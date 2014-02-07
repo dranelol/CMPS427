@@ -8,3 +8,7 @@ Library/*
 Temp
 *.pidb
 Build
+*.suo
+obj
+*.unity
+*.unity.meta
