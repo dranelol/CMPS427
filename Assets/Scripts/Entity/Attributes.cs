@@ -10,6 +10,10 @@ using System.Collections.Generic;
 /// </summary>
 public class Attributes : UnityEngine.Object
 {
+    // Since different objects can have different limits, these need to be set on a per object basis.
+    private float attackSpeedMin, attackSpeedMax;
+    private float moveSpeedMin, moveSpeedMax;
+
     public enum Stats
     {
         HEALTH,
@@ -27,6 +31,10 @@ public class Attributes : UnityEngine.Object
     /// </summary>
     public Attributes()
     {
+		// Default values for clamps, to prevent errors.
+		attackSpeedMin = moveSpeedMin = 0.5f;
+		attackSpeedMax = moveSpeedMax = 2.0f;
+
         foreach (Stats stat in Enum.GetValues(typeof(Stats)))
             statList.Add(stat, 0);
     }
@@ -173,14 +181,15 @@ public class Attributes : UnityEngine.Object
         }
         set 
         {
+			float newValue = Mathf.Clamp (value, attackSpeedMin, attackSpeedMax);
             try
             {
-                statList[Stats.ATTACK_SPEED] = value;
+				statList[Stats.ATTACK_SPEED] = newValue;
             }
             catch (KeyNotFoundException noKey)
             {
                 Debug.LogException(noKey, this);
-                AddKey(Stats.ATTACK_SPEED, value);
+                AddKey(Stats.ATTACK_SPEED, newValue);
             }
         }
     }
@@ -204,14 +213,15 @@ public class Attributes : UnityEngine.Object
         }
         set 
         {
+			float newValue = Mathf.Clamp (value, moveSpeedMin, moveSpeedMax);
             try
             {
-                statList[Stats.MOVEMENT_SPEED] = value;
+                statList[Stats.MOVEMENT_SPEED] = newValue;
             }
             catch (KeyNotFoundException noKey)
             {
                 Debug.LogException(noKey, this);
-                AddKey(Stats.MOVEMENT_SPEED, value);
+                AddKey(Stats.MOVEMENT_SPEED, newValue);
             }
         }
     }
@@ -245,6 +255,20 @@ public class Attributes : UnityEngine.Object
         Defense -= other.Defense;
         AttackSpeed -= other.AttackSpeed;
         MovementSpeed -= other.MovementSpeed;
+    }
+    #endregion
+
+    #region Setters for Min/Max caps.
+    public void SetAttackSpeedClamps(float min, float max)
+    {
+        attackSpeedMin = min;
+        attackSpeedMax = max;
+    }
+
+    public void SetMovementSpeedClamps(float min, float max)
+    {
+        moveSpeedMin = min;
+        moveSpeedMax = max;
     }
     #endregion
 
