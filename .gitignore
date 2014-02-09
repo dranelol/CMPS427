@@ -9,6 +9,7 @@ Temp
 *.pidb
 Build
 *.suo
-obj
+obj/*
 *.unity
 *.unity.meta
+obj/Debug/*
