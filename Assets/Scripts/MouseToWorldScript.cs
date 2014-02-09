@@ -17,7 +17,6 @@ public class MouseToWorldScript : MonoBehaviour
         {
             Plane playerPlane = new Plane(Vector3.up, transform.position);
             Ray theRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-
             float hitdist = 0;
 
             if (playerPlane.Raycast(theRay, out hitdist))
