@@ -39,7 +39,7 @@ public class CursorFSM : StateMachine
     }
 
     #region idle functions
-    IEnumerator ingame_EnterState()
+    IEnumerator idle_EnterState()
     {
         Transition(CursorStates.ingame);
         yield break;
