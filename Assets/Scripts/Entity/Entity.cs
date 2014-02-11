@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public interface Entity
+public class Entity
 {
     public enum EquipmentSlots
     {
