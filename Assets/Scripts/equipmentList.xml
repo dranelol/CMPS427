@@ -12,5 +12,35 @@
     <attribute value="10">Health</attribute>
     <attribute value="4">Defense</attribute>
   </type>
+  <type>
+    <name>Iron Dagger</name>
+    <slot>Main</slot>
+    <attribute value="2">Power</attribute>
+    <attribute value="5">Power</attribute>
+  </type>
+  <type>
+    <name>Wooden Shield</name>
+    <slot>Off</slot>
+    <attribute value="6">Defense</attribute>
+    <attribute value="5">Health</attribute>
+  </type>
+  <type>
+    <name>Leather Boots</name>
+    <slot>Feet</slot>
+    <attribute value="2">MoveSpeed</attribute>
+    <attribute value="10">Health</attribute>
+  </type>
+  <type>
+    <name>Leather Pants</name>
+    <slot>Legs</slot>
+    <attribute value="1">MoveSpeed</attribute>
+    <attribute value="3">Defense</attribute>
+    <attribute value="10">Health</attribute>
+  </type>
+  <type>
+    <name>Cloth Cap</name>
+    <slot>Head</slot>
+    <attribute value="10">Resource</attribute>
+  </type>
   
 </types>

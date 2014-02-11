@@ -50,7 +50,34 @@ public class equipmentFactory : MonoBehaviour {
 
             Debug.Log(thingy);
         }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
 
+            equipment tempo = randomEquipment(1);
+            string thingy = "name: " + tempo.equipmentName + " slot: " + tempo.validSlot.ToString() + " attributes: ";
+            thingy = thingy + "health: " + tempo.equipmentAttributes.Health.ToString() + " ";
+            thingy = thingy + "power: " + tempo.equipmentAttributes.Power.ToString() + " ";
+            thingy = thingy + "defense: " + tempo.equipmentAttributes.Defense.ToString() + " ";
+            thingy = thingy + "resource: " + tempo.equipmentAttributes.Resource.ToString() + " ";
+            thingy = thingy + "attackspeed: " + tempo.equipmentAttributes.AttackSpeed.ToString() + " ";
+            thingy = thingy + "movespeed: " + tempo.equipmentAttributes.MovementSpeed.ToString() + " ";
+
+            Debug.Log(thingy);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+
+            equipment tempo = randomEquipment(2);
+            string thingy = "name: " + tempo.equipmentName + " slot: " + tempo.validSlot.ToString() + " attributes: ";
+            thingy = thingy + "health: " + tempo.equipmentAttributes.Health.ToString() + " ";
+            thingy = thingy + "power: " + tempo.equipmentAttributes.Power.ToString() + " ";
+            thingy = thingy + "defense: " + tempo.equipmentAttributes.Defense.ToString() + " ";
+            thingy = thingy + "resource: " + tempo.equipmentAttributes.Resource.ToString() + " ";
+            thingy = thingy + "attackspeed: " + tempo.equipmentAttributes.AttackSpeed.ToString() + " ";
+            thingy = thingy + "movespeed: " + tempo.equipmentAttributes.MovementSpeed.ToString() + " ";
+
+            Debug.Log(thingy);
+        }
 	}
 
     /// <summary>
@@ -340,6 +367,8 @@ public class equipmentFactory : MonoBehaviour {
                 randEquipment.equipmentName = tempaffix.affixName + " " + randEquipment.equipmentName;
             }
 
+            randEquipment.tier = 1;
+
             //add its attributes to the equipment
             randEquipment.equipmentAttributes.Add(tempaffix.affixAttributes);
 
@@ -389,6 +418,7 @@ public class equipmentFactory : MonoBehaviour {
             randEquipment.equipmentName = randEquipment.equipmentName + " " + tempaffix.affixName;
             randEquipment.equipmentAttributes.Add(tempaffix.affixAttributes);
 
+            randEquipment.tier = 2;
         }
 
         return randEquipment;
@@ -396,5 +426,105 @@ public class equipmentFactory : MonoBehaviour {
 
     }
 
+    public equipment randomEquipment(int tier)
+    {
+
+        equipment randEquipment = new equipment();
+
+        int randint = UnityEngine.Random.Range(0, basesList.Count);
+
+        equipment tempEquipment = (equipment)basesList[randint];
+
+        randEquipment.equipmentName = tempEquipment.equipmentName;
+        randEquipment.equipmentType = tempEquipment.equipmentType;
+        randEquipment.validSlot = tempEquipment.validSlot;
+        randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
+
+
+        //one affix
+        if (tier == 1)
+        {
+            int temp = UnityEngine.Random.Range(0, affixeslist.Count);
+            affix tempaffix = (affix)affixeslist[temp];
+
+            //get a random affix that can fit in our slot
+            while (tempaffix.affixSlots.Contains(randEquipment.validSlot) != true)
+            {
+                if (temp < affixeslist.Count - 1)
+                {
+                    temp += 1;
+                }
+                else
+                {
+                    temp = 0;
+                }
+                tempaffix = (affix)affixeslist[temp];
+            }
+
+            //make the name correctly
+            if (tempaffix.affixType == "suffix")
+            {
+                randEquipment.equipmentName = randEquipment.equipmentName + " " + tempaffix.affixName;
+            }
+            else if (tempaffix.affixType == "prefix")
+            {
+                randEquipment.equipmentName = tempaffix.affixName + " " + randEquipment.equipmentName;
+            }
+
+            //add its attributes to the equipment
+            randEquipment.equipmentAttributes.Add(tempaffix.affixAttributes);
+
+        }
+        else if (tier == 2)
+        {
+            //two affixes
+            //rollin dem bones
+            int temp = UnityEngine.Random.Range(0, affixeslist.Count);
+            affix tempaffix = (affix)affixeslist[temp];
+
+            //go until we get a prefix that can fit
+            while (tempaffix.affixSlots.Contains(randEquipment.validSlot) != true || tempaffix.affixType != "prefix")
+            {
+                if (temp < affixeslist.Count - 1)
+                {
+                    temp += 1;
+                }
+                else
+                {
+                    temp = 0;
+                }
+                tempaffix = (affix)affixeslist[temp];
+            }
+            //add it to the equipment
+            randEquipment.equipmentName = tempaffix.affixName + " " + randEquipment.equipmentName;
+            randEquipment.equipmentAttributes.Add(tempaffix.affixAttributes);
+
+            //roll for a suffix
+            temp = UnityEngine.Random.Range(0, affixeslist.Count);
+            tempaffix = (affix)affixeslist[temp];
+
+            //go until we get one that can fit
+            while (tempaffix.affixSlots.Contains(randEquipment.validSlot) != true || tempaffix.affixType != "suffix")
+            {
+                if (temp < affixeslist.Count - 1)
+                {
+                    temp += 1;
+                }
+                else
+                {
+                    temp = 0;
+                }
+                tempaffix = (affix)affixeslist[temp];
+            }
+            //add it on
+            randEquipment.equipmentName = randEquipment.equipmentName + " " + tempaffix.affixName;
+            randEquipment.equipmentAttributes.Add(tempaffix.affixAttributes);
+
+        }
+
+        return randEquipment;
+
+
+    }
 
 }
