@@ -2,16 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class equipment{
+public class affix
+{
 
-    public Attributes equipmentAttributes;
-    public string equipmentName;
-    public string equipmentType;
-    public slots validSlot;
-    public int tier;
+    public Attributes affixAttributes;
+    public string affixName;
+    public string affixType;
 
+    public ArrayList affixSlots = new ArrayList();
 
     private Dictionary<string, slots> slotList = new Dictionary<string, slots>();
+
 
     public enum slots
     {
@@ -23,24 +24,25 @@ public class equipment{
         Off
     }
 
-    public equipment()
+    public affix()
     {
-        equipmentAttributes = new Attributes();
-        equipmentName = "default_equipment";
-        equipmentType = "default_type";
-        validSlot = slots.Head;
-        tier = 0;
+        affixAttributes = new Attributes();
+        affixName = "default_affix";
+        affixType = "prefix";
         slotList.Add("Head", slots.Head);
         slotList.Add("Legs", slots.Legs);
         slotList.Add("Feet", slots.Feet);
         slotList.Add("Chest", slots.Chest);
         slotList.Add("Main", slots.Main);
         slotList.Add("Off", slots.Off);
+
+
     }
 
-    public void setslot(string setto)
+    public void addslot(string setto)
     {
-        validSlot = slotList[setto];
+       slots validSlot = slotList[setto];
+       affixSlots.Add(validSlot);
     }
 
 }
