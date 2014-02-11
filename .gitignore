@@ -8,3 +8,9 @@ Library/*
 Temp
 *.pidb
 Build
+*.suo
+obj/*
+*.unity
+*.unity.meta
+obj/Debug/*
+obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
