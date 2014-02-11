@@ -11,9 +11,9 @@ public class affix
 
     public ArrayList affixSlots = new ArrayList();
 
-    private Dictionary<string, slots> slotList = new Dictionary<string, slots>();
+    private Dictionary<string, equipmentFactory.slots> slotList = new Dictionary<string, equipmentFactory.slots>();
 
-
+    /*
     public enum slots
     {
         Head,
@@ -23,25 +23,26 @@ public class affix
         Main,
         Off
     }
+     */
 
     public affix()
     {
         affixAttributes = new Attributes();
         affixName = "default_affix";
         affixType = "prefix";
-        slotList.Add("Head", slots.Head);
-        slotList.Add("Legs", slots.Legs);
-        slotList.Add("Feet", slots.Feet);
-        slotList.Add("Chest", slots.Chest);
-        slotList.Add("Main", slots.Main);
-        slotList.Add("Off", slots.Off);
+        slotList.Add("Head", equipmentFactory.slots.Head);
+        slotList.Add("Legs", equipmentFactory.slots.Legs);
+        slotList.Add("Feet", equipmentFactory.slots.Feet);
+        slotList.Add("Chest", equipmentFactory.slots.Chest);
+        slotList.Add("Main", equipmentFactory.slots.Main);
+        slotList.Add("Off", equipmentFactory.slots.Off);
 
 
     }
 
     public void addslot(string setto)
     {
-       slots validSlot = slotList[setto];
+        equipmentFactory.slots validSlot = slotList[setto];
        affixSlots.Add(validSlot);
     }
 
