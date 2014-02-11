@@ -10,6 +10,7 @@ public abstract class StateMachine : MonoBehaviour
     #region fields
 
     public bool Debugging = false;
+    private string FSMName;
 
     private Enum currentState = null;
 
@@ -98,7 +99,7 @@ public abstract class StateMachine : MonoBehaviour
 
     protected virtual void OnStart()
     {
-
+        FSMName = this.GetType().Name;
     }
 
     public void Transition(Enum nextState)
@@ -144,7 +145,7 @@ public abstract class StateMachine : MonoBehaviour
         {
             if (Debugging == true)
             {
-                Debug.Log("calling exit state for state: " + currentState.ToString());
+                Debug.Log("calling exit state for state: " + currentState.ToString() + " of fsm: " + FSMName);
             }
             StartCoroutine(ExitState());
         }
@@ -174,7 +175,7 @@ public abstract class StateMachine : MonoBehaviour
         {
             if (Debugging == true)
             {
-                Debug.Log("calling enter state for state: " + currentState.ToString());
+                Debug.Log("calling enter state for state: " + currentState.ToString() + " of fsm: " + FSMName);
             }
             StartCoroutine(EnterState());
         }
@@ -205,7 +206,7 @@ public abstract class StateMachine : MonoBehaviour
     {
         if (Debugging == true)
         {
-            Debug.Log("calling update for state: " + currentState.ToString());
+            Debug.Log("calling update for state: " + currentState.ToString() + " of fsm: " + FSMName);
         }
         DoUpdate();
     }
@@ -214,7 +215,7 @@ public abstract class StateMachine : MonoBehaviour
     {
         if (Debugging == true)
         {
-            Debug.Log("calling late update for state: " + currentState.ToString());
+            Debug.Log("calling late update for state: " + currentState.ToString() + " of fsm: " + FSMName);
         }
         DoLateUpdate();
     }
@@ -223,7 +224,7 @@ public abstract class StateMachine : MonoBehaviour
     {
         if (Debugging == true)
         {
-            Debug.Log("calling on mouse enter for state: " + currentState.ToString());
+            Debug.Log("calling on mouse enter for state: " + currentState.ToString() + " of fsm: " + FSMName);
         }
         DoOnMouseEnter();
     }
@@ -232,7 +233,7 @@ public abstract class StateMachine : MonoBehaviour
     {
         if (Debugging == true)
         {
-            Debug.Log("calling on mouse up for state: " + currentState.ToString());
+            Debug.Log("calling on mouse up for state: " + currentState.ToString() + " of fsm: " + FSMName);
         }
         DoOnMouseUp();
     }
@@ -241,7 +242,7 @@ public abstract class StateMachine : MonoBehaviour
     {
         if (Debugging == true)
         {
-            Debug.Log("calling on mouse down for state: " + currentState.ToString());
+            Debug.Log("calling on mouse down for state: " + currentState.ToString() + " of fsm: " + FSMName);
         }
         DoOnMouseDown();
     }
@@ -250,7 +251,7 @@ public abstract class StateMachine : MonoBehaviour
     {
         if (Debugging == true)
         {
-            Debug.Log("calling on mouse exit for state: " + currentState.ToString());
+            Debug.Log("calling on mouse exit for state: " + currentState.ToString() + " of fsm: " + FSMName);
         }
         DoOnMouseExit();
     }
@@ -259,7 +260,7 @@ public abstract class StateMachine : MonoBehaviour
     {
         if (Debugging == true)
         {
-            Debug.Log("calling on mouse drag for state: " + currentState.ToString());
+            Debug.Log("calling on mouse drag for state: " + currentState.ToString() + " of fsm: " + FSMName);
         }
         DoOnMouseDrag();
     }
@@ -268,7 +269,7 @@ public abstract class StateMachine : MonoBehaviour
     {
         if (Debugging == true)
         {
-            Debug.Log("calling fixed update for state: " + currentState.ToString());
+            Debug.Log("calling fixed update for state: " + currentState.ToString() + " of fsm: " + FSMName);
         }
         DoFixedUpdate();
     }
@@ -276,7 +277,7 @@ public abstract class StateMachine : MonoBehaviour
     {
         if (Debugging == true)
         {
-            Debug.Log("calling on trigger enter for state: " + currentState.ToString());
+            Debug.Log("calling on trigger enter for state: " + currentState.ToString() + " of fsm: " + FSMName);
         }
         DoOnTriggerEnter(other);
     }
@@ -284,7 +285,7 @@ public abstract class StateMachine : MonoBehaviour
     {
         if (Debugging == true)
         {
-            Debug.Log("calling on trigger exit for state: " + currentState.ToString());
+            Debug.Log("calling on trigger exit for state: " + currentState.ToString() + " of fsm: " + FSMName);
         }
         DoOnTriggerExit(other);
     }
@@ -292,7 +293,7 @@ public abstract class StateMachine : MonoBehaviour
     {
         if (Debugging == true)
         {
-            Debug.Log("calling on trigger stay for state: " + currentState.ToString());
+            Debug.Log("calling on trigger stay for state: " + currentState.ToString() + " of fsm: " + FSMName);
         }
         DoOnTriggerStay(other);
     }
@@ -300,7 +301,7 @@ public abstract class StateMachine : MonoBehaviour
     {
         if (Debugging == true)
         {
-            Debug.Log("calling on collision enter for state: " + currentState.ToString());
+            Debug.Log("calling on collision enter for state: " + currentState.ToString() + " of fsm: " + FSMName);
         }
         DoOnCollisionEnter(other);
     }
@@ -308,7 +309,7 @@ public abstract class StateMachine : MonoBehaviour
     {
         if (Debugging == true)
         {
-            Debug.Log("calling on collision exit for state: " + currentState.ToString());
+            Debug.Log("calling on collision exit for state: " + currentState.ToString() + " of fsm: " + FSMName);
         }
         DoOnCollisionExit(other);
     }
@@ -316,7 +317,7 @@ public abstract class StateMachine : MonoBehaviour
     {
         if (Debugging == true)
         {
-            Debug.Log("calling on collision stay for state: " + currentState.ToString());
+            Debug.Log("calling on collision stay for state: " + currentState.ToString() + " of fsm: " + FSMName);
         }
         DoOnCollisionStay(other);
     }
@@ -324,7 +325,7 @@ public abstract class StateMachine : MonoBehaviour
     {
         if (Debugging == true)
         {
-            Debug.Log("calling on gui for state: " + currentState.ToString());
+            Debug.Log("calling on gui for state: " + currentState.ToString() + " of fsm: " + FSMName);
         }
         DoOnGUI();
     }

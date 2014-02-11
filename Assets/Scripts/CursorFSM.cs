@@ -39,9 +39,32 @@ public class CursorFSM : StateMachine
     }
 
     #region idle functions
+    IEnumerator ingame_EnterState()
+    {
+        Transition(CursorStates.ingame);
+        yield break;
+    }
     #endregion
 
     #region ingame functions
+
+    void ingame_Update()
+    {
+        if (Input.GetMouseButtonDown(0) == true)
+        {
+            Plane cursorPlane = new Plane(Vector3.up, transform.position);
+            Ray theRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            float hitdist = 0;
+
+            Vector3 animationPosition = Vector3.zero;
+
+            if (cursorPlane.Raycast(theRay, out hitdist))
+            {
+                animationPosition = theRay.GetPoint(hitdist);
+            }
+            Debug.Log("playing swooshy swoosh 'MOVING HERE' animation at: " + animationPosition.ToString());
+        }
+    }
     #endregion
 
 
