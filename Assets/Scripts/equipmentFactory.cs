@@ -4,16 +4,253 @@ using System.Xml;
 
 public class equipmentFactory : MonoBehaviour {
 
+
+    private ArrayList basesList = new ArrayList();
+    private ArrayList affixeslist = new ArrayList();
+   
+
 	// Use this for initialization
 	void Start () {
-	
+        loadBaseItems();
+        loadAffixes();
+    
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            loadtest();
+        }
+
+
 	}
 
+    /// <summary>
+    /// outputs a bunch of stats about all of the base items and affixes stored
+    /// </summary>
+    public void loadtest()
+    {
+        foreach(equipment baseitem in basesList)
+        {
+            string thingy = "name: " + baseitem.equipmentName + " slot: " + baseitem.validSlot.ToString() + " attributes: ";
+            thingy = thingy + "health: " + baseitem.equipmentAttributes.Health.ToString() + " ";
+            thingy = thingy + "power: " + baseitem.equipmentAttributes.Power.ToString() + " ";
+            thingy = thingy + "defense: " + baseitem.equipmentAttributes.Defense.ToString() + " ";
+            thingy = thingy + "resource: " + baseitem.equipmentAttributes.Resource.ToString() + " ";
+            thingy = thingy + "attackspeed: " + baseitem.equipmentAttributes.AttackSpeed.ToString() + " ";
+            thingy = thingy + "movespeed: " + baseitem.equipmentAttributes.MovementSpeed.ToString() + " ";
+            
+            Debug.Log(thingy);
+        }
+        foreach (affix baseitem in affixeslist)
+        {
+            string thingy = "name: " + baseitem.affixName + " type: " + baseitem.affixType + " attributes: ";
+            thingy = thingy + "health: " + baseitem.affixAttributes.Health.ToString() + " ";
+            thingy = thingy + "power: " + baseitem.affixAttributes.Power.ToString() + " ";
+            thingy = thingy + "defense: " + baseitem.affixAttributes.Defense.ToString() + " ";
+            thingy = thingy + "resource: " + baseitem.affixAttributes.Resource.ToString() + " ";
+            thingy = thingy + "attackspeed: " + baseitem.affixAttributes.AttackSpeed.ToString() + " ";
+            thingy = thingy + "movespeed: " + baseitem.affixAttributes.MovementSpeed.ToString() + " ";
+            
+
+                Debug.Log(thingy);
+        }
+    }
+
+
+    /// <summary>
+    /// loads the base items from xml
+    /// </summary>
+    public void loadBaseItems()
+    {
+        
+        //xml reading stuff. this is probably a jank way to do it, but IT WORKS
+        XmlDocument equipList = new XmlDocument();
+        XmlReader reader = new XmlTextReader("Assets/Scripts/equipmentList.xml");
+        try
+        {
+            equipList.Load("Assets/Scripts/equipmentList.xml");
+        }
+        catch
+        {
+            Debug.Log("equipmentlist fail");
+        }
+
+        Debug.Log("after load");
+
+        //Debug.Log(equipList.InnerXml);
+        
+        XmlNode root = equipList.ReadNode(reader);
+
+        XmlNodeList bases = root.SelectNodes("type");
+
+        //this is for each item in the file
+        foreach(XmlNode item in bases)
+        {
+            //Debug.Log("in foreach");
+            equipment newE = new equipment();
+
+
+            XmlNode tempnode = item.SelectSingleNode("name");
+            Debug.Log(tempnode.InnerText);
+
+            //since this is base, with no affixes, the item name and type are the same
+            newE.equipmentName = tempnode.InnerText;
+            newE.equipmentType = tempnode.InnerText;
+
+            tempnode = item.SelectSingleNode("slot");
+
+            newE.setslot(tempnode.InnerText);
+            Debug.Log(tempnode.InnerText);
+
+            //this is for each attribute for each item
+            XmlNodeList atts = item.SelectNodes("attribute");
+            foreach(XmlNode att in atts)
+            {
+                //this is a bit wierd, there probably is a better way to do this
+                if(att.InnerText == "Health")
+                {
+                    newE.equipmentAttributes.Health += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else if (att.InnerText == "Power")
+                {
+                    newE.equipmentAttributes.Power += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else if (att.InnerText == "Resource")
+                {
+                    newE.equipmentAttributes.Resource += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else if (att.InnerText == "MoveSpeed")
+                {
+                    newE.equipmentAttributes.MovementSpeed += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else if (att.InnerText == "Defense")
+                {
+                    newE.equipmentAttributes.Defense += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else if (att.InnerText == "AttackSpeed")
+                {
+                    newE.equipmentAttributes.AttackSpeed += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else
+                {
+                    Debug.Log("CAUTION: " + att.InnerText + " is not in the Factory!");
+                }
+
+                Debug.Log(att.InnerText + " " + att.Attributes.GetNamedItem("value").InnerText);
+                
+                
+            }
+
+            basesList.Add(newE);
+            
+        }
+
+    }
+
+    /// <summary>
+    /// loads the affixes from xml
+    /// </summary>
+    public void loadAffixes()
+    {
+
+        //xml reading stuff. this is probably a jank way to do it, but IT WORKS
+        XmlDocument affixList = new XmlDocument();
+        XmlReader reader = new XmlTextReader("Assets/Scripts/affixList.xml");
+        try
+        {
+            affixList.Load("Assets/Scripts/affixList.xml");
+        }
+        catch
+        {
+            Debug.Log("affixlist fail");
+        }
+
+        Debug.Log("after affix load");
+
+        //Debug.Log(affixList.InnerXml);
+
+        XmlNode root = affixList.ReadNode(reader);
+
+        XmlNodeList affixes = root.SelectNodes("affix");
+
+        //this is for each item in the file
+        foreach (XmlNode affix in affixes)
+        {
+            //Debug.Log("in foreach");
+            affix newA = new affix();
+
+            newA.affixType = affix.Attributes.GetNamedItem("category").InnerText;
+
+            XmlNode tempnode = affix.SelectSingleNode("name");
+            Debug.Log(tempnode.InnerText);
+
+            
+            newA.affixName = tempnode.InnerText;
+            
+            
+
+            //this is for each slot for the affix
+            XmlNodeList atts = affix.SelectNodes("slot");
+
+            foreach (XmlNode att in atts)
+            {
+                newA.addslot(att.InnerText);
+                Debug.Log(att.InnerText);
+            }
+
+
+
+            //this is for each attribute for each item
+            atts = affix.SelectNodes("attribute");
+            foreach (XmlNode att in atts)
+            {
+                //this is a bit wierd, there probably is a better way to do this
+                if (att.InnerText == "Health")
+                {
+                    newA.affixAttributes.Health += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else if (att.InnerText == "Power")
+                {
+                    newA.affixAttributes.Power += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else if (att.InnerText == "Resource")
+                {
+                    newA.affixAttributes.Resource += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else if (att.InnerText == "MoveSpeed")
+                {
+                    newA.affixAttributes.MovementSpeed += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else if (att.InnerText == "Defense")
+                {
+                    newA.affixAttributes.Defense += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else if (att.InnerText == "AttackSpeed")
+                {
+                    newA.affixAttributes.AttackSpeed += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else
+                {
+                    Debug.Log("CAUTION: " + att.InnerText + " is not in the Factory!");
+                }
+
+                Debug.Log(att.InnerText + " " + att.Attributes.GetNamedItem("value").InnerText);
+
+            }
+
+            affixeslist.Add(newA);
+
+        }
+
+    }
+
+    /// <summary>
+    /// builds a default equipment
+    /// </summary>
+    /// <returns>an equipment object</returns>
     public equipment buildEquipment() {
 
         equipment tempEquipment = new equipment();
@@ -21,6 +258,27 @@ public class equipmentFactory : MonoBehaviour {
         
 
         return tempEquipment;
+
+
+    }
+
+    public equipment randomEquipment()
+    {
+
+        equipment randEquipment = new equipment();
+
+        int randint = Random.Range(0, basesList.Count);
+
+        equipment tempEquipment = (equipment)basesList[randint];
+
+        randEquipment.equipmentName = tempEquipment.equipmentName;
+        randEquipment.equipmentType = tempEquipment.equipmentType;
+        randEquipment.validSlot = tempEquipment.validSlot;
+        randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
+
+
+
+        return randEquipment;
 
 
     }
