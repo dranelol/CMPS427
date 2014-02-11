@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Entity
+public class Entity : MonoBehaviour
 {
     public enum EquipmentSlots
     {
@@ -15,10 +15,10 @@ public class Entity
 
     public float currentHP; // Currently unused.
     public Attributes currentAtt; // The entity's current total attributes
-    public Attributes tempAtt; // Attributes that are added on top of the entity's base attributes
+    public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
+    public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
 
     private Dictionary<EquipmentSlots, Attributes> equipmentStats = new Dictionary<EquipmentSlots, Attributes>();
-    private ArrayList bufflist; // To be implemented.
 
     /// <summary>
     /// Creates the entity with a given set of base attributes,
@@ -27,8 +27,7 @@ public class Entity
     public Entity(Attributes att)
     {
         currentAtt = att;
-        tempAtt = new Attributes();
-        bufflist = new ArrayList();
+        equipAtt = new Attributes();
     }
 
     /// <summary>
@@ -47,7 +46,7 @@ public class Entity
         {
             equipmentStats.Add(slot, itemAtt);
             currentAtt.Add(itemAtt);
-            tempAtt.Add(itemAtt);
+            equipAtt.Add(itemAtt);
             return true;
         }
     }
@@ -64,10 +63,30 @@ public class Entity
             Attributes removed = equipmentStats[slot];
             equipmentStats.Remove(slot);
             currentAtt.Subtract(removed);
-            tempAtt.Subtract(removed);
+            equipAtt.Subtract(removed);
             return true;
         }
         else
             return false;
+    }
+
+    /// <summary>
+    /// Adds a buff to the entity. The buff is given by an attributes object that is added to the entity's current
+    /// stats. The duration of the buff is given in seconds.
+    /// </summary>
+    /// <param name="statChange">The attributes to be added by this buff</param>
+    /// <param name="duration">The duration of this buff in seconds</param>
+    public void addBuff(Attributes statChange, float duration)
+    {
+        StartCoroutine(newbuff(statChange, duration));
+    }
+
+    private IEnumerator newbuff(Attributes s, float d)
+    {
+        currentAtt.Add(s);
+        buffAtt.Add(s);
+        yield return new WaitForSeconds(d);
+        currentAtt.Subtract(s);
+        buffAtt.Subtract(s);
     }
 }
