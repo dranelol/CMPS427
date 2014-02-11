@@ -22,4 +22,36 @@
     <attribute value="5">Resource</attribute>
     <attribute value="5">MoveSpeed</attribute>
   </affix>
+  <affix category="prefix">
+    <name>Sturdy</name>
+    <slot>Head</slot>
+    <slot>Chest</slot>
+    <slot>Feet</slot>
+    <slot>Legs</slot>
+    <slot>Off</slot>
+    <attribute value="15">Health</attribute>
+    <attribute value="7">Defense</attribute>
+  </affix>
+  <affix category="suffix">
+    <name>of the Owl</name>
+    <slot>Head</slot>
+    <attribute value="20">Resource</attribute>
+    <attribute value="2">AttackSpeed</attribute>
+  </affix>
+  <affix category="prefix">
+    <name>Inspiring</name>
+    <slot>Head</slot>
+    <slot>Chest</slot>
+    <slot>Feet</slot>
+    <slot>Legs</slot>
+    <slot>Off</slot>
+    <slot>Main</slot>
+    <attribute value="5">MoveSpeed</attribute>
+  </affix>
+  <affix category="suffix">
+    <name>of Striking</name>
+    <slot>Main</slot>
+    <attribute value="5">Power</attribute>
+    <attribute value="1">AttackSpeed</attribute>
+  </affix>
 </affixes>
