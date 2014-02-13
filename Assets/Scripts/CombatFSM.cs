@@ -8,7 +8,7 @@ using UnityEngine;
 public class CombatFSM : StateMachine
 {
     private bool timeLocked = false;
-    public bool attack = false;
+    private bool attack = false;
     private float lockedTime = 0;
 
     public enum CombatStates
@@ -40,11 +40,14 @@ public class CombatFSM : StateMachine
 
     #region public functions
 
-    public void Attack(float time = 0)
+    public void Attack(float time)
     {
         attack = true;
-        lockedTime = Mathf.Max(time, 0);
-        Transition(CombatStates.attacking);
+        if (timeLocked == false)
+        {
+            lockedTime = Mathf.Max(time, 0);
+            Transition(CombatStates.attacking);
+        }
     }
 
     #endregion
@@ -53,7 +56,6 @@ public class CombatFSM : StateMachine
 
     void idle_Update()
     {
-        Debug.Log("Idle");
         if (attack == true && timeLocked == false)
         {
             Transition(CombatStates.attacking);
@@ -70,8 +72,8 @@ public class CombatFSM : StateMachine
 
     void attacking_Update()
     {
-        Debug.Log("Attacking");
         timeLocked = true;
+        attack = false;
         Transition(CombatStates.combatLocked);
     }
 
@@ -81,7 +83,6 @@ public class CombatFSM : StateMachine
 
     void combatLocked_Update()
     {
-        Debug.Log("Combat Locked");
         if (timeLocked == true)
         {
             lockedTime -= Time.deltaTime;
@@ -96,9 +97,10 @@ public class CombatFSM : StateMachine
     IEnumerator combatLocked_ExitState()
     {
         timeLocked = false;
-        lockedTime = 0;
         yield break;
     }
 
     #endregion
 }
+
+
