@@ -8,7 +8,6 @@ public class Rotations
         Quaternion rotation = Quaternion.Euler(angle,0, 0);
         return rotation * vectorToRotate;
     }
-
     static Vector3 RotateAboutY(Vector3 vectorToRotate, float angle)
     {
         Quaternion rotation = Quaternion.Euler(0, angle, 0);
@@ -19,5 +18,4 @@ public class Rotations
         Quaternion rotation = Quaternion.Euler(0, 0,angle);
         return rotation * vectorToRotate;
     }
-
 }
