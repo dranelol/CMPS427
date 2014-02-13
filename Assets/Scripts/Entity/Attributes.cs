@@ -8,8 +8,12 @@ using System.Collections.Generic;
 /// If an entity needs more attributes than what this class provides, this class should be extended to include
 /// the extra attributes.
 /// </summary>
-public class Attributes
+public class Attributes : UnityEngine.Object
 {
+    // Since different objects can have different limits, these need to be set on a per object basis.
+    private float attackSpeedMin, attackSpeedMax;
+    private float moveSpeedMin, moveSpeedMax;
+
     public enum Stats
     {
         HEALTH,
@@ -29,6 +33,10 @@ public class Attributes
     /// </summary>
     public Attributes()
     {
+		// Default values for clamps, to prevent errors.
+		attackSpeedMin = moveSpeedMin = 0.5f;
+		attackSpeedMax = moveSpeedMax = 2.0f;
+
         foreach (Stats stat in Enum.GetValues(typeof(Stats)))
             statList.Add(stat, 0);
     }
@@ -37,48 +45,187 @@ public class Attributes
     public float Health
     {
         get
-        { return statList[Stats.HEALTH]; }
-        set { statList[Stats.HEALTH] = value; }
+        {
+            try
+            {
+                return statList[Stats.HEALTH];
+            }
+            catch (KeyNotFoundException noKey)
+            {
+                Debug.LogException(noKey, this);
+                AddKey(Stats.HEALTH, 0);
+                return 0;
+            }
+        }
+        set 
+        {
+            try
+            {
+                statList[Stats.HEALTH] = value;
+            }
+            catch (KeyNotFoundException noKey)
+            {
+                Debug.LogException(noKey, this);
+                AddKey(Stats.HEALTH, value);
+            }
+        }
     }
     #endregion
 
     #region Resource
     public float Resource
     {
-        get { return statList[Stats.RESOURCE]; }
-        set { statList[Stats.RESOURCE] = value; }
+        get 
+        {
+            try
+            {
+                return statList[Stats.RESOURCE];
+            }
+            catch (KeyNotFoundException noKey)
+            {
+                Debug.LogException(noKey, this);
+                AddKey(Stats.RESOURCE, 0);
+                return 0;
+            }
+        }
+        set 
+        {
+            try
+            {
+                statList[Stats.RESOURCE] = value;
+            }
+            catch (KeyNotFoundException noKey)
+            {
+                Debug.LogException(noKey, this);
+                AddKey(Stats.RESOURCE, value);
+            }
+        }
     }
     #endregion
 
     #region Power
     public float Power
     {
-        get { return statList[Stats.POWER]; }
-        set { statList[Stats.POWER] = value; }
+        get 
+        {
+            try
+            {
+                return statList[Stats.POWER];
+            }
+            catch (KeyNotFoundException noKey)
+            {
+                Debug.LogException(noKey, this);
+                AddKey(Stats.POWER, 0);
+                return 0;
+            }
+        }
+        set 
+        {
+            try
+            {
+                statList[Stats.POWER] = value;
+            }
+            catch (KeyNotFoundException noKey)
+            {
+                Debug.LogException(noKey, this);
+                AddKey(Stats.POWER, value);
+            }
+        }
     }
     #endregion
 
     #region Defense
     public float Defense
     {
-        get { return statList[Stats.DEFENSE]; }
-        set { statList[Stats.DEFENSE] = value; }
+        get 
+        {
+            try
+            {
+                return statList[Stats.DEFENSE];
+            }
+            catch (KeyNotFoundException noKey)
+            {
+                Debug.LogException(noKey, this);
+                AddKey(Stats.DEFENSE, 0);
+                return 0;
+            }
+        }
+        set 
+        {
+            try
+            {
+                statList[Stats.DEFENSE] = value;
+            }
+            catch (KeyNotFoundException noKey)
+            {
+                Debug.LogException(noKey, this);
+                AddKey(Stats.DEFENSE, value);
+            }
+        }
     }
     #endregion
 
     #region Attack Speed
     public float AttackSpeed
     {
-        get { return statList[Stats.ATTACK_SPEED]; }
-        set { statList[Stats.ATTACK_SPEED] = value; }
+        get 
+        {
+            try
+            {
+                return statList[Stats.ATTACK_SPEED];
+            }
+            catch (KeyNotFoundException noKey)
+            {
+                Debug.LogException(noKey, this);
+                AddKey(Stats.ATTACK_SPEED, 0);
+                return 0;
+            }
+        }
+        set 
+        {
+			float newValue = Mathf.Clamp (value, attackSpeedMin, attackSpeedMax);
+            try
+            {
+				statList[Stats.ATTACK_SPEED] = newValue;
+            }
+            catch (KeyNotFoundException noKey)
+            {
+                Debug.LogException(noKey, this);
+                AddKey(Stats.ATTACK_SPEED, newValue);
+            }
+        }
     }
     #endregion
 
     #region Movement Speed
     public float MovementSpeed
     {
-        get { return statList[Stats.MOVEMENT_SPEED]; }
-        set { statList[Stats.MOVEMENT_SPEED] = value; }
+        get 
+        {
+            try
+            {
+                return statList[Stats.MOVEMENT_SPEED];
+            }
+            catch (KeyNotFoundException noKey)
+            {
+                Debug.LogException(noKey, this);
+                AddKey(Stats.MOVEMENT_SPEED, 0);
+                return 0;
+            }
+        }
+        set 
+        {
+			float newValue = Mathf.Clamp (value, moveSpeedMin, moveSpeedMax);
+            try
+            {
+                statList[Stats.MOVEMENT_SPEED] = newValue;
+            }
+            catch (KeyNotFoundException noKey)
+            {
+                Debug.LogException(noKey, this);
+                AddKey(Stats.MOVEMENT_SPEED, newValue);
+            }
+        }
     }
 
     #endregion
@@ -138,4 +285,29 @@ public class Attributes
         MaxDamage -= other.MaxDamage;
     }
     #endregion
+
+    #region Setters for Min/Max caps.
+    public void SetAttackSpeedClamps(float min, float max)
+    {
+        attackSpeedMin = min;
+        attackSpeedMax = max;
+    }
+
+    public void SetMovementSpeedClamps(float min, float max)
+    {
+        moveSpeedMin = min;
+        moveSpeedMax = max;
+    }
+    #endregion
+
+    /// <summary>
+    /// Adds a key to the stat list.
+    /// </summary>
+    /// <param name="stat">Key</param>
+    /// <param name="value">Default value.</param>
+    private void AddKey(Stats stat, float value)
+    {
+        Debug.Log("Adding key for " + stat.ToString());
+        statList.Add(stat, value);
+    }
 }
