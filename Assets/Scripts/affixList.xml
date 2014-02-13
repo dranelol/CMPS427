@@ -36,7 +36,7 @@
     <name>of the Owl</name>
     <slot>Head</slot>
     <attribute value="20">Resource</attribute>
-    <attribute value="2">AttackSpeed</attribute>
+    <attribute value=".5">AttackSpeed</attribute>
   </affix>
   <affix category="prefix">
     <name>Inspiring</name>
@@ -53,5 +53,21 @@
     <slot>Main</slot>
     <attribute value="5">Power</attribute>
     <attribute value="1">AttackSpeed</attribute>
+  </affix>
+  <affix category="prefix">
+    <name>Swift</name>
+    <slot>Main</slot>
+    <attribute value="1.5">AttackSpeed</attribute>
+  </affix>
+  <affix category="prefix">
+    <name>Sure</name>
+    <slot>Main</slot>
+    <attribute value="2">MinDamage</attribute>
+  </affix>
+  <affix category="prefix">
+    <name>Wild</name>
+    <slot>Main</slot>
+    <attribute value="-1">MinDamage</attribute>
+    <attribute value="1">MaxDamage</attribute>
   </affix>
 </affixes>

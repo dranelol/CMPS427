@@ -17,7 +17,9 @@ public class Attributes
         POWER,
         DEFENSE,
         ATTACK_SPEED,
-        MOVEMENT_SPEED
+        MOVEMENT_SPEED,
+        MIN_DAMAGE,
+        MAX_DAMAGE
     };
 
     private Dictionary<Stats, float> statList = new Dictionary<Stats,float>();
@@ -81,6 +83,28 @@ public class Attributes
 
     #endregion
 
+
+    #region Min Damage
+    public float MinDamage
+    {
+        get { return statList[Stats.MIN_DAMAGE]; }
+        set { statList[Stats.MIN_DAMAGE] = value; }
+    }
+
+    #endregion
+
+
+    #region Max Damage
+    public float MaxDamage
+    {
+        get { return statList[Stats.MAX_DAMAGE]; }
+        set { statList[Stats.MAX_DAMAGE] = value; }
+    }
+
+    #endregion
+
+
+
     #region Arithmetic Operations
     /// <summary>
     /// Adds attributes to the current attribute object.
@@ -94,6 +118,8 @@ public class Attributes
         Defense += other.Defense;
         AttackSpeed += other.AttackSpeed;
         MovementSpeed += other.MovementSpeed;
+        MinDamage += other.MinDamage;
+        MaxDamage += other.MaxDamage;
     }
 
     /// <summary>
@@ -108,6 +134,8 @@ public class Attributes
         Defense -= other.Defense;
         AttackSpeed -= other.AttackSpeed;
         MovementSpeed -= other.MovementSpeed;
+        MinDamage -= other.MinDamage;
+        MaxDamage -= other.MaxDamage;
     }
     #endregion
 }
