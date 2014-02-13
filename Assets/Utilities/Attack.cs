@@ -8,7 +8,7 @@ public class Attack
     {
         List<GameObject> enemiesToAttack = new List<GameObject>();
 
-        Vector3 forward = attacker.forward;
+        Vector3 forward = attacker.forward.normalized;
 
         Collider[] colliders = Physics.OverlapSphere(attacker.position, attackRange);
 
@@ -16,7 +16,12 @@ public class Attack
         {
             Vector3 enemyVector = (collider.transform.position - attacker.position).normalized;
 
+            if (Vector3.AngleBetween(forward, enemyVector) < attackAngle)
+            {
+                // draw ray between enemy and player
+                // raycast with a layermask for enemies
 
+            }
         }
 
 
