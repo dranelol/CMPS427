@@ -3,7 +3,25 @@ using System;
 using System.Collections;
 using System.Xml;
 
-public class equipmentFactory : MonoBehaviour {
+/// <summary>
+/// equipment factory! use this to generate equipment!
+/// </summary>
+public class equipmentFactory {
+
+
+    /*
+     * This is the equipment factory!
+     * 
+     * We're going to need to have the game manager call the constructor, as that will 
+     * load the base equipment and affixes into the game.
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     */
 
 
     private ArrayList basesList = new ArrayList();
@@ -21,7 +39,16 @@ public class equipmentFactory : MonoBehaviour {
     }
 
 
+    public equipmentFactory()
+    {
+        loadBaseItems();
+        loadAffixes();
+    
+    }
 
+
+    #region monodevelop old code
+    /*
 	// Use this for initialization
 	void Start () {
         loadBaseItems();
@@ -91,6 +118,9 @@ public class equipmentFactory : MonoBehaviour {
 
         }
 	}
+    */
+    #endregion
+
 
     /// <summary>
     /// outputs a bunch of stats about all of the base items and affixes stored
