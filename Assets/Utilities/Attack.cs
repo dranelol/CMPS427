@@ -16,11 +16,25 @@ public class Attack
         {
             Vector3 enemyVector = (collider.transform.position - attacker.position).normalized;
 
-            if (Vector3.AngleBetween(forward, enemyVector) < attackAngle)
+            if (Vector3.Angle(forward, enemyVector) < attackAngle)
             {
+                Debug.Log(Vector3.Angle(forward, enemyVector).ToString());
                 // draw ray between enemy and player
                 // raycast with a layermask for enemies
+                RaycastHit hit;
+                int enemyMask = LayerMask.NameToLayer("Enemy");
+                Physics.Raycast(new Ray(collider.transform.position, enemyVector),out hit, attackRange, enemyMask);
 
+                // if the first thing the raycast hits is the player, player do damage to enemy
+
+                Debug.Log(hit.ToString());
+                
+                /*
+                if (hit.collider.gameObject.tag == "Player")
+                {
+                    Debug.Log("fucked him up!");
+                }
+                */
             }
         }
 

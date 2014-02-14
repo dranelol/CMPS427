@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class NavTest : MonoBehaviour 
 {
@@ -18,7 +19,9 @@ public class NavTest : MonoBehaviour
 
 	void Update () 
     {
-        
+        Debug.DrawRay(transform.position, transform.forward);
+        Debug.DrawRay(transform.position, Rotations.RotateAboutY(transform.forward, -22.5f),Color.white,5f);
+        Debug.DrawRay(transform.position, Rotations.RotateAboutY(transform.forward, 22.5f), Color.white, 5f);
         
         if (agent.velocity != Vector3.zero)
         {
@@ -41,6 +44,15 @@ public class NavTest : MonoBehaviour
             {
                 Vector3 NavTarget = theRay.GetPoint(hitdist);
                 MoveFSM.SetPath(NavTarget);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            List<GameObject> attacked = Attack.OnAttack(transform, 22.5f, 5f);
+            foreach (GameObject enemy in attacked)
+            {
+                //Debug.Log(enemy.GetInstanceID().ToString());
             }
         }
 	}
