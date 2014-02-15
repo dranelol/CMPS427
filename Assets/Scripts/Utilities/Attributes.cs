@@ -23,6 +23,7 @@ public class Attributes : UnityEngine.Object
         MOVEMENT_SPEED,
         MIN_DAMAGE,
         MAX_DAMAGE
+
     };
 
     private Dictionary<Stats, float> statList = new Dictionary<Stats,float>();
