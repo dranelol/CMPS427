@@ -27,8 +27,11 @@ public class NavTest : MonoBehaviour
 	void Update () 
     {
         Debug.DrawRay(transform.position, transform.forward);
-        Debug.DrawRay(transform.position, Rotations.RotateAboutY(transform.forward, -22.5f),Color.white,5f);
-        Debug.DrawRay(transform.position, Rotations.RotateAboutY(transform.forward, 22.5f), Color.white, 5f);
+        Debug.DrawRay(transform.position, Rotations.RotateAboutY(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f), -22.5f));
+        Debug.DrawRay(transform.position, Rotations.RotateAboutY(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f), 22.5f));
+        //Debug.Log(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f).magnitude);
+        //Debug.Log(transform.forward);
+        //Debug.Log(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f));
         
         if (agent.velocity != Vector3.zero)
         {
@@ -58,7 +61,7 @@ public class NavTest : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.A))
         {
-            List<GameObject> attacked = Attack.OnAttack(transform, 22.5f, 5f);
+            List<GameObject> attacked = Attack.OnAttack(transform, 45f, 5f);
             foreach (GameObject enemy in attacked)
             {
                 //Debug.Log(enemy.GetInstanceID().ToString());
