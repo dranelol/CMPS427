@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<affixes>
+  <affix type="prefix">
+    <name>Keen</name>
+    <slot>Main</slot>
+    <attribute value="1">Power</attribute>
+  </affix>
+  <affix type="suffix">
+    <name>of the Bear</name>
+    <slot>Off</slot>
+    <slot>Chest</slot>
+    <slot>Legs</slot>
+    <slot>Head</slot>
+    <attribute value="10">Health</attribute>
+    <attribute value="5">Defense</attribute>
+  </affix>
+  <affix type="suffix">
+    <name>of the Squid</name>
+    <slot>Head</slot>
+    <slot>Chest</slot>
+    <slot>Off</slot>
+    <attribute value="10">Resource</attribute>
+    <attribute value="2">MoveSpeed</attribute>
+  </affix>
+  <affix type="suffix">
+    <name>of the Sun</name>
+    <slot>Head</slot>
+    <slot>Chest</slot>
+    <slot>Off</slot>
+    <slot>Legs</slot>
+    <slot>Main</slot>
+    <attribute value="10">Power</attribute>
+    <attribute value="2">AttackSpeed</attribute>
+  </affix>
+  <affix type="prefix">
+    <name>Crude</name>
+    <slot>Head</slot>
+    <slot>Chest</slot>
+    <slot>Off</slot>
+    <slot>Legs</slot>
+    <slot>Main</slot>
+    <slot>Feet</slot>
+    <attribute value="-1">Power</attribute>
+    <attribute value="-1">MaxDamage</attribute>
+  </affix>
+  <affix type="prefix">
+    <name>Shining</name>
+    <slot>Head</slot>
+    <slot>Chest</slot>
+    <slot>Off</slot>
+    <slot>Legs</slot>
+    <slot>Main</slot>
+    <slot>Feet</slot>
+    <attribute value="1">AttackSpeed</attribute>
+    <attribute value="1">MoveSpeed</attribute>
+  </affix>
+  <affix type="prefix">
+    <name>Exquisite</name>
+    <slot>Head</slot>
+    <slot>Chest</slot>
+    <slot>Off</slot>
+    <slot>Legs</slot>
+    <slot>Main</slot>
+    <slot>Feet</slot>
+    <attribute value="1">Power</attribute>
+    <attribute value="1">Defense</attribute>
+  </affix>
+  <affix type="suffix">
+    <name>of the 37th President</name>
+    <slot>Head</slot>
+    <slot>Chest</slot>
+    <slot>Off</slot>
+    <slot>Legs</slot>
+    <slot>Main</slot>
+    <slot>Feet</slot>
+    <attribute value="4">Defense</attribute>
+    <attribute value="1">MoveSpeed</attribute>
+  </affix>
+  <affix type="suffix">
+    <name>of the Lizard</name>
+    <slot>Head</slot>
+    <slot>Off</slot>
+    <attribute value="10">Resource</attribute>
+    <attribute value="1">Defense</attribute>
+  </affix>
+  <affix type="suffix">
+    <name>of the Owl</name>
+    <slot>Head</slot>
+    <slot>Chest</slot>
+    <slot>Off</slot>
+    <slot>Legs</slot>
+    <slot>Feet</slot>
+    <attribute value="1">40</attribute>
+  </affix>
+  <affix type="prefix">
+    <name>Cunning</name>
+    <slot>Head</slot>
+    <slot>Chest</slot>
+    <slot>Off</slot>
+    <slot>Legs</slot>
+    <slot>Feet</slot>
+    <slot>Main</slot>
+    <attribute value="40">Resource</attribute>
+  </affix>
+</affixes>
