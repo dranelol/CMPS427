@@ -42,7 +42,7 @@ public class Attack
                 
                 if (hit.collider.gameObject.tag == "Player")
                 {
-                    Debug.Log("dat hit!");
+                    //Debug.Log("dat hit!");
                     enemiesToAttack.Add(collider.gameObject);
                 }
                  
