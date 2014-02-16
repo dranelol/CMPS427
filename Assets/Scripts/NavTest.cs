@@ -7,6 +7,7 @@ public class NavTest : MonoBehaviour
     public MovementFSM MoveFSM;
     public NavMeshAgent agent;
     public CharacterController controller;
+    public Material lerpMaterial;
 
     void Start()
     {
@@ -55,7 +56,21 @@ public class NavTest : MonoBehaviour
             List<GameObject> attacked = Attack.OnAttack(transform, 45f, 5f);
             foreach (GameObject enemy in attacked)
             {
-                //Debug.Log(enemy.GetInstanceID().ToString());
+                Debug.Log(enemy.GetInstanceID().ToString());
+                //Color enemyColor = enemy.renderer.material.color;
+                //enemy.renderer.material.color = ;
+                Color enemyColor = enemy.renderer.material.GetColor("_Color");
+                //Color enemyColorTint = enemy.renderer.material.GetColor("_TintColor");
+                //float intensity = enemyColorTint.a + 50;
+                Debug.Log(enemyColor.ToString());
+                enemyColor.r -= (byte)0.5;
+                enemyColor.b -= (byte)0.5;
+                enemyColor.g -= (byte)0.5;
+                
+                //Color tintColor = new Color32(255, 23, 0, (byte)intensity);
+                //enemy.renderer.material.SetColor("_TintColor", tintColor);
+                enemy.renderer.material.SetColor("_Color", enemyColor);
+                enemy.transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
             }
         }
 	}
