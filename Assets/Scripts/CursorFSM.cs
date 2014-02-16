@@ -62,7 +62,7 @@ public class CursorFSM : StateMachine
             {
                 animationPosition = theRay.GetPoint(hitdist);
             }
-            Debug.Log("playing swooshy swoosh 'MOVING HERE' animation at: " + animationPosition.ToString());
+            //Debug.Log("playing swooshy swoosh 'MOVING HERE' animation at: " + animationPosition.ToString());
         }
     }
     #endregion

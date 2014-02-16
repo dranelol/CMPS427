@@ -17,8 +17,9 @@ public class Attack
 
         foreach (Collider collider in colliders)
         {
-            //Vector3 enemyVector = collider.transform.position - attacker.position;
+            
             Vector3 enemyVector = collider.transform.position - attacker.position;
+            Vector3 enemyVector2 = attacker.position - collider.transform.position;
             //Debug.Log(enemyVector);
             //Debug.Log(Vector3.Angle(forward, enemyVector));
             
@@ -31,16 +32,20 @@ public class Attack
                 // raycast with a layermask for enemies
                 //Debug.Log("enemy in angle: " + Vector3.Angle(forward, enemyVector).ToString());
                 RaycastHit hit = new RaycastHit();
-                Physics.Raycast(new Ray(collider.transform.position, enemyVector),out hit, attackRange, 1 << playerMask);
+                Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
 
-                Debug.Log("hit: " + hit.transform.ToString());
+
+
+
+                bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2),out hit, attackRange, 1 << playerMask);
                 
-                /*
                 if (hit.collider.gameObject.tag == "Player")
                 {
-                    Debug.Log("asd");
+                    Debug.Log("dat hit!");
+                    enemiesToAttack.Add(collider.gameObject);
                 }
-                 */
+                 
                 // if the first thing the raycast hits is the player, player do damage to enemy
 
                 //Debug.Log(hit.ToString());
