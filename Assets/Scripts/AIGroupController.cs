@@ -5,7 +5,6 @@ public class AIGroupController : MonoBehaviour {
     private const float baseResetDistance = 25;
     private const float groupBufferDistance = 1.5f;
 
-    public bool orientationCentered = true;
     private Vector3 homePosition;
     private bool inCombat = false;
     private float resetDistance;
@@ -46,33 +45,18 @@ public class AIGroupController : MonoBehaviour {
     {
         int childCount = transform.childCount;
 
-        if (childCount == 1)
+        if (childCount > 0)
         {
-            transform.GetChild(childCount - 1).GetComponent<AIController>().localHomePosition = homePosition;
-        }
-        
-        else
-        {
-            float maxRadius = 0;
+            transform.GetChild(0).GetComponent<AIController>().localHomePosition = homePosition;
+            childCount--;
 
-            foreach (Transform child in transform)
+            while (childCount > 0)
             {
-                maxRadius = Mathf.Max(maxRadius, child.GetComponent<NavMeshAgent>().radius);
+
+
+
+
             }
-
-            float adjustedBufferDistance = maxRadius * 2 + groupBufferDistance;
-
-            if (childCount % 2 != 0)
-            {
-                if (orientationCentered)
-                {
-                    transform.GetChild(childCount - 1).GetComponent<AIController>().localHomePosition = homePosition;
-                    childCount--;
-                }
-            }
-
-            float angleBetween = 360 / (float)childCount;
-
         }
     }
 
