@@ -59,7 +59,7 @@ public class AIController : StateMachine
     private AIGroupController Group; // The script managing the group of enemies
     private AggroRadius Aggro; // The script managing the aggro
     private MovementFSM MoveFSM; // The Movement FSM the enemy uses
-    private NavMeshAgent NavAgent;
+    private NavMeshAgent NavAgent; // NavMeshAgent for this enemy
 
     private Dictionary<GameObject, TargetObject> ThreatTable; // A dictionary of all threat targets
     private GameObject target; // The Target object that holds information about the current target
@@ -74,6 +74,8 @@ public class AIController : StateMachine
     public bool hasFled; // True if the enemy has fled this combat
     
     private float resetDistanceDelta; // The change in pursuit distance each time the enemy is attacked
+
+    private bool alive = true; // Enemy state
 
     void Awake()
     {
@@ -108,16 +110,12 @@ public class AIController : StateMachine
         fleeTransitions.Add(AIStates.dead);
         fleeTransitions.Add(AIStates.reset);
 
-        List<Enum> deadTransitions = new List<Enum>();
-        deadTransitions.Add(AIStates.idle);
-
         List<Enum> resetTransitions = new List<Enum>();
         resetTransitions.Add(AIStates.idle);
 
         Transitions.Add(AIStates.idle, idleTransitions);
         Transitions.Add(AIStates.pursuit, pursuitTransitions);
         Transitions.Add(AIStates.flee, fleeTransitions);
-        Transitions.Add(AIStates.dead, deadTransitions);
         Transitions.Add(AIStates.reset, resetTransitions);
 
         StartMachine(AIStates.idle);
@@ -134,29 +132,33 @@ public class AIController : StateMachine
     {
         if (source.tag == "Player")
         {
+
             if ((AIStates)CurrentState == AIStates.idle)
             {
                 Transition(AIStates.pursuit);
                 Group.BeginCombat(source);
             }
 
-            if (!ThreatTable.ContainsKey(source))
+            else if ((AIStates)CurrentState == AIStates.pursuit)
             {
-                TargetObject newTarget = new TargetObject(source);
+                if (!ThreatTable.ContainsKey(source))
+                {
+                    TargetObject newTarget = new TargetObject(source);
 
-                ThreatTable.Add(source, newTarget);
-                Group.BeginCombat(source); // If a new target is found, add it to every enemy's threat table with 0 threat
+                    ThreatTable.Add(source, newTarget);
+                    Group.BeginCombat(source); // If a new target is found, add it to every enemy's threat table with 0 threat
+                }
+
+                ThreatTable[source].Threaten(magnitude);
+
+                if (target == null || ThreatTable[source].TargetThreat > ThreatTable[target].TargetThreat)
+                {
+                    target = source;
+                }
+
+                resetDistanceDelta *= ThreatTable[source].LevelFactor;
+                Group.ResetDistance = resetDistanceDelta;
             }
-
-            ThreatTable[source].Threaten(magnitude);
-
-            if (target == null || ThreatTable[source].TargetThreat > ThreatTable[target].TargetThreat)
-            {
-                target = source;
-            }
-
-            resetDistanceDelta *= ThreatTable[source].LevelFactor;
-            Group.ResetDistance = resetDistanceDelta;
         }
 
         else
@@ -194,6 +196,11 @@ public class AIController : StateMachine
     public GameObject Target
     {
         get { return target; }
+    }
+
+    public bool Alive
+    {
+        get { return alive; }
     }
 
     #endregion
@@ -304,6 +311,16 @@ public class AIController : StateMachine
 
     #endregion
 
+    #region dead functions
+
+    IEnumerator dead_EnterState()
+    {
+        alive = false;
+        yield return null;
+    }
+
+    #endregion
+
     #region reset functions
 
     IEnumerator reset_EnterState()
@@ -318,22 +335,19 @@ public class AIController : StateMachine
 
     void reset_Update()
     {
-        if (Vector3.Distance(transform.position, NavAgent.destination) < 3)
+        if (Vector3.Distance(transform.position, localHomePosition) < 1)
         {
-            if (Vector3.Distance(transform.position, localHomePosition) < 1)
-            {
-                MoveFSM.Stop();
-                Transition(AIStates.idle);
-            }
+            MoveFSM.Stop();
+            Transition(AIStates.idle);
+        }
 
-            else
+        else
+        {
+            if (NavAgent.destination != localHomePosition)
             {
                 MoveFSM.SetPath(localHomePosition);
             }
         }
-
-        Debug.Log(localHomePosition);
-        Debug.Log(Group.HomePosition);
     }
 
     #endregion
