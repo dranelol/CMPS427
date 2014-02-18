@@ -46,14 +46,12 @@ public class AIController : StateMachine
     {
         idle,
         pursuit,
-        flee,
         dead,
         reset,
     }
 
     private const float baseLevelFactor = 0.5f; // The level factor when the enemy is the same level as its target
     private const float levelFactorRange = 0.5f; // The range between the min and max possible level factors
-    private const float fleeTime = 5; // The time until the enemy will stop fleeing and resume pursuit
     private const float maxDistanceFromTargetPositionToTarget = 10; // The distance before position recalculation
 
     private AIGroupController Group; // The script managing the group of enemies
@@ -69,6 +67,7 @@ public class AIController : StateMachine
 
     private float attackRange = 20; // The range the enemy must be within in order to attack
 
+    private const float fleeTime = 5; // The time until the enemy will stop fleeing and resume pursuit
     private float timeFled; // The time fleeing started
     public bool canFlee = true; // True if the enemy will flee, false otherwise
     public bool hasFled; // True if the enemy has fled this combat
@@ -101,21 +100,14 @@ public class AIController : StateMachine
         idleTransitions.Add(AIStates.pursuit);
 
         List<Enum> pursuitTransitions = new List<Enum>();
-        pursuitTransitions.Add(AIStates.flee);
         pursuitTransitions.Add(AIStates.dead);
         pursuitTransitions.Add(AIStates.reset);
-
-        List<Enum> fleeTransitions = new List<Enum>();
-        fleeTransitions.Add(AIStates.pursuit);
-        fleeTransitions.Add(AIStates.dead);
-        fleeTransitions.Add(AIStates.reset);
 
         List<Enum> resetTransitions = new List<Enum>();
         resetTransitions.Add(AIStates.idle);
 
         Transitions.Add(AIStates.idle, idleTransitions);
         Transitions.Add(AIStates.pursuit, pursuitTransitions);
-        Transitions.Add(AIStates.flee, fleeTransitions);
         Transitions.Add(AIStates.reset, resetTransitions);
 
         StartMachine(AIStates.idle);
@@ -256,11 +248,6 @@ public class AIController : StateMachine
             Transition(AIStates.dead);
         }
 
-        else if (false && canFlee && !hasFled) // Check health for flee || if (health <= 10%)
-        {
-            Transition(AIStates.flee);
-        }
-
         else if (ThreatTable.Count == 0 || !Pursue())
         {
             Group.EndCombat();
@@ -273,40 +260,6 @@ public class AIController : StateMachine
     }
 
     #endregion 
-
-    #region flee functions
-
-    IEnumerator flee_EnterState()
-    {
-        hasFled = true;
-        timeFled = Time.time;
-        yield return null;
-    }
-
-    void flee_Update()
-    {
-        if (false) // Check health for death || if (health <= 0)
-        {
-            Transition(AIStates.dead);
-        }
-
-        else if (ThreatTable.Count == 0)
-        {
-            Group.EndCombat();
-        }
-
-        else if (timeFled + fleeTime <= Time.time)
-        {
-            Transition(AIStates.pursuit);
-        }
-
-        else
-        {
-            Debug.Log("FLEE");
-        }
-    }
-
-    #endregion
 
     #region dead functions
 
