@@ -61,6 +61,7 @@ public class NavTest : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.A))
         {
+            Debug.Log("lelele");
             List<GameObject> attacked = Attack.OnAttack(transform, 45f, 5f);
             foreach (GameObject enemy in attacked)
             {
