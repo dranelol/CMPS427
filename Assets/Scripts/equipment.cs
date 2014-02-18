@@ -7,38 +7,26 @@ public class equipment{
     public Attributes equipmentAttributes;
     public string equipmentName;
     public string equipmentType;
-    public equipmentFactory.slots validSlot;
+    public equipSlots.slots validSlot;
     public int tier;
 
 
 
-    private Dictionary<string, equipmentFactory.slots> slotList = new Dictionary<string, equipmentFactory.slots>();
-
-    /*
-    public enum slots
-    {
-        Head,
-        Chest,
-        Legs,
-        Feet,
-        Main,
-        Off
-    }
-     * */
+    private Dictionary<string, equipSlots.slots> slotList = new Dictionary<string, equipSlots.slots>();
 
     public equipment()
     {
         equipmentAttributes = new Attributes();
         equipmentName = "default_equipment";
         equipmentType = "default_type";
-        validSlot = equipmentFactory.slots.Head;
+        validSlot = equipSlots.slots.Head;
         tier = 0;
-        slotList.Add("Head", equipmentFactory.slots.Head);
-        slotList.Add("Legs", equipmentFactory.slots.Legs);
-        slotList.Add("Feet", equipmentFactory.slots.Feet);
-        slotList.Add("Chest", equipmentFactory.slots.Chest);
-        slotList.Add("Main", equipmentFactory.slots.Main);
-        slotList.Add("Off", equipmentFactory.slots.Off);
+        slotList.Add("Head", equipSlots.slots.Head);
+        slotList.Add("Legs", equipSlots.slots.Legs);
+        slotList.Add("Feet", equipSlots.slots.Feet);
+        slotList.Add("Chest", equipSlots.slots.Chest);
+        slotList.Add("Main", equipSlots.slots.Main);
+        slotList.Add("Off", equipSlots.slots.Off);
     }
 
     public void setslot(string setto)

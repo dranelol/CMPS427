@@ -28,16 +28,7 @@ public class equipmentFactory {
     private ArrayList affixeslist = new ArrayList();
     public bool testflag = true;
 
-    public enum slots
-    {
-        Head,
-        Chest,
-        Legs,
-        Feet,
-        Main,
-        Off
-    }
-
+    
 
     public equipmentFactory()
     {
