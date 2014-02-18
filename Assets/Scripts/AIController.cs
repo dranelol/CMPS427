@@ -139,26 +139,23 @@ public class AIController : StateMachine
                 Group.BeginCombat(source);
             }
 
-            else if ((AIStates)CurrentState == AIStates.pursuit)
+            if (!ThreatTable.ContainsKey(source))
             {
-                if (!ThreatTable.ContainsKey(source))
-                {
-                    TargetObject newTarget = new TargetObject(source);
+                TargetObject newTarget = new TargetObject(source);
 
-                    ThreatTable.Add(source, newTarget);
-                    Group.BeginCombat(source); // If a new target is found, add it to every enemy's threat table with 0 threat
-                }
-
-                ThreatTable[source].Threaten(magnitude);
-
-                if (target == null || ThreatTable[source].TargetThreat > ThreatTable[target].TargetThreat)
-                {
-                    target = source;
-                }
-
-                resetDistanceDelta *= ThreatTable[source].LevelFactor;
-                Group.ResetDistance = resetDistanceDelta;
+                ThreatTable.Add(source, newTarget);
+                Group.BeginCombat(source); // If a new target is found, add it to every enemy's threat table with 0 threat
             }
+
+            ThreatTable[source].Threaten(magnitude);
+
+            if (target == null || ThreatTable[source].TargetThreat > ThreatTable[target].TargetThreat)
+            {
+                target = source;
+            }
+
+            resetDistanceDelta *= ThreatTable[source].LevelFactor;
+            Group.ResetDistance = resetDistanceDelta;
         }
 
         else

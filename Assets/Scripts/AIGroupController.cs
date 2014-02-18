@@ -43,21 +43,6 @@ public class AIGroupController : MonoBehaviour {
 
     public void CalculatePositions()
     {
-        int childCount = transform.childCount;
-
-        if (childCount > 0)
-        {
-            transform.GetChild(0).GetComponent<AIController>().localHomePosition = homePosition;
-            childCount--;
-
-            while (childCount > 0)
-            {
-
-
-
-
-            }
-        }
     }
 
     public float BaseResetDistance
