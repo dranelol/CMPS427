@@ -57,7 +57,24 @@ public class NavTest : MonoBehaviour
             foreach (GameObject enemy in attacked)
             {
                 Debug.Log(enemy.GetInstanceID().ToString());
+                //Color enemyColor = enemy.renderer.material.color;
+                //enemy.renderer.material.color = ;
+                //Color enemyColor = enemy.renderer.material.GetColor("_Color");
+                //Color enemyColorTint = enemy.renderer.material.GetColor("_TintColor");
+                //float intensity = enemyColorTint.a + 50;
+                //Debug.Log(enemyColor.ToString());
+                //enemyColor.r -= (byte)0.5;
+                //enemyColor.b -= (byte)0.5;
+                //enemyColor.g -= (byte)0.5;
+
+                //Color tintColor = new Color32(255, 23, 0, (byte)intensity);
+                //enemy.renderer.material.SetColor("_TintColor", tintColor);
+                //enemy.renderer.material.SetColor("_Color", enemyColor);
+                //enemy.renderer.material.SetColor("_Color", new Color(enemyColor.r - (byte)1, enemyColor.g - (byte)1, enemyColor.b - (byte)1, enemyColor.a));
+                //enemy.transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
+                enemy.renderer.material.SetColor("_Color", Color.red);
             }
         }
+
 	}
 }
