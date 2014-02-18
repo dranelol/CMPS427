@@ -13,7 +13,6 @@ public class Attributes : UnityEngine.Object
     // Since different objects can have different limits, these need to be set on a per object basis.
     private float attackSpeedMin, attackSpeedMax;
     private float moveSpeedMin, moveSpeedMax;
-
     public enum Stats
     {
         HEALTH,
@@ -24,6 +23,7 @@ public class Attributes : UnityEngine.Object
         MOVEMENT_SPEED,
         MIN_DAMAGE,
         MAX_DAMAGE
+
     };
 
     private Dictionary<Stats, float> statList = new Dictionary<Stats,float>();
@@ -36,7 +36,6 @@ public class Attributes : UnityEngine.Object
 		// Default values for clamps, to prevent errors.
 		attackSpeedMin = moveSpeedMin = 0.5f;
 		attackSpeedMax = moveSpeedMax = 2.0f;
-
         foreach (Stats stat in Enum.GetValues(typeof(Stats)))
             statList.Add(stat, 0);
     }
