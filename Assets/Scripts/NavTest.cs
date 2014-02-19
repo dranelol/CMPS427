@@ -28,7 +28,7 @@ public class NavTest : MonoBehaviour
         
         if (agent.velocity != Vector3.zero)
         {
-            Vector3 newVector = (transform.position + agent.velocity.normalized);
+            Vector3 newVector = (transform.position += agent.velocity.normalized);
             Vector3 target = newVector - transform.position;
             
             Quaternion quat = Quaternion.LookRotation(target);
