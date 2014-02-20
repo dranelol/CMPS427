@@ -95,8 +95,8 @@
   <type>
     <name>Helix Helm</name>
     <slot>Head</slot>
-    <minlvl>10</minlvl>
-    <maxlvl>15</maxlvl>
+    <minlvl>1</minlvl>
+    <maxlvl>20</maxlvl>
     <flavor>PRIASE BE!</flavor>
     <attribute value="100">Resource</attribute>
     <tier>3</tier>
