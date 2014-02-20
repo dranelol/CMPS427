@@ -27,6 +27,8 @@ public class equipment{
         flavorText = "";
         validSlot = equipSlots.slots.Head;
         tier = 0;
+        minlvl = 1;
+        maxlvl = 20;
         slotList.Add("Head", equipSlots.slots.Head);
         slotList.Add("Legs", equipSlots.slots.Legs);
         slotList.Add("Feet", equipSlots.slots.Feet);

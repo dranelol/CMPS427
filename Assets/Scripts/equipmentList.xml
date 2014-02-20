@@ -86,6 +86,13 @@
     <attribute value="10">Resource</attribute>
   </type>
   <type>
+    <name>Scraps</name>
+    <slot>Chest</slot>
+    <minlvl>1</minlvl>
+    <maxlvl>20</maxlvl>
+    <attribute value="1">Health</attribute>
+  </type>
+  <type>
     <name>Helix Helm</name>
     <slot>Head</slot>
     <minlvl>10</minlvl>
