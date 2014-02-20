@@ -17,7 +17,7 @@ public class Attack
 
         foreach (Collider collider in colliders)
         {
-            
+            //Debug.Log(collider.ToString());
             Vector3 enemyVector = collider.transform.position - attacker.position;
             Vector3 enemyVector2 = attacker.position - collider.transform.position;
             //Debug.Log(enemyVector);

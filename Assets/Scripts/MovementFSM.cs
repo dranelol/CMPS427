@@ -44,7 +44,7 @@ public class MovementFSM : StateMachine
 
     public void SetPath(Vector3 targetPosition)
     {
-        if (CurrentState != (Enum)MoveStates.moveLocked)
+        if ((MoveStates)CurrentState != MoveStates.moveLocked)
         {
             thisAgent.SetDestination(targetPosition);
         }
