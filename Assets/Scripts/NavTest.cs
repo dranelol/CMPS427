@@ -78,7 +78,8 @@ public class NavTest : MonoBehaviour
                 
                 //Color tintColor = new Color32(255, 23, 0, (byte)intensity);
                 //enemy.renderer.material.SetColor("_TintColor", tintColor);
-                enemy.renderer.material.SetColor("_Color", enemyColor);
+                //enemy.renderer.material.SetColor("_Color", enemyColor);
+                enemy.renderer.material.SetColor("_Color", new Color(enemyColor.r - (byte)1, enemyColor.g - (byte)1, enemyColor.b - (byte)1, enemyColor.a));
                 enemy.transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
             }
         }
