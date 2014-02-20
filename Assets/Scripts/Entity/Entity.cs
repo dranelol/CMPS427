@@ -23,11 +23,13 @@ public class Entity : MonoBehaviour
     /// <summary>
     /// Creates the entity with a given set of base attributes,
     /// </summary>
-    /// <param name="att">An Attributes object containing the base stats of this entity.</param>
-    public Entity(Attributes att)
+    public void Start()
     {
-        currentAtt = att;
+        currentAtt = new Attributes();
         equipAtt = new Attributes();
+        buffAtt = new Attributes();
+
+        currentAtt.Power = 100;
     }
 
     /// <summary>
@@ -71,6 +73,20 @@ public class Entity : MonoBehaviour
     }
 
     /// <summary>
+    /// Modifies the current health of the entity, clamped by the maximum health.
+    /// Can be used for both taking damage and gaining health.
+    /// </summary>
+    /// <param name="value">Delta value to modify current health.</param>
+    public void ModifyHealth(float delta) { currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); }
+
+    /// <summary>
+    /// Kind of obvious.
+    /// </summary>
+    /// <returns>True if the dude is dead.</returns>
+    public bool IsDead() { return currentHP <= 0; }
+
+    #region Buffs
+    /// <summary>
     /// Adds a buff to the entity. The buff is given by an attributes object that is added to the entity's current
     /// stats. The duration of the buff is given in seconds.
     /// </summary>
@@ -81,6 +97,7 @@ public class Entity : MonoBehaviour
         StartCoroutine(newbuff(statChange, duration));
     }
 
+
     private IEnumerator newbuff(Attributes s, float d)
     {
         currentAtt.Add(s);
@@ -89,4 +106,5 @@ public class Entity : MonoBehaviour
         currentAtt.Subtract(s);
         buffAtt.Subtract(s);
     }
+    #endregion
 }
