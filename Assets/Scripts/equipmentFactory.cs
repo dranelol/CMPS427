@@ -378,7 +378,7 @@ public class equipmentFactory {
     }
 
     /// <summary>
-    /// function to generate a random equipment
+    /// function to generate a random piece of equipment
     /// </summary>
     /// <returns>an equipment object</returns>
     public equipment randomEquipment()
@@ -395,6 +395,7 @@ public class equipmentFactory {
         randEquipment.validSlot = tempEquipment.validSlot;
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
 
+        
 
         //roll the dice to see if we get affixes
         randint = UnityEngine.Random.Range(0, 100);
