@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+
 //using System;
 using System.Collections;
 //using System.Math;
@@ -10,6 +11,7 @@ public class CombatTest : MonoBehaviour
     public float tpower = 0;
     public float tdef = 0;
     public float tmagic = 0;
+
     public CombatFSM AttackFSM;
 
 	// Use this for initialization
@@ -24,6 +26,7 @@ public class CombatTest : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
+
             AttackFSM.Attack(2f);
             DamageCalc(tmax, tmin, tpower, tdef, tmagic);
         }
@@ -60,6 +63,7 @@ public class CombatTest : MonoBehaviour
 
         int trandom = Mathf.RoundToInt(random);
     }
+
 }
 
 
