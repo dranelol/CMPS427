@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public interface Entity
+public class Entity
 {
     /* Buff List - list of timed attribute changes. Used to remove buffs after a given time (I dunno how to do dat)
      * Current Attribute object
