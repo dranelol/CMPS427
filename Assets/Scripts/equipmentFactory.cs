@@ -610,19 +610,6 @@ public class equipmentFactory {
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     private void doaffixes(equipment randEquipment, int tier)
     {
         //one affix
