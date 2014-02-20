@@ -4,21 +4,13 @@ using System.Collections.Generic;
 
 public class Entity : MonoBehaviour
 {
-    public enum EquipmentSlots
-    {
-        HEAD,
-        TORSO,
-        LEFT_ARM,
-        RIGHT_ARM,
-        FEET
-    };
-
+  
     public float currentHP; // Currently unused.
     public Attributes currentAtt; // The entity's current total attributes
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
 
-    private Dictionary<EquipmentSlots, Attributes> equipmentStats = new Dictionary<EquipmentSlots, Attributes>();
+    private Dictionary<equipSlots.slots, Attributes> equipmentStats = new Dictionary<equipSlots.slots, Attributes>();
 
     /// <summary>
     /// Creates the entity with a given set of base attributes,
@@ -32,13 +24,13 @@ public class Entity : MonoBehaviour
 
     /// <summary>
     /// Add the attribute changes of an item to the entity. The item must correlate to one of the equipment slots,
-    /// HEAD, TORSO, LEFT_ARM, RIGHT_ARM, or FEET. Attribute changes are taken as an attributes object. Returns
+    /// Head, Chest, Legs, Feet, Main, Off. Attribute changes are taken as an attributes object. Returns
     /// false if the slot is already filled.
     /// </summary>
     /// <param name="slot">The equipment slot being filled.</param>
     /// <param name="itemAtt">The attributes of the item being equipped.</param>
     /// <returns></returns>
-    public bool addEquipment(EquipmentSlots slot, Attributes itemAtt)
+    public bool addEquipment(equipSlots.slots slot , Attributes itemAtt)
     {
         if (equipmentStats.ContainsKey(slot))
             return false;
@@ -56,7 +48,7 @@ public class Entity : MonoBehaviour
     /// </summary>
     /// <param name="slot"></param>
     /// <returns></returns>
-    public bool removeEquipment(EquipmentSlots slot)
+    public bool removeEquipment(equipSlots.slots slot)
     {
         if (equipmentStats.ContainsKey(slot))
         {
