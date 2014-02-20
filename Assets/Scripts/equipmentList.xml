@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+Let's talk about the structure!
+
+
+<type>
+
+Each specific equipment is a "type" For example, Iron Dagger is a different entry
+    than Steel Dagger.
+
+
+<name>Rusty Dagger</name>
+    
+The name is the actual displayed name of the equipment. Keep these unique
+    and don't put spaces before or after, please! Only one name per equipment!
+    
+    
+<slot>Main</slot>
+    
+The slot determines where the equipment gets equipped!
+    The slots, as of this 2/9/14 are Main, Off, Head, Chest, Legs, Feet.
+    You should only have one of these, unless you want to wear knifepants!
+    
+    
+<attribute value="2">Power</attribute>
+
+The attribute says the attribute that the equipment gives bonus (or penalty)
+    to. The value is the amount of that bonus! You can have more than one of
+    these!
+
+-->
+
+<types>
+  <type>
+    <name>Rusty Dagger</name>
+    <slot>Main</slot>
+    <attribute value="1">MinDamage</attribute>
+    <attribute value="4">MaxDamage</attribute>
+  </type>
+  <type>
+    <name>Tattered Chainmail</name>
+    <slot>Body</slot>
+    <attribute value="10">Health</attribute>
+    <attribute value="4">Defense</attribute>
+  </type>
+  
+</types>

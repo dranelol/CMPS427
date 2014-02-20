@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--This is the list of pre/suffixes!-->
+
+<!--
+
+Let's talk about the structure!
+
+
+<affix category="prefix">
+
+Affix is the general form. The category says whether this one is a prefix
+    or a suffix
+
+
+<name>Keen</name>
+    
+The name is the actual displayed name of the prefix or suffix. Keep these unique
+    and don't put spaces before or after, please! Only one name per affix!
+    
+    
+<slot>Main</slot>
+    
+The slot determines what type of equipment the affix can be attached to!
+    The slots, as of this 2/9/14 are Main, Off, Head, Chest, Legs, Feet.
+    You can, and should have more than one of these!
+    
+    
+<attribute value="2">Power</attribute>
+
+The attribute says the attribute that the equipment gives bonus (or penalty)
+    to. The value is the amount of that bonus! You can have more than one of
+    these, too!
+
+-->
+
+<affixes>
+  <affix category="prefix">
+    <name>Keen</name>
+    <slot>Main</slot>
+    <attribute value="2">Power</attribute>
+  </affix>
+  <affix category="suffix">
+    <name>of the Bear</name>
+    <slot>Main</slot>
+    <slot>Off</slot>
+    <slot>Chest</slot>
+    <slot>Feet</slot>
+    <attribute value="5">Health</attribute>
+  </affix>
+  <affix category="suffix">
+    <name>of the Squid</name>
+    <slot>Head</slot>
+    <slot>Chest</slot>
+    <slot>Feet</slot>
+    <slot>Legs</slot>
+    <attribute value="5">Resource</attribute>
+    <attribute value="5">MoveSpeed</attribute>
+  </affix>
+</affixes>
