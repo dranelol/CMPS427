@@ -94,6 +94,7 @@ public class PlayerController : MonoBehaviour {
         // HADOUKEN
         if (Input.GetKeyDown(KeyCode.B))
         {
+            /*
             if (hadouken == false)
             {
                 agent.radius = 10f;
@@ -105,7 +106,50 @@ public class PlayerController : MonoBehaviour {
                 agent.radius = 0.5f;
                 hadouken = false;
             }
+             * */
+            List<GameObject> attacked = Attack.OnAttack(transform, 360f, 5f);
+
+            foreach (GameObject enemy in attacked)
+            {
+                Vector3 relativeVector = (enemy.transform.position - transform.position);
+                float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
+                
+                 
+                enemy.AddComponent<Rigidbody>();
+                float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
+                enemy.GetComponent<MovementFSM>().Stop(0.2f);
+                enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
+                Destroy(enemy.rigidbody, 0.2f);
+                //enemy.rigidbody.AddForceAtPosition(50f, 
+                //enemy.rigidbody.AddExplosionForce(50f, transform.position, 5f, 3f);
+                //Destroy(enemy.rigidbody);
+            }
+            
         }
+
+        // REVERSE HADOUKEN
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            List<GameObject> attacked = Attack.OnAttack(transform, 360f, 5f);
+
+            foreach (GameObject enemy in attacked)
+            {
+                Vector3 relativeVector = (enemy.transform.position - transform.position);
+                float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
+
+
+                enemy.AddComponent<Rigidbody>();
+                float force = (-1) * (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
+                enemy.GetComponent<MovementFSM>().Stop(0.2f);
+                enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
+                Destroy(enemy.rigidbody, 0.2f);
+                //enemy.rigidbody.AddForceAtPosition(50f, 
+                //enemy.rigidbody.AddExplosionForce(50f, transform.position, 5f, 3f);
+                //Destroy(enemy.rigidbody);
+            }
+
+        }
+        
         if (Input.GetKeyDown(KeyCode.A))
         {
             Debug.Log("lelele");
@@ -129,6 +173,24 @@ public class PlayerController : MonoBehaviour {
                 //enemy.renderer.material.SetColor("_Color", new Color(enemyColor.r - (byte)1, enemyColor.g - (byte)1, enemyColor.b - (byte)1, enemyColor.a));
                 //enemy.transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
                 enemy.renderer.material.SetColor("_Color", Color.red);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Debug.Log("lelele");
+            List<GameObject> attacked = Attack.OnAttack(transform, 45f, 5f);
+            foreach (GameObject enemy in attacked)
+            {
+                Vector3 relativeVector = (enemy.transform.position - transform.position);
+                float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
+
+
+                enemy.AddComponent<Rigidbody>();
+                float force = (normalizedMagnitude / (Mathf.Pow(0.35f, 2)));
+                enemy.GetComponent<MovementFSM>().Stop(0.17f);
+                enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
+                Destroy(enemy.rigidbody, 0.17f);
             }
         }
 
