@@ -8,7 +8,7 @@ public class equipmentFactory : MonoBehaviour {
 
     private ArrayList basesList = new ArrayList();
     private ArrayList affixeslist = new ArrayList();
-
+    public bool testflag = true;
 
     public enum slots
     {
@@ -32,51 +32,63 @@ public class equipmentFactory : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (Input.GetKeyDown(KeyCode.Y))
+
+
+        if (testflag == true)
         {
-            loadtest();
-        }
-        if (Input.GetKeyDown(KeyCode.U))
-        {
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                loadtest();
+            }
+            if (Input.GetKeyDown(KeyCode.U))
+            {
 
-            equipment tempo =  randomEquipment();
-            string thingy = "name: " + tempo.equipmentName + " slot: " + tempo.validSlot.ToString() + " attributes: ";
-            thingy = thingy + "health: " + tempo.equipmentAttributes.Health.ToString() + " ";
-            thingy = thingy + "power: " + tempo.equipmentAttributes.Power.ToString() + " ";
-            thingy = thingy + "defense: " + tempo.equipmentAttributes.Defense.ToString() + " ";
-            thingy = thingy + "resource: " + tempo.equipmentAttributes.Resource.ToString() + " ";
-            thingy = thingy + "attackspeed: " + tempo.equipmentAttributes.AttackSpeed.ToString() + " ";
-            thingy = thingy + "movespeed: " + tempo.equipmentAttributes.MovementSpeed.ToString() + " ";
+                equipment tempo = randomEquipment();
+                string thingy = "name: " + tempo.equipmentName + " slot: " + tempo.validSlot.ToString() + " attributes: ";
+                thingy = thingy + "health: " + tempo.equipmentAttributes.Health.ToString() + " ";
+                thingy = thingy + "power: " + tempo.equipmentAttributes.Power.ToString() + " ";
+                thingy = thingy + "defense: " + tempo.equipmentAttributes.Defense.ToString() + " ";
+                thingy = thingy + "resource: " + tempo.equipmentAttributes.Resource.ToString() + " ";
+                thingy = thingy + "attackspeed: " + tempo.equipmentAttributes.AttackSpeed.ToString() + " ";
+                thingy = thingy + "movespeed: " + tempo.equipmentAttributes.MovementSpeed.ToString() + " ";
+                thingy = thingy + "mindamage: " + tempo.equipmentAttributes.MinDamage.ToString() + " ";
+                thingy = thingy + "maxdamage: " + tempo.equipmentAttributes.MaxDamage.ToString() + " ";
 
-            Debug.Log(thingy);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
+                Debug.Log(thingy);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
 
-            equipment tempo = randomEquipment(1);
-            string thingy = "name: " + tempo.equipmentName + " slot: " + tempo.validSlot.ToString() + " attributes: ";
-            thingy = thingy + "health: " + tempo.equipmentAttributes.Health.ToString() + " ";
-            thingy = thingy + "power: " + tempo.equipmentAttributes.Power.ToString() + " ";
-            thingy = thingy + "defense: " + tempo.equipmentAttributes.Defense.ToString() + " ";
-            thingy = thingy + "resource: " + tempo.equipmentAttributes.Resource.ToString() + " ";
-            thingy = thingy + "attackspeed: " + tempo.equipmentAttributes.AttackSpeed.ToString() + " ";
-            thingy = thingy + "movespeed: " + tempo.equipmentAttributes.MovementSpeed.ToString() + " ";
+                equipment tempo = randomEquipment(1);
+                string thingy = "name: " + tempo.equipmentName + " slot: " + tempo.validSlot.ToString() + " attributes: ";
+                thingy = thingy + "health: " + tempo.equipmentAttributes.Health.ToString() + " ";
+                thingy = thingy + "power: " + tempo.equipmentAttributes.Power.ToString() + " ";
+                thingy = thingy + "defense: " + tempo.equipmentAttributes.Defense.ToString() + " ";
+                thingy = thingy + "resource: " + tempo.equipmentAttributes.Resource.ToString() + " ";
+                thingy = thingy + "attackspeed: " + tempo.equipmentAttributes.AttackSpeed.ToString() + " ";
+                thingy = thingy + "movespeed: " + tempo.equipmentAttributes.MovementSpeed.ToString() + " ";
+                thingy = thingy + "mindamage: " + tempo.equipmentAttributes.MinDamage.ToString() + " ";
+                thingy = thingy + "maxdamage: " + tempo.equipmentAttributes.MaxDamage.ToString() + " ";
 
-            Debug.Log(thingy);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
+                Debug.Log(thingy);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
 
-            equipment tempo = randomEquipment(2);
-            string thingy = "name: " + tempo.equipmentName + " slot: " + tempo.validSlot.ToString() + " attributes: ";
-            thingy = thingy + "health: " + tempo.equipmentAttributes.Health.ToString() + " ";
-            thingy = thingy + "power: " + tempo.equipmentAttributes.Power.ToString() + " ";
-            thingy = thingy + "defense: " + tempo.equipmentAttributes.Defense.ToString() + " ";
-            thingy = thingy + "resource: " + tempo.equipmentAttributes.Resource.ToString() + " ";
-            thingy = thingy + "attackspeed: " + tempo.equipmentAttributes.AttackSpeed.ToString() + " ";
-            thingy = thingy + "movespeed: " + tempo.equipmentAttributes.MovementSpeed.ToString() + " ";
+                equipment tempo = randomEquipment(2);
+                string thingy = "name: " + tempo.equipmentName + " slot: " + tempo.validSlot.ToString() + " attributes: ";
+                thingy = thingy + "health: " + tempo.equipmentAttributes.Health.ToString() + " ";
+                thingy = thingy + "power: " + tempo.equipmentAttributes.Power.ToString() + " ";
+                thingy = thingy + "defense: " + tempo.equipmentAttributes.Defense.ToString() + " ";
+                thingy = thingy + "resource: " + tempo.equipmentAttributes.Resource.ToString() + " ";
+                thingy = thingy + "attackspeed: " + tempo.equipmentAttributes.AttackSpeed.ToString() + " ";
+                thingy = thingy + "movespeed: " + tempo.equipmentAttributes.MovementSpeed.ToString() + " ";
+                thingy = thingy + "mindamage: " + tempo.equipmentAttributes.MinDamage.ToString() + " ";
+                thingy = thingy + "maxdamage: " + tempo.equipmentAttributes.MaxDamage.ToString() + " ";
 
-            Debug.Log(thingy);
+                Debug.Log(thingy);
+            }
+
         }
 	}
 
@@ -94,6 +106,8 @@ public class equipmentFactory : MonoBehaviour {
             thingy = thingy + "resource: " + baseitem.equipmentAttributes.Resource.ToString() + " ";
             thingy = thingy + "attackspeed: " + baseitem.equipmentAttributes.AttackSpeed.ToString() + " ";
             thingy = thingy + "movespeed: " + baseitem.equipmentAttributes.MovementSpeed.ToString() + " ";
+            thingy = thingy + "mindamage: " + baseitem.equipmentAttributes.MinDamage.ToString() + " ";
+            thingy = thingy + "maxdamage: " + baseitem.equipmentAttributes.MaxDamage.ToString() + " ";
             
             Debug.Log(thingy);
         }
@@ -106,6 +120,8 @@ public class equipmentFactory : MonoBehaviour {
             thingy = thingy + "resource: " + baseitem.affixAttributes.Resource.ToString() + " ";
             thingy = thingy + "attackspeed: " + baseitem.affixAttributes.AttackSpeed.ToString() + " ";
             thingy = thingy + "movespeed: " + baseitem.affixAttributes.MovementSpeed.ToString() + " ";
+            thingy = thingy + "mindamage: " + baseitem.affixAttributes.MinDamage.ToString() + " ";
+            thingy = thingy + "maxdamage: " + baseitem.affixAttributes.MaxDamage.ToString() + " ";
             
 
                 Debug.Log(thingy);
@@ -186,6 +202,14 @@ public class equipmentFactory : MonoBehaviour {
                 else if (att.InnerText == "AttackSpeed")
                 {
                     newE.equipmentAttributes.AttackSpeed += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else if (att.InnerText == "MinDamage")
+                {
+                    newE.equipmentAttributes.MinDamage += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else if (att.InnerText == "MaxDamage")
+                {
+                    newE.equipmentAttributes.MaxDamage += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
                 }
                 else
                 {
@@ -284,6 +308,14 @@ public class equipmentFactory : MonoBehaviour {
                 else if (att.InnerText == "AttackSpeed")
                 {
                     newA.affixAttributes.AttackSpeed += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else if (att.InnerText == "MinDamage")
+                {
+                    newA.affixAttributes.MinDamage += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
+                }
+                else if (att.InnerText == "MaxDamage")
+                {
+                    newA.affixAttributes.MaxDamage += float.Parse(att.Attributes.GetNamedItem("value").InnerText);
                 }
                 else
                 {
