@@ -426,6 +426,11 @@ public class equipmentFactory : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// function to generate a random equipment
+    /// </summary>
+    /// <param name="tier">the tier of the desired equipment</param>
+    /// <returns>a random equipment of the desired tier</returns>
     public equipment randomEquipment(int tier)
     {
 
