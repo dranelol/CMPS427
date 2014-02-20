@@ -26,6 +26,7 @@ public class equipmentFactory {
 
     private ArrayList basesList = new ArrayList();
     private ArrayList affixeslist = new ArrayList();
+    private ArrayList uniqueslist = new ArrayList();
     public bool testflag = true;
 
     
@@ -195,6 +196,25 @@ public class equipmentFactory {
             newE.setslot(tempnode.InnerText);
             Debug.Log(tempnode.InnerText);
 
+            //min and max lvl
+            tempnode = item.SelectSingleNode("minlvl");
+            newE.minlvl = int.Parse(tempnode.InnerText);
+            tempnode = item.SelectSingleNode("maxlvl");
+            newE.maxlvl = int.Parse(tempnode.InnerText);
+
+            //tier and flavor text
+            if (item.SelectSingleNode("tier") != null)
+            {
+                tempnode = item.SelectSingleNode("tier");
+                newE.tier = int.Parse(tempnode.InnerText);
+            }
+            if (item.SelectSingleNode("flavor") != null)
+            {
+                tempnode = item.SelectSingleNode("flavor");
+                newE.flavorText = tempnode.InnerText;
+            }
+
+
             //this is for each attribute for each item
             XmlNodeList atts = item.SelectNodes("attribute");
             foreach(XmlNode att in atts)
@@ -241,9 +261,14 @@ public class equipmentFactory {
                 
                 
             }
-
-            basesList.Add(newE);
-            
+            if (newE.tier == 0)
+            {
+                basesList.Add(newE);
+            }
+            else if (newE.tier == 3)
+            {
+                uniqueslist.Add(newE);
+            }
         }
 
     }
@@ -376,104 +401,121 @@ public class equipmentFactory {
     {
 
         equipment randEquipment = new equipment();
+        equipment tempEquipment;
 
-        int randint = UnityEngine.Random.Range(0, basesList.Count);
+        //roll the dice to see if we get affixes
+        int randint = UnityEngine.Random.Range(0, 100);
 
-        equipment tempEquipment = (equipment)basesList[randint];
-
+        if (randint >= 97)
+        {
+            int lootroll = UnityEngine.Random.Range(0, uniqueslist.Count);
+            tempEquipment = (equipment)uniqueslist[lootroll];
+        }
+        else
+        {
+            int lootroll = UnityEngine.Random.Range(0, basesList.Count);
+            tempEquipment = (equipment)basesList[randint];
+        }
         randEquipment.equipmentName = tempEquipment.equipmentName;
         randEquipment.equipmentType = tempEquipment.equipmentType;
         randEquipment.validSlot = tempEquipment.validSlot;
-        randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
+        randEquipment.maxlvl = tempEquipment.maxlvl;
+        randEquipment.minlvl = tempEquipment.minlvl;
+        randEquipment.flavorText = tempEquipment.flavorText;
+        randEquipment.tier = tempEquipment.tier;
 
+
+        randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
         
 
-        //roll the dice to see if we get affixes
-        randint = UnityEngine.Random.Range(0, 100);
 
-        //one affix
-        if (randint > 75 && randint < 95)
-        {
-            int temp = UnityEngine.Random.Range(0, affixeslist.Count);
-            affix tempaffix = (affix)affixeslist[temp];
+            //roll the dice to see if we get affixes
+            randint = UnityEngine.Random.Range(0, 100);
 
-            //get a random affix that can fit in our slot
-            while(tempaffix.affixSlots.Contains(randEquipment.validSlot) != true)
+            //one affix
+            if (randint > 60 && randint < 85)
             {
-                if (temp < affixeslist.Count-1)
+                int temp = UnityEngine.Random.Range(0, affixeslist.Count);
+                affix tempaffix = (affix)affixeslist[temp];
+
+                //get a random affix that can fit in our slot
+                while (tempaffix.affixSlots.Contains(randEquipment.validSlot) != true)
                 {
-                    temp += 1;
+                    if (temp < affixeslist.Count - 1)
+                    {
+                        temp += 1;
+                    }
+                    else
+                    {
+                        temp = 0;
+                    }
+                    tempaffix = (affix)affixeslist[temp];
                 }
-                else
-                {
-                    temp = 0;
-                }
-                tempaffix = (affix)affixeslist[temp];
-            }
 
-            //make the name correctly
-            if (tempaffix.affixType == "suffix")
-            {
-                randEquipment.equipmentName = randEquipment.equipmentName + " " + tempaffix.affixName;
+                //make the name correctly
+                if (tempaffix.affixType == "suffix")
+                {
+                    randEquipment.equipmentName = randEquipment.equipmentName + " " + tempaffix.affixName;
+                }
+                else if (tempaffix.affixType == "prefix")
+                {
+                    randEquipment.equipmentName = tempaffix.affixName + " " + randEquipment.equipmentName;
+                }
+
+                randEquipment.tier = 1;
+
+                //add its attributes to the equipment
+                randEquipment.equipmentAttributes.Add(tempaffix.affixAttributes);
+
             }
-            else if (tempaffix.affixType == "prefix")
+            else if (randint >= 85)
             {
+                //two affixes
+                //rollin dem bones
+                int temp = UnityEngine.Random.Range(0, affixeslist.Count);
+                affix tempaffix = (affix)affixeslist[temp];
+
+                //go until we get a prefix that can fit
+                while (tempaffix.affixSlots.Contains(randEquipment.validSlot) != true || tempaffix.affixType != "prefix")
+                {
+                    if (temp < affixeslist.Count - 1)
+                    {
+                        temp += 1;
+                    }
+                    else
+                    {
+                        temp = 0;
+                    }
+                    tempaffix = (affix)affixeslist[temp];
+                }
+                //add it to the equipment
                 randEquipment.equipmentName = tempaffix.affixName + " " + randEquipment.equipmentName;
-            }
+                randEquipment.equipmentAttributes.Add(tempaffix.affixAttributes);
 
-            randEquipment.tier = 1;
-
-            //add its attributes to the equipment
-            randEquipment.equipmentAttributes.Add(tempaffix.affixAttributes);
-
-        }
-        else if (randint >= 95)
-        {
-            //two affixes
-            //rollin dem bones
-            int temp = UnityEngine.Random.Range(0, affixeslist.Count);
-            affix tempaffix = (affix)affixeslist[temp];
-
-            //go until we get a prefix that can fit
-            while (tempaffix.affixSlots.Contains(randEquipment.validSlot) != true || tempaffix.affixType != "prefix")
-            {
-                if (temp < affixeslist.Count-1)
-                {
-                    temp += 1;
-                }
-                else
-                {
-                    temp = 0;
-                }
+                //roll for a suffix
+                temp = UnityEngine.Random.Range(0, affixeslist.Count);
                 tempaffix = (affix)affixeslist[temp];
-            }
-            //add it to the equipment
-            randEquipment.equipmentName = tempaffix.affixName + " " + randEquipment.equipmentName;
-            randEquipment.equipmentAttributes.Add(tempaffix.affixAttributes);
 
-            //roll for a suffix
-            temp = UnityEngine.Random.Range(0, affixeslist.Count);
-            tempaffix = (affix)affixeslist[temp];
-
-            //go until we get one that can fit
-            while (tempaffix.affixSlots.Contains(randEquipment.validSlot) != true || tempaffix.affixType != "suffix")
-            {
-                if (temp < affixeslist.Count-1)
+                //go until we get one that can fit
+                while (tempaffix.affixSlots.Contains(randEquipment.validSlot) != true || tempaffix.affixType != "suffix")
                 {
-                    temp += 1;
+                    if (temp < affixeslist.Count - 1)
+                    {
+                        temp += 1;
+                    }
+                    else
+                    {
+                        temp = 0;
+                    }
+                    tempaffix = (affix)affixeslist[temp];
                 }
-                else
-                {
-                    temp = 0;
-                }
-                tempaffix = (affix)affixeslist[temp];
-            }
-            //add it on
-            randEquipment.equipmentName = randEquipment.equipmentName + " " + tempaffix.affixName;
-            randEquipment.equipmentAttributes.Add(tempaffix.affixAttributes);
+                //add it on
+                randEquipment.equipmentName = randEquipment.equipmentName + " " + tempaffix.affixName;
+                randEquipment.equipmentAttributes.Add(tempaffix.affixAttributes);
 
-            randEquipment.tier = 2;
-        }
+                randEquipment.tier = 2;
+            }
+        
 
         return randEquipment;
 
@@ -489,14 +531,29 @@ public class equipmentFactory {
     {
 
         equipment randEquipment = new equipment();
+        equipment tempEquipment;
+        
 
-        int randint = UnityEngine.Random.Range(0, basesList.Count);
-
-        equipment tempEquipment = (equipment)basesList[randint];
+        //grab a random equipment out of the list appropriate for the tier
+        if (tier == 3)
+        {
+            int randint = UnityEngine.Random.Range(0, uniqueslist.Count);
+            tempEquipment = (equipment)uniqueslist[randint];
+        }
+        else
+        {
+            int randint = UnityEngine.Random.Range(0, basesList.Count);
+            tempEquipment = (equipment)basesList[randint];
+        }
 
         randEquipment.equipmentName = tempEquipment.equipmentName;
         randEquipment.equipmentType = tempEquipment.equipmentType;
         randEquipment.validSlot = tempEquipment.validSlot;
+        randEquipment.maxlvl = tempEquipment.maxlvl;
+        randEquipment.minlvl = tempEquipment.minlvl;
+        randEquipment.flavorText = tempEquipment.flavorText;
+        randEquipment.tier = tempEquipment.tier;
+
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
 
 

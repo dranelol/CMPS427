@@ -5,7 +5,7 @@ public class equipSlots
 {
 
 
-    public static enum slots
+    public enum slots
     {
         Head,
         Chest,

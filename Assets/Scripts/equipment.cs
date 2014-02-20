@@ -5,10 +5,15 @@ using System.Collections.Generic;
 public class equipment{
 
     public Attributes equipmentAttributes;
+    
     public string equipmentName;
     public string equipmentType;
+    public string flavorText;
+
     public equipSlots.slots validSlot;
     public int tier;
+    public int minlvl;
+    public int maxlvl;
 
 
 
@@ -19,6 +24,7 @@ public class equipment{
         equipmentAttributes = new Attributes();
         equipmentName = "default_equipment";
         equipmentType = "default_type";
+        flavorText = "";
         validSlot = equipSlots.slots.Head;
         tier = 0;
         slotList.Add("Head", equipSlots.slots.Head);
