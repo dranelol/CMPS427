@@ -4,12 +4,12 @@ using System.Collections;
 public class AggroRadius : MonoBehaviour 
 {
     private const float defaultAggroRadius = 5;
-    private AIController EnemyAI;
+    private AIGroupController EnemyGroup;
     private SphereCollider aggroTrigger;
 
 	void Awake() 
     {
-        EnemyAI = transform.parent.gameObject.GetComponent<AIController>();
+        EnemyGroup = transform.parent.parent.GetComponent<AIGroupController>();
         aggroTrigger = GetComponent<SphereCollider>();
 	}
 
@@ -22,8 +22,8 @@ public class AggroRadius : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            // Do level calculations
-            EnemyAI.Threat(other.gameObject);
+            EnemyGroup.Threat(other.gameObject, 1);
+            aggroTrigger.enabled = false;
         }
     }
 
