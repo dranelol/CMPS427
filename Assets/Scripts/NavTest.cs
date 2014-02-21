@@ -10,7 +10,7 @@ public class NavTest : MonoBehaviour
         {
             animation.animation.Play("idle", PlayMode.StopAll);
         }
-
+	}
     public MovementFSM MoveFSM;
     public NavMeshAgent agent;
     public CharacterController controller;
@@ -47,16 +47,10 @@ public class NavTest : MonoBehaviour
 			Vector3 tempRotation = transform.rotation.eulerAngles ;
 			tempRotation.y = Mathf.LerpAngle(transform.rotation.eulerAngles.y,  Quaternion.LookRotation(target).eulerAngles.y,Time.deltaTime * RotationSpeed);
 			transform.rotation = Quaternion.Euler(tempRotation);
-		
+		}
 
 
-        }
-<<<<<<< HEAD
-        
-=======
-
-
->>>>>>> rotation controll added for player
+  
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 NavTarget;
@@ -78,7 +72,7 @@ public class NavTest : MonoBehaviour
         {
             Debug.Log("lelele");
             List<GameObject> attacked = Attack.OnAttack(transform, 45f, 5f);
-            foreach (GameObject enemy in attacked)
+            foreach(GameObject enemy in attacked)
             {
                 Debug.Log(enemy.GetInstanceID().ToString());
             }
