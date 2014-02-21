@@ -1,4 +1,8 @@
 ﻿using UnityEngine;
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/master
 //using System;
 using System.Collections;
 //using System.Math;

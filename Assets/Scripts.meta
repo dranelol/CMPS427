@@ -1,9 +1,13 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<< HEAD
 guid: f9a6d69841a19834ea286e96c5dd5260
 =======
 guid: 80529ef23a535414292a60cf32726205
 >>>>>>> Cursor and Folders
+=======
+guid: 80529ef23a535414292a60cf32726205
+>>>>>>> upstream/master
 folderAsset: yes
 DefaultImporter:
   userData: 
