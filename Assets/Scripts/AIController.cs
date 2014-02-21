@@ -107,7 +107,7 @@ public class AIController : StateMachine
     /// <param name="magnitude">The amount of threat to apply.</param>
     public void Threat(GameObject source, float magnitude = 0)
     {
-        if ((AIStates)CurrentState != AIStates.dead)
+        if ((AIStates)CurrentState != AIStates.dead && (AIStates)CurrentState != AIStates.reset)
         {
             if (source.tag == "Player")
             {
@@ -229,14 +229,14 @@ public class AIController : StateMachine
 
     IEnumerator idle_EnterState()
     {
-        Aggro.AggroTrigger.enabled = true;
-        yield return null;
+        Aggro.Trigger.enabled = true;
+        yield break;
     }
 
     IEnumerator idle_ExitState()
     {
-        Aggro.AggroTrigger.enabled = false;
-        yield return null;
+        Aggro.Trigger.enabled = false;
+        yield break;
     }
 
     #endregion
@@ -252,7 +252,7 @@ public class AIController : StateMachine
 
         else
         {
-            while (!TargetInRange())
+            if (!TargetInRange())
             {
                 Group.RemoveTarget(target);
             }
@@ -274,7 +274,7 @@ public class AIController : StateMachine
         // Make invincible
         PursuitFSM.StopPursuit();
         ThreatTable.Clear();
-        yield return null;
+        yield break;
     }
 
     #endregion 
@@ -284,7 +284,7 @@ public class AIController : StateMachine
     IEnumerator reset_EnterState()
     {
         MoveFSM.SetPath(localHomePosition);
-        yield return null;
+        yield break;
     }
 
     void reset_Update()

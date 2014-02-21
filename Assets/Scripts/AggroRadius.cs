@@ -3,32 +3,32 @@ using System.Collections;
 
 public class AggroRadius : MonoBehaviour 
 {
-    private const float defaultAggroRadius = 5;
-    private AIGroupController EnemyGroup;
-    private SphereCollider aggroTrigger;
+    private const float aggroRadius = 5;
+    private AIGroupController group;
+    private SphereCollider trigger;
 
 	void Awake() 
     {
-        EnemyGroup = transform.parent.parent.GetComponent<AIGroupController>();
-        aggroTrigger = GetComponent<SphereCollider>();
+        group = transform.parent.parent.GetComponent<AIGroupController>();
+        trigger = GetComponent<SphereCollider>();
 	}
 
     void Start()
     {
-        aggroTrigger.radius = defaultAggroRadius;
+        trigger.radius = aggroRadius;
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
-            EnemyGroup.Threat(other.gameObject, 1);
-            aggroTrigger.enabled = false;
+            group.Threat(other.gameObject, 1);
+            trigger.enabled = false;
         }
     }
 
-    public SphereCollider AggroTrigger
+    public SphereCollider Trigger
     {
-        get { return aggroTrigger; }
+        get { return trigger; }
     }
 }

@@ -4,7 +4,7 @@ using System;
 
 public class AIPursuit : MonoBehaviour 
 {
-    private const float maxDistanceFromTargetPositionToTarget = 4; // The distance before position recalculation
+    private const float stoppingDistance = 4; // The normal distance before position recalculation
 
     private enum PursuitStates
     {
@@ -24,7 +24,8 @@ public class AIPursuit : MonoBehaviour
 
     private GameObject currentTarget;
 
-    private float attackRange = 20; // The range the enemy must be within in order to attack
+    private float attackRange = 4; // The range the enemy must be within in order to attack
+    
 
     void Awake()
     {
@@ -32,13 +33,20 @@ public class AIPursuit : MonoBehaviour
 
         PursuitFSM.AddTransitionsFromAToB(PursuitStates.inactive, PursuitStates.seek);
 
-        PursuitFSM.AddTransitionsFromAToB(PursuitStates.conservative, PursuitStates.flee, PursuitStates.defensive, PursuitStates.seek);
+        PursuitStates[] listtest = new PursuitStates[3] { PursuitStates.defensive, PursuitStates.flee, PursuitStates.seek };
+
+        //PursuitFSM.AddTransitionsFromAToB(PursuitStates.conservative, PursuitStates.flee, PursuitStates.defensive, PursuitStates.seek);
+
+        PursuitFSM.AddTransitionsFromAToB(PursuitStates.conservative, listtest);
         PursuitFSM.AddTransitionsToAFromB(PursuitStates.conservative, PursuitStates.flee, PursuitStates.defensive, PursuitStates.seek, PursuitStates.aggressive);
  
         PursuitFSM.AddTransitionsFromAToB(PursuitStates.aggressive, PursuitStates.berserker, PursuitStates.cheap, PursuitStates.seek);
         PursuitFSM.AddTransitionsToAFromB(PursuitStates.aggressive, PursuitStates.berserker, PursuitStates.cheap, PursuitStates.seek, PursuitStates.conservative);
 
         PursuitFSM.AddTransitionsToAFromB(PursuitStates.inactive);
+
+        PursuitFSM.AddTransitionBehavior(PursuitStates.inactive, null, inactive_OnStay, null);
+        PursuitFSM.AddTransitionBehavior(PursuitStates.seek, seek_EnterState, seek_OnStay);
 
         PursuitFSM.Start(PursuitStates.inactive);
 
@@ -48,8 +56,8 @@ public class AIPursuit : MonoBehaviour
 
     public void Pursue(GameObject target)
     {
-        PursuitFSM.Transition(PursuitFSM.Current_State);
         currentTarget = target; 
+        PursuitFSM.Transition(PursuitFSM.Current_State);
     }
 
     public void StopPursuit()
@@ -58,6 +66,15 @@ public class AIPursuit : MonoBehaviour
     }
 
     #region transition functions
+
+    #region inactive functions
+
+    private void inactive_OnStay()
+    {
+        PursuitFSM.Transition(PursuitStates.seek);
+    }
+
+    #endregion
 
     #region seek functions
 
@@ -68,11 +85,58 @@ public class AIPursuit : MonoBehaviour
 
     private void seek_OnStay()
     {
-        if (Vector3.Distance(transform.position, NavAgent.destination) < maxDistanceFromTargetPositionToTarget)
+        /*
+        if (Vector3.Distance(transform.position, currentTarget.transform.position) > attackRange)
         {
-            if (Vector3.Distance(transform.position, currentTarget.transform.position) > 6)
+            if (!NavAgent.hasPath || Vector3.Distance(transform.position, NavAgent.destination) < maxDistanceFromTargetPositionToTarget)
             {
+                //NavAgent.avoidancePriority = 49;
                 MoveFSM.SetPath(currentTarget.transform.position);
+            }
+        }
+
+        else
+        {
+            
+            Vector3 directionToTarget = currentTarget.transform.position - transform.position;
+            RaycastHit hit;
+            Physics.Raycast(transform.position, directionToTarget, out hit, 1 << LayerMask.NameToLayer("Player"));
+
+            if (hit.transform.tag == "Player")
+            {
+                Debug.Log("I see player");
+                // set to a higher priority, we want lower priority things to path around
+                //NavAgent.avoidancePriority = 51;
+
+                MoveFSM.Stop();
+            }
+
+            else
+            {
+                Debug.Log("I wanna get up in dat");
+                //NavAgent.avoidancePriority = 50;
+
+                if (!NavAgent.hasPath || Vector3.Distance(transform.position, NavAgent.destination) < minDistanceFromTargetPositionToTarget)
+                {
+                    MoveFSM.SetPath(currentTarget.transform.position);
+                }
+            }
+        }*/
+
+        if (Vector3.Distance(transform.position, currentTarget.transform.position) > attackRange)
+        {
+            MoveFSM.SetPath(currentTarget.transform.position);
+        }
+
+        else
+        {
+            Vector3 directionToTarget = currentTarget.transform.position - transform.position;
+            RaycastHit hit;
+            Physics.Raycast(transform.position, directionToTarget, out hit, 1 << LayerMask.NameToLayer("Player"));
+
+            if (hit.transform.tag == "Player")
+            {
+                MoveFSM.Stop();
             }
         }
     }
