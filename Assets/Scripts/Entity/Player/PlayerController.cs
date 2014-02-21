@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-<<<<<<< HEAD
-=======
 using System.Collections.Generic;
->>>>>>> upstream/master
 
 public class PlayerController : MonoBehaviour {
     // Range at which the player stops moving and begins attacking. BAM
@@ -12,11 +9,7 @@ public class PlayerController : MonoBehaviour {
 	// Need to keep track of enemy if we click to attack it.
 	private Vector3 targetPosition;
 
-<<<<<<< HEAD
-	// Use this for initialization
-	void Start () {
-		targetPosition = Vector3.zero;
-=======
+
     public NavMeshAgent agent;
 
     private bool hadouken = false;
@@ -27,14 +20,11 @@ public class PlayerController : MonoBehaviour {
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         
->>>>>>> upstream/master
 	}
 	
 	// Update is called once per frame
 	void Update () {
-<<<<<<< HEAD
-        // If we have a target...
-=======
+
         Debug.DrawRay(transform.position, transform.forward);
         Debug.DrawRay(transform.position, Rotations.RotateAboutY(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f), -22.5f));
         Debug.DrawRay(transform.position, Rotations.RotateAboutY(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f), 22.5f));
@@ -59,7 +49,6 @@ public class PlayerController : MonoBehaviour {
         }
         // If we have a target...
 
->>>>>>> upstream/master
         if (targetPosition != Vector3.zero)
         {
             // If we're in attack range...
@@ -94,14 +83,7 @@ public class PlayerController : MonoBehaviour {
 					targetPosition = target.collider.gameObject.transform.position;
 				else
 				{
-<<<<<<< HEAD
-                    // Otherwise, move towards the point of collision.
-					targetPosition = Vector3.zero;
-					GetComponent<MovementFSM>().SetPath(target.point);
-				}
-			}
-        }
-=======
+
                     
                     // Otherwise, move towards the point of collision.
 					targetPosition = Vector3.zero;
@@ -214,7 +196,5 @@ public class PlayerController : MonoBehaviour {
                 Destroy(enemy.rigidbody, 0.17f);
             }
         }
-
->>>>>>> upstream/master
 	}
 }
