@@ -10,7 +10,7 @@ public class Entity : MonoBehaviour
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
 
-    private Dictionary<equipSlots.slots, Attributes> equipmentStats = new Dictionary<equipSlots.slots, Attributes>();
+    private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
 
     /// <summary>
     /// Creates the entity with a given set of base attributes,
@@ -32,15 +32,15 @@ public class Entity : MonoBehaviour
     /// <param name="slot">The equipment slot being filled.</param>
     /// <param name="itemAtt">The attributes of the item being equipped.</param>
     /// <returns></returns>
-    public bool addEquipment(equipSlots.slots slot , Attributes itemAtt)
+    public bool addEquipment(equipSlots.slots slot , equipment item)
     {
-        if (equipmentStats.ContainsKey(slot))
+        if (this.equippedEquip.ContainsKey(slot))
             return false;
         else
         {
-            equipmentStats.Add(slot, itemAtt);
-            currentAtt.Add(itemAtt);
-            equipAtt.Add(itemAtt);
+            this.equippedEquip.Add(slot, item);
+            currentAtt.Add(item.equipmentAttributes);
+            this.equipAtt.Add(item.equipmentAttributes);
             return true;
         }
     }
@@ -52,12 +52,12 @@ public class Entity : MonoBehaviour
     /// <returns></returns>
     public bool removeEquipment(equipSlots.slots slot)
     {
-        if (equipmentStats.ContainsKey(slot))
+        if (equippedEquip.ContainsKey(slot))
         {
-            Attributes removed = equipmentStats[slot];
-            equipmentStats.Remove(slot);
-            currentAtt.Subtract(removed);
-            equipAtt.Subtract(removed);
+            equipment removed = equippedEquip[slot];
+            equippedEquip.Remove(slot);
+            currentAtt.Subtract(removed.equipmentAttributes);
+            equipAtt.Subtract(removed.equipmentAttributes);
             return true;
         }
         else
