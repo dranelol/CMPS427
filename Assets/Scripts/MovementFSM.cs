@@ -22,13 +22,21 @@ public class MovementFSM : StateMachine
     {
         thisAgent = GetComponent<NavMeshAgent>();
 
+        SetType(typeof(MoveStates));
+
         List<Enum> idleTransitions = new List<Enum>();
         idleTransitions.Add(MoveStates.moving);
         idleTransitions.Add(MoveStates.moveLocked);
 
+
+
         List<Enum> movingTransitions = new List<Enum>();
         movingTransitions.Add(MoveStates.idle);
         movingTransitions.Add(MoveStates.moveLocked);
+        AddTranitions(MoveStates.moving, idleTransitions);
+
+
+
 
         List<Enum> moveLockedTransitions = new List<Enum>();
         moveLockedTransitions.Add(MoveStates.idle);
@@ -37,7 +45,10 @@ public class MovementFSM : StateMachine
         Transitions.Add(MoveStates.moving, movingTransitions);
         Transitions.Add(MoveStates.moveLocked, moveLockedTransitions);
 
+
+
         StartMachine(MoveStates.idle);
+
     }
 
     #region public functions

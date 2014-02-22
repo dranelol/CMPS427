@@ -11,6 +11,17 @@ public class affix
 
     public ArrayList affixSlots = new ArrayList();
 
+    /*
+    public enum slots
+    {
+        Head,
+        Chest,
+        Legs,
+        Feet,
+        Main,
+        Off
+    }
+     */
     private Dictionary<string, equipSlots.slots> slotList = new Dictionary<string, equipSlots.slots>();
 
 
@@ -25,7 +36,6 @@ public class affix
         slotList.Add("Chest", equipSlots.slots.Chest);
         slotList.Add("Main", equipSlots.slots.Main);
         slotList.Add("Off", equipSlots.slots.Off);
-
 
     }
 

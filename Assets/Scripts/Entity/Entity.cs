@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Entity : MonoBehaviour
-{
-  
+{ 
     public float currentHP; // Currently unused.
     public Attributes currentAtt; // The entity's current total attributes
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes

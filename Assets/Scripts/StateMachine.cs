@@ -12,6 +12,8 @@ public abstract class StateMachine : MonoBehaviour
     public bool Debugging = false;
     private string FSMName;
 
+    private Type stateType = null;
+
     private Enum currentState = null;
 
     public Enum CurrentState
@@ -32,7 +34,7 @@ public abstract class StateMachine : MonoBehaviour
         }
     }
 
-    public Dictionary<Enum, List<Enum>> Transitions = new Dictionary<Enum, List<Enum>>();
+    public Dictionary<Enum, HashSet<Enum>> Transitions = new Dictionary<Enum, HashSet<Enum>>();
     #endregion
 
     #region constructors
@@ -86,6 +88,12 @@ public abstract class StateMachine : MonoBehaviour
 
     #endregion
 
+    public void SetupMachine(Enum stateType)
+    {
+        stateType = typeSet;
+        Debug.Log("setting type: " + stateType.ToString());
+    }
+
     //spins up the FSM, called on start
     public void StartMachine(Enum startState)
     {
@@ -94,11 +102,6 @@ public abstract class StateMachine : MonoBehaviour
             currentState = startState;
         }
         ConfigureCurrentState();
-        OnStart();
-    }
-
-    protected virtual void OnStart()
-    {
         FSMName = this.GetType().Name;
     }
 
@@ -201,6 +204,60 @@ public abstract class StateMachine : MonoBehaviour
 
     }
 
+    protected void Setup(Type typeSet)
+    {
+
+        
+
+
+    }
+
+    private void AddAllTransitions(Enum toState)
+    {
+
+    }
+
+    private void AddTransitionsFrom(Enum fromState, HashSet<Enum> states)
+    {
+        if (fromState.GetType() != stateType)
+        {
+            throw new Exception("Attempting to add an invalid state type");
+        }
+
+        else
+        {
+            if (states.Count > 0)
+            {
+                // check for type of each transition
+                // if valid, add to transition set for that state
+                foreach (Enum toState in states)
+                {
+
+                    if (toState.GetType() != stateType)
+                    {
+                        throw new Exception("Attempting to add an invalid state transition to state");
+                    }
+
+                    AddTransition(toState, fromState);
+                }
+            }
+        }
+    }
+
+    private void AddTransitionsTo(Enum state, HashSet<Enum> transitions)
+    {
+
+    }
+
+    /// <summary>
+    /// adds transition "transition" to state "state"
+    /// </summary>
+    /// <param name="state"></param>
+    /// <param name="transition"></param>
+    private void AddTransition(Enum state, Enum transition)
+    {
+
+    }
     #region game loop methods
     void Update()
     {
