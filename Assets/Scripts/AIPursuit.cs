@@ -4,6 +4,7 @@ using System;
 
 public class AIPursuit : MonoBehaviour 
 {
+    /*
     private const float stoppingDistance = 4; // The normal distance before position recalculation
 
     private enum PursuitStates
@@ -121,7 +122,7 @@ public class AIPursuit : MonoBehaviour
                     MoveFSM.SetPath(currentTarget.transform.position);
                 }
             }
-        }*/
+        }
 
         if (Vector3.Distance(transform.position, currentTarget.transform.position) > attackRange)
         {
@@ -144,4 +145,5 @@ public class AIPursuit : MonoBehaviour
     #endregion
 
     #endregion
+*/
 }

@@ -85,7 +85,6 @@ public class AIController : StateMachine
         idleTransitions.Add(AIStates.pursuit);
 
         HashSet<Enum> pursuitTransitions = new HashSet<Enum>();
-        pursuitTransitions.Add(AIStates.flee);
         pursuitTransitions.Add(AIStates.dead);
         pursuitTransitions.Add(AIStates.reset);
 
@@ -99,7 +98,6 @@ public class AIController : StateMachine
 
         AddTransitionsTo(AIStates.idle, idleTransitions);
         AddTransitionsTo(AIStates.pursuit, pursuitTransitions);
-        AddTransitionsTo(AIStates.flee, fleeTransitions);
         AddTransitionsTo(AIStates.reset, resetTransitions);
 
         StartMachine(AIStates.idle);
@@ -216,24 +214,9 @@ public class AIController : StateMachine
         }
     }
 
-    public GameObject Target
-    {
-        get { return target; }
-    }
-
-    public bool Alive
-    {
-        get { return alive; }
-    }
-
     #endregion
 
     #region private functions
-
-    private bool Pursue()
-    {
-        return (Vector3.Distance(Group.transform.position, transform.position) < Group.ResetDistance);
-    }
 
     private void Fight()
     {
@@ -278,7 +261,7 @@ public class AIController : StateMachine
 
             if (target != null)
             {
-                PursuitFSM.Pursue(target);
+                Fight();//PursuitFSM.Pursue(target);
             }
 
             else
@@ -291,7 +274,7 @@ public class AIController : StateMachine
     IEnumerator pursuit_ExitState()
     {
         // Make invincible
-        PursuitFSM.StopPursuit();
+       // PursuitFSM.StopPursuit();
         ThreatTable.Clear();
         yield break;
     }
