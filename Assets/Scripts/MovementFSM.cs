@@ -34,6 +34,7 @@ public class MovementFSM : StateMachine
 
         HashSet<Enum> moveLockedTransitions = new HashSet<Enum>();
         moveLockedTransitions.Add(MoveStates.idle);
+        moveLockedTransitions.Add(MoveStates.moveLocked);
 
         AddTransitionsTo(MoveStates.idle, idleTransitions);
         AddTransitionsTo(MoveStates.moving, movingTransitions);

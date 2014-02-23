@@ -32,23 +32,13 @@ public abstract class StateMachine : MonoBehaviour
         }
     }
 
-    private Enum previousState;
+    private Enum previousState = null;
 
     public Enum PreviousState
     {
         get
         {
             return previousState;
-        }
-    }
-
-    private HashSet<Enum> statesList = null;
-
-    public HashSet<Enum> StatesList
-    {
-        get
-        {
-            return statesList;
         }
     }
 
@@ -115,15 +105,13 @@ public abstract class StateMachine : MonoBehaviour
     {
         Transitions = new Dictionary<Enum, HashSet<Enum>>();
         stateType = typeSet.GetType();
-        Debug.Log("setting type: " + stateType.ToString());
-
         var stateTypes = Enum.GetValues(stateType);
 
-        statesList = new HashSet<Enum>();
+        
 
         foreach(Enum state in stateTypes)
         {
-            statesList.Add(state);
+            Transitions.Add(state, new HashSet<Enum>());
         }
     }
 
@@ -167,16 +155,6 @@ public abstract class StateMachine : MonoBehaviour
             previousState = currentState;
             currentState = nextState;
 
-            if (previousState == currentState)
-            {
-                reflexiveTransition = true;
-            }
-
-            else
-            {
-                reflexiveTransition = false;
-            }
-
             ConfigureCurrentState();
 
         }
@@ -184,7 +162,12 @@ public abstract class StateMachine : MonoBehaviour
         // a transition from current to next doesnt exist
         else
         {
-            throw new NullReferenceException("no valid transition to next state: " + nextState.ToString());
+            throw new NullReferenceException("no valid transition from: " 
+                + currentState.ToString() 
+                + " to next state: " 
+                + nextState.ToString()
+                + " on object " + gameObject.name
+                );
         }
 
     }
@@ -204,10 +187,20 @@ public abstract class StateMachine : MonoBehaviour
     /// </summary>
     private void ConfigureCurrentState()
     {
-        if (reflexiveTransition == true)
+        Debug.Log("previous state: " + previousState);
+        Debug.Log("current state: " + currentState);
+
+        if(previousState.ToString() == currentState.ToString())
         {
-            
+            Debug.Log("asd");
+
+            if (Debugging == true)
+            {
+                Debug.Log("calling stay state for state: " + currentState.ToString() + " of fsm: " + FSMName);
+            }
+
             StartCoroutine(StayState());
+
         }
 
         else
@@ -289,7 +282,7 @@ public abstract class StateMachine : MonoBehaviour
     /// <param name="transition">State to tranistion to</param>
     protected void AddAllTransitionsTo(Enum transition)
     {
-        foreach (Enum state in statesList)
+        foreach (Enum state in Transitions.Keys)
         {
             AddTransition(state, transition);
         }
@@ -302,7 +295,7 @@ public abstract class StateMachine : MonoBehaviour
     /// <param name="state">State to transition from</param>
     protected void AddAllTransitionsFrom(Enum state)
     {
-        foreach (Enum transition in statesList)
+        foreach (Enum transition in Transitions.Keys)
         {
             AddTransition(state, transition);
         }

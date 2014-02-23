@@ -186,7 +186,7 @@ public class AIController : StateMachine
 
     public void Reset()
     {
-        if (CheckTransition(AIStates.reset))
+        if (IsValidTransition((AIStates)CurrentState, AIStates.reset) == true)
         {
             Transition(AIStates.reset);
         }
@@ -214,19 +214,6 @@ public class AIController : StateMachine
     private void Fight()
     {
         MoveFSM.SetPath(target.transform.position);
-    }
-
-    private bool CheckTransition(AIStates state)
-    {
-        try
-        {
-            return Transitions[CurrentState].Contains(state);
-        }
-
-        catch
-        {
-            return false;
-        }
     }
 
     #endregion
