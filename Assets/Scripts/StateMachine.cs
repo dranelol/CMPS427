@@ -108,9 +108,9 @@ public abstract class StateMachine : MonoBehaviour
     #endregion
 
     /// <summary>
-    /// Sets up the state machine. Call this first!
+    /// Sets up the state machine by giving it an example of a state it describes
     /// </summary>
-    /// <param name="typeSet">Type of states handled by this FSM</param>
+    /// <param name="typeSet">Example of type of states handled by this FSM</param>
     public void SetupMachine(Enum typeSet)
     {
         Transitions = new Dictionary<Enum, HashSet<Enum>>();
@@ -202,7 +202,7 @@ public abstract class StateMachine : MonoBehaviour
     /// <summary>
     /// magic.
     /// </summary>
-    void ConfigureCurrentState()
+    private void ConfigureCurrentState()
     {
         if (reflexiveTransition == true)
         {
@@ -262,7 +262,7 @@ public abstract class StateMachine : MonoBehaviour
     /// <param name="methodRoot">More magic.</param>
     /// <param name="Default">Voodoo.</param>
     /// <returns></returns>
-    T ConfigureDelegate<T>(string methodRoot, T Default) where T : class
+    private T ConfigureDelegate<T>(string methodRoot, T Default) where T : class
     {
         var mtd = GetType().GetMethod(currentState.ToString() + "_" + methodRoot, System.Reflection.BindingFlags.Instance
             | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.InvokeMethod);
@@ -287,7 +287,7 @@ public abstract class StateMachine : MonoBehaviour
     /// Adds a transition to every state in statesList from "transition"
     /// </summary>
     /// <param name="transition">State to tranistion to</param>
-    private void AddAllTransitionsTo(Enum transition)
+    protected void AddAllTransitionsTo(Enum transition)
     {
         foreach (Enum state in statesList)
         {
@@ -300,7 +300,7 @@ public abstract class StateMachine : MonoBehaviour
     /// Adds a transition from "state" to every state in statesList
     /// </summary>
     /// <param name="state">State to transition from</param>
-    private void AddAllTransitionsFrom(Enum state)
+    protected void AddAllTransitionsFrom(Enum state)
     {
         foreach (Enum transition in statesList)
         {
@@ -313,7 +313,7 @@ public abstract class StateMachine : MonoBehaviour
     /// </summary>
     /// <param name="transition">State being added</param>
     /// <param name="states">States being added to</param>
-    private void AddTransitionsFrom(Enum transition, HashSet<Enum> states)
+    protected void AddTransitionsFrom(Enum transition, HashSet<Enum> states)
     {
         if (states.Count > 0)
         {
@@ -331,7 +331,7 @@ public abstract class StateMachine : MonoBehaviour
     /// </summary>
     /// <param name="state">State being added to</param>
     /// <param name="transitions">State being added</param>
-    private void AddTransitionsTo(Enum state, HashSet<Enum> transitions)
+    protected void AddTransitionsTo(Enum state, HashSet<Enum> transitions)
     {
         if (transitions.Count > 0)
         {
@@ -355,7 +355,7 @@ public abstract class StateMachine : MonoBehaviour
     /// </summary>
     /// <param name="state"></param>
     /// <param name="transition"></param>
-    private void AddTransition(Enum state, Enum transition)
+    protected void AddTransition(Enum state, Enum transition)
     {
         // check state for statetype
         if(state.GetType() != stateType)
