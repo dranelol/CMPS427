@@ -5,7 +5,7 @@ public class PlayerEntity : Entity {
     public float power, defense, attackSpeed, movementSpeed, minDamage, maxDamage;
 
 	// Use this for initialization
-	void Start () {
+	new void Start () {
         base.Start();
 	}
 	
