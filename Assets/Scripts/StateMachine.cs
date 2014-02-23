@@ -90,7 +90,7 @@ public abstract class StateMachine : MonoBehaviour
 
     public void SetupMachine(Enum stateType)
     {
-        stateType = typeSet;
+        //stateType = typeSet;
         Debug.Log("setting type: " + stateType.ToString());
     }
 
