@@ -79,20 +79,28 @@ public class AIController : StateMachine
         ThreatTable = new Dictionary<GameObject, Hostile>();
         target = null;
 
-        // FSM Initialization
-        List<Enum> idleTransitions = new List<Enum>();
+        SetupMachine(AIStates.idle);
+
+        HashSet<Enum> idleTransitions = new HashSet<Enum>();
         idleTransitions.Add(AIStates.pursuit);
 
-        List<Enum> pursuitTransitions = new List<Enum>();
+        HashSet<Enum> pursuitTransitions = new HashSet<Enum>();
+        pursuitTransitions.Add(AIStates.flee);
         pursuitTransitions.Add(AIStates.dead);
         pursuitTransitions.Add(AIStates.reset);
 
-        List<Enum> resetTransitions = new List<Enum>();
+        HashSet<Enum> fleeTransitions = new HashSet<Enum>();
+        fleeTransitions.Add(AIStates.pursuit);
+        fleeTransitions.Add(AIStates.dead);
+        fleeTransitions.Add(AIStates.reset);
+
+        HashSet<Enum> resetTransitions = new HashSet<Enum>();
         resetTransitions.Add(AIStates.idle);
 
-        Transitions.Add(AIStates.idle, idleTransitions);
-        Transitions.Add(AIStates.pursuit, pursuitTransitions);
-        Transitions.Add(AIStates.reset, resetTransitions);
+        AddTransitionsTo(AIStates.idle, idleTransitions);
+        AddTransitionsTo(AIStates.pursuit, pursuitTransitions);
+        AddTransitionsTo(AIStates.flee, fleeTransitions);
+        AddTransitionsTo(AIStates.reset, resetTransitions);
 
         StartMachine(AIStates.idle);
     }
@@ -202,23 +210,34 @@ public class AIController : StateMachine
 
     private void Reset()
     {
-        if ((AIStates)CurrentState == AIStates.pursuit)
+        if (IsValidTransition((AIStates)CurrentState, AIStates.reset) == true)
         {
             Transition(AIStates.reset);
         }
     }
 
-    private bool CheckTransition(AIStates state)
+    public GameObject Target
     {
-        try
-        {
-            return Transitions[CurrentState].Contains(state);
-        }
+        get { return target; }
+    }
 
-        catch
-        {
-            return false;
-        }
+    public bool Alive
+    {
+        get { return alive; }
+    }
+
+    #endregion
+
+    #region private functions
+
+    private bool Pursue()
+    {
+        return (Vector3.Distance(Group.transform.position, transform.position) < Group.ResetDistance);
+    }
+
+    private void Fight()
+    {
+        MoveFSM.SetPath(target.transform.position);
     }
 
     #endregion

@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour {
 	// Need to keep track of enemy if we click to attack it.
 	private Vector3 targetPosition;
 
+	public float RotationSpeed = 10f;
     public NavMeshAgent agent;
 
     private bool hadouken = false;
@@ -17,17 +18,37 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
 		targetPosition = Vector3.zero;
         agent = GetComponent<NavMeshAgent>();
+		agent.acceleration = 100f;
         agent.updateRotation = false;
         
 	}
 	
 	// Update is called once per frame
+	void FixedUpdate()
+	{
+		if (agent.hasPath)
+		{
+			Vector3 newVector = (transform.position + agent.velocity.normalized);
+			Vector3 target = newVector - transform.position;
+			
+			
+			//	Quaternion quat = Quaternion.LookRotation(target);
+			//  transform.rotation = quat;
+			
+			Vector3 tempRotation = transform.rotation.eulerAngles ;
+			tempRotation.y = Mathf.LerpAngle(transform.rotation.eulerAngles.y,  Quaternion.LookRotation(target).eulerAngles.y,Time.deltaTime * RotationSpeed);
+			transform.rotation = Quaternion.Euler(tempRotation);
+		}
+	}
 	void Update () {
+
         Debug.DrawRay(transform.position, transform.forward);
         Debug.DrawRay(transform.position, Rotations.RotateAboutY(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f), -22.5f));
         Debug.DrawRay(transform.position, Rotations.RotateAboutY(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f), 22.5f));
         
         // if our agent actually has a path to move to
+
+
         if (agent.hasPath == true)
         {
             // find the next steering target and his current position, without caring about y-axis
@@ -38,7 +59,7 @@ public class PlayerController : MonoBehaviour {
             Quaternion quat = Quaternion.LookRotation(steeringTarget - playerPosition);
 
             //apply quaternion to the player's rotation
-            transform.rotation = quat;
+            //transform.rotation = quat;
         }
         
         if (Vector3.Distance(transform.position, agent.destination) < 1.0f)
@@ -81,6 +102,7 @@ public class PlayerController : MonoBehaviour {
 					targetPosition = target.collider.gameObject.transform.position;
 				else
 				{
+
                     
                     // Otherwise, move towards the point of collision.
 					targetPosition = Vector3.zero;
@@ -94,6 +116,7 @@ public class PlayerController : MonoBehaviour {
         // HADOUKEN
         if (Input.GetKeyDown(KeyCode.B))
         {
+            /*
             if (hadouken == false)
             {
                 agent.radius = 10f;
@@ -105,7 +128,50 @@ public class PlayerController : MonoBehaviour {
                 agent.radius = 0.5f;
                 hadouken = false;
             }
+             * */
+            List<GameObject> attacked = Attack.OnAttack(transform, 360f, 5f);
+
+            foreach (GameObject enemy in attacked)
+            {
+                Vector3 relativeVector = (enemy.transform.position - transform.position);
+                float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
+                
+                 
+                enemy.AddComponent<Rigidbody>();
+                float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
+                enemy.GetComponent<MovementFSM>().Stop(0.2f);
+                enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
+                Destroy(enemy.rigidbody, 0.2f);
+                //enemy.rigidbody.AddForceAtPosition(50f, 
+                //enemy.rigidbody.AddExplosionForce(50f, transform.position, 5f, 3f);
+                //Destroy(enemy.rigidbody);
+            }
+            
         }
+
+        // REVERSE HADOUKEN
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            List<GameObject> attacked = Attack.OnAttack(transform, 360f, 5f);
+
+            foreach (GameObject enemy in attacked)
+            {
+                Vector3 relativeVector = (enemy.transform.position - transform.position);
+                float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
+
+
+                enemy.AddComponent<Rigidbody>();
+                float force = (-1) * (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
+                enemy.GetComponent<MovementFSM>().Stop(0.2f);
+                enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
+                Destroy(enemy.rigidbody, 0.2f);
+                //enemy.rigidbody.AddForceAtPosition(50f, 
+                //enemy.rigidbody.AddExplosionForce(50f, transform.position, 5f, 3f);
+                //Destroy(enemy.rigidbody);
+            }
+
+        }
+        
         if (Input.GetKeyDown(KeyCode.A))
         {
             Debug.Log("lelele");
@@ -132,5 +198,22 @@ public class PlayerController : MonoBehaviour {
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Debug.Log("lelele");
+            List<GameObject> attacked = Attack.OnAttack(transform, 45f, 5f);
+            foreach (GameObject enemy in attacked)
+            {
+                Vector3 relativeVector = (enemy.transform.position - transform.position);
+                float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
+
+
+                enemy.AddComponent<Rigidbody>();
+                float force = (normalizedMagnitude / (Mathf.Pow(0.35f, 2)));
+                enemy.GetComponent<MovementFSM>().Stop(0.17f);
+                enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
+                Destroy(enemy.rigidbody, 0.17f);
+            }
+        }
 	}
 }
