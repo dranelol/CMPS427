@@ -10,6 +10,14 @@ public abstract class StateMachine : MonoBehaviour
     #region fields
 
     public bool Debugging = false;
+
+    /// <summary>
+    /// Returns whether or not the current state's next state is itself
+    /// </summary>
+    private bool reflexiveTransition;
+
+
+
     private string FSMName;
 
     private Type stateType = null;
@@ -95,6 +103,7 @@ public abstract class StateMachine : MonoBehaviour
 
     public Func<IEnumerator> EnterState = DefaultCoroutine;
     public Func<IEnumerator> ExitState = DefaultCoroutine;
+    public Func<IEnumerator> StayState = DefaultCoroutine;
 
     #endregion
 
@@ -157,6 +166,17 @@ public abstract class StateMachine : MonoBehaviour
 
             previousState = currentState;
             currentState = nextState;
+
+            if (previousState == currentState)
+            {
+                reflexiveTransition = true;
+            }
+
+            else
+            {
+                reflexiveTransition = false;
+            }
+
             ConfigureCurrentState();
 
         }
@@ -184,44 +204,54 @@ public abstract class StateMachine : MonoBehaviour
     /// </summary>
     void ConfigureCurrentState()
     {
-        // call exit state function for old current state
-        if (ExitState != null)
+        if (reflexiveTransition == true)
         {
-            if (Debugging == true)
-            {
-                Debug.Log("calling exit state for state: " + currentState.ToString() + " of fsm: " + FSMName);
-            }
-            StartCoroutine(ExitState());
+            
+            StartCoroutine(StayState());
         }
 
-        // update all state function delegates
-        DoUpdate = ConfigureDelegate<Action>("Update", DefaultFunction);
-        DoOnGUI = ConfigureDelegate<Action>("OnGUI", DefaultFunction);
-        DoLateUpdate = ConfigureDelegate<Action>("LateUpdate", DefaultFunction);
-        DoFixedUpdate = ConfigureDelegate<Action>("FixedUpdate", DefaultFunction);
-        DoOnMouseUp = ConfigureDelegate<Action>("OnMouseUp", DefaultFunction);
-        DoOnMouseDown = ConfigureDelegate<Action>("OnMouseDown", DefaultFunction);
-        DoOnMouseEnter = ConfigureDelegate<Action>("OnMouseEnter", DefaultFunction);
-        DoOnMouseExit = ConfigureDelegate<Action>("OnMouseExit", DefaultFunction);
-        DoOnMouseDrag = ConfigureDelegate<Action>("OnMouseDrag", DefaultFunction);
-        DoOnMouseOver = ConfigureDelegate<Action>("OnMouseOver", DefaultFunction);
-        DoOnTriggerEnter = ConfigureDelegate<Action<Collider>>("OnTriggerEnter", DefaultCollider);
-        DoOnTriggerExit = ConfigureDelegate<Action<Collider>>("OnTriggerExit", DefaultCollider);
-        DoOnTriggerStay = ConfigureDelegate<Action<Collider>>("OnTriggerEnter", DefaultCollider);
-        DoOnCollisionEnter = ConfigureDelegate<Action<Collision>>("OnCollisionEnter", DefaultCollision);
-        DoOnCollisionExit = ConfigureDelegate<Action<Collision>>("OnCollisionExit", DefaultCollision);
-        DoOnCollisionStay = ConfigureDelegate<Action<Collision>>("OnCollisionStay", DefaultCollision);
-        EnterState = ConfigureDelegate<Func<IEnumerator>>("EnterState", DefaultCoroutine);
-        ExitState = ConfigureDelegate<Func<IEnumerator>>("ExitState", DefaultCoroutine);
-
-        // call enter state function for new current state
-        if (EnterState != null)
+        else
         {
-            if (Debugging == true)
+            // call exit state function for old current state
+            if (ExitState != null)
             {
-                Debug.Log("calling enter state for state: " + currentState.ToString() + " of fsm: " + FSMName);
+                if (Debugging == true)
+                {
+                    Debug.Log("calling exit state for state: " + currentState.ToString() + " of fsm: " + FSMName);
+                }
+                StartCoroutine(ExitState());
             }
-            StartCoroutine(EnterState());
+
+            // update all state function delegates
+
+            DoUpdate = ConfigureDelegate<Action>("Update", DefaultFunction);
+            DoOnGUI = ConfigureDelegate<Action>("OnGUI", DefaultFunction);
+            DoLateUpdate = ConfigureDelegate<Action>("LateUpdate", DefaultFunction);
+            DoFixedUpdate = ConfigureDelegate<Action>("FixedUpdate", DefaultFunction);
+            DoOnMouseUp = ConfigureDelegate<Action>("OnMouseUp", DefaultFunction);
+            DoOnMouseDown = ConfigureDelegate<Action>("OnMouseDown", DefaultFunction);
+            DoOnMouseEnter = ConfigureDelegate<Action>("OnMouseEnter", DefaultFunction);
+            DoOnMouseExit = ConfigureDelegate<Action>("OnMouseExit", DefaultFunction);
+            DoOnMouseDrag = ConfigureDelegate<Action>("OnMouseDrag", DefaultFunction);
+            DoOnMouseOver = ConfigureDelegate<Action>("OnMouseOver", DefaultFunction);
+            DoOnTriggerEnter = ConfigureDelegate<Action<Collider>>("OnTriggerEnter", DefaultCollider);
+            DoOnTriggerExit = ConfigureDelegate<Action<Collider>>("OnTriggerExit", DefaultCollider);
+            DoOnTriggerStay = ConfigureDelegate<Action<Collider>>("OnTriggerEnter", DefaultCollider);
+            DoOnCollisionEnter = ConfigureDelegate<Action<Collision>>("OnCollisionEnter", DefaultCollision);
+            DoOnCollisionExit = ConfigureDelegate<Action<Collision>>("OnCollisionExit", DefaultCollision);
+            DoOnCollisionStay = ConfigureDelegate<Action<Collision>>("OnCollisionStay", DefaultCollision);
+            EnterState = ConfigureDelegate<Func<IEnumerator>>("EnterState", DefaultCoroutine);
+            ExitState = ConfigureDelegate<Func<IEnumerator>>("ExitState", DefaultCoroutine);
+            StayState = ConfigureDelegate<Func<IEnumerator>>("StayState", DefaultCoroutine);
+            // call enter state function for new current state
+            if (EnterState != null)
+            {
+                if (Debugging == true)
+                {
+                    Debug.Log("calling enter state for state: " + currentState.ToString() + " of fsm: " + FSMName);
+                }
+                StartCoroutine(EnterState());
+            }
         }
     }
 
