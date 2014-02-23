@@ -34,7 +34,17 @@ public abstract class StateMachine : MonoBehaviour
         }
     }
 
-    public Dictionary<Enum, HashSet<Enum>> Transitions = new Dictionary<Enum, HashSet<Enum>>();
+    private HashSet<Enum> statesList = null;
+
+    public HashSet<Enum> StatesList
+    {
+        get
+        {
+            return statesList;
+        }
+    }
+
+    private Dictionary<Enum, HashSet<Enum>> Transitions = null; 
     #endregion
 
     #region constructors
@@ -88,13 +98,30 @@ public abstract class StateMachine : MonoBehaviour
 
     #endregion
 
-    public void SetupMachine(Enum stateType)
+    /// <summary>
+    /// Sets up the state machine. Call this first!
+    /// </summary>
+    /// <param name="typeSet">Type of states handled by this FSM</param>
+    public void SetupMachine(Enum typeSet)
     {
-        //stateType = typeSet;
+        Transitions = new Dictionary<Enum, HashSet<Enum>>();
+        stateType = typeSet.GetType();
         Debug.Log("setting type: " + stateType.ToString());
+
+        var stateTypes = Enum.GetValues(stateType);
+
+        statesList = new HashSet<Enum>();
+
+        foreach(Enum state in stateTypes)
+        {
+            statesList.Add(state);
+        }
     }
 
-    //spins up the FSM, called on start
+    /// <summary>
+    /// Starts the FSM. Call this after setting up the entire FSM and transitions
+    /// </summary>
+    /// <param name="startState">The state from which the FSM is started</param>
     public void StartMachine(Enum startState)
     {
         if (currentState == null)
@@ -105,6 +132,10 @@ public abstract class StateMachine : MonoBehaviour
         FSMName = this.GetType().Name;
     }
 
+    /// <summary>
+    /// Transition to the next state given by "nextState"
+    /// </summary>
+    /// <param name="nextState"></param>
     public void Transition(Enum nextState)
     {
         if (Debugging == true)
@@ -116,11 +147,8 @@ public abstract class StateMachine : MonoBehaviour
             throw new NullReferenceException("null current state");
         }
 
-        //returns the valid transitions for current state
-        List<Enum> searchTransitions = Transitions[currentState];
-
-        //if the returned list contains a valid transition to next state
-        if (searchTransitions.Contains(nextState))
+        //if the hashset of transitions contains a valid transition to next state
+        if (Transitions[currentState].Contains(nextState))
         {
             // 0. set/verify all needed values
             // 1. need to call current state's exit
@@ -140,7 +168,20 @@ public abstract class StateMachine : MonoBehaviour
         }
 
     }
+    /// <summary>
+    /// Returns whether or not there is a valid transition from "fromState" to "toState"
+    /// </summary>
+    /// <param name="fromState"></param>
+    /// <param name="toState"></param>
+    /// <returns></returns>
+    public bool IsValidTransition(Enum fromState, Enum toState)
+    {
+        return Transitions[fromState].Contains(toState);
+    }
 
+    /// <summary>
+    /// magic.
+    /// </summary>
     void ConfigureCurrentState()
     {
         // call exit state function for old current state
@@ -184,6 +225,13 @@ public abstract class StateMachine : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// More magic.
+    /// </summary>
+    /// <typeparam name="T">Magic.</typeparam>
+    /// <param name="methodRoot">More magic.</param>
+    /// <param name="Default">Voodoo.</param>
+    /// <returns></returns>
     T ConfigureDelegate<T>(string methodRoot, T Default) where T : class
     {
         var mtd = GetType().GetMethod(currentState.ToString() + "_" + methodRoot, System.Reflection.BindingFlags.Instance
@@ -204,49 +252,72 @@ public abstract class StateMachine : MonoBehaviour
 
     }
 
-    protected void Setup(Type typeSet)
+
+    /// <summary>
+    /// Adds a transition to every state in statesList from "transition"
+    /// </summary>
+    /// <param name="transition">State to tranistion to</param>
+    private void AddAllTransitionsTo(Enum transition)
     {
-
-        
-
-
-    }
-
-    private void AddAllTransitions(Enum toState)
-    {
-
-    }
-
-    private void AddTransitionsFrom(Enum fromState, HashSet<Enum> states)
-    {
-        if (fromState.GetType() != stateType)
+        foreach (Enum state in statesList)
         {
-            throw new Exception("Attempting to add an invalid state type");
+            AddTransition(state, transition);
         }
+        
+    }
 
-        else
+    /// <summary>
+    /// Adds a transition from "state" to every state in statesList
+    /// </summary>
+    /// <param name="state">State to transition from</param>
+    private void AddAllTransitionsFrom(Enum state)
+    {
+        foreach (Enum transition in statesList)
         {
-            if (states.Count > 0)
+            AddTransition(state, transition);
+        }
+    }
+    
+    /// <summary>
+    /// Adds a transition from "transition" to every state in "states"
+    /// </summary>
+    /// <param name="transition">State being added</param>
+    /// <param name="states">States being added to</param>
+    private void AddTransitionsFrom(Enum transition, HashSet<Enum> states)
+    {
+        if (states.Count > 0)
+        {
+            // check for type of each transition
+            // if valid, add to transition set for that state
+            foreach (Enum state in states)
             {
-                // check for type of each transition
-                // if valid, add to transition set for that state
-                foreach (Enum toState in states)
-                {
-
-                    if (toState.GetType() != stateType)
-                    {
-                        throw new Exception("Attempting to add an invalid state transition to state");
-                    }
-
-                    AddTransition(toState, fromState);
-                }
+                AddTransition(state, transition);
             }
         }
     }
 
+    /// <summary>
+    /// Adds a transition from each state in "transitions" to "state"
+    /// </summary>
+    /// <param name="state">State being added to</param>
+    /// <param name="transitions">State being added</param>
     private void AddTransitionsTo(Enum state, HashSet<Enum> transitions)
     {
+        if (transitions.Count > 0)
+        {
+            // check for type of each transition
+            // if valid, add to transition set for that state
+            foreach (Enum transition in transitions)
+            {
 
+                if (transition.GetType() != stateType)
+                {
+                    throw new Exception("Attempting to add an invalid state transition to state");
+                }
+
+                AddTransition(state, transition);
+            }
+        }
     }
 
     /// <summary>
@@ -256,9 +327,29 @@ public abstract class StateMachine : MonoBehaviour
     /// <param name="transition"></param>
     private void AddTransition(Enum state, Enum transition)
     {
+        // check state for statetype
+        if(state.GetType() != stateType)
+        {
+            throw new Exception("Attempting to transition from an invalid state type");
+        }
 
+        else
+        {
+            // check transition for statetype
+            if (transition.GetType() != stateType)
+            {
+                throw new Exception("Attempting to transition to an invalid state type");
+            }
+
+            else
+            {
+                // we can add the transition!
+                Transitions[state].Add(transition);
+            }
+        } 
     }
     #region game loop methods
+
     void Update()
     {
         if (Debugging == true)
