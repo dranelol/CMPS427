@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class equipment{
 
     public Attributes equipmentAttributes;
+
     
     public string equipmentName;
     public string equipmentType;
@@ -15,9 +16,8 @@ public class equipment{
     public int minlvl;
     public int maxlvl;
 
-
-
     private Dictionary<string, equipSlots.slots> slotList = new Dictionary<string, equipSlots.slots>();
+
 
     public equipment()
     {

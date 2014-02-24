@@ -22,22 +22,26 @@ public class MovementFSM : StateMachine
     {
         thisAgent = GetComponent<NavMeshAgent>();
 
-        List<Enum> idleTransitions = new List<Enum>();
+        SetupMachine(MoveStates.idle);
+
+        HashSet<Enum> idleTransitions = new HashSet<Enum>();
         idleTransitions.Add(MoveStates.moving);
         idleTransitions.Add(MoveStates.moveLocked);
 
-        List<Enum> movingTransitions = new List<Enum>();
+        HashSet<Enum> movingTransitions = new HashSet<Enum>();
         movingTransitions.Add(MoveStates.idle);
         movingTransitions.Add(MoveStates.moveLocked);
 
-        List<Enum> moveLockedTransitions = new List<Enum>();
+        HashSet<Enum> moveLockedTransitions = new HashSet<Enum>();
         moveLockedTransitions.Add(MoveStates.idle);
+        moveLockedTransitions.Add(MoveStates.moveLocked);
 
-        Transitions.Add(MoveStates.idle, idleTransitions);
-        Transitions.Add(MoveStates.moving, movingTransitions);
-        Transitions.Add(MoveStates.moveLocked, moveLockedTransitions);
+        AddTransitionsTo(MoveStates.idle, idleTransitions);
+        AddTransitionsTo(MoveStates.moving, movingTransitions);
+        AddTransitionsTo(MoveStates.moveLocked, moveLockedTransitions);
 
         StartMachine(MoveStates.idle);
+
     }
 
     #region public functions

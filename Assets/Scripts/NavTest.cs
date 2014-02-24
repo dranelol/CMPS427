@@ -4,20 +4,29 @@ using System.Collections.Generic;
 
 public class NavTest : MonoBehaviour 
 {
+	void Update () 
+    {
+        if (!this.gameObject.GetComponent<NavMeshAgent>().hasPath)
+        {
+            animation.animation.Play("idle", PlayMode.StopAll);
+        }
+	}
     public MovementFSM MoveFSM;
     public NavMeshAgent agent;
     public CharacterController controller;
+	public float RotationSpeed = 10f;
 
     void Start()
     {
         MoveFSM = GetComponent<MovementFSM>();
         agent = GetComponent<NavMeshAgent>();
         controller = GetComponent<CharacterController>();
+
+		agent.acceleration = 100f;
         agent.updateRotation = false;
         
     }
-
-	void Update () 
+	void FixedUpdate ()
     {
         Debug.DrawRay(transform.position, transform.forward);
         Debug.DrawRay(transform.position, Rotations.RotateAboutY(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f), -22.5f));
@@ -26,6 +35,21 @@ public class NavTest : MonoBehaviour
         //Debug.Log(transform.forward);
         //Debug.Log(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f));
         
+        if (agent.hasPath)
+        {
+            Vector3 newVector = (transform.position + agent.velocity.normalized);
+            Vector3 target = newVector - transform.position;
+            
+            
+		//	Quaternion quat = Quaternion.LookRotation(target);
+         //  transform.rotation = quat;
+
+			Vector3 tempRotation = transform.rotation.eulerAngles ;
+			tempRotation.y = Mathf.LerpAngle(transform.rotation.eulerAngles.y,  Quaternion.LookRotation(target).eulerAngles.y,Time.deltaTime * RotationSpeed);
+			transform.rotation = Quaternion.Euler(tempRotation);
+		}
+ 
+		/*
         if (agent.velocity != Vector3.zero)
         {
             Vector3 newVector = (transform.position += agent.velocity.normalized);
@@ -34,7 +58,7 @@ public class NavTest : MonoBehaviour
             Quaternion quat = Quaternion.LookRotation(target);
             transform.rotation = quat;
         }
-        
+        */
         
         
         if (Input.GetMouseButtonDown(0))
@@ -45,6 +69,10 @@ public class NavTest : MonoBehaviour
 
             if (playerPlane.Raycast(theRay, out hitdist))
             {
+                //NavTarget = theRay.GetPoint(hitdist);
+                //this.gameObject.GetComponent<NavMeshAgent>().SetDestination(NavTarget);
+                //animation.Rewind("run");
+                //animation.animation.Play("run", PlayMode.StopAll);
                 Vector3 NavTarget = theRay.GetPoint(hitdist);
                 MoveFSM.SetPath(NavTarget);
             }
@@ -54,6 +82,7 @@ public class NavTest : MonoBehaviour
         {
             Debug.Log("lelele");
             List<GameObject> attacked = Attack.OnAttack(transform, 45f, 5f);
+
             foreach (GameObject enemy in attacked)
             {
                 Debug.Log(enemy.GetInstanceID().ToString());
@@ -75,6 +104,5 @@ public class NavTest : MonoBehaviour
                 enemy.renderer.material.SetColor("_Color", Color.red);
             }
         }
-
 	}
 }
