@@ -250,6 +250,7 @@ public class AIController : StateMachine
     {
         if (EntityObject.currentHP <=0.0f) // Check health for death || if (health <= 0)
         {
+            MoveFSM.LockMovement();
             Transition(AIStates.dead);
         }
 

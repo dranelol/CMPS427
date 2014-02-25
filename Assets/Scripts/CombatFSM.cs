@@ -9,7 +9,7 @@ public class CombatFSM : StateMachine
 {
     private bool timeLocked = false;
     private bool attack = false;
-    private float lockedTime = 0;
+    private float lockedTime = 1.0f;
 
     public enum CombatStates
     {
