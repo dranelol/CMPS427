@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class Entity : MonoBehaviour
 {
-	public float currentHP=20f; // Currently unused.
+    public float currentHP = 50f; // Currently unused.
+    public float maxHP = 50f; // Currently unused.
 	public Attributes currentAtt; // The entity's current total attributes
 	public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
 	public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
@@ -17,14 +18,15 @@ public class Entity : MonoBehaviour
 	/// <param name="att">An Attributes object containing the base stats of this entity.</param>
 	public Entity(Attributes att)
 	{
-        currentHP = 20f;
+        //currentHP = 20f;
 		currentAtt = att;
 		equipAtt = new Attributes();
 	}
 
     void Start()
     {
-        currentHP = 20f;
+        currentHP = 50f;
+        maxHP = 50f;
     }
 	
 	/// <summary>
@@ -86,5 +88,14 @@ public class Entity : MonoBehaviour
 		currentAtt.Subtract(s);
 		buffAtt.Subtract(s);
 	}
+
+    /// <summary>
+    /// Check if the entity is dead or not
+    /// </summary>
+    /// <returns></returns>
+    public bool IsDead()
+    {
+        return currentHP <= 0;
+    }
 
 }
