@@ -7,18 +7,17 @@ using UnityEngine;
 
 public class AIController : StateMachine 
 {
-    private class TargetObject
+    private class Hostile
     {
         private GameObject target; // The player the enemy is currently pursuing
-        private float levelFactor; // A factor determined by the difference in levels of the enemy and its target
-        private float targetThreat; // The current amount of threat the target object has
+        private float level; // The level of the player
+        private float threat; // The current amount of threat the target object has
 
-        public TargetObject(GameObject newTarget)
+        public Hostile(GameObject newTarget)
         {
             target = newTarget;
-            levelFactor = baseLevelFactor;
-            targetThreat = 0;
-            //levelFactor = math
+            level = 1;
+            threat = 0;
         }
 
         public GameObject Target
@@ -26,19 +25,19 @@ public class AIController : StateMachine
             get { return target; }
         }
 
-        public float LevelFactor
+        public float Level
         {
-            get { return levelFactor; }
+            get { return level; }
         }
 
-        public float TargetThreat
+        public float Threat
         {
-            get { return targetThreat; }
+            get { return threat; }
         }
 
         public void Threaten(float magnitude)
         {
-            targetThreat += magnitude;
+            threat += magnitude;
         }
     }
 
@@ -46,36 +45,23 @@ public class AIController : StateMachine
     {
         idle,
         pursuit,
-        flee,
         dead,
         reset,
     }
 
-    private const float baseLevelFactor = 0.5f; // The level factor when the enemy is the same level as its target
-    private const float levelFactorRange = 0.5f; // The range between the min and max possible level factors
-    private const float fleeTime = 5; // The time until the enemy will stop fleeing and resume pursuit
-    private const float maxDistanceFromTargetPositionToTarget = 10; // The distance before position recalculation
-
+    // Script references
     private AIGroupController Group; // The script managing the group of enemies
     private AggroRadius Aggro; // The script managing the aggro
     private MovementFSM MoveFSM; // The Movement FSM the enemy uses
     private NavMeshAgent NavAgent; // NavMeshAgent for this enemy
+    private AIPursuit PursuitFSM; // The script that managers AI behavior when pursuing a target
+    private Entity EntityObject; // our entity object
+    // Reset variables
+    public Vector3 localHomePosition; // The position around the home position this unit returns to upon reset
 
-    private Dictionary<GameObject, TargetObject> ThreatTable; // A dictionary of all threat targets
+    // Target variabels
+    private Dictionary<GameObject, Hostile> ThreatTable; // A dictionary of all threat targets
     private GameObject target; // The Target object that holds information about the current target
-    private Vector3 targetPosition; // The target world position to move to while pursuing the player
-
-    public Vector3 localHomePosition; // The position around the home position this unit returns to
-
-    private float attackRange = 20; // The range the enemy must be within in order to attack
-
-    private float timeFled; // The time fleeing started
-    public bool canFlee = true; // True if the enemy will flee, false otherwise
-    public bool hasFled; // True if the enemy has fled this combat
-    
-    private float resetDistanceDelta; // The change in pursuit distance each time the enemy is attacked
-
-    private bool alive = true; // Enemy state
 
     void Awake()
     {
@@ -83,40 +69,37 @@ public class AIController : StateMachine
         Aggro = GetComponentInChildren<AggroRadius>();
         MoveFSM = GetComponent<MovementFSM>();
         NavAgent = GetComponent<NavMeshAgent>();
+        EntityObject = GetComponent<Entity>();
     }
 
 	void Start() 
     {
-        ThreatTable = new Dictionary<GameObject, TargetObject>();
+        PursuitFSM = GetComponent<AIPursuit>();
+        localHomePosition = transform.position;
+
+        ThreatTable = new Dictionary<GameObject, Hostile>();
         target = null;
-        timeFled = 0;
-        hasFled = false;
-        localHomePosition = Group.HomePosition;
-        resetDistanceDelta = Group.BaseResetDistance;
 
-        GetComponent<NavMeshAgent>().updatePosition = true;
-        GetComponent<NavMeshAgent>().updateRotation = true;
+        SetupMachine(AIStates.idle);
 
-        List<Enum> idleTransitions = new List<Enum>();
+        HashSet<Enum> idleTransitions = new HashSet<Enum>();
         idleTransitions.Add(AIStates.pursuit);
 
-        List<Enum> pursuitTransitions = new List<Enum>();
-        pursuitTransitions.Add(AIStates.flee);
+        HashSet<Enum> pursuitTransitions = new HashSet<Enum>();
         pursuitTransitions.Add(AIStates.dead);
         pursuitTransitions.Add(AIStates.reset);
 
-        List<Enum> fleeTransitions = new List<Enum>();
+        HashSet<Enum> fleeTransitions = new HashSet<Enum>();
         fleeTransitions.Add(AIStates.pursuit);
         fleeTransitions.Add(AIStates.dead);
         fleeTransitions.Add(AIStates.reset);
 
-        List<Enum> resetTransitions = new List<Enum>();
+        HashSet<Enum> resetTransitions = new HashSet<Enum>();
         resetTransitions.Add(AIStates.idle);
 
-        Transitions.Add(AIStates.idle, idleTransitions);
-        Transitions.Add(AIStates.pursuit, pursuitTransitions);
-        Transitions.Add(AIStates.flee, fleeTransitions);
-        Transitions.Add(AIStates.reset, resetTransitions);
+        AddTransitionsTo(AIStates.idle, idleTransitions);
+        AddTransitionsTo(AIStates.pursuit, pursuitTransitions);
+        AddTransitionsTo(AIStates.reset, resetTransitions);
 
         StartMachine(AIStates.idle);
     }
@@ -124,107 +107,121 @@ public class AIController : StateMachine
     #region public functions
 
     /// <summary>
-    /// Used to apply threat.
+    /// Apply threat to the individual enemy. The enemy always attacks the
+    /// target with the highest threat.
     /// </summary>
-    /// <param name="source"></param>
-    /// <param name="magnitude"></param>
+    /// <param name="source">The source of the threat.</param>
+    /// <param name="magnitude">The amount of threat to apply.</param>
     public void Threat(GameObject source, float magnitude = 0)
     {
-        if (source.tag == "Player")
+        if ((AIStates)CurrentState != AIStates.dead && (AIStates)CurrentState != AIStates.reset)
         {
-
-            if ((AIStates)CurrentState == AIStates.idle)
+            if (source.tag == "Player")
             {
-                Transition(AIStates.pursuit);
-                Group.BeginCombat(source);
-            }
-
-            if (!ThreatTable.ContainsKey(source))
-            {
-                TargetObject newTarget = new TargetObject(source);
-
-                ThreatTable.Add(source, newTarget);
-                Group.BeginCombat(source); // If a new target is found, add it to every enemy's threat table with 0 threat
-            }
-
-            ThreatTable[source].Threaten(magnitude);
-
-            if (target == null || ThreatTable[source].TargetThreat > ThreatTable[target].TargetThreat)
-            {
-                target = source;
-            }
-
-            resetDistanceDelta *= ThreatTable[source].LevelFactor;
-            Group.ResetDistance = resetDistanceDelta;
-        }
-
-        else
-        {
-            throw new InvalidOperationException("Threat cannot be applied by a non-player GameObject. Dumbass.");
-        }
-    }
-
-    public void RemoveTarget(GameObject lostTarget)
-    {
-        if (ThreatTable.Remove(lostTarget))
-        {
-            GameObject highestThreatTarget = null;
-
-            foreach (GameObject targetInTable in ThreatTable.Keys)
-            {
-                if (ThreatTable[targetInTable].TargetThreat > ThreatTable[target].TargetThreat)
+                if (!ThreatTable.ContainsKey(source))
                 {
-                    highestThreatTarget = targetInTable;
+                    Hostile newTargetObject = new Hostile(source);
+
+                    ThreatTable.Add(source, newTargetObject);
+                    Group.Threat(source);
+
+                    if ((AIStates)CurrentState == AIStates.idle)
+                    {
+                        target = source;
+                        Transition(AIStates.pursuit);
+                    }
+                }
+
+                ThreatTable[source].Threaten(magnitude);
+
+                if (ThreatTable[source].Threat > ThreatTable[target].Threat)
+                {
+                    target = source;
                 }
             }
 
-            target = highestThreatTarget;
+            else
+            {
+                throw new InvalidOperationException("Threat cannot be applied by a non-player GameObject. Dumbass.");
+            }
         }
     }
 
-    public void Reset()
-    {
-        if (CheckTransition(AIStates.reset))
-        {
-            Transition(AIStates.reset);
-        }
-    }
-
+    /// <summary>
+    /// Return the current target.
+    /// </summary>
     public GameObject Target
     {
         get { return target; }
-    }
-
-    public bool Alive
-    {
-        get { return alive; }
     }
 
     #endregion
 
     #region private functions
 
-    private bool Pursue()
+    private bool TargetInRange()
     {
-        return (Vector3.Distance(Group.transform.position, transform.position) < Group.ResetDistance);
+        if (target != null)
+        {
+            return Vector3.Distance(Group.transform.position, target.transform.position) < Group.ResetDistance;
+        }
+
+        else
+        {
+            return false;
+        }
     }
+
+    public void RemoveTarget(GameObject lostTarget)
+    {
+        if ((AIStates)CurrentState == AIStates.pursuit)
+        {
+            if (ThreatTable.Remove(lostTarget))
+            {
+                if (ThreatTable.Count == 0)
+                {
+                    target = Group.GetNewTarget();
+
+                    if (target != null)
+                    {
+                        Hostile newTargetObject = new Hostile(target);
+                        ThreatTable.Add(target, newTargetObject);
+                    }
+                }
+
+                else if (target == lostTarget)
+                {
+                    GameObject highestThreatTarget = ThreatTable.Keys.First();
+
+                    foreach (GameObject targetInTable in ThreatTable.Keys)
+                    {
+                        if (ThreatTable[targetInTable].Threat > ThreatTable[highestThreatTarget].Threat)
+                        {
+                            highestThreatTarget = targetInTable;
+                        }
+                    }
+
+                    target = highestThreatTarget;
+                }
+            }
+        }
+    }
+
+    private void Reset()
+    {
+        if (IsValidTransition((AIStates)CurrentState, AIStates.reset) == true)
+        {
+            Transition(AIStates.reset);
+        }
+    }
+
+    #endregion
+
+    #region private functions
 
     private void Fight()
     {
         MoveFSM.SetPath(target.transform.position);
-    }
-
-    private bool CheckTransition(AIStates state)
-    {
-        try
-        {
-            return Transitions[CurrentState].Contains(state);
-        }
-
-        catch
-        {
-            return false;
-        }
     }
 
     #endregion
@@ -235,14 +232,14 @@ public class AIController : StateMachine
 
     IEnumerator idle_EnterState()
     {
-        Aggro.AggroTrigger.enabled = true;
-        yield return null;
+        Aggro.Trigger.enabled = true;
+        yield break;
     }
 
     IEnumerator idle_ExitState()
     {
-        Aggro.AggroTrigger.enabled = false;
-        yield return null;
+        Aggro.Trigger.enabled = false;
+        yield break;
     }
 
     #endregion
@@ -251,83 +248,47 @@ public class AIController : StateMachine
 
     void pursuit_Update()
     {
-        if (false) // Check health for death || if (health <= 0)
+        if (EntityObject.currentHP <=0.0f) // Check health for death || if (health <= 0)
         {
+            MoveFSM.LockMovement();
             Transition(AIStates.dead);
-        }
-
-        else if (false && canFlee && !hasFled) // Check health for flee || if (health <= 10%)
-        {
-            Transition(AIStates.flee);
-        }
-
-        else if (ThreatTable.Count == 0 || !Pursue())
-        {
-            Group.EndCombat();
         }
 
         else
         {
-            Fight();
+            if (!TargetInRange())
+            {
+                Group.RemoveTarget(target);
+            }
+
+            if (target != null)
+            {
+                Fight();//PursuitFSM.Pursue(target);
+            }
+
+            else
+            {
+                Reset();
+            }
         }
+    }
+
+    IEnumerator pursuit_ExitState()
+    {
+        // Make invincible
+       // PursuitFSM.StopPursuit();
+        ThreatTable.Clear();
+        yield break;
     }
 
     #endregion 
-
-    #region flee functions
-
-    IEnumerator flee_EnterState()
-    {
-        hasFled = true;
-        timeFled = Time.time;
-        yield return null;
-    }
-
-    void flee_Update()
-    {
-        if (false) // Check health for death || if (health <= 0)
-        {
-            Transition(AIStates.dead);
-        }
-
-        else if (ThreatTable.Count == 0)
-        {
-            Group.EndCombat();
-        }
-
-        else if (timeFled + fleeTime <= Time.time)
-        {
-            Transition(AIStates.pursuit);
-        }
-
-        else
-        {
-            Debug.Log("FLEE");
-        }
-    }
-
-    #endregion
-
-    #region dead functions
-
-    IEnumerator dead_EnterState()
-    {
-        alive = false;
-        yield return null;
-    }
-
-    #endregion
 
     #region reset functions
 
     IEnumerator reset_EnterState()
     {
         MoveFSM.SetPath(localHomePosition);
-        ThreatTable.Clear();
-        // Make invincible
-        hasFled = false;
-        resetDistanceDelta = Group.BaseResetDistance;
-        yield return null;
+        yield break;
     }
 
     void reset_Update()
