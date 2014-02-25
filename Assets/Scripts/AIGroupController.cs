@@ -1,68 +1,110 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class AIGroupController : MonoBehaviour {
-    private const float baseResetDistance = 25;
+    private const float baseResetDistance = 50;
     private const float groupBufferDistance = 1.5f;
 
+    private List<GameObject> MasterThreatTable;
     private Vector3 homePosition;
-    private bool inCombat = false;
+    private int GroupLevel;
     private float resetDistance;
 
     void Awake()
     {
-        CalculatePositions();
+        MasterThreatTable = new List<GameObject>();
         homePosition = transform.position;
+        GroupLevel = 5;
         resetDistance = baseResetDistance;
     }
 
-    public void BeginCombat(GameObject target)
+    /// <summary>
+    /// Apply threat to the entire group. Used when threat should be applied to anything targeting you, ie. heals.
+    /// </summary>
+    /// <param name="source">The source of threat.</param>
+    /// <param name="magnitude">The magnitude of threat.</param>
+    public void Threat(GameObject source, float magnitude = 0)
     {
-        if (inCombat == false)
+        if (source.tag == "Player")
         {
-            inCombat = true;
-
-            foreach (Transform child in transform)
+            if (!MasterThreatTable.Contains(source))
             {
-                child.gameObject.GetComponent<AIController>().Threat(target);
+                MasterThreatTable.Add(source);
+            }
+
+            if (magnitude > 0)
+            {
+                foreach (Transform child in transform)
+                {
+                    child.gameObject.GetComponent<AIController>().Threat(source, magnitude);
+                }
             }
         }
     }
 
-    public void EndCombat()
+    private bool TargetInRange(GameObject source)
     {
-        inCombat = false;
-        foreach (Transform child in transform)
+        if (source != null && Vector3.Distance(transform.position, source.transform.position) < resetDistance)
         {
-            child.gameObject.GetComponent<AIController>().Reset();
+            return true;
         }
 
+        else
+        {
+            MasterThreatTable.Remove(source);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Remove the target from all threat tables.
+    /// </summary>
+    /// <param name="source">The target to remove.</param>
+    public void RemoveTarget(GameObject source)
+    {
+        if (MasterThreatTable.Remove(source))
+        {
+            foreach (Transform child in transform)
+            {
+                child.gameObject.GetComponent<AIController>().RemoveTarget(source);
+            }
+        }
+    }
+
+    public int TargetCount
+    {
+        get { return MasterThreatTable.Count; }
+    }
+
+    public GameObject GetNewTarget()
+    {
+        if (MasterThreatTable.Count > 0)
+        {
+            return MasterThreatTable[0];
+        }
+
+        else
+        {
+            return null;
+        }
+    }
+
+    public void ResetGroup()
+    {
         resetDistance = baseResetDistance;
-        CalculatePositions();
     }
 
-    public void CalculatePositions()
-    {
-    }
-
-    public float BaseResetDistance
-    {
-        get { return baseResetDistance; }
-    }
-
-    public bool InCombat
-    {
-        get { return inCombat; }
-    }
+    #region Getters and Setters
 
     public float ResetDistance
     {
         get { return resetDistance; }
-        set { resetDistance = Mathf.Max(resetDistance, value); }
     }
 
     public Vector3 HomePosition
     {
         get { return homePosition; }
     }
+
+    #endregion
 }

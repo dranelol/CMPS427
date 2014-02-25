@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour {
 
         }
 
-        // HADOUKEN
+        #region hadouken
         if (Input.GetKeyDown(KeyCode.B))
         {
             /*
@@ -145,11 +145,14 @@ public class PlayerController : MonoBehaviour {
                 //enemy.rigidbody.AddForceAtPosition(50f, 
                 //enemy.rigidbody.AddExplosionForce(50f, transform.position, 5f, 3f);
                 //Destroy(enemy.rigidbody);
+                Attack.DoDamage(gameObject, enemy);
             }
-            
+
         }
 
-        // REVERSE HADOUKEN
+        #endregion
+
+        #region reverse hadouken
         if (Input.GetKeyDown(KeyCode.V))
         {
             List<GameObject> attacked = Attack.OnAttack(transform, 360f, 5f);
@@ -171,7 +174,10 @@ public class PlayerController : MonoBehaviour {
             }
 
         }
-        
+
+        #endregion
+
+        #region cleave
         if (Input.GetKeyDown(KeyCode.A))
         {
             Debug.Log("lelele");
@@ -198,6 +204,9 @@ public class PlayerController : MonoBehaviour {
             }
         }
 
+        #endregion
+
+        #region fusrodah
         if (Input.GetKeyDown(KeyCode.F))
         {
             Debug.Log("lelele");
@@ -215,5 +224,6 @@ public class PlayerController : MonoBehaviour {
                 Destroy(enemy.rigidbody, 0.17f);
             }
         }
-	}
+        #endregion
+    }
 }
