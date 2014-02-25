@@ -308,5 +308,15 @@ public class AIController : StateMachine
 
     #endregion
 
+    #region dead functions
+
+    IEnumerator dead_EnterState()
+    {
+        MoveFSM.LockMovement();
+        yield return null;
+    }
+
+    #endregion
+
     #endregion
 }
