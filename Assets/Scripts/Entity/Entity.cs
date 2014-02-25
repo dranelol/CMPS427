@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Entity : MonoBehaviour
 { 
     public float currentHP; // Currently unused.
+    public float maxHP; // max HP
     public Attributes currentAtt; // The entity's current total attributes
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
@@ -21,6 +22,8 @@ public class Entity : MonoBehaviour
         buffAtt = new Attributes();
 
         currentAtt.Power = 100;
+
+        maxHP = currentHP = 50f;
     }
 
     /// <summary>

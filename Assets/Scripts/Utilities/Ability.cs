@@ -69,11 +69,14 @@ public class Ability {
     
     #endregion
 
-    public static Dictionary<string, Ability> abilities;
+    // TODO: Implement this idea outside of the ability class inside of manager
+    //public static Dictionary<string, Ability> abilities;
 
     // Constructor is private to prevent abilities from being created on the fly.
     private Ability(AttackType attackType, DamageType damageType, float range, float radius, float cooldown, string id, string readable)
     {
+        
+
         this.attackType = attackType;
         this.damageType = damageType;
         this.range = range;
@@ -81,7 +84,8 @@ public class Ability {
         this.cooldown = cooldown;
         this.readable = readable;
 
-        abilities.Add(id, this);
+        // See previous TODO
+        //abilities.Add(id, this);
     }
 
     // The following is a list of example abilities.
