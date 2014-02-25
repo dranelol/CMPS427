@@ -188,8 +188,8 @@ public abstract class StateMachine : MonoBehaviour
     /// </summary>
     private void ConfigureCurrentState()
     {
-        Debug.Log("previous state: " + previousState);
-        Debug.Log("current state: " + currentState);
+       // Debug.Log("previous state: " + previousState);
+       // Debug.Log("current state: " + currentState);
 
         if (previousState != null)
         {
