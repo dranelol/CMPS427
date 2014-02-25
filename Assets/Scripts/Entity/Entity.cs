@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Entity : MonoBehaviour
 {
-	public float currentHP; // Currently unused.
+	public float currentHP=20f; // Currently unused.
 	public Attributes currentAtt; // The entity's current total attributes
 	public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
 	public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
@@ -17,9 +17,15 @@ public class Entity : MonoBehaviour
 	/// <param name="att">An Attributes object containing the base stats of this entity.</param>
 	public Entity(Attributes att)
 	{
+        currentHP = 20f;
 		currentAtt = att;
 		equipAtt = new Attributes();
 	}
+
+    void Start()
+    {
+        currentHP = 20f;
+    }
 	
 	/// <summary>
 	/// Add the attribute changes of an item to the entity. The item must correlate to one of the equipment slots,
@@ -80,4 +86,5 @@ public class Entity : MonoBehaviour
 		currentAtt.Subtract(s);
 		buffAtt.Subtract(s);
 	}
+
 }

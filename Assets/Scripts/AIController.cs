@@ -55,7 +55,7 @@ public class AIController : StateMachine
     private MovementFSM MoveFSM; // The Movement FSM the enemy uses
     private NavMeshAgent NavAgent; // NavMeshAgent for this enemy
     private AIPursuit PursuitFSM; // The script that managers AI behavior when pursuing a target
-
+    private Entity EntityObject; // our entity object
     // Reset variables
     public Vector3 localHomePosition; // The position around the home position this unit returns to upon reset
 
@@ -69,6 +69,7 @@ public class AIController : StateMachine
         Aggro = GetComponentInChildren<AggroRadius>();
         MoveFSM = GetComponent<MovementFSM>();
         NavAgent = GetComponent<NavMeshAgent>();
+        EntityObject = GetComponent<Entity>();
     }
 
 	void Start() 
@@ -247,7 +248,7 @@ public class AIController : StateMachine
 
     void pursuit_Update()
     {
-        if (false) // Check health for death || if (health <= 0)
+        if (EntityObject.currentHP <=0.0f) // Check health for death || if (health <= 0)
         {
             Transition(AIStates.dead);
         }
