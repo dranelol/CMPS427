@@ -481,6 +481,109 @@ public class equipmentFactory {
 
     }
 
+    /// <summary>
+    /// generate a random equipment
+    /// </summary>
+    /// <param name="level">the desired level</param>
+    /// <returns>a random equipment of the desired level</returns>
+    public equipment randomEquipment(int level)
+    {
+
+        equipment randEquipment = new equipment();
+        equipment tempEquipment;
+
+        //roll the dice to see if we get affixes
+        int randint = UnityEngine.Random.Range(0, 100);
+
+        if (randint >= 97)
+        {
+            ArrayList templist = new ArrayList();
+            foreach (equipment e in uniqueslist)
+            {
+                if (e.maxlvl >= level && e.minlvl <= level)
+                {
+                    templist.Add(e);
+                }
+            }
+            tempEquipment = (equipment)templist[UnityEngine.Random.Range(0, templist.Count)];
+        }
+        else
+        {
+            ArrayList templist = new ArrayList();
+            foreach (equipment e in basesList)
+            {
+                if (e.maxlvl >= level && e.minlvl <= level)
+                {
+                    templist.Add(e);
+                }
+            }
+            tempEquipment = (equipment)templist[UnityEngine.Random.Range(0, templist.Count)];
+        }
+        randEquipment.equipmentName = tempEquipment.equipmentName;
+        randEquipment.equipmentType = tempEquipment.equipmentType;
+        randEquipment.validSlot = tempEquipment.validSlot;
+        randEquipment.maxlvl = tempEquipment.maxlvl;
+        randEquipment.minlvl = tempEquipment.minlvl;
+        randEquipment.flavorText = tempEquipment.flavorText;
+        randEquipment.tier = tempEquipment.tier;
+
+
+        randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
+
+        int tier = 0;
+        if (randint > 60 && randint <= 85)
+            tier = 1;
+        if (randint > 85 && randint < 97)
+            tier = 2;
+
+        doaffixes(randEquipment, tier);
+
+        return randEquipment;
+
+
+    }
+
+    /// <summary>
+    /// get a unique equipment from the list
+    /// </summary>
+    /// <param name="name">the name of the equipment</param>
+    /// <returns>the unique equipment</returns>
+    public equipment getUnique(string name)
+    {
+
+        equipment randEquipment = new equipment();
+        equipment tempEquipment;
+
+
+        
+        ArrayList templist = new ArrayList();
+        foreach (equipment e in uniqueslist)
+        {
+            if (e.equipmentName == name)
+            {
+                templist.Add(e);
+            }
+        }
+        tempEquipment = (equipment)templist[UnityEngine.Random.Range(0, templist.Count)];
+
+        randEquipment.equipmentName = tempEquipment.equipmentName;
+        randEquipment.equipmentType = tempEquipment.equipmentType;
+        randEquipment.validSlot = tempEquipment.validSlot;
+        randEquipment.maxlvl = tempEquipment.maxlvl;
+        randEquipment.minlvl = tempEquipment.minlvl;
+        randEquipment.flavorText = tempEquipment.flavorText;
+        randEquipment.tier = tempEquipment.tier;
+
+        randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
+
+        doaffixes(randEquipment, tier);
+
+        return randEquipment;
+
+
+    }
+
+
  /// <summary>
  /// function to generate a random equipment
  /// </summary>
