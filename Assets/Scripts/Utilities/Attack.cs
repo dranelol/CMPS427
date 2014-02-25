@@ -67,4 +67,22 @@ public class Attack
 
         return enemiesToAttack;
     }
+
+    public static void DoDamage(GameObject attacker, GameObject defender)
+    {
+        Entity attackerEntity = attacker.GetComponent<Entity>();
+        Entity defenderEntity = defender.GetComponent<Entity>();
+
+        // for now, always just take 10hp off
+
+        defenderEntity.currentHP -= 10f;
+
+        float ratio = (defenderEntity.currentHP / defenderEntity.maxHP);
+
+        defender.renderer.material.color = new Color(1.0f, ratio, ratio);
+
+
+    }
+
+
 }
