@@ -125,6 +125,7 @@ public abstract class StateMachine : MonoBehaviour
         {
             currentState = startState;
         }
+        
         ConfigureCurrentState();
         FSMName = this.GetType().Name;
     }
@@ -190,62 +191,65 @@ public abstract class StateMachine : MonoBehaviour
         Debug.Log("previous state: " + previousState);
         Debug.Log("current state: " + currentState);
 
-        if(previousState.ToString() == currentState.ToString())
+        if (previousState != null)
         {
-            Debug.Log("asd");
+            if (previousState.ToString() == currentState.ToString())
+            {
 
+                if (Debugging == true)
+                {
+                    Debug.Log("calling stay state for state: " + currentState.ToString() + " of fsm: " + FSMName);
+                }
+
+                StartCoroutine(StayState());
+                // dont need to do anything else, we're in a reflexive transition
+                return;
+            }
+            
+           
+        }
+
+        // call exit state function for old current state
+        if (ExitState != null)
+        {
             if (Debugging == true)
             {
-                Debug.Log("calling stay state for state: " + currentState.ToString() + " of fsm: " + FSMName);
+                Debug.Log("calling exit state for state: " + currentState.ToString() + " of fsm: " + FSMName);
             }
-
-            StartCoroutine(StayState());
-
+            StartCoroutine(ExitState());
         }
 
-        else
+        // update all state function delegates
+
+        DoUpdate = ConfigureDelegate<Action>("Update", DefaultFunction);
+        DoOnGUI = ConfigureDelegate<Action>("OnGUI", DefaultFunction);
+        DoLateUpdate = ConfigureDelegate<Action>("LateUpdate", DefaultFunction);
+        DoFixedUpdate = ConfigureDelegate<Action>("FixedUpdate", DefaultFunction);
+        DoOnMouseUp = ConfigureDelegate<Action>("OnMouseUp", DefaultFunction);
+        DoOnMouseDown = ConfigureDelegate<Action>("OnMouseDown", DefaultFunction);
+        DoOnMouseEnter = ConfigureDelegate<Action>("OnMouseEnter", DefaultFunction);
+        DoOnMouseExit = ConfigureDelegate<Action>("OnMouseExit", DefaultFunction);
+        DoOnMouseDrag = ConfigureDelegate<Action>("OnMouseDrag", DefaultFunction);
+        DoOnMouseOver = ConfigureDelegate<Action>("OnMouseOver", DefaultFunction);
+        DoOnTriggerEnter = ConfigureDelegate<Action<Collider>>("OnTriggerEnter", DefaultCollider);
+        DoOnTriggerExit = ConfigureDelegate<Action<Collider>>("OnTriggerExit", DefaultCollider);
+        DoOnTriggerStay = ConfigureDelegate<Action<Collider>>("OnTriggerEnter", DefaultCollider);
+        DoOnCollisionEnter = ConfigureDelegate<Action<Collision>>("OnCollisionEnter", DefaultCollision);
+        DoOnCollisionExit = ConfigureDelegate<Action<Collision>>("OnCollisionExit", DefaultCollision);
+        DoOnCollisionStay = ConfigureDelegate<Action<Collision>>("OnCollisionStay", DefaultCollision);
+        EnterState = ConfigureDelegate<Func<IEnumerator>>("EnterState", DefaultCoroutine);
+        ExitState = ConfigureDelegate<Func<IEnumerator>>("ExitState", DefaultCoroutine);
+        StayState = ConfigureDelegate<Func<IEnumerator>>("StayState", DefaultCoroutine);
+        // call enter state function for new current state
+        if (EnterState != null)
         {
-            // call exit state function for old current state
-            if (ExitState != null)
+            if (Debugging == true)
             {
-                if (Debugging == true)
-                {
-                    Debug.Log("calling exit state for state: " + currentState.ToString() + " of fsm: " + FSMName);
-                }
-                StartCoroutine(ExitState());
+                Debug.Log("calling enter state for state: " + currentState.ToString() + " of fsm: " + FSMName);
             }
-
-            // update all state function delegates
-
-            DoUpdate = ConfigureDelegate<Action>("Update", DefaultFunction);
-            DoOnGUI = ConfigureDelegate<Action>("OnGUI", DefaultFunction);
-            DoLateUpdate = ConfigureDelegate<Action>("LateUpdate", DefaultFunction);
-            DoFixedUpdate = ConfigureDelegate<Action>("FixedUpdate", DefaultFunction);
-            DoOnMouseUp = ConfigureDelegate<Action>("OnMouseUp", DefaultFunction);
-            DoOnMouseDown = ConfigureDelegate<Action>("OnMouseDown", DefaultFunction);
-            DoOnMouseEnter = ConfigureDelegate<Action>("OnMouseEnter", DefaultFunction);
-            DoOnMouseExit = ConfigureDelegate<Action>("OnMouseExit", DefaultFunction);
-            DoOnMouseDrag = ConfigureDelegate<Action>("OnMouseDrag", DefaultFunction);
-            DoOnMouseOver = ConfigureDelegate<Action>("OnMouseOver", DefaultFunction);
-            DoOnTriggerEnter = ConfigureDelegate<Action<Collider>>("OnTriggerEnter", DefaultCollider);
-            DoOnTriggerExit = ConfigureDelegate<Action<Collider>>("OnTriggerExit", DefaultCollider);
-            DoOnTriggerStay = ConfigureDelegate<Action<Collider>>("OnTriggerEnter", DefaultCollider);
-            DoOnCollisionEnter = ConfigureDelegate<Action<Collision>>("OnCollisionEnter", DefaultCollision);
-            DoOnCollisionExit = ConfigureDelegate<Action<Collision>>("OnCollisionExit", DefaultCollision);
-            DoOnCollisionStay = ConfigureDelegate<Action<Collision>>("OnCollisionStay", DefaultCollision);
-            EnterState = ConfigureDelegate<Func<IEnumerator>>("EnterState", DefaultCoroutine);
-            ExitState = ConfigureDelegate<Func<IEnumerator>>("ExitState", DefaultCoroutine);
-            StayState = ConfigureDelegate<Func<IEnumerator>>("StayState", DefaultCoroutine);
-            // call enter state function for new current state
-            if (EnterState != null)
-            {
-                if (Debugging == true)
-                {
-                    Debug.Log("calling enter state for state: " + currentState.ToString() + " of fsm: " + FSMName);
-                }
-                StartCoroutine(EnterState());
-            }
+            StartCoroutine(EnterState());
         }
+        
     }
 
     /// <summary>
