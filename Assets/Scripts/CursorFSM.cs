@@ -16,24 +16,26 @@ public class CursorFSM : StateMachine
 
     void Start()
     {
-        List<Enum> idleTransitions = new List<Enum>();
+        SetupMachine(CursorStates.idle);
+
+        HashSet<Enum> idleTransitions = new HashSet<Enum>();
 
         idleTransitions.Add(CursorStates.ingame);
         idleTransitions.Add(CursorStates.menu);
 
-        List<Enum> ingameTransitions = new List<Enum>();
+        HashSet<Enum> ingameTransitions = new HashSet<Enum>();
 
         ingameTransitions.Add(CursorStates.idle);
         ingameTransitions.Add(CursorStates.menu);
 
-        List<Enum> menuTransitions = new List<Enum>();
+        HashSet<Enum> menuTransitions = new HashSet<Enum>();
 
         menuTransitions.Add(CursorStates.idle);
         menuTransitions.Add(CursorStates.ingame);
 
-        Transitions.Add(CursorStates.idle, idleTransitions);
-        Transitions.Add(CursorStates.ingame, ingameTransitions);
-        Transitions.Add(CursorStates.menu, menuTransitions);
+        AddTransitionsTo(CursorStates.idle, idleTransitions);
+        AddTransitionsTo(CursorStates.ingame, ingameTransitions);
+        AddTransitionsTo(CursorStates.menu, menuTransitions);
 
         StartMachine(CursorStates.idle);
     }
