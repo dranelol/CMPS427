@@ -89,17 +89,12 @@ public class AIController : StateMachine
         pursuitTransitions.Add(AIStates.dead);
         pursuitTransitions.Add(AIStates.reset);
 
-        HashSet<Enum> fleeTransitions = new HashSet<Enum>();
-        fleeTransitions.Add(AIStates.pursuit);
-        fleeTransitions.Add(AIStates.dead);
-        fleeTransitions.Add(AIStates.reset);
-
         HashSet<Enum> resetTransitions = new HashSet<Enum>();
         resetTransitions.Add(AIStates.idle);
 
-        AddTransitionsTo(AIStates.idle, idleTransitions);
-        AddTransitionsTo(AIStates.pursuit, pursuitTransitions);
-        AddTransitionsTo(AIStates.reset, resetTransitions);
+        AddTransitionsFrom(AIStates.idle, idleTransitions);
+        AddTransitionsFrom(AIStates.pursuit, pursuitTransitions);
+        AddTransitionsFrom(AIStates.reset, resetTransitions);
 
         StartMachine(AIStates.idle);
     }
@@ -221,7 +216,18 @@ public class AIController : StateMachine
 
     private void Fight()
     {
-        MoveFSM.SetPath(target.transform.position);
+        if (Vector3.Distance(transform.position, target.transform.position) > 5)
+        {
+            MoveFSM.SetPath(target.transform.position);
+        }
+
+        else
+        {
+            if (NavAgent.hasPath)
+            {
+                MoveFSM.Stop();
+            }
+        }
     }
 
     #endregion
@@ -250,7 +256,6 @@ public class AIController : StateMachine
     {
         if (EntityObject.currentHP <=0.0f) // Check health for death || if (health <= 0)
         {
-            MoveFSM.LockMovement();
             Transition(AIStates.dead);
         }
 
@@ -287,6 +292,7 @@ public class AIController : StateMachine
 
     IEnumerator reset_EnterState()
     {
+        PursuitFSM.StopPursuit();
         MoveFSM.SetPath(localHomePosition);
         yield break;
     }
@@ -314,6 +320,7 @@ public class AIController : StateMachine
 
     IEnumerator dead_EnterState()
     {
+        PursuitFSM.StopPursuit();
         MoveFSM.LockMovement();
         yield return null;
     }
