@@ -36,9 +36,9 @@ public class MovementFSM : StateMachine
         moveLockedTransitions.Add(MoveStates.idle);
         moveLockedTransitions.Add(MoveStates.moveLocked);
 
-        AddTransitionsTo(MoveStates.idle, idleTransitions);
-        AddTransitionsTo(MoveStates.moving, movingTransitions);
-        AddTransitionsTo(MoveStates.moveLocked, moveLockedTransitions);
+        AddTransitionsFrom(MoveStates.idle, idleTransitions);
+        AddTransitionsFrom(MoveStates.moving, movingTransitions);
+        AddTransitionsFrom(MoveStates.moveLocked, moveLockedTransitions);
 
         StartMachine(MoveStates.idle);
 
@@ -63,6 +63,7 @@ public class MovementFSM : StateMachine
 
     public void LockMovement()
     {
+        timedLock = false;
         Transition(MoveStates.moveLocked);
     }
 

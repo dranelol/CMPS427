@@ -276,21 +276,6 @@ public abstract class StateMachine : MonoBehaviour
         {
             return Default;
         }
-
-    }
-
-
-    /// <summary>
-    /// Adds a transition to every state in statesList from "transition"
-    /// </summary>
-    /// <param name="transition">State to tranistion to</param>
-    protected void AddAllTransitionsTo(Enum transition)
-    {
-        foreach (Enum state in Transitions.Keys)
-        {
-            AddTransition(state, transition);
-        }
-        
     }
 
     /// <summary>
@@ -304,19 +289,29 @@ public abstract class StateMachine : MonoBehaviour
             AddTransition(state, transition);
         }
     }
-    
+
     /// <summary>
-    /// Adds a transition from "transition" to every state in "states"
+    /// Adds a transition from every state in statesList to "state"
     /// </summary>
-    /// <param name="transition">State being added</param>
-    /// <param name="states">States being added to</param>
-    protected void AddTransitionsFrom(Enum transition, HashSet<Enum> states)
+    /// <param name="state">State to tranistion to</param>
+    protected void AddAllTransitionsTo(Enum state)
     {
-        if (states.Count > 0)
+        foreach (Enum transition in Transitions.Keys)
         {
-            // check for type of each transition
-            // if valid, add to transition set for that state
-            foreach (Enum state in states)
+            AddTransition(transition, state);
+        }     
+    }
+
+    /// <summary>
+    /// Adds a transition from "state" to every state in "transitions"
+    /// </summary>
+    /// <param name="state">State to transition from</param>
+    /// <param name="transitions">States to transitions to</param>
+    protected void AddTransitionsFrom(Enum state, HashSet<Enum> transitions)
+    {
+        if (transitions.Count > 0)
+        {
+            foreach (Enum transition in transitions)
             {
                 AddTransition(state, transition);
             }
@@ -326,23 +321,15 @@ public abstract class StateMachine : MonoBehaviour
     /// <summary>
     /// Adds a transition from each state in "transitions" to "state"
     /// </summary>
-    /// <param name="state">State being added to</param>
-    /// <param name="transitions">State being added</param>
+    /// <param name="state">State to transitions to</param>
+    /// <param name="transitions">States to transition from</param>
     protected void AddTransitionsTo(Enum state, HashSet<Enum> transitions)
     {
         if (transitions.Count > 0)
         {
-            // check for type of each transition
-            // if valid, add to transition set for that state
             foreach (Enum transition in transitions)
             {
-
-                if (transition.GetType() != stateType)
-                {
-                    throw new Exception("Attempting to add an invalid state transition to state");
-                }
-
-                AddTransition(state, transition);
+                AddTransition(transition, state);
             }
         }
     }

@@ -1,55 +1,39 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 
-public class AIPursuit : MonoBehaviour 
+public class AIPursuit : StateMachine 
 {
-    /*
     private const float stoppingDistance = 4; // The normal distance before position recalculation
 
     private enum PursuitStates
     {
         inactive,
         seek,
-        conservative,
-        defensive,
-        flee,
-        aggressive,
-        berserker,
-        cheap,
+        attack,
     }
 
-    private FSM<PursuitStates> PursuitFSM;
     private MovementFSM MoveFSM;
     private NavMeshAgent NavAgent;
 
-    private GameObject currentTarget;
+    private GameObject currentTarget = null;
 
     private float attackRange = 4; // The range the enemy must be within in order to attack
     
 
     void Awake()
     {
-        PursuitFSM = new FSM<PursuitStates>();
+        SetupMachine(PursuitStates.inactive);
 
-        PursuitFSM.AddTransitionsFromAToB(PursuitStates.inactive, PursuitStates.seek);
+        HashSet<Enum> inactiveTransitions = new HashSet<Enum>();
+        inactiveTransitions.Add(PursuitStates.seek);
+        AddTransitionsFrom(PursuitStates.inactive, inactiveTransitions);
 
-        PursuitStates[] listtest = new PursuitStates[3] { PursuitStates.defensive, PursuitStates.flee, PursuitStates.seek };
+        AddAllTransitionsFrom(PursuitStates.seek);
+        AddAllTransitionsTo(PursuitStates.seek);
+        AddAllTransitionsTo(PursuitStates.inactive);
 
-        //PursuitFSM.AddTransitionsFromAToB(PursuitStates.conservative, PursuitStates.flee, PursuitStates.defensive, PursuitStates.seek);
-
-        PursuitFSM.AddTransitionsFromAToB(PursuitStates.conservative, listtest);
-        PursuitFSM.AddTransitionsToAFromB(PursuitStates.conservative, PursuitStates.flee, PursuitStates.defensive, PursuitStates.seek, PursuitStates.aggressive);
- 
-        PursuitFSM.AddTransitionsFromAToB(PursuitStates.aggressive, PursuitStates.berserker, PursuitStates.cheap, PursuitStates.seek);
-        PursuitFSM.AddTransitionsToAFromB(PursuitStates.aggressive, PursuitStates.berserker, PursuitStates.cheap, PursuitStates.seek, PursuitStates.conservative);
-
-        PursuitFSM.AddTransitionsToAFromB(PursuitStates.inactive);
-
-        PursuitFSM.AddTransitionBehavior(PursuitStates.inactive, null, inactive_OnStay, null);
-        PursuitFSM.AddTransitionBehavior(PursuitStates.seek, seek_EnterState, seek_OnStay);
-
-        PursuitFSM.Start(PursuitStates.inactive);
+        StartMachine(PursuitStates.inactive);
 
         MoveFSM = GetComponent<MovementFSM>();
         NavAgent = GetComponent<NavMeshAgent>();
@@ -57,23 +41,33 @@ public class AIPursuit : MonoBehaviour
 
     public void Pursue(GameObject target)
     {
-        currentTarget = target; 
-        PursuitFSM.Transition(PursuitFSM.Current_State);
+        currentTarget = target;
+
+        if ((PursuitStates)CurrentState == PursuitStates.inactive)
+        {
+            Transition(PursuitStates.seek);
+        }
+    }
+
+    public void Retarget(GameObject newTarget)
+    {
+        currentTarget = newTarget;
+
+        if ((PursuitStates)CurrentState != PursuitStates.inactive)
+        {
+            Transition(PursuitStates.seek);
+        }
     }
 
     public void StopPursuit()
     {
-        PursuitFSM.Transition(PursuitStates.inactive);
+        currentTarget = null;
+        Transition(PursuitStates.inactive);
     }
 
     #region transition functions
 
     #region inactive functions
-
-    private void inactive_OnStay()
-    {
-        PursuitFSM.Transition(PursuitStates.seek);
-    }
 
     #endregion
 
@@ -140,10 +134,10 @@ public class AIPursuit : MonoBehaviour
                 MoveFSM.Stop();
             }
         }
+         */
     }
 
     #endregion
 
     #endregion
-*/
 }
