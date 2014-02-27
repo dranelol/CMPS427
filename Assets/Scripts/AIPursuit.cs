@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 using System;
 
 public class AIPursuit : StateMachine 
 {
-    private const float stoppingDistance = 4; // The normal distance before position recalculation
-
     private enum PursuitStates
     {
         inactive,
@@ -20,7 +19,6 @@ public class AIPursuit : StateMachine
 
     private float attackRange = 4; // The range the enemy must be within in order to attack
     
-
     void Awake()
     {
         SetupMachine(PursuitStates.inactive);
@@ -41,100 +39,58 @@ public class AIPursuit : StateMachine
 
     public void Pursue(GameObject target)
     {
-        currentTarget = target;
-
-        if ((PursuitStates)CurrentState == PursuitStates.inactive)
+        if (target != null)
         {
-            Transition(PursuitStates.seek);
-        }
-    }
-
-    public void Retarget(GameObject newTarget)
-    {
-        currentTarget = newTarget;
-
-        if ((PursuitStates)CurrentState != PursuitStates.inactive)
-        {
+            currentTarget = target;
             Transition(PursuitStates.seek);
         }
     }
 
     public void StopPursuit()
     {
-        currentTarget = null;
         Transition(PursuitStates.inactive);
     }
 
-    #region transition functions
+    #region state based functions
 
     #region inactive functions
+
+    IEnumerator inactive_EnterState()
+    {
+        currentTarget = null;
+        yield break;
+    }
 
     #endregion
 
     #region seek functions
 
-    private void seek_EnterState()
+    void seek_Update()
     {
-        MoveFSM.SetPath(currentTarget.transform.position);
-    }
-
-    private void seek_OnStay()
-    {
-        /*
-        if (Vector3.Distance(transform.position, currentTarget.transform.position) > attackRange)
+        if (Vector3.Distance(transform.position, currentTarget.transform.position) < attackRange)
         {
-            if (!NavAgent.hasPath || Vector3.Distance(transform.position, NavAgent.destination) < maxDistanceFromTargetPositionToTarget)
+            Vector3 directionToTarget = currentTarget.transform.position - transform.position;
+            RaycastHit hit;
+            Physics.Raycast(transform.position, directionToTarget, out hit, 1 << LayerMask.NameToLayer("Player"));
+
+            if (hit.transform.tag == "Player")
             {
-                //NavAgent.avoidancePriority = 49;
+                MoveFSM.Stop();
+                // Transition(PusuitStates.attack);
+            }
+
+            else
+            {
                 MoveFSM.SetPath(currentTarget.transform.position);
             }
         }
 
         else
         {
-            
-            Vector3 directionToTarget = currentTarget.transform.position - transform.position;
-            RaycastHit hit;
-            Physics.Raycast(transform.position, directionToTarget, out hit, 1 << LayerMask.NameToLayer("Player"));
-
-            if (hit.transform.tag == "Player")
-            {
-                Debug.Log("I see player");
-                // set to a higher priority, we want lower priority things to path around
-                //NavAgent.avoidancePriority = 51;
-
-                MoveFSM.Stop();
-            }
-
-            else
-            {
-                Debug.Log("I wanna get up in dat");
-                //NavAgent.avoidancePriority = 50;
-
-                if (!NavAgent.hasPath || Vector3.Distance(transform.position, NavAgent.destination) < minDistanceFromTargetPositionToTarget)
-                {
-                    MoveFSM.SetPath(currentTarget.transform.position);
-                }
-            }
-        }
-
-        if (Vector3.Distance(transform.position, currentTarget.transform.position) > attackRange)
-        {
             MoveFSM.SetPath(currentTarget.transform.position);
         }
 
-        else
-        {
-            Vector3 directionToTarget = currentTarget.transform.position - transform.position;
-            RaycastHit hit;
-            Physics.Raycast(transform.position, directionToTarget, out hit, 1 << LayerMask.NameToLayer("Player"));
-
-            if (hit.transform.tag == "Player")
-            {
-                MoveFSM.Stop();
-            }
-        }
-         */
+        transform.position = currentTarget.transform.position + UnityEngine.Random.insideUnitSphere * 5;
     }
 
     #endregion
