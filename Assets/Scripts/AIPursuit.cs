@@ -89,8 +89,6 @@ public class AIPursuit : StateMachine
         {
             MoveFSM.SetPath(currentTarget.transform.position);
         }
-
-        transform.position = currentTarget.transform.position + UnityEngine.Random.insideUnitSphere * 5;
     }
 
     #endregion
