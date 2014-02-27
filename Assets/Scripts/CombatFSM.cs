@@ -9,7 +9,7 @@ public class CombatFSM : StateMachine
 {
     private bool timeLocked = false;
     private bool attack = false;
-    private float lockedTime = 0;
+    private float lockedTime = 1.0f;
 
     public enum CombatStates
     {
@@ -33,9 +33,9 @@ public class CombatFSM : StateMachine
         HashSet<Enum> combatLockedTransitions = new HashSet<Enum>();
         combatLockedTransitions.Add(CombatStates.idle);
 
-        AddTransitionsTo(CombatStates.idle, idleTransitions);
-        AddTransitionsTo(CombatStates.attacking, attackingTransitions);
-        AddTransitionsTo(CombatStates.combatLocked, combatLockedTransitions);
+        AddTransitionsFrom(CombatStates.idle, idleTransitions);
+        AddTransitionsFrom(CombatStates.attacking, attackingTransitions);
+        AddTransitionsFrom(CombatStates.combatLocked, combatLockedTransitions);
 
         StartMachine(CombatStates.idle);
 	}

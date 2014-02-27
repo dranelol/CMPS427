@@ -133,19 +133,22 @@ public class PlayerController : MonoBehaviour {
 
             foreach (GameObject enemy in attacked)
             {
-                Vector3 relativeVector = (enemy.transform.position - transform.position);
-                float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
-                
-                 
-                enemy.AddComponent<Rigidbody>();
-                float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
-                enemy.GetComponent<MovementFSM>().Stop(0.2f);
-                enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
-                Destroy(enemy.rigidbody, 0.2f);
-                //enemy.rigidbody.AddForceAtPosition(50f, 
-                //enemy.rigidbody.AddExplosionForce(50f, transform.position, 5f, 3f);
-                //Destroy(enemy.rigidbody);
-                Attack.DoDamage(gameObject, enemy);
+                if (enemy.GetComponent<Entity>().IsDead() == false)
+                {
+                    Vector3 relativeVector = (enemy.transform.position - transform.position);
+                    float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
+
+
+                    enemy.AddComponent<Rigidbody>();
+                    float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
+                    enemy.GetComponent<MovementFSM>().Stop(0.2f);
+                    enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
+                    Destroy(enemy.rigidbody, 0.2f);
+                    //enemy.rigidbody.AddForceAtPosition(50f, 
+                    //enemy.rigidbody.AddExplosionForce(50f, transform.position, 5f, 3f);
+                    //Destroy(enemy.rigidbody);
+                    Attack.DoDamage(gameObject, enemy);
+                }
             }
 
         }
@@ -156,21 +159,25 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.V))
         {
             List<GameObject> attacked = Attack.OnAttack(transform, 360f, 5f);
-
+            
             foreach (GameObject enemy in attacked)
             {
-                Vector3 relativeVector = (enemy.transform.position - transform.position);
-                float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
+                if (enemy.GetComponent<Entity>().IsDead() == false)
+                {
+                    Vector3 relativeVector = (enemy.transform.position - transform.position);
+                    float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
 
 
-                enemy.AddComponent<Rigidbody>();
-                float force = (-1) * (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
-                enemy.GetComponent<MovementFSM>().Stop(0.2f);
-                enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
-                Destroy(enemy.rigidbody, 0.2f);
-                //enemy.rigidbody.AddForceAtPosition(50f, 
-                //enemy.rigidbody.AddExplosionForce(50f, transform.position, 5f, 3f);
-                //Destroy(enemy.rigidbody);
+                    enemy.AddComponent<Rigidbody>();
+                    float force = (-1) * (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
+                    enemy.GetComponent<MovementFSM>().Stop(0.2f);
+                    enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
+                    Destroy(enemy.rigidbody, 0.2f);
+                    //enemy.rigidbody.AddForceAtPosition(50f, 
+                    //enemy.rigidbody.AddExplosionForce(50f, transform.position, 5f, 3f);
+                    //Destroy(enemy.rigidbody);
+                    Attack.DoDamage(gameObject, enemy);
+                }
             }
 
         }
@@ -184,23 +191,27 @@ public class PlayerController : MonoBehaviour {
             List<GameObject> attacked = Attack.OnAttack(transform, 45f, 5f);
             foreach (GameObject enemy in attacked)
             {
-                Debug.Log(enemy.GetInstanceID().ToString());
-                //Color enemyColor = enemy.renderer.material.color;
-                //enemy.renderer.material.color = ;
-                //Color enemyColor = enemy.renderer.material.GetColor("_Color");
-                //Color enemyColorTint = enemy.renderer.material.GetColor("_TintColor");
-                //float intensity = enemyColorTint.a + 50;
-                //Debug.Log(enemyColor.ToString());
-                //enemyColor.r -= (byte)0.5;
-                //enemyColor.b -= (byte)0.5;
-                //enemyColor.g -= (byte)0.5;
+                if (enemy.GetComponent<Entity>().IsDead() == false)
+                {
+                    Debug.Log(enemy.GetInstanceID().ToString());
+                    //Color enemyColor = enemy.renderer.material.color;
+                    //enemy.renderer.material.color = ;
+                    //Color enemyColor = enemy.renderer.material.GetColor("_Color");
+                    //Color enemyColorTint = enemy.renderer.material.GetColor("_TintColor");
+                    //float intensity = enemyColorTint.a + 50;
+                    //Debug.Log(enemyColor.ToString());
+                    //enemyColor.r -= (byte)0.5;
+                    //enemyColor.b -= (byte)0.5;
+                    //enemyColor.g -= (byte)0.5;
 
-                //Color tintColor = new Color32(255, 23, 0, (byte)intensity);
-                //enemy.renderer.material.SetColor("_TintColor", tintColor);
-                //enemy.renderer.material.SetColor("_Color", enemyColor);
-                //enemy.renderer.material.SetColor("_Color", new Color(enemyColor.r - (byte)1, enemyColor.g - (byte)1, enemyColor.b - (byte)1, enemyColor.a));
-                //enemy.transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
-                enemy.renderer.material.SetColor("_Color", Color.red);
+                    //Color tintColor = new Color32(255, 23, 0, (byte)intensity);
+                    //enemy.renderer.material.SetColor("_TintColor", tintColor);
+                    //enemy.renderer.material.SetColor("_Color", enemyColor);
+                    //enemy.renderer.material.SetColor("_Color", new Color(enemyColor.r - (byte)1, enemyColor.g - (byte)1, enemyColor.b - (byte)1, enemyColor.a));
+                    //enemy.transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
+                    //enemy.renderer.material.SetColor("_Color", Color.red);
+                    Attack.DoDamage(gameObject, enemy);
+                }
             }
         }
 
@@ -213,15 +224,19 @@ public class PlayerController : MonoBehaviour {
             List<GameObject> attacked = Attack.OnAttack(transform, 45f, 5f);
             foreach (GameObject enemy in attacked)
             {
-                Vector3 relativeVector = (enemy.transform.position - transform.position);
-                float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
+                if (enemy.GetComponent<Entity>().IsDead() == false)
+                {
+                    Vector3 relativeVector = (enemy.transform.position - transform.position);
+                    float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
 
 
-                enemy.AddComponent<Rigidbody>();
-                float force = (normalizedMagnitude / (Mathf.Pow(0.35f, 2)));
-                enemy.GetComponent<MovementFSM>().Stop(0.17f);
-                enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
-                Destroy(enemy.rigidbody, 0.17f);
+                    enemy.AddComponent<Rigidbody>();
+                    float force = (normalizedMagnitude / (Mathf.Pow(0.35f, 2)));
+                    enemy.GetComponent<MovementFSM>().Stop(0.17f);
+                    enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
+                    Destroy(enemy.rigidbody, 0.17f);
+                    Attack.DoDamage(gameObject, enemy);
+                }
             }
         }
         #endregion
