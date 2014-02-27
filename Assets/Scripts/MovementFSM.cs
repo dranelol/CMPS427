@@ -41,7 +41,6 @@ public class MovementFSM : StateMachine
         AddTransitionsFrom(MoveStates.moveLocked, moveLockedTransitions);
 
         StartMachine(MoveStates.idle);
-
     }
 
     #region public functions

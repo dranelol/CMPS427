@@ -227,7 +227,6 @@ public class AIController : StateMachine
 
     #endregion
 
-
     #region state based functions
 
     #region idle functions
@@ -317,7 +316,7 @@ public class AIController : StateMachine
 
     IEnumerator dead_EnterState()
     {
-        gameObject.layer = 0;
+        Destroy(GetComponent<CapsuleCollider>());
         PursuitFSM.StopPursuit();
         MoveFSM.LockMovement();
         yield return null;
