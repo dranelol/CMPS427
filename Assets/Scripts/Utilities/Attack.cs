@@ -38,7 +38,7 @@ public class Attack
 
 
 
-                bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2),out hit, attackRange, 1 << playerMask);
+                bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, attackRange, 1 << playerMask);
                 
                 if (hit.collider.gameObject.tag == "Player")
                 {

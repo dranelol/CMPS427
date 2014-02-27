@@ -8,6 +8,7 @@ public class Entity : MonoBehaviour
     public Attributes currentAtt; // The entity's current total attributes
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
+	public float maxHP;
 
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
 
@@ -20,6 +21,7 @@ public class Entity : MonoBehaviour
         equipAtt = new Attributes();
         buffAtt = new Attributes();
 
+		currentHP = maxHP = 50;
         currentAtt.Power = 100;
     }
 

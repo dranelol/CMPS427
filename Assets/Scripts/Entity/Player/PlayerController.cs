@@ -20,7 +20,6 @@ public class PlayerController : MonoBehaviour {
         agent = GetComponent<NavMeshAgent>();
 		agent.acceleration = 100f;
         agent.updateRotation = false;
-        
 	}
 	
 	// Update is called once per frame
