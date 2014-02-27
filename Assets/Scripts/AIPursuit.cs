@@ -15,6 +15,9 @@ public class AIPursuit : StateMachine
     private MovementFSM MoveFSM;
     private NavMeshAgent NavAgent;
 
+    public bool wuduriketomakingfuk = false;
+    public bool katamarimdoe = false;
+
     private GameObject currentTarget = null;
 
     private float attackRange = 4; // The range the enemy must be within in order to attack
@@ -67,16 +70,26 @@ public class AIPursuit : StateMachine
 
     void seek_Update()
     {
-        if (Vector3.Distance(transform.position, currentTarget.transform.position) < attackRange)
+        if (!wuduriketomakingfuk)
         {
-            Vector3 directionToTarget = currentTarget.transform.position - transform.position;
-            RaycastHit hit;
-            Physics.Raycast(transform.position, directionToTarget, out hit, 1 << LayerMask.NameToLayer("Player"));
 
-            if (hit.transform.tag == "Player")
+
+            if (Vector3.Distance(transform.position, currentTarget.transform.position) < attackRange)
             {
-                MoveFSM.Stop();
-                // Transition(PusuitStates.attack);
+                Vector3 directionToTarget = currentTarget.transform.position - transform.position;
+                RaycastHit hit;
+                Physics.Raycast(transform.position, directionToTarget, out hit, 1 << LayerMask.NameToLayer("Player"));
+
+                if (hit.transform.tag == "Player")
+                {
+                    MoveFSM.Stop();
+                    // Transition(PusuitStates.attack);
+                }
+
+                else
+                {
+                    MoveFSM.SetPath(currentTarget.transform.position);
+                }
             }
 
             else
@@ -87,7 +100,12 @@ public class AIPursuit : StateMachine
 
         else
         {
-            MoveFSM.SetPath(currentTarget.transform.position);
+            transform.position = currentTarget.transform.position + UnityEngine.Random.insideUnitSphere * 5;
+        }
+
+        if (katamarimdoe)
+        {
+            NavAgent.Warp(currentTarget.transform.position);
         }
     }
 
