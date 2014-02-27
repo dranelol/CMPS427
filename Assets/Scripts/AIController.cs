@@ -151,6 +151,15 @@ public class AIController : StateMachine
         get { return target; }
     }
 
+    public bool IsDead()
+    {
+        return (AIStates)CurrentState == AIStates.dead;
+    }
+
+    public bool IsResetting()
+    {
+        return (AIStates)CurrentState == AIStates.reset;
+    }
     #endregion
 
     #region private functions
@@ -218,9 +227,6 @@ public class AIController : StateMachine
 
     #endregion
 
-    #region private functions
-
-    #endregion
 
     #region state based functions
 
@@ -311,6 +317,7 @@ public class AIController : StateMachine
 
     IEnumerator dead_EnterState()
     {
+        gameObject.layer = 0;
         PursuitFSM.StopPursuit();
         MoveFSM.LockMovement();
         yield return null;
@@ -319,4 +326,6 @@ public class AIController : StateMachine
     #endregion
 
     #endregion
+
+    
 }
