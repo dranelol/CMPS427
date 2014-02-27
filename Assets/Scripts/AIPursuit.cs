@@ -78,20 +78,23 @@ public class AIPursuit : StateMachine
             {
                 Vector3 directionToTarget = currentTarget.transform.position - transform.position;
                 RaycastHit hit;
-                Physics.Raycast(transform.position, directionToTarget, out hit, 1 << LayerMask.NameToLayer("Player"));
+                bool raycastSuccess = Physics.Raycast(transform.position, directionToTarget, out hit, 1 << LayerMask.NameToLayer("Player"));
 
-                if (hit.transform.tag == "Player")
+                // if we succeeded our raycast, and we hit the player first: we're in attack range and LoS
+                if (raycastSuccess == true && hit.transform.tag == "Player")
                 {
                     MoveFSM.Stop();
-                    // Transition(PusuitStates.attack);
                 }
 
+                // raycast was false, we either hit nothing, or hit something that wasnt the player
                 else
                 {
                     MoveFSM.SetPath(currentTarget.transform.position);
                 }
+               
             }
 
+            // we're outside of range
             else
             {
                 MoveFSM.SetPath(currentTarget.transform.position);
