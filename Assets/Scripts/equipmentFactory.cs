@@ -414,7 +414,7 @@ public class equipmentFactory {
         else
         {
             int lootroll = UnityEngine.Random.Range(0, basesList.Count);
-            tempEquipment = (equipment)basesList[randint];
+            tempEquipment = (equipment)basesList[lootroll];
         }
         randEquipment.equipmentName = tempEquipment.equipmentName;
         randEquipment.equipmentType = tempEquipment.equipmentType;
@@ -486,7 +486,7 @@ public class equipmentFactory {
     /// </summary>
     /// <param name="level">the desired level</param>
     /// <returns>a random equipment of the desired level</returns>
-    public equipment randomEquipment(int level)
+    public equipment randomEquipmentByLevel(int level)
     {
 
         equipment randEquipment = new equipment();
@@ -575,8 +575,6 @@ public class equipmentFactory {
         randEquipment.tier = tempEquipment.tier;
 
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
-
-        doaffixes(randEquipment, tier);
 
         return randEquipment;
 
