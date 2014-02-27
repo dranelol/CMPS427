@@ -34,17 +34,20 @@ public class Attack
                 RaycastHit hit = new RaycastHit();
                 Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
                 Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+                bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2),out hit, attackRange, 1 << playerMask);
 
-
-
-
-                bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, attackRange, 1 << playerMask);
-                
-                if (hit.collider.gameObject.tag == "Player")
+                if (!rayCastHit)
                 {
-                    //Debug.Log("dat hit!");
-                    enemiesToAttack.Add(collider.gameObject);
+                    Debug.Log("derp");
                 }
+                else{
+                    if (hit.collider.gameObject.tag == "Player")
+                    {
+                        //Debug.Log("dat hit!");
+                        enemiesToAttack.Add(collider.gameObject);
+                    }
+                }
+        
                  
                 // if the first thing the raycast hits is the player, player do damage to enemy
 

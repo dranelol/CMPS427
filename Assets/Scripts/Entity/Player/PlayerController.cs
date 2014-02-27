@@ -158,7 +158,7 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.V))
         {
             List<GameObject> attacked = Attack.OnAttack(transform, 360f, 5f);
-
+            
             foreach (GameObject enemy in attacked)
             {
                 if (enemy.GetComponent<Entity>().IsDead() == false)
