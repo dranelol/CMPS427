@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour {
         agent = GetComponent<NavMeshAgent>();
 		agent.acceleration = 100f;
         agent.updateRotation = false;
-        
+        agent.avoidancePriority = 1;
 	}
 	
 	// Update is called once per frame
@@ -143,6 +143,7 @@ public class PlayerController : MonoBehaviour {
                     
                     float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
                     enemy.GetComponent<MovementFSM>().Stop(0.2f);
+                    enemy.rigidbody.isKinematic = false;
                     enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
                     
                     //enemy.rigidbody.AddForceAtPosition(50f, 
@@ -150,7 +151,7 @@ public class PlayerController : MonoBehaviour {
                     //Destroy(enemy.rigidbody);
                     
                     Attack.DoDamage(gameObject, enemy);
-                    StartCoroutine(Attack.RemoveVelocity(enemy.rigidbody, 0.2f));
+                    StartCoroutine(Attack.RemovePhysics(enemy.rigidbody, 0.2f));
                 }
             }
 
@@ -182,7 +183,7 @@ public class PlayerController : MonoBehaviour {
                     //enemy.rigidbody.AddExplosionForce(50f, transform.position, 5f, 3f);
                     //Destroy(enemy.rigidbody);
                     Attack.DoDamage(gameObject, enemy);
-                    StartCoroutine(Attack.RemoveVelocity(enemy.rigidbody, 0.2f));
+                    StartCoroutine(Attack.RemovePhysics(enemy.rigidbody, 0.2f));
                 }
             }
 
@@ -244,7 +245,7 @@ public class PlayerController : MonoBehaviour {
                     enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
                     
                     Attack.DoDamage(gameObject, enemy);
-                    StartCoroutine(Attack.RemoveVelocity(enemy.rigidbody, 0.17f));
+                    StartCoroutine(Attack.RemovePhysics(enemy.rigidbody, 0.17f));
                 }
             }
         }
