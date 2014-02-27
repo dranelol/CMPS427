@@ -100,5 +100,60 @@
     <attribute value="100">Resource</attribute>
     <tier>3</tier>
   </type>
-  
+  <type>
+    <name>DUX's Leek</name>
+    <slot>Main</slot>
+    <minlvl>1</minlvl>
+    <maxlvl>20</maxlvl>
+    <flavor>It can CUT the mightiest bush.</flavor>
+    <attribute value="1">MinDamage</attribute>
+    <attribute value="1">MaxDamage</attribute>
+    <attribute value=".5">AttackSpeed</attribute>
+    <tier>3</tier>
+  </type>
+  <type>
+    <name>Dome Shield</name>
+    <slot>Off</slot>
+    <minlvl>1</minlvl>
+    <maxlvl>20</maxlvl>
+    <flavor>It is come, the pure embodiment of evil.</flavor>
+    <attribute value="50">Health</attribute>
+    <attribute value="-1000">Resource</attribute>
+    <attribute value="20">Defense</attribute>
+    <tier>3</tier>
+  </type>
+  <type>
+    <name>LAZ0R SWORD</name>
+    <slot>Main</slot>
+    <minlvl>15</minlvl>
+    <maxlvl>20</maxlvl>
+    <flavor>PEW PEW SWOOSH SWOOSH</flavor>
+    <attribute value="8">MinDamage</attribute>
+    <attribute value="18">MaxDamage</attribute>
+    <attribute value="1">AttackSpeed</attribute>
+    <tier>3</tier>
+  </type>
+  <type>
+    <name>Knife of Exact Zero</name>
+    <slot>Main</slot>
+    <minlvl>12</minlvl>
+    <maxlvl>17</maxlvl>
+    <flavor>The sharpest blade...</flavor>
+    <attribute value="7">MinDamage</attribute>
+    <attribute value="9">MaxDamage</attribute>
+    <attribute value="3">AttackSpeed</attribute>
+    <tier>3</tier>
+  </type>
+  <type>
+    <name>The Kragle</name>
+    <slot>Main</slot>
+    <minlvl>12</minlvl>
+    <maxlvl>17</maxlvl>
+    <flavor>A solid mass, completely indestructable.</flavor>
+    <attribute value="10">MinDamage</attribute>
+    <attribute value="20">MaxDamage</attribute>
+    <attribute value=".5">AttackSpeed</attribute>
+    <tier>3</tier>
+  </type>
+
 </types>
