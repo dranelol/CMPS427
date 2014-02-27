@@ -91,5 +91,20 @@ public class Attack
 
     }
 
+    /// <summary>
+    /// Completely removes the velocity from a rigidbody
+    /// Note: This is used in most of the force-based attacks
+    /// </summary>
+    /// <param name="target">Target rigid body from which you are removing velocity</param>
+    /// <param name="time">Time, in seconds, after which veloctiy is removed. Default=0</param>
+    /// <returns></returns>
+    public static IEnumerator RemoveVelocity(Rigidbody target, float time=0.0f)
+    {
+        yield return new WaitForSeconds(time);
+
+        target.velocity = Vector3.zero;
+
+        yield break;
+    }
 
 }

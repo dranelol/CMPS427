@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 public class AIGroupController : MonoBehaviour {
-    private const float baseResetDistance = 50;
+    private const float baseResetDistance = 40;
     private const float groupBufferDistance = 1.5f;
 
     private List<GameObject> MasterThreatTable;
