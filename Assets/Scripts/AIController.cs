@@ -89,17 +89,12 @@ public class AIController : StateMachine
         pursuitTransitions.Add(AIStates.dead);
         pursuitTransitions.Add(AIStates.reset);
 
-        HashSet<Enum> fleeTransitions = new HashSet<Enum>();
-        fleeTransitions.Add(AIStates.pursuit);
-        fleeTransitions.Add(AIStates.dead);
-        fleeTransitions.Add(AIStates.reset);
-
         HashSet<Enum> resetTransitions = new HashSet<Enum>();
         resetTransitions.Add(AIStates.idle);
 
-        AddTransitionsTo(AIStates.idle, idleTransitions);
-        AddTransitionsTo(AIStates.pursuit, pursuitTransitions);
-        AddTransitionsTo(AIStates.reset, resetTransitions);
+        AddTransitionsFrom(AIStates.idle, idleTransitions);
+        AddTransitionsFrom(AIStates.pursuit, pursuitTransitions);
+        AddTransitionsFrom(AIStates.reset, resetTransitions);
 
         StartMachine(AIStates.idle);
     }
@@ -137,6 +132,7 @@ public class AIController : StateMachine
                 if (ThreatTable[source].Threat > ThreatTable[target].Threat)
                 {
                     target = source;
+                    PursuitFSM.Pursue(target);
                 }
             }
 
@@ -178,30 +174,35 @@ public class AIController : StateMachine
         {
             if (ThreatTable.Remove(lostTarget))
             {
-                if (ThreatTable.Count == 0)
+                if (target == lostTarget)
                 {
-                    target = Group.GetNewTarget();
-
-                    if (target != null)
+                    if (ThreatTable.Count == 0)
                     {
-                        Hostile newTargetObject = new Hostile(target);
-                        ThreatTable.Add(target, newTargetObject);
-                    }
-                }
+                        target = Group.GetNewTarget();
 
-                else if (target == lostTarget)
-                {
-                    GameObject highestThreatTarget = ThreatTable.Keys.First();
-
-                    foreach (GameObject targetInTable in ThreatTable.Keys)
-                    {
-                        if (ThreatTable[targetInTable].Threat > ThreatTable[highestThreatTarget].Threat)
+                        if (target != null)
                         {
-                            highestThreatTarget = targetInTable;
+                            Hostile newTargetObject = new Hostile(target);
+                            ThreatTable.Add(target, newTargetObject);
                         }
                     }
 
-                    target = highestThreatTarget;
+                    else
+                    {
+                        GameObject highestThreatTarget = ThreatTable.Keys.First();
+
+                        foreach (GameObject targetInTable in ThreatTable.Keys)
+                        {
+                            if (ThreatTable[targetInTable].Threat > ThreatTable[highestThreatTarget].Threat)
+                            {
+                                highestThreatTarget = targetInTable;
+                            }
+                        }
+
+                        target = highestThreatTarget;
+                    }
+
+                    PursuitFSM.Pursue(target);
                 }
             }
         }
@@ -218,11 +219,6 @@ public class AIController : StateMachine
     #endregion
 
     #region private functions
-
-    private void Fight()
-    {
-        MoveFSM.SetPath(target.transform.position);
-    }
 
     #endregion
 
@@ -246,11 +242,16 @@ public class AIController : StateMachine
 
     #region pursuit functions
 
+    IEnumerator pursuit_EnterState()
+    {
+        PursuitFSM.Pursue(target);
+        yield break;
+    }
+
     void pursuit_Update()
     {
         if (EntityObject.currentHP <=0.0f) // Check health for death || if (health <= 0)
         {
-            MoveFSM.LockMovement();
             Transition(AIStates.dead);
         }
 
@@ -261,12 +262,7 @@ public class AIController : StateMachine
                 Group.RemoveTarget(target);
             }
 
-            if (target != null)
-            {
-                Fight();//PursuitFSM.Pursue(target);
-            }
-
-            else
+            if (target == null)
             {
                 Reset();
             }
@@ -276,7 +272,7 @@ public class AIController : StateMachine
     IEnumerator pursuit_ExitState()
     {
         // Make invincible
-       // PursuitFSM.StopPursuit();
+        PursuitFSM.StopPursuit();
         ThreatTable.Clear();
         yield break;
     }
@@ -287,6 +283,7 @@ public class AIController : StateMachine
 
     IEnumerator reset_EnterState()
     {
+        PursuitFSM.StopPursuit();
         MoveFSM.SetPath(localHomePosition);
         yield break;
     }
@@ -306,6 +303,17 @@ public class AIController : StateMachine
                 MoveFSM.SetPath(localHomePosition);
             }
         }
+    }
+
+    #endregion
+
+    #region dead functions
+
+    IEnumerator dead_EnterState()
+    {
+        PursuitFSM.StopPursuit();
+        MoveFSM.LockMovement();
+        yield return null;
     }
 
     #endregion

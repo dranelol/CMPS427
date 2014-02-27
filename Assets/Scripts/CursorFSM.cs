@@ -33,9 +33,9 @@ public class CursorFSM : StateMachine
         menuTransitions.Add(CursorStates.idle);
         menuTransitions.Add(CursorStates.ingame);
 
-        AddTransitionsTo(CursorStates.idle, idleTransitions);
-        AddTransitionsTo(CursorStates.ingame, ingameTransitions);
-        AddTransitionsTo(CursorStates.menu, menuTransitions);
+        AddTransitionsFrom(CursorStates.idle, idleTransitions);
+        AddTransitionsFrom(CursorStates.ingame, ingameTransitions);
+        AddTransitionsFrom(CursorStates.menu, menuTransitions);
 
         StartMachine(CursorStates.idle);
     }
