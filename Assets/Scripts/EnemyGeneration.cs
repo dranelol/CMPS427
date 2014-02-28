@@ -30,6 +30,7 @@ public class EnemyGeneration : MonoBehaviour
             {
                 if (meshHit.hit)
                 {
+                    meshHit.position = transform.position;
                     Collider[] nearbyObjects = Physics.OverlapSphere(meshHit.position, groupRadius, 1 << LayerMask.NameToLayer("Not Walkable"));
 
                     if (nearbyObjects.Length > 0)
@@ -43,7 +44,7 @@ public class EnemyGeneration : MonoBehaviour
                         enemyGroup.name = "Group " + (i + 1);
                         enemyGroup.AddComponent<AIGroupController>();
 
-                        int enemyCount = UnityEngine.Random.Range(1, 6);
+                        int enemyCount = UnityEngine.Random.Range(3, 6);
 
                         for (int j = 0; j < enemyCount; j++)
                         {
