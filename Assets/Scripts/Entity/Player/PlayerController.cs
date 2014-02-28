@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class PlayerController : MonoBehaviour {
     // Range at which the player stops moving and begins attacking. BAM
@@ -47,7 +48,7 @@ public class PlayerController : MonoBehaviour {
         Debug.DrawRay(transform.position, Rotations.RotateAboutY(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f), 22.5f));
         
         // if our agent actually has a path to move to
-
+        
 
         if (agent.hasPath == true)
         {
@@ -90,6 +91,11 @@ public class PlayerController : MonoBehaviour {
         // If the move/attack key was pressed...
         if (Input.GetAxis("Move/Attack") != 0) 
         {
+            
+
+
+
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit target;
 
@@ -163,7 +169,7 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.V))
         {
             List<GameObject> attacked = Attack.OnAttack(transform, 360f, 5f);
-            Debug.Log(attacked.Count);
+            //Debug.Log(attacked.Count);
             foreach (GameObject enemy in attacked)
             {
                 
