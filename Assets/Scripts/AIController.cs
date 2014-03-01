@@ -316,9 +316,16 @@ public class AIController : StateMachine
 
     IEnumerator dead_EnterState()
     {
-        Destroy(GetComponent<CapsuleCollider>());
-        PursuitFSM.StopPursuit();
+        Destroy(this.gameObject);
+
+        /*PursuitFSM.StopPursuit();
         MoveFSM.LockMovement();
+
+        GetComponent<CapsuleCollider>().enabled = false;
+        NavAgent.enabled = false;
+        transform.GetChild(0).gameObject.SetActive(false);
+        Destroy(rigidbody, 2f);
+        */
         yield return null;
     }
 
