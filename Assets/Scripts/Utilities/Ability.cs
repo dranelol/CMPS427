@@ -2,32 +2,34 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Ability {
+/// <summary>
+/// Attack type will determine the attack algorithm used.
+/// </summary>
+public enum AttackType
+{
+    PROJECTILE,
+    AOE,
+    PBAOE,      // Point Blank Area of Effect
+    MELEE,
+    STATUS      // Maybe an attack type that just inflicts conditions?
+};
 
-    /// <summary>
-    /// Attack type will determine the attack algorithm used.
-    /// </summary>
-    public enum AttackType
-    {
-        PROJECTILE,
-        AOE,
-        PBAOE,      // Point Blank Area of Effect
-        MELEE,
-        STATUS      // Maybe an attack type that just inflicts conditions?
-    };
+/// <summary>
+/// Damage type will indicate which type of damage to mitigate.
+/// This might not be used - it's just being included.
+/// </summary>
+public enum DamageType
+{
+    PHYSICAL,
+    FIRE,
+    WATER,
+    EARTH,
+    AIR
+};
 
-    /// <summary>
-    /// Damage type will indicate which type of damage to mitigate.
-    /// This might not be used - it's just being included.
-    /// </summary>
-    public enum DamageType
-    {
-        PHYSICAL,
-        FIRE,
-        WATER,
-        EARTH,
-        AIR
-    };
+public abstract class Ability {
+
+    
 
     #region Properties
 
@@ -66,6 +68,11 @@ public class Ability {
     {
         get { return readable; }
     }
+
+
+    public abstract List<GameObject> OnAttack();
+
+    public abstract void DoDamage(GameObject attacker, GameObject defender);
     
     #endregion
 
@@ -88,8 +95,10 @@ public class Ability {
         //abilities.Add(id, this);
     }
 
-    // The following is a list of example abilities.
-    Ability fireball = new Ability(AttackType.PROJECTILE, DamageType.FIRE, 5.0f, 10.0f, 3.0f, "fireball", "Fireball");
-    Ability cleave = new Ability(AttackType.MELEE, DamageType.PHYSICAL, 1.0f, 45.0f, 5.0f, "cleave", "Cleave");
-    Ability shout = new Ability(AttackType.PBAOE, DamageType.AIR, 20.0f, 360.0f, 10.0f, "fusrodah", "Fus Roh Dah");
+    
 }
+
+// The following is a list of example abilities.
+    //Ability fireball = new Ability(AttackType.PROJECTILE, DamageType.FIRE, 5.0f, 10.0f, 3.0f, "fireball", "Fireball");
+    //Ability cleave = new Ability(AttackType.MELEE, DamageType.PHYSICAL, 1.0f, 45.0f, 5.0f, "cleave", "Cleave");
+    //Ability shout = new Ability(AttackType.PBAOE, DamageType.AIR, 20.0f, 360.0f, 10.0f, "fusrodah", "Fus Roh Dah");
