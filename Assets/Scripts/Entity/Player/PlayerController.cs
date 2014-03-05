@@ -13,8 +13,6 @@ public class PlayerController : MonoBehaviour {
 	public float RotationSpeed = 10f;
     public NavMeshAgent agent;
 
-    private bool hadouken = false;
-
 	// Use this for initialization
 	void Start () {
 		targetPosition = Vector3.zero;

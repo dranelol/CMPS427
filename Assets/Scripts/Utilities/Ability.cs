@@ -27,7 +27,7 @@ public enum DamageType
     AIR
 };
 
-public abstract class Ability {
+public class Ability {
 
     
 
@@ -69,18 +69,18 @@ public abstract class Ability {
         get { return readable; }
     }
 
-
-    public abstract List<GameObject> OnAttack();
-
-    public abstract void DoDamage(GameObject attacker, GameObject defender);
+    /// <summary>
+    /// Base modifier from which damage is calculated
+    /// </summary>
+    private float damageMod;
+    public float DamageMod
+    {
+        get { return damageMod; }
+    }
     
     #endregion
 
-    // TODO: Implement this idea outside of the ability class inside of manager
-    //public static Dictionary<string, Ability> abilities;
-
-    // Constructor is private to prevent abilities from being created on the fly.
-    private Ability(AttackType attackType, DamageType damageType, float range, float radius, float cooldown, string id, string readable)
+    public Ability(AttackType attackType, DamageType damageType, float range, float radius, float cooldown, float damageMod, string id, string readable)
     {
         this.attackType = attackType;
         this.damageType = damageType;
@@ -88,9 +88,7 @@ public abstract class Ability {
         this.radius = radius;
         this.cooldown = cooldown;
         this.readable = readable;
-
-        // See previous TODO
-        //abilities.Add(id, this);
+        this.damageMod = damageMod;
     }
 
     
