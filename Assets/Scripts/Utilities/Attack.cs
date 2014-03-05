@@ -42,9 +42,10 @@ public class Attack
 
                 if (!rayCastHit)
                 {
-                    Debug.Log("derp");
+
                 }
-                else{
+                else
+                {
                     if (hit.collider.gameObject.tag == "Player")
                     {
                         //Debug.Log("dat hit!");
@@ -77,6 +78,7 @@ public class Attack
 
     public static void DoDamage(GameObject attacker, GameObject defender)
     {
+        Debug.Log(defender.ToString());
         Entity attackerEntity = attacker.GetComponent<Entity>();
         Entity defenderEntity = defender.GetComponent<Entity>();
 
