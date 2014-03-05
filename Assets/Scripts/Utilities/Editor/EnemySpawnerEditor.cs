@@ -50,7 +50,7 @@ public class EnemySpawnerEditor : Editor
 
         catch(Exception e)
         {
-            Debug.Log(e.ToString());
+            //Debug.Log(e.ToString());
         }
     }
 
