@@ -13,11 +13,12 @@ public class Attack
         int enemyMask = LayerMask.NameToLayer("Enemy");
         int playerMask = LayerMask.NameToLayer("Player");
 
+
         Collider[] colliders = Physics.OverlapSphere(attacker.position, attackRange, 1 << enemyMask);
 
         foreach (Collider collider in colliders)
         {
-            //Debug.Log(collider.ToString());
+            Debug.Log(collider.ToString());
             Vector3 enemyVector = collider.transform.position - attacker.position;
             Vector3 enemyVector2 = attacker.position - collider.transform.position;
             //Debug.Log(enemyVector);
@@ -35,9 +36,6 @@ public class Attack
                 Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
                 Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
 
-
-
-
                 bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2),out hit, attackRange, 1 << playerMask);
 
                 if (!rayCastHit)
@@ -46,6 +44,7 @@ public class Attack
                 }
                 else
                 {
+                    //Debug.Log(hit.collider.name);
                     if (hit.collider.gameObject.tag == "Player")
                     {
                         //Debug.Log("dat hit!");
