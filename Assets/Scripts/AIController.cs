@@ -303,10 +303,7 @@ public class AIController : StateMachine
 
         else
         {
-            if (NavAgent.destination != localHomePosition)
-            {
-                MoveFSM.SetPath(localHomePosition);
-            }
+            MoveFSM.SetPath(localHomePosition);
         }
     }
 

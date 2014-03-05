@@ -10,7 +10,7 @@ public class AIGroupController : MonoBehaviour {
     private int GroupLevel;
     private float resetDistance;
 
-    void Awake()
+    void Start()
     {
         MasterThreatTable = new List<GameObject>();
         homePosition = transform.position;

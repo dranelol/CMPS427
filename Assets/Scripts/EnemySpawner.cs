@@ -16,16 +16,35 @@ public class EnemySpawner : MonoBehaviour
     public bool isTrigger;
     public float triggerRadius; // The radius in which a player must be before to trigger generation
     public int spawnInterval; // The time in between spawns while a player is within the radius
-    public float spawnCounter = 0;
+    private float spawnCounter = 0;
+
+    void Awake()
+    {
+        NavMeshHit meshLocation;
+
+        if (NavMesh.SamplePosition(transform.position, out meshLocation, 30, 1 << LayerMask.NameToLayer("Default")))
+        {
+            transform.position = meshLocation.position;
+        }
+
+        else
+        {
+            this.gameObject.SetActive(false);
+            throw new NullReferenceException("Place the node closer to the NavMesh.");
+        }
+    }
 
     void Start()
     {
+        //renderer.enabled = false;
+
         SphereCollider trigger = GetComponent<SphereCollider>();
         trigger.radius = triggerRadius;
 
         if (!isStatic || !isTrigger)
         {
             Destroy(trigger);
+            spawnCounter = spawnInterval;
 
             for (int i = 0; i < enemyCount; i++)
             {
@@ -79,7 +98,7 @@ public class EnemySpawner : MonoBehaviour
 
         NavMeshHit meshLocation;
 
-        if (NavMesh.SamplePosition(newPosition, out meshLocation, 30, 1 << LayerMask.NameToLayer("Default")))
+        if (NavMesh.SamplePosition(newPosition, out meshLocation, SPAWN_RADIUS_MAX, 1 << LayerMask.NameToLayer("Default")))
         {
             GameObject newEnemy = Instantiate(enemyPrefab, newPosition, Quaternion.identity) as GameObject;
             newEnemy.name = "Enemy(" + newEnemy.GetInstanceID() + ")";
@@ -92,7 +111,7 @@ public class EnemySpawner : MonoBehaviour
         else
         {
             this.gameObject.SetActive(false);
-            throw new NullReferenceException("Move the enemy node closer to the NavMesh");
+            throw new NullReferenceException("Could not find a place to spawn enemy. Check node location.");
         }
     }
 
