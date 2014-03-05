@@ -103,7 +103,10 @@ public class Attack
     {
         yield return new WaitForSeconds(time);
 
-        target.isKinematic = true;
+        if (target != null)
+        {
+            target.isKinematic = true;
+        }
 
         yield break;
     }

@@ -82,8 +82,6 @@ public abstract class Ability {
     // Constructor is private to prevent abilities from being created on the fly.
     private Ability(AttackType attackType, DamageType damageType, float range, float radius, float cooldown, string id, string readable)
     {
-        
-
         this.attackType = attackType;
         this.damageType = damageType;
         this.range = range;
