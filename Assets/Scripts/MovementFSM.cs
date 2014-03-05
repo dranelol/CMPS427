@@ -7,8 +7,7 @@ using UnityEngine;
 
 public class MovementFSM : StateMachine 
 {
-    private NavMeshAgent thisAgent;
-    private bool timedLock = false;
+    private NavMeshAgent navAgent;
     private float lockTime = 0;
 
     public enum MoveStates
@@ -20,7 +19,7 @@ public class MovementFSM : StateMachine
 
     void Start()
     {
-        thisAgent = GetComponent<NavMeshAgent>();
+        navAgent = GetComponent<NavMeshAgent>();
 
         SetupMachine(MoveStates.idle);
 
@@ -49,26 +48,37 @@ public class MovementFSM : StateMachine
     {
         if ((MoveStates)CurrentState != MoveStates.moveLocked)
         {
-            thisAgent.SetDestination(targetPosition);
+            navAgent.SetDestination(targetPosition);
         }
     }
 
     public void Stop(float time = 0)
     {
-        lockTime = Mathf.Max(time, 0);
-        timedLock = true;
-        Transition(MoveStates.moveLocked);
+        lockTime += Mathf.Max(time, 0);
+
+        if (lockTime > 0)
+        {
+            Transition(MoveStates.moveLocked);
+        }
+
+        else
+        {
+            navAgent.ResetPath();
+        }
     }
 
     public void LockMovement()
     {
-        timedLock = false;
+        lockTime = 0;
         Transition(MoveStates.moveLocked);
     }
 
     public void UnlockMovement()
     {
-        Transition(MoveStates.idle);
+        if ((MoveStates)CurrentState == MoveStates.moveLocked)
+        {
+            Transition(MoveStates.idle);
+        }
     }
 
     #endregion
@@ -77,7 +87,7 @@ public class MovementFSM : StateMachine
 
     void idle_Update()
     {
-        if (thisAgent.velocity != Vector3.zero)
+        if (navAgent.velocity != Vector3.zero)
         {
             Transition(MoveStates.moving);
         }
@@ -89,7 +99,7 @@ public class MovementFSM : StateMachine
 
     void moving_Update()
     {
-        if (thisAgent.velocity == Vector3.zero)
+        if (navAgent.velocity == Vector3.zero)
         {
             Transition(MoveStates.idle);
         }
@@ -101,13 +111,13 @@ public class MovementFSM : StateMachine
 
     IEnumerator moveLocked_EnterState()
     {
-        thisAgent.ResetPath();
+        navAgent.ResetPath();
         yield break;
     }
 
     void moveLocked_Update()
     {
-        if (timedLock == true)
+        if (lockTime > 0)
         {
             lockTime -= Time.deltaTime;
 
@@ -120,9 +130,8 @@ public class MovementFSM : StateMachine
 
     IEnumerator moveLocked_ExitState()
     {
-        timedLock = false;
         lockTime = 0;
-        thisAgent.ResetPath();
+        navAgent.ResetPath();
         yield break;
     }
 
