@@ -48,14 +48,6 @@ public class EnemySpawnerEditor : Editor
                 CheckDirty(spawner);
             }
 
-            else
-            {
-                if (spawner.spawnCounter <= 0)
-                {
-                    spawner.spawnCounter = spawner.spawnInterval;
-                }
-            }
-
             EditorGUILayout.EndToggleGroup();
         }
     }
