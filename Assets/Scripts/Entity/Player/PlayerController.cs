@@ -91,17 +91,20 @@ public class PlayerController : MonoBehaviour {
         // If the move/attack key was pressed...
         if (Input.GetAxis("Move/Attack") != 0) 
         {
-            
 
 
 
+
+            int terrainMask= LayerMask.NameToLayer("Terrain");
+            int enemyMask = LayerMask.NameToLayer("Enemy");
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit target;
 
             // If the raycast hit a collider...
-			if (Physics.Raycast(ray, out target))
+			if (Physics.Raycast(ray, out target, 1 << terrainMask))
 			{
+
                 // If the collider was an enemy...
                 if (target.collider.gameObject.tag == "Enemy")
                 {

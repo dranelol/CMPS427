@@ -30,6 +30,7 @@ public class EnemySpawner : MonoBehaviour
         Group.AddComponent<AIGroupController>();
         
         trigger = gameObject.AddComponent<SphereCollider>();
+        
         trigger.radius = triggerRadius;
         trigger.isTrigger = true;
 
