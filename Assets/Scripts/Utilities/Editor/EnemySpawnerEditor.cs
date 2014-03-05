@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System;
 
 [CustomEditor(typeof(EnemySpawner))]
 public class EnemySpawnerEditor : Editor
@@ -47,8 +48,10 @@ public class EnemySpawnerEditor : Editor
             EditorGUILayout.EndToggleGroup();
         }
 
-        catch
-        {}
+        catch(Exception e)
+        {
+            Debug.Log(e.ToString());
+        }
     }
 
     private string _padding = "     ";

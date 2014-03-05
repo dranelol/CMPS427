@@ -103,18 +103,21 @@ public class PlayerController : MonoBehaviour {
 			if (Physics.Raycast(ray, out target))
 			{
                 // If the collider was an enemy...
-				if (target.collider.gameObject.tag == "Enemy")
+                if (target.collider.gameObject.tag == "Enemy")
+                {
                     // Set the target position to the enemy's position.
-					targetPosition = target.collider.gameObject.transform.position;
-				else
-				{
+                    targetPosition = target.collider.gameObject.transform.position;
+                }
 
-                    
+                else
+                {
+
+
                     // Otherwise, move towards the point of collision.
-					targetPosition = Vector3.zero;
-					GetComponent<MovementFSM>().SetPath(target.point);
+                    targetPosition = Vector3.zero;
+                    GetComponent<MovementFSM>().SetPath(target.point);
 
-				}
+                }
 			}
 
         }
@@ -144,9 +147,6 @@ public class PlayerController : MonoBehaviour {
                 {
                     Vector3 relativeVector = (enemy.transform.position - transform.position);
                     float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
-
-
-                    
                     float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
                     enemy.GetComponent<MovementFSM>().Stop(0.2f);
                     enemy.rigidbody.isKinematic = false;
@@ -208,22 +208,6 @@ public class PlayerController : MonoBehaviour {
                     && enemy.GetComponent<AIController>().IsDead() == false)
                 {
                     Debug.Log(enemy.GetInstanceID().ToString());
-                    //Color enemyColor = enemy.renderer.material.color;
-                    //enemy.renderer.material.color = ;
-                    //Color enemyColor = enemy.renderer.material.GetColor("_Color");
-                    //Color enemyColorTint = enemy.renderer.material.GetColor("_TintColor");
-                    //float intensity = enemyColorTint.a + 50;
-                    //Debug.Log(enemyColor.ToString());
-                    //enemyColor.r -= (byte)0.5;
-                    //enemyColor.b -= (byte)0.5;
-                    //enemyColor.g -= (byte)0.5;
-
-                    //Color tintColor = new Color32(255, 23, 0, (byte)intensity);
-                    //enemy.renderer.material.SetColor("_TintColor", tintColor);
-                    //enemy.renderer.material.SetColor("_Color", enemyColor);
-                    //enemy.renderer.material.SetColor("_Color", new Color(enemyColor.r - (byte)1, enemyColor.g - (byte)1, enemyColor.b - (byte)1, enemyColor.a));
-                    //enemy.transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
-                    //enemy.renderer.material.SetColor("_Color", Color.red);
                     Attack.DoDamage(gameObject, enemy);
                 }
             }

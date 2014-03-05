@@ -28,7 +28,7 @@ public class EnemySpawner : MonoBehaviour
         Group.transform.parent = transform;
         Group.transform.position = transform.position;
         Group.AddComponent<AIGroupController>();
-
+        
         trigger = gameObject.AddComponent<SphereCollider>();
         trigger.radius = triggerRadius;
         trigger.isTrigger = true;
