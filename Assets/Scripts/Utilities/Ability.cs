@@ -27,14 +27,10 @@ public enum DamageType
     AIR
 };
 
-<<<<<<< HEAD
-public abstract class Ability {
 
-    
-=======
 public abstract class Ability
 {
->>>>>>> upstream/master
+
 
     #region Properties
 
@@ -74,12 +70,7 @@ public abstract class Ability
         get { return readable; }
     }
 
-<<<<<<< HEAD
 
-    public abstract List<GameObject> OnAttack();
-
-    public abstract void DoDamage(GameObject attacker, GameObject defender);
-=======
     /// <summary>
     /// Base modifier from which damage is calculated
     /// </summary>
@@ -88,7 +79,7 @@ public abstract class Ability
     {
         get { return damageMod; }
     }
->>>>>>> upstream/master
+
     
     #endregion
 
@@ -135,11 +126,7 @@ public abstract class Ability
     {
     }
 
-<<<<<<< HEAD
-=======
 
-
->>>>>>> upstream/master
     
 }
 
