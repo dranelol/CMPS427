@@ -27,9 +27,6 @@ public class Cleave : Ability
                 && enemy.GetComponent<AIController>().IsDead() == false)
             {
                 DoDamage(attacker, enemy);
-
-                // this is a physics attack, so do physics applies
-                DoPhysics(attacker, enemy);
             }
         }
     }
@@ -52,7 +49,7 @@ public class Cleave : Ability
 
         foreach (Collider collider in colliders)
         {
-            Debug.Log(collider.ToString());
+            //Debug.Log(collider.ToString());
 
             // create a vector from the possible enemy to the attacker
 
@@ -94,7 +91,7 @@ public class Cleave : Ability
     /// <param name="defender">The gameobject defending against the attack</param>
     public override void DoDamage(GameObject attacker, GameObject defender)
     {
-        Debug.Log(defender.ToString());
+        //Debug.Log(defender.ToString());
         Entity attackerEntity = attacker.GetComponent<Entity>();
         Entity defenderEntity = defender.GetComponent<Entity>();
 
@@ -114,13 +111,6 @@ public class Cleave : Ability
     /// <param name="defender">Gameobject affected by the attack</param>
     public override void DoPhysics(GameObject attacker, GameObject defender)
     {
-        Vector3 relativeVector = (defender.transform.position - attacker.transform.position);
-        float normalizedMagnitude = 5f - Vector3.Distance(defender.transform.position, attacker.transform.position);
-        float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
-        defender.GetComponent<MovementFSM>().Stop(0.2f);
-        defender.rigidbody.isKinematic = false;
-        defender.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
-        StartCoroutine(Attack.RemovePhysics(defender.rigidbody, 0.2f));
 
     }
 }

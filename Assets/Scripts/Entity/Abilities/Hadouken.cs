@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class Hadouken : Ability
 {
-    
     public Hadouken(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable)
         : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable)
     {
@@ -53,7 +52,7 @@ public class Hadouken : Ability
 
         foreach (Collider collider in colliders)
         {
-            Debug.Log(collider.ToString());
+            //Debug.Log(collider.ToString());
 
             // create a vector from the possible enemy to the attacker
 
@@ -95,7 +94,7 @@ public class Hadouken : Ability
     /// <param name="defender">The gameobject defending against the attack</param>
     public override void DoDamage(GameObject attacker, GameObject defender)
     {
-        Debug.Log(defender.ToString());
+        //Debug.Log(defender.ToString());
         Entity attackerEntity = attacker.GetComponent<Entity>();
         Entity defenderEntity = defender.GetComponent<Entity>();
 
@@ -121,8 +120,7 @@ public class Hadouken : Ability
         defender.GetComponent<MovementFSM>().Stop(0.2f);
         defender.rigidbody.isKinematic = false;
         defender.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
-
-        StartCoroutine(Attack.RemovePhysics(defender.rigidbody, 0.2f));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RemovePhysics(defender.rigidbody, 0.2f);
         
     }
 }

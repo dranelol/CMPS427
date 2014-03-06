@@ -52,7 +52,7 @@ public class Deathgrip : Ability
 
         foreach (Collider collider in colliders)
         {
-            Debug.Log(collider.ToString());
+            //Debug.Log(collider.ToString());
 
             // create a vector from the possible enemy to the attacker
 
@@ -94,7 +94,7 @@ public class Deathgrip : Ability
     /// <param name="defender">The gameobject defending against the attack</param>
     public override void DoDamage(GameObject attacker, GameObject defender)
     {
-        Debug.Log(defender.ToString());
+        //Debug.Log(defender.ToString());
         Entity attackerEntity = attacker.GetComponent<Entity>();
         Entity defenderEntity = defender.GetComponent<Entity>();
 
@@ -116,11 +116,11 @@ public class Deathgrip : Ability
     {
         Vector3 relativeVector = (defender.transform.position - attacker.transform.position);
         float normalizedMagnitude = 5f - Vector3.Distance(defender.transform.position, attacker.transform.position);
-        float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
+        float force = (-1) * (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
         defender.GetComponent<MovementFSM>().Stop(0.2f);
         defender.rigidbody.isKinematic = false;
         defender.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
-        StartCoroutine(Attack.RemovePhysics(defender.rigidbody, 0.2f));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RemovePhysics(defender.rigidbody, 0.2f);
 
     }
 }

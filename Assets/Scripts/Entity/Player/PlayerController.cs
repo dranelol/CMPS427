@@ -134,6 +134,20 @@ public class PlayerController : MonoBehaviour {
             entity.abilities[2].AttackHandler(gameObject);
         }
 
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            entity.abilities[3].AttackHandler(gameObject);
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            entity.abilities[4].AttackHandler(gameObject);
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            entity.abilities[5].AttackHandler(gameObject);
+        }
         #endregion
 
         #endregion

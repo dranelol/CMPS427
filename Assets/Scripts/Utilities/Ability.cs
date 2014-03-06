@@ -27,7 +27,7 @@ public enum DamageType
     AIR
 };
 
-public abstract class Ability : MonoBehaviour
+public abstract class Ability
 {
 
     #region Properties
