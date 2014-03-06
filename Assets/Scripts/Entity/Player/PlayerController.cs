@@ -15,6 +15,10 @@ public class PlayerController : MonoBehaviour {
 
     private bool hadouken = false;
 
+    public PlayerEntity entity;
+    public MovementFSM moveFSM;
+    public CombatFSM combatFSM;
+
 	// Use this for initialization
 	void Start () {
 		targetPosition = Vector3.zero;
@@ -22,6 +26,12 @@ public class PlayerController : MonoBehaviour {
 		agent.acceleration = 100f;
         agent.updateRotation = false;
         agent.avoidancePriority = 1;
+<<<<<<< HEAD
+=======
+        entity = GetComponent<PlayerEntity>();
+        moveFSM = GetComponent<MovementFSM>();
+        combatFSM = GetComponent<CombatFSM>();
+>>>>>>> upstream/master
 	}
 	
 	// Update is called once per frame
@@ -75,27 +85,28 @@ public class PlayerController : MonoBehaviour {
             Vector3 diff = targetPosition - transform.position;
             if (diff.magnitude <= attackRange)
             {
-                // TODO: Attack the enemy.
-                Debug.Log("WE'Z GONNA ATTACK NAO");
+                // attack enemy
                 targetPosition = Vector3.zero;
-                GetComponent<MovementFSM>().Stop();
+                moveFSM.Stop();
             }
             else
             {
-                // Otherwise, move towards the enemy.
-                Debug.Log("We chasin' da enemy.");
-                GetComponent<MovementFSM>().SetPath(targetPosition);
+                moveFSM.SetPath(targetPosition);
             }
         }
 
         // If the move/attack key was pressed...
         if (Input.GetAxis("Move/Attack") != 0) 
         {
+<<<<<<< HEAD
 
 
 
 
             int terrainMask =  LayerMask.NameToLayer("Terrain");
+=======
+            int terrainMask= LayerMask.NameToLayer("Terrain");
+>>>>>>> upstream/master
             int enemyMask = LayerMask.NameToLayer("Enemy");
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -103,10 +114,16 @@ public class PlayerController : MonoBehaviour {
 			RaycastHit target;
 
             // If the raycast hit a collider...
+<<<<<<< HEAD
 			if (Physics.Raycast(ray, out target, Mathf.Infinity, 1 << terrainMask))
 			{
                // Debug.Log(target.collider.gameObject.layer);
                 //Debug.Log(target.collider.name);
+=======
+			if (Physics.Raycast(ray, out target, 1 << terrainMask))
+			{
+
+>>>>>>> upstream/master
                 // If the collider was an enemy...
                 if (target.collider.gameObject.tag == "Enemy")
                 {
@@ -120,23 +137,20 @@ public class PlayerController : MonoBehaviour {
 
                     // Otherwise, move towards the point of collision.
                     targetPosition = Vector3.zero;
+<<<<<<< HEAD
                     GetComponent<MovementFSM>().SetPath(target.point);
+=======
+                    moveFSM.SetPath(target.point);
+>>>>>>> upstream/master
 
                 }
 			}
 
         }
 
-        #region hadouken
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            /*
-            if (hadouken == false)
-            {
-                agent.radius = 10f;
-                hadouken = true;
-            }
+        #region new key-bound attacks
 
+<<<<<<< HEAD
             else
             {
                 agent.radius = 0.5f;
@@ -165,14 +179,28 @@ public class PlayerController : MonoBehaviour {
                     StartCoroutine(Attack.RemovePhysics(enemy.rigidbody, 0.2f));
                 }
             }
+=======
 
+
+        #region ability 1
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (combatFSM.IsIdle() == true)
+            {
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+>>>>>>> upstream/master
+
+                Debug.Log(entity.abilities[2].ToString());
+                entity.abilities[2].AttackHandler(gameObject, true);
+            }
         }
 
         #endregion
 
-        #region reverse hadouken
-        if (Input.GetKeyDown(KeyCode.V))
+        #region ability 2
+        if (Input.GetKeyDown(KeyCode.W))
         {
+<<<<<<< HEAD
             List<GameObject> attacked = Attack.OnAttack(transform, 360f, 5f);
             //Debug.Log(attacked.Count);
             foreach (GameObject enemy in attacked)
@@ -196,37 +224,44 @@ public class PlayerController : MonoBehaviour {
                     Attack.DoDamage(gameObject, enemy);
                     StartCoroutine(Attack.RemovePhysics(enemy.rigidbody, 0.2f));
                 }
+=======
+            if (combatFSM.IsIdle() == true)
+            {
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                entity.abilities[3].AttackHandler(gameObject, true);
+>>>>>>> upstream/master
             }
-
         }
-
         #endregion
 
-        #region cleave
-        if (Input.GetKeyDown(KeyCode.A))
+        #region ability 3
+
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log("lelele");
-            List<GameObject> attacked = Attack.OnAttack(transform, 45f, 5f);
-            foreach (GameObject enemy in attacked)
+            if (combatFSM.IsIdle() == true)
             {
+<<<<<<< HEAD
                 if (enemy.GetComponent<AIController>().IsResetting() == false
                     && enemy.GetComponent<AIController>().IsDead() == false)
                 {
                     Debug.Log(enemy.GetInstanceID().ToString());
                     Attack.DoDamage(gameObject, enemy);
                 }
+=======
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                entity.abilities[4].AttackHandler(gameObject, true);
+>>>>>>> upstream/master
             }
         }
-
         #endregion
 
-        #region fusrodah
-        if (Input.GetKeyDown(KeyCode.F))
+        #region ability 4
+
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            Debug.Log("lelele");
-            List<GameObject> attacked = Attack.OnAttack(transform, 45f, 5f);
-            foreach (GameObject enemy in attacked)
+            if (combatFSM.IsIdle() == true)
             {
+<<<<<<< HEAD
                 if (enemy.GetComponent<AIController>().IsResetting() == false
                     && enemy.GetComponent<AIController>().IsDead() == false)
                 {
@@ -242,8 +277,14 @@ public class PlayerController : MonoBehaviour {
                     Attack.DoDamage(gameObject, enemy);
                     StartCoroutine(Attack.RemovePhysics(enemy.rigidbody, 0.17f));
                 }
+=======
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                entity.abilities[5].AttackHandler(gameObject, true);
+>>>>>>> upstream/master
             }
         }
+        #endregion
+
         #endregion
     }
 }

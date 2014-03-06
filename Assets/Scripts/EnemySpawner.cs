@@ -5,6 +5,7 @@ using System;
 public class EnemySpawner : MonoBehaviour 
 {
     public GameObject enemyPrefab;
+
     public SphereCollider trigger;
 
     public int enemyCount;
@@ -17,26 +18,37 @@ public class EnemySpawner : MonoBehaviour
     public bool isTrigger;
     public float triggerRadius; // The radius in which a player must be before to trigger generation
     public int spawnInterval; // The time in between spawns while a player is within the radius
-    public float spawnCounter = 0;
 
-    private GameObject Group;
+    private float spawnCounter = 0;
+
+    void Awake()
+    {
+        NavMeshHit meshLocation;
+
+        if (NavMesh.SamplePosition(transform.position, out meshLocation, 30, 1 << LayerMask.NameToLayer("Default")))
+        {
+            transform.position = meshLocation.position;
+        }
+
+        else
+        {
+            this.gameObject.SetActive(false);
+            throw new NullReferenceException("Place the node closer to the NavMesh.");
+        }
+    }
 
     void Start()
     {
-        Group = new GameObject();
-        Group.name = "Enemy Group";
-        Group.transform.parent = transform;
-        Group.transform.position = transform.position;
-        Group.AddComponent<AIGroupController>();
-        
-        trigger = gameObject.AddComponent<SphereCollider>();
-        
+        //renderer.enabled = false;
+
+        SphereCollider trigger = GetComponent<SphereCollider>();
         trigger.radius = triggerRadius;
-        trigger.isTrigger = true;
 
         if (!isStatic || !isTrigger)
         {
-            trigger.enabled = false;
+            Destroy(trigger);
+            spawnCounter = spawnInterval;
+
 
             for (int i = 0; i < enemyCount; i++)
             {
@@ -45,15 +57,18 @@ public class EnemySpawner : MonoBehaviour
 
             if (!isStatic)
             {
-                Destroy(gameObject);
-                return;
+
+                this.enabled = false;
+
             }
         }
     }
 
     void Update()
     {
-        if (Group.transform.childCount < enemyCount)
+
+        if (transform.childCount < enemyCount)
+
         {
             if (spawnCounter > 0)
             {
@@ -87,84 +102,30 @@ public class EnemySpawner : MonoBehaviour
 
     private void GenerateEnemy()
     {
-        Vector3 newPosition = transform.position + new Vector3(UnityEngine.Random.Range(SPAWN_INTERVAL_MIN, spawnRadius), 0, UnityEngine.Random.Range(SPAWN_INTERVAL_MIN, spawnRadius));
+
+        Vector3 newPosition = transform.position + new Vector3(UnityEngine.Random.Range(-spawnRadius, spawnRadius), 0, UnityEngine.Random.Range(-spawnRadius, spawnRadius));
 
         NavMeshHit meshLocation;
 
-        if (NavMesh.SamplePosition(newPosition, out meshLocation, 30, 1 << LayerMask.NameToLayer("Default")))
+        if (NavMesh.SamplePosition(newPosition, out meshLocation, SPAWN_RADIUS_MAX, 1 << LayerMask.NameToLayer("Default")))
         {
             GameObject newEnemy = Instantiate(enemyPrefab, newPosition, Quaternion.identity) as GameObject;
-            //newEnemy.GetComponent<Entity>().Start();
             newEnemy.name = "Enemy(" + newEnemy.GetInstanceID() + ")";
-            newEnemy.transform.parent = Group.transform;
+            newEnemy.transform.parent = transform;
 
             newEnemy.transform.GetChild(0).gameObject.AddComponent<AggroRadius>();
             newEnemy.AddComponent<AIController>();
-          }
+        }
+
 
         else
         {
             this.gameObject.SetActive(false);
-            throw new NullReferenceException("Move the spawn node closer to the NavMesh");
+
+            throw new NullReferenceException("Could not find a place to spawn enemy. Check node location.");
         }
     }
 
-    /*
-    public void GenerateEnemies(Vector3 playerPosition)
-    {
-        int numberOfGroups = 5;
-        float groupRadius = 10;
-
-        for (int i = 0; i < numberOfGroups; i++)
-        {
-            float randomRadius = UnityEngine.Random.Range(15, 50);
-            Vector2 spawnCircle = UnityEngine.Random.insideUnitCircle * randomRadius;
-            
-            NavMeshHit meshHit;
-
-            if (NavMesh.SamplePosition(newPosition, out meshHit, 30, 1 << LayerMask.NameToLayer("Default")))
-            {
-                if (meshHit.hit)
-                {
-                    meshHit.position = transform.position;
-                    Collider[] nearbyObjects = Physics.OverlapSphere(meshHit.position, groupRadius, 1 << LayerMask.NameToLayer("Not Walkable"));
-
-                    if (nearbyObjects.Length > 0)
-                    {
-                        i--;
-                    }
-
-                    else
-                    {
-                        GameObject enemyGroup = new GameObject();
-                        enemyGroup.name = "Group " + (i + 1);
-                        enemyGroup.AddComponent<AIGroupController>();
-
-                        int enemyCount = UnityEngine.Random.Range(3, 6);
-
-                        for (int j = 0; j < enemyCount; j++)
-                        {
-                            Vector3 internalLocation = UnityEngine.Random.insideUnitSphere * groupRadius;
-                            internalLocation = meshHit.position + new Vector3(internalLocation.x, meshHit.position.y, internalLocation.z);
-
-                            GameObject newEnemy = Instantiate(enemyPrefab, internalLocation, Quaternion.identity) as GameObject;
-                            newEnemy.name = "Enemy " + (j + 1) + ", Group " + (i + 1);
-                            newEnemy.transform.parent = enemyGroup.transform;
-
-                            newEnemy.transform.GetChild(0).gameObject.AddComponent<AggroRadius>();
-                            newEnemy.AddComponent<AIController>();
-                        }
-                    }
-                }
-            }
-
-            else
-            {
-                i--;
-            }
-        }
-    }
-    */
 
     public const int ENEMY_COUNT_MIN = 1;
     public const int ENEMY_COUNT_MAX = 20;
