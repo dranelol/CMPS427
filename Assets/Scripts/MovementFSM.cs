@@ -17,9 +17,10 @@ public class MovementFSM : StateMachine
         moveLocked
     }
 
-    void Start()
+    void Awake()
     {
         navAgent = GetComponent<NavMeshAgent>();
+        navAgent.stoppingDistance = navAgent.radius + 1;
 
         SetupMachine(MoveStates.idle);
 
