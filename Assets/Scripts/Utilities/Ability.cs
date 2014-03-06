@@ -50,10 +50,10 @@ public class Ability
         get { return range; }
     }
     
-    private float radius;
-    public float Radius
+    private float angle;
+    public float Angle
     {
-        get { return radius; }
+        get { return angle; }
     }
     
     private float cooldown;
@@ -79,12 +79,12 @@ public class Ability
     
     #endregion
 
-    public Ability(AttackType attackType, DamageType damageType, float range, float radius, float cooldown, float damageMod, string id, string readable)
+    public Ability(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable)
     {
         this.attackType = attackType;
         this.damageType = damageType;
         this.range = range;
-        this.radius = radius;
+        this.angle = angle;
         this.cooldown = cooldown;
         this.readable = readable;
         this.damageMod = damageMod;
@@ -97,7 +97,7 @@ public class Ability
     /// <returns>Returns a list of gameobjects this attack will affect</returns>
     public List<GameObject> OnAttack(Transform attacker)
     {
-        return Attack.OnAttack(attacker, radius, range);
+        return Attack.OnAttack(attacker, angle, range, this.attackType, Vector3.zero);
     }
 
     /// <summary>

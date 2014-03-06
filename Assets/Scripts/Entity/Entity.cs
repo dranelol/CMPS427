@@ -10,6 +10,8 @@ public class Entity : MonoBehaviour
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
 
+    public Dictionary<string, Ability> abilities; // set of abilities that this entity currently has access to
+
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
 
     /// <summary>
@@ -20,6 +22,7 @@ public class Entity : MonoBehaviour
         currentAtt = new Attributes();
         equipAtt = new Attributes();
         buffAtt = new Attributes();
+        abilities = new Dictionary<string, Ability>();
 
         currentAtt.Power = 100;
 
@@ -79,6 +82,23 @@ public class Entity : MonoBehaviour
     /// <returns>True if the dude is dead.</returns>
     public bool IsDead() { return currentHP <= 0; }
 
+    /// <summary>
+    /// Adds an ability to the entity
+    /// </summary>
+    /// <param name="toAdd">Name key of the ability to add</param>
+    public void AddAbility(string toAdd)
+    {
+        abilities.Add(toAdd, GameManager.Abilities[toAdd]);
+    }
+
+    /// <summary>
+    /// Removes an ability from the entity
+    /// </summary>
+    /// <param name="toRemove">Name key of the ability to remove</param>
+    public void RemoveAbility(string toRemove)
+    {
+        abilities.Remove(toRemove);
+    }
     #region Buffs
     /// <summary>
     /// Adds a buff to the entity. The buff is given by an attributes object that is added to the entity's current

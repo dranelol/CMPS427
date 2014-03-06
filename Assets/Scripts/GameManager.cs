@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour {
 
     public equipmentFactory EquipmentFactory;
 
-    public Dictionary<string, Ability> Abilities;
+    public static Dictionary<string, Ability> Abilities;
 
 	// Use this for initialization
 	void Start () 
