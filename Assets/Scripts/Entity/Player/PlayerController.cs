@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour {
 	public float RotationSpeed = 10f;
     public NavMeshAgent agent;
 
+    private bool hadouken = false;
+
 	// Use this for initialization
 	void Start () {
 		targetPosition = Vector3.zero;
@@ -89,22 +91,16 @@ public class PlayerController : MonoBehaviour {
         // If the move/attack key was pressed...
         if (Input.GetAxis("Move/Attack") != 0) 
         {
-
-
-
-
-            int terrainMask =  LayerMask.NameToLayer("Terrain");
+            int terrainMask= LayerMask.NameToLayer("Terrain");
             int enemyMask = LayerMask.NameToLayer("Enemy");
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            
 			RaycastHit target;
 
             // If the raycast hit a collider...
-			if (Physics.Raycast(ray, out target, Mathf.Infinity, 1 << terrainMask))
+			if (Physics.Raycast(ray, out target, 1 << terrainMask))
 			{
-                Debug.Log(target.collider.gameObject.layer);
-                //Debug.Log(target.collider.name);
+
                 // If the collider was an enemy...
                 if (target.collider.gameObject.tag == "Enemy")
                 {
@@ -142,7 +138,7 @@ public class PlayerController : MonoBehaviour {
             }
              * */
             List<GameObject> attacked = Attack.OnAttack(transform, 360f, 5f);
-            //Debug.Log(attacked.Count);
+            Debug.Log(attacked.Count);
             foreach (GameObject enemy in attacked)
             {
                 if (enemy.GetComponent<AIController>().IsResetting() == false

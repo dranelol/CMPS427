@@ -27,9 +27,8 @@ public enum DamageType
     AIR
 };
 
-public class Ability {
-
-    
+public class Ability 
+{
 
     #region Properties
 
@@ -90,6 +89,28 @@ public class Ability {
         this.readable = readable;
         this.damageMod = damageMod;
     }
+
+    /// <summary>
+    /// Figure out who will be affected by this attack
+    /// </summary>
+    /// <param name="attacker"></param>
+    /// <returns>Returns a list of gameobjects this attack will affect</returns>
+    public List<GameObject> OnAttack(Transform attacker)
+    {
+        return Attack.OnAttack(attacker, radius, range);
+    }
+
+    /// <summary>
+    /// Do damage with this attack
+    /// </summary>
+    /// <param name="attacker">The gameobject carrying out the attack</param>
+    /// <param name="defender">The gameobject defending against the attack</param>
+    public void DoDamage(GameObject attacker, GameObject defender)
+    {
+        Attack.DoDamage(attacker, defender);
+    }
+
+
 
     
 }
