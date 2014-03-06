@@ -137,6 +137,11 @@ public class PlayerController : MonoBehaviour {
                 hadouken = false;
             }
              * */
+
+
+
+
+
             List<GameObject> attacked = Attack.OnAttack(transform, 360f, 5f);
             Debug.Log(attacked.Count);
             foreach (GameObject enemy in attacked)

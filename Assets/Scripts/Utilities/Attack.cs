@@ -133,6 +133,11 @@ public class Attack
         return enemiesToAttack;
     }
 
+    /// <summary>
+    /// Do damage to an enemy
+    /// </summary>
+    /// <param name="attacker">Gameobject doing the attacking</param>
+    /// <param name="defender">Gameobject affected by the attack</param>
     public static void DoDamage(GameObject attacker, GameObject defender)
     {
         Debug.Log(defender.ToString());
@@ -150,6 +155,14 @@ public class Attack
 
     }
 
+    /// <summary>
+    /// Certain attacks have a physics component to them; this resolves those effects
+    /// </summary>
+    /// <param name="attacker">Gameobject doing the attacking</param>
+    /// <param name="defender">Gameobject affected by the attack</param>
+    public static void DoPhysics(GameObject attacker, GameObject defende, AttackType attackType)
+    {
+    }
     /// <summary>
     /// Completely removes the velocity from a rigidbody
     /// Note: This is used in most of the force-based attacks

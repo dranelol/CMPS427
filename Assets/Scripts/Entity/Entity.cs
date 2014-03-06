@@ -10,8 +10,14 @@ public class Entity : MonoBehaviour
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
 
-    //public Dictionary<string, Ability> abilities; // set of abilities that this entity currently has access to
-    public List<Ability> abilities; // set of abilities that this entity currently has access to
+    public ArrayList abilities; // list of abilties the entity has access to
+    // ability indices:
+    // 0 = main attack (left click)
+    // 1 = alt attack (right click)
+    // 2 = ability1
+    // 3 = ability2
+    // 4 = ability3
+    // 5 = ability4
 
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
 
@@ -23,7 +29,7 @@ public class Entity : MonoBehaviour
         currentAtt = new Attributes();
         equipAtt = new Attributes();
         buffAtt = new Attributes();
-        abilities = new List<Ability>();
+        abilities = new ArrayList(6);
 
         currentAtt.Power = 100;
 
@@ -98,9 +104,10 @@ public class Entity : MonoBehaviour
     /// Adds an ability to the entity
     /// </summary>
     /// <param name="toAdd">Name key of the ability to add</param>
-    public void AddAbility(string toAdd)
+    /// <param name="index">Index of the ability list to add </param>
+    public void AddAbility(string toAdd, int index)
     {
-        abilities.Add(GameManager.Abilities[toAdd]);
+        abilities[index] = GameManager.Abilities[toAdd];
     }
 
     /// <summary>
@@ -109,6 +116,7 @@ public class Entity : MonoBehaviour
     /// <param name="toRemove">Name key of the ability to remove</param>
     public void RemoveAbility(string toRemove)
     {
+        //abilities.RemoveAt(index);
         abilities.Remove(GameManager.Abilities[toRemove]);
     }
     #region Buffs
