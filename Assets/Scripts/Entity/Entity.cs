@@ -10,7 +10,8 @@ public class Entity : MonoBehaviour
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
 
-    public Dictionary<string, Ability> abilities; // set of abilities that this entity currently has access to
+    //public Dictionary<string, Ability> abilities; // set of abilities that this entity currently has access to
+    public List<Ability> abilities; // set of abilities that this entity currently has access to
 
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
 
@@ -22,7 +23,7 @@ public class Entity : MonoBehaviour
         currentAtt = new Attributes();
         equipAtt = new Attributes();
         buffAtt = new Attributes();
-        abilities = new Dictionary<string, Ability>();
+        abilities = new List<Ability>();
 
         currentAtt.Power = 100;
 
@@ -40,7 +41,10 @@ public class Entity : MonoBehaviour
     public bool addEquipment(equipSlots.slots slot , equipment item)
     {
         if (this.equippedEquip.ContainsKey(slot))
+        {
             return false;
+        }
+
         else
         {
             this.equippedEquip.Add(slot, item);
@@ -66,7 +70,9 @@ public class Entity : MonoBehaviour
             return true;
         }
         else
+        {
             return false;
+        }
     }
 
     /// <summary>
@@ -74,13 +80,19 @@ public class Entity : MonoBehaviour
     /// Can be used for both taking damage and gaining health.
     /// </summary>
     /// <param name="value">Delta value to modify current health.</param>
-    public void ModifyHealth(float delta) { currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); }
+    public void ModifyHealth(float delta) 
+    { 
+        currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); 
+    }
 
     /// <summary>
     /// Kind of obvious.
     /// </summary>
     /// <returns>True if the dude is dead.</returns>
-    public bool IsDead() { return currentHP <= 0; }
+    public bool IsDead() 
+    { 
+        return currentHP <= 0; 
+    }
 
     /// <summary>
     /// Adds an ability to the entity
@@ -88,7 +100,7 @@ public class Entity : MonoBehaviour
     /// <param name="toAdd">Name key of the ability to add</param>
     public void AddAbility(string toAdd)
     {
-        abilities.Add(toAdd, GameManager.Abilities[toAdd]);
+        abilities.Add(GameManager.Abilities[toAdd]);
     }
 
     /// <summary>
@@ -97,7 +109,7 @@ public class Entity : MonoBehaviour
     /// <param name="toRemove">Name key of the ability to remove</param>
     public void RemoveAbility(string toRemove)
     {
-        abilities.Remove(toRemove);
+        abilities.Remove(GameManager.Abilities[toRemove]);
     }
     #region Buffs
     /// <summary>
