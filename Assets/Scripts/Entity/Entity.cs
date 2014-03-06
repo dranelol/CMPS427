@@ -10,7 +10,7 @@ public class Entity : MonoBehaviour
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
 
-    public ArrayList abilities; // list of abilties the entity has access to
+    public List<Ability> abilities; // list of abilties the entity has access to
     // ability indices:
     // 0 = main attack (left click)
     // 1 = alt attack (right click)
@@ -29,7 +29,15 @@ public class Entity : MonoBehaviour
         currentAtt = new Attributes();
         equipAtt = new Attributes();
         buffAtt = new Attributes();
-        abilities = new ArrayList(6);
+
+        abilities = new List<Ability>(6);
+        
+        // change this to something cleaner?
+
+        for (int i = 0; i < abilities.Capacity; i++)
+        {
+            abilities.Add(null);
+        }
 
         currentAtt.Power = 100;
 

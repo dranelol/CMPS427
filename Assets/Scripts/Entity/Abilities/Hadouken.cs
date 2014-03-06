@@ -113,7 +113,7 @@ public class Hadouken : Ability
     /// </summary>
     /// <param name="attacker">Gameobject doing the attacking</param>
     /// <param name="defender">Gameobject affected by the attack</param>
-    public override void DoPhysics(GameObject attacker, GameObject defender, AttackType attackType)
+    public override void DoPhysics(GameObject attacker, GameObject defender)
     {
         Vector3 relativeVector = (defender.transform.position - attacker.transform.position);
         float normalizedMagnitude = 5f - Vector3.Distance(defender.transform.position, attacker.transform.position);
@@ -121,6 +121,7 @@ public class Hadouken : Ability
         defender.GetComponent<MovementFSM>().Stop(0.2f);
         defender.rigidbody.isKinematic = false;
         defender.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
+
         StartCoroutine(Attack.RemovePhysics(defender.rigidbody, 0.2f));
         
     }

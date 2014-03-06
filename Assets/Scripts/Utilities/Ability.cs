@@ -95,28 +95,28 @@ public abstract class Ability : MonoBehaviour
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <param name="defender">The gameobject defending against the attack</param>
-    public virtual void AttackHandler(GameObject attacker);
+    public abstract void AttackHandler(GameObject attacker);
 
     /// <summary>
     /// Figure out who will be affected by this attack
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <returns>Returns a list of gameobjects this attack will affect</returns>
-    public virtual List<GameObject> OnAttack(Transform attacker);
+    public abstract List<GameObject> OnAttack(Transform attacker);
 
     /// <summary>
     /// Do damage with this attack
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <param name="defender">The gameobject defending against the attack</param>
-    public virtual void DoDamage(GameObject attacker, GameObject defender);
+    public abstract void DoDamage(GameObject attacker, GameObject defender);
 
     /// <summary>
     /// Certain attacks have a physics component to them; this resolves those effects
     /// </summary>
     /// <param name="attacker">Gameobject doing the attacking</param>
     /// <param name="defender">Gameobject affected by the attack</param>
-    public virtual void DoPhysics(GameObject attacker, GameObject defender);
+    public abstract void DoPhysics(GameObject attacker, GameObject defender);
 
 
 

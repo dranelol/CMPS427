@@ -8,11 +8,12 @@ public class PlayerEntity : Entity {
 	new void Start () 
     {
         base.Start();
-
-        abilities[0] = GameManager.Abilities["cleave"];
-        abilities[1] = GameManager.Abilities["fusrodah"];
-        abilities[2] = GameManager.Abilities["deathgrip"];
-        abilities[3] = GameManager.Abilities["hadouken"];
+        //abilities[0] = GameManager.Abilities["cleave"];
+        //abilities[1] = GameManager.Abilities["fusrodah"];
+        //abilities[2] = GameManager.Abilities["deathgrip"];
+        //abilities[0] = GameManager.Abilities["hadouken"];
+        //abilities[1] = GameManager.Abilities["hadouken"];
+        abilities[2] = GameManager.Abilities["hadouken"];
 	}
 	
 	// Update is called once per frame
@@ -27,6 +28,6 @@ public class PlayerEntity : Entity {
         //minDamage = currentAtt.MinDamage;
         //maxDamage = currentAtt.MaxDamage;
 
-
+        Debug.Log(abilities.Count);
 	}
 }

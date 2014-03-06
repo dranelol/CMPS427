@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Attack
+public class Attack : MonoBehaviour
 {
     /// <summary>
     /// Figure out which gameobjects will be affected by this attack

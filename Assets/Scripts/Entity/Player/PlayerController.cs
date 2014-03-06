@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour {
 
     private bool hadouken = false;
 
+    public PlayerEntity entity;
+
 	// Use this for initialization
 	void Start () {
 		targetPosition = Vector3.zero;
@@ -22,6 +24,7 @@ public class PlayerController : MonoBehaviour {
 		agent.acceleration = 100f;
         agent.updateRotation = false;
         agent.avoidancePriority = 1;
+        entity = GetComponent<PlayerEntity>();
 	}
 	
 	// Update is called once per frame
@@ -125,54 +128,16 @@ public class PlayerController : MonoBehaviour {
 
 
 
-        #region hadouken
-        if (Input.GetKeyDown(KeyCode.B))
+        #region ability 1
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            /*
-            if (hadouken == false)
-            {
-                agent.radius = 10f;
-                hadouken = true;
-            }
-
-            else
-            {
-                agent.radius = 0.5f;
-                hadouken = false;
-            }
-             * */
-
-
-
-
-
-            List<GameObject> attacked = Attack.OnAttack(transform, 360f, 5f);
-            Debug.Log(attacked.Count);
-            foreach (GameObject enemy in attacked)
-            {
-                if (enemy.GetComponent<AIController>().IsResetting() == false
-                    && enemy.GetComponent<AIController>().IsDead() == false)
-                {
-                    Vector3 relativeVector = (enemy.transform.position - transform.position);
-                    float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
-                    float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
-                    enemy.GetComponent<MovementFSM>().Stop(0.2f);
-                    enemy.rigidbody.isKinematic = false;
-                    enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
-                    
-                    //enemy.rigidbody.AddForceAtPosition(50f, 
-                    //enemy.rigidbody.AddExplosionForce(50f, transform.position, 5f, 3f);
-                    //Destroy(enemy.rigidbody);
-                    
-                    Attack.DoDamage(gameObject, enemy);
-                    StartCoroutine(Attack.RemovePhysics(enemy.rigidbody, 0.2f));
-                }
-            }
-
+            entity.abilities[2].AttackHandler(gameObject);
         }
 
         #endregion
 
+        #endregion
+        /*
         #region reverse hadouken
         if (Input.GetKeyDown(KeyCode.V))
         {
@@ -248,5 +213,6 @@ public class PlayerController : MonoBehaviour {
             }
         }
         #endregion
+        */
     }
 }

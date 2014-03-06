@@ -16,12 +16,12 @@ public class GameManager : MonoBehaviour {
         #region ability initialization
         Abilities = new Dictionary<string, Ability>();
 
-        // Attack type, damage type, range, radius, cooldown, 
+        // Attack type, damage type, range, angle, cooldown, damagemod
 
-        Abilities["hadouken"] = new Ability(AttackType.PBAOE, DamageType.FIRE, 5.0f, 10.0f, 3.0f, 1.0f, "hadouken", "Hadouken");
-        Abilities["deathgrip"] = new Ability(AttackType.PBAOE, DamageType.FIRE, 5.0f, 10.0f, 3.0f, 1.0f, "deathgrip", "AoE Deathgrip");
-        Abilities["cleave"] = new Ability(AttackType.MELEE, DamageType.PHYSICAL, 1.0f, 45.0f, 5.0f, 1.0f, "cleave", "Cleave");
-        Abilities["fusrodah"] = new Ability(AttackType.PBAOE, DamageType.AIR, 20.0f, 360.0f, 10.0f, 1.0f, "fusrodah", "Fus Roh Dah");
+        Abilities["hadouken"] = new Hadouken(AttackType.PBAOE, DamageType.FIRE, 5.0f, 360.0f, 3.0f, 1.0f, "hadouken", "Hadouken");
+        //Abilities["deathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.FIRE, 5.0f, 360.0f, 3.0f, 1.0f, "deathgrip", "AoE Deathgrip");
+        //Abilities["cleave"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 1.0f, 45.0f, 5.0f, 1.0f, "cleave", "Cleave");
+        //Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 20.0f, 45.0f, 10.0f, 1.0f, "fusrodah", "Fus Roh Dah");
 
         #endregion
     }
