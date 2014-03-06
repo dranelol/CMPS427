@@ -27,7 +27,7 @@ public enum DamageType
     AIR
 };
 
-public abstract class Ability 
+public abstract class Ability : MonoBehaviour
 {
 
     #region Properties
@@ -91,9 +91,16 @@ public abstract class Ability
     }
 
     /// <summary>
+    /// Handler for this attack; figures out who will be attacked, and carries out everything needed for the attack to occur
+    /// </summary>
+    /// <param name="attacker">The gameobject carrying out the attack</param>
+    /// <param name="defender">The gameobject defending against the attack</param>
+    public virtual void AttackHandler(GameObject attacker);
+
+    /// <summary>
     /// Figure out who will be affected by this attack
     /// </summary>
-    /// <param name="attacker"></param>
+    /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <returns>Returns a list of gameobjects this attack will affect</returns>
     public virtual List<GameObject> OnAttack(Transform attacker);
 
@@ -109,7 +116,7 @@ public abstract class Ability
     /// </summary>
     /// <param name="attacker">Gameobject doing the attacking</param>
     /// <param name="defender">Gameobject affected by the attack</param>
-    public virtual void DoPhysics(GameObject attacker, GameObject defende, AttackType attackType);
+    public virtual void DoPhysics(GameObject attacker, GameObject defender);
 
 
 

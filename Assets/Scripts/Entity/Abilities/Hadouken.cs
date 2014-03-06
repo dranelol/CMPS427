@@ -10,6 +10,30 @@ public class Hadouken : Ability
     {
        
     }
+
+    /// <summary>
+    /// Handler for this attack; figures out who will be attacked, and carries out everything needed for the attack to occur
+    /// </summary>
+    /// <param name="attacker">The gameobject carrying out the attack</param>
+    /// <param name="defender">The gameobject defending against the attack</param>
+    public override void AttackHandler(GameObject attacker)
+    {
+        List<GameObject> attacked = OnAttack(attacker.transform);
+
+        Debug.Log(attacked.Count);
+
+        foreach (GameObject enemy in attacked)
+        {
+            if (enemy.GetComponent<AIController>().IsResetting() == false
+                && enemy.GetComponent<AIController>().IsDead() == false)
+            {
+                DoDamage(attacker, enemy);
+
+                // this is a physics attack, so do physics applies
+                DoPhysics(attacker, enemy);
+            }
+        }
+    }
          
     /// <summary>
     /// Figure out who will be affected by this attack
@@ -71,7 +95,17 @@ public class Hadouken : Ability
     /// <param name="defender">The gameobject defending against the attack</param>
     public override void DoDamage(GameObject attacker, GameObject defender)
     {
+        Debug.Log(defender.ToString());
+        Entity attackerEntity = attacker.GetComponent<Entity>();
+        Entity defenderEntity = defender.GetComponent<Entity>();
 
+        // for now, always just take 10hp off
+
+        defenderEntity.currentHP -= 10f;
+
+        float ratio = (defenderEntity.currentHP / defenderEntity.maxHP);
+
+        defender.renderer.material.color = new Color(1.0f, ratio, ratio);
     }
 
     /// <summary>
@@ -79,8 +113,15 @@ public class Hadouken : Ability
     /// </summary>
     /// <param name="attacker">Gameobject doing the attacking</param>
     /// <param name="defender">Gameobject affected by the attack</param>
-    public override void DoPhysics(GameObject attacker, GameObject defende, AttackType attackType)
+    public override void DoPhysics(GameObject attacker, GameObject defender, AttackType attackType)
     {
-
+        Vector3 relativeVector = (defender.transform.position - attacker.transform.position);
+        float normalizedMagnitude = 5f - Vector3.Distance(defender.transform.position, attacker.transform.position);
+        float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
+        defender.GetComponent<MovementFSM>().Stop(0.2f);
+        defender.rigidbody.isKinematic = false;
+        defender.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
+        StartCoroutine(Attack.RemovePhysics(defender.rigidbody, 0.2f));
+        
     }
 }

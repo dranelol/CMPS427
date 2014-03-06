@@ -162,6 +162,13 @@ public class Attack
     /// <param name="defender">Gameobject affected by the attack</param>
     public void DoPhysics(GameObject attacker, GameObject defender, AttackType attackType)
     {
+        Vector3 relativeVector = (defender.transform.position - attacker.transform.position);
+        float normalizedMagnitude = 5f - Vector3.Distance(defender.transform.position, attacker.transform.position);
+        float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
+        defender.GetComponent<MovementFSM>().Stop(0.2f);
+        defender.rigidbody.isKinematic = false;
+        defender.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
+        
     }
     /// <summary>
     /// Completely removes the velocity from a rigidbody
@@ -170,7 +177,7 @@ public class Attack
     /// <param name="target">Target rigid body from which you are removing velocity</param>
     /// <param name="time">Time, in seconds, after which veloctiy is removed. Default=0</param>
     /// <returns></returns>
-    public IEnumerator RemovePhysics(Rigidbody target, float time=0.0f)
+    public static IEnumerator RemovePhysics(Rigidbody target, float time=0.0f)
     {
         yield return new WaitForSeconds(time);
 
