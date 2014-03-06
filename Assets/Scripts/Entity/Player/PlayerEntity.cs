@@ -5,8 +5,8 @@ public class PlayerEntity : Entity {
     public float power, defense, attackSpeed, movementSpeed, minDamage, maxDamage;
 
 	// Use this for initialization
-	new void Start () {
-        base.Start();
+	new void Awake () {
+        base.Awake();
 	}
 	
 	// Update is called once per frame

@@ -94,11 +94,19 @@ public class EnemySpawner : MonoBehaviour
         if (NavMesh.SamplePosition(newPosition, out meshLocation, 30, 1 << LayerMask.NameToLayer("Default")))
         {
             GameObject newEnemy = Instantiate(enemyPrefab, newPosition, Quaternion.identity) as GameObject;
+            //newEnemy.GetComponent<Entity>().Start();
             newEnemy.name = "Enemy(" + newEnemy.GetInstanceID() + ")";
             newEnemy.transform.parent = Group.transform;
 
             newEnemy.transform.GetChild(0).gameObject.AddComponent<AggroRadius>();
             newEnemy.AddComponent<AIController>();
+            //newEnemy.GetComponent<Entity>().currentAtt = new Attributes();
+            //equipment tempequip = new equipment();
+            //tempequip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GM>().EquipmentFact.randomEquipment();
+            //Debug.Log("equipment: " + tempequip.equipmentName + " " + tempequip.equipmentAttributes.Power.ToString());
+            //bool newbool = newEnemy.GetComponent<Entity>().addEquipment(tempequip.validSlot, tempequip);
+            
+            //Debug.Log(newEnemy.GetComponent<Entity>().currentAtt.Defense.ToString() + " " + newEnemy.GetComponent<Entity>().currentAtt.Power.ToString() + " " + newEnemy.GetComponent<Entity>().currentAtt.MaxDamage.ToString());
         }
 
         else

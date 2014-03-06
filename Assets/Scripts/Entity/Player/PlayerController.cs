@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour {
             // If the raycast hit a collider...
 			if (Physics.Raycast(ray, out target, Mathf.Infinity, 1 << terrainMask))
 			{
-                Debug.Log(target.collider.gameObject.layer);
+               // Debug.Log(target.collider.gameObject.layer);
                 //Debug.Log(target.collider.name);
                 // If the collider was an enemy...
                 if (target.collider.gameObject.tag == "Enemy")

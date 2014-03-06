@@ -10,13 +10,14 @@ public class Entity : MonoBehaviour
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
 
-    private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
+    private Dictionary<equipSlots.slots, equipment> equippedEquip;
 
     /// <summary>
     /// Creates the entity with a given set of base attributes,
     /// </summary>
-    public void Start()
+    public void Awake()
     {
+        equippedEquip = new Dictionary<equipSlots.slots, equipment>();
         currentAtt = new Attributes();
         equipAtt = new Attributes();
         buffAtt = new Attributes();
