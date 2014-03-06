@@ -10,13 +10,19 @@ public class Entity : MonoBehaviour
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
 
+    public List<Ability> abilities;
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
 
-    /// <summary>
-    /// Creates the entity with a given set of base attributes,
-    /// </summary>
-    public void Start()
+
+    public void Awake()
     {
+        abilities = new List<Ability>(6);
+
+        for (int i = 0; i < abilities.Capacity; i++)
+        {
+            abilities.Add(null);
+        }
+
         currentAtt = new Attributes();
         equipAtt = new Attributes();
         buffAtt = new Attributes();
@@ -24,6 +30,13 @@ public class Entity : MonoBehaviour
         currentAtt.Power = 100;
 
         maxHP = currentHP = 50f;
+    }
+    /// <summary>
+    /// Creates the entity with a given set of base attributes,
+    /// </summary>
+    public void Start()
+    {
+        
     }
 
     /// <summary>

@@ -169,7 +169,7 @@ public class equipmentFactory {
             Debug.Log("equipmentlist fail");
         }
 
-        Debug.Log("after load");
+        //Debug.Log("after load");
 
         //Debug.Log(equipList.InnerXml);
         
@@ -185,7 +185,7 @@ public class equipmentFactory {
 
 
             XmlNode tempnode = item.SelectSingleNode("name");
-            Debug.Log(tempnode.InnerText);
+            //Debug.Log(tempnode.InnerText);
 
             //since this is base, with no affixes, the item name and type are the same
             newE.equipmentName = tempnode.InnerText;
@@ -194,7 +194,7 @@ public class equipmentFactory {
             tempnode = item.SelectSingleNode("slot");
 
             newE.setslot(tempnode.InnerText);
-            Debug.Log(tempnode.InnerText);
+            //Debug.Log(tempnode.InnerText);
 
             //min and max lvl
             tempnode = item.SelectSingleNode("minlvl");
@@ -257,7 +257,7 @@ public class equipmentFactory {
                     Debug.Log("CAUTION: " + att.InnerText + " is not in the Factory!");
                 }
 
-                Debug.Log(att.InnerText + " " + att.Attributes.GetNamedItem("value").InnerText);
+                //Debug.Log(att.InnerText + " " + att.Attributes.GetNamedItem("value").InnerText);
                 
                 
             }
@@ -291,7 +291,7 @@ public class equipmentFactory {
             Debug.Log("affixlist fail");
         }
 
-        Debug.Log("after affix load");
+        //Debug.Log("after affix load");
 
         //Debug.Log(affixList.InnerXml);
 
@@ -308,7 +308,7 @@ public class equipmentFactory {
             newA.affixType = affix.Attributes.GetNamedItem("category").InnerText;
 
             XmlNode tempnode = affix.SelectSingleNode("name");
-            Debug.Log(tempnode.InnerText);
+            //Debug.Log(tempnode.InnerText);
 
             
             newA.affixName = tempnode.InnerText;
@@ -321,7 +321,7 @@ public class equipmentFactory {
             foreach (XmlNode att in atts)
             {
                 newA.addslot(att.InnerText);
-                Debug.Log(att.InnerText);
+                //Debug.Log(att.InnerText);
             }
 
 
@@ -368,7 +368,7 @@ public class equipmentFactory {
                     Debug.Log("CAUTION: " + att.InnerText + " is not in the Factory!");
                 }
 
-                Debug.Log(att.InnerText + " " + att.Attributes.GetNamedItem("value").InnerText);
+                //Debug.Log(att.InnerText + " " + att.Attributes.GetNamedItem("value").InnerText);
 
             }
 

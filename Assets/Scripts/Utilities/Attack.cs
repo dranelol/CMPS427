@@ -2,9 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Attack
+public class Attack : MonoBehaviour
 {
-    public static List<GameObject> OnAttack(Transform attacker, float attackAngle, float attackRange)
+    /// <summary>
+    /// Figure out which gameobjects will be affected by this attack
+    /// </summary>
+    /// <param name="attacker">The attacking gameobject</param>
+    /// <param name="attackAngle">The angle of the attack</param>
+    /// <param name="attackRange">The range of the attack (radius for arced attacks)</param>
+    /// <param name="attackType">The type of attack</param>
+    /// <param name="attackPosition">Optional: the position of the attack. By default, this is the attacker's position</param>
+    /// <returns>The list containing the affected gameobjects</returns>
+    public List<GameObject> OnAttack(Transform attacker, float attackAngle, float attackRange, AttackType attackType, Vector3 attackPosition = new Vector3())
     {
         List<GameObject> enemiesToAttack = new List<GameObject>();
 
@@ -14,58 +23,109 @@ public class Attack
         int playerMask = LayerMask.NameToLayer("Player");
 
 
-        Collider[] colliders = Physics.OverlapSphere(attacker.position, attackRange, 1 << enemyMask);
-
-        foreach (Collider collider in colliders)
+        switch(attackType)
         {
-            Debug.Log(collider.ToString());
-            Vector3 enemyVector = collider.transform.position - attacker.position;
-            Vector3 enemyVector2 = attacker.position - collider.transform.position;
-            //Debug.Log(enemyVector);
-            //Debug.Log(Vector3.Angle(forward, enemyVector));
-            
-            if (Vector3.Angle(forward, enemyVector) < attackAngle)
-            {
-                //Debug.Log(collider.ToString());
-                //Debug.Log(Vector3.Angle(forward, enemyVector));
-                //Debug.Log(Vector3.Angle(forward, enemyVector).ToString());
-                // draw ray between enemy and player
-                // raycast with a layermask for enemies
-                //Debug.Log("enemy in angle: " + Vector3.Angle(forward, enemyVector).ToString());
-                RaycastHit hit = new RaycastHit();
-                Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
-
-                bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2),out hit, attackRange, 1 << playerMask);
-
-                if (!rayCastHit)
+            case AttackType.PBAOE:
+                #region Point-blank AoE
                 {
+                    // get a list of all the enemies in range of the attack
+                    Collider[] colliders = Physics.OverlapSphere(attacker.position, attackRange, 1 << enemyMask);
 
-                }
-                else
-                {
-                    //Debug.Log(hit.collider.name);
-                    if (hit.collider.gameObject.tag == "Player")
+                    foreach (Collider collider in colliders)
+>>>>>>> upstream/master
                     {
-                        //Debug.Log("dat hit!");
-                        enemiesToAttack.Add(collider.gameObject);
+                        Debug.Log(collider.ToString());
+
+                        // create a vector from the possible enemy to the attacker
+
+                        Vector3 enemyVector = collider.transform.position - attacker.position;
+                        Vector3 enemyVector2 = attacker.position - collider.transform.position;
+
+                        // if the angle between the forward vector of the attacker and the enemy vector is less than the angle of attack, the enemy is within the attack angle
+                        if (Vector3.Angle(forward, enemyVector) < attackAngle)
+                        {
+                            RaycastHit hit = new RaycastHit();
+                            Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                            Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+
+                            // try to cast a ray from the enemy to the player
+                            bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, attackRange, 1 << playerMask);
+
+                            if (!rayCastHit)
+                            {
+
+                            }
+                            // if the ray hits, the enemy is in line of sight of the player, this is a successful attack hit
+                            else
+                            {
+                                if (hit.collider.gameObject.tag == "Player")
+                                {
+                                    enemiesToAttack.Add(collider.gameObject);
+                                }
+                            }
+                        }
                     }
                 }
-        
-                 
-                // if the first thing the raycast hits is the player, player do damage to enemy
+                #endregion
 
-                //Debug.Log(hit.ToString());
-                //Debug.Log(hit.collider.tag);
-                //Debug.Log(hit.collider.gameObject.tag);
-                /*
-                if (hit.collider.gameObject.tag == "Player")
+                break;
+
+            case AttackType.AOE:
+                break;
+
+            // for now, melees are treated exactly the same as point-blank AoEs
+            case AttackType.MELEE:
+                #region Melee
                 {
-                    Debug.Log("fucked him up!");
+                    // get a list of all the enemies in range of the attack
+                    Collider[] colliders = Physics.OverlapSphere(attacker.position, attackRange, 1 << enemyMask);
+
+                    foreach (Collider collider in colliders)
+                    {
+                        Debug.Log(collider.ToString());
+
+                        // create a vector from the possible enemy to the attacker
+
+                        Vector3 enemyVector = collider.transform.position - attacker.position;
+                        Vector3 enemyVector2 = attacker.position - collider.transform.position;
+
+                        // if the angle between the forward vector of the attacker and the enemy vector is less than the angle of attack, the enemy is within the attack angle
+                        if (Vector3.Angle(forward, enemyVector) < attackAngle)
+                        {
+                            RaycastHit hit = new RaycastHit();
+                            Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                            Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+
+                            // try to cast a ray from the enemy to the player
+                            bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, attackRange, 1 << playerMask);
+
+                            if (!rayCastHit)
+                            {
+
+                            }
+                            // if the ray hits, the enemy is in line of sight of the player, this is a successful attack hit
+                            else
+                            {
+                                if (hit.collider.gameObject.tag == "Player")
+                                {
+                                    enemiesToAttack.Add(collider.gameObject);
+                                }
+                            }
+                        }
+                    }
                 }
-                */
-            }
+                #endregion
+
+                break;
+
+            case AttackType.PROJECTILE:
+                break;
+
+            default:
+
+                break;
         }
+    
 
 
 
@@ -75,7 +135,12 @@ public class Attack
         return enemiesToAttack;
     }
 
-    public static void DoDamage(GameObject attacker, GameObject defender)
+    /// <summary>
+    /// Do damage to an enemy
+    /// </summary>
+    /// <param name="attacker">Gameobject doing the attacking</param>
+    /// <param name="defender">Gameobject affected by the attack</param>
+    public void DoDamage(GameObject attacker, GameObject defender)
     {
         Debug.Log(defender.ToString());
         Entity attackerEntity = attacker.GetComponent<Entity>();
@@ -93,6 +158,23 @@ public class Attack
     }
 
     /// <summary>
+
+    /// Certain attacks have a physics component to them; this resolves those effects
+    /// </summary>
+    /// <param name="attacker">Gameobject doing the attacking</param>
+    /// <param name="defender">Gameobject affected by the attack</param>
+    public void DoPhysics(GameObject attacker, GameObject defender, AttackType attackType)
+    {
+        Vector3 relativeVector = (defender.transform.position - attacker.transform.position);
+        float normalizedMagnitude = 5f - Vector3.Distance(defender.transform.position, attacker.transform.position);
+        float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
+        defender.GetComponent<MovementFSM>().Stop(0.2f);
+        defender.rigidbody.isKinematic = false;
+        defender.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
+        
+    }
+    /// <summary>
+
     /// Completely removes the velocity from a rigidbody
     /// Note: This is used in most of the force-based attacks
     /// </summary>
@@ -103,10 +185,12 @@ public class Attack
     {
         yield return new WaitForSeconds(time);
 
+
         if (target != null)
         {
             target.isKinematic = true;
         }
+
 
         yield break;
     }
