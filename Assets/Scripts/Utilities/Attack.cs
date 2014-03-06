@@ -13,7 +13,7 @@ public class Attack
     /// <param name="attackType">The type of attack</param>
     /// <param name="attackPosition">Optional: the position of the attack. By default, this is the attacker's position</param>
     /// <returns>The list containing the affected gameobjects</returns>
-    public static List<GameObject> OnAttack(Transform attacker, float attackAngle, float attackRange, AttackType attackType, Vector3 attackPosition = new Vector3())
+    public List<GameObject> OnAttack(Transform attacker, float attackAngle, float attackRange, AttackType attackType, Vector3 attackPosition = new Vector3())
     {
         List<GameObject> enemiesToAttack = new List<GameObject>();
 
@@ -138,7 +138,7 @@ public class Attack
     /// </summary>
     /// <param name="attacker">Gameobject doing the attacking</param>
     /// <param name="defender">Gameobject affected by the attack</param>
-    public static void DoDamage(GameObject attacker, GameObject defender)
+    public void DoDamage(GameObject attacker, GameObject defender)
     {
         Debug.Log(defender.ToString());
         Entity attackerEntity = attacker.GetComponent<Entity>();
@@ -160,7 +160,7 @@ public class Attack
     /// </summary>
     /// <param name="attacker">Gameobject doing the attacking</param>
     /// <param name="defender">Gameobject affected by the attack</param>
-    public static void DoPhysics(GameObject attacker, GameObject defende, AttackType attackType)
+    public void DoPhysics(GameObject attacker, GameObject defender, AttackType attackType)
     {
     }
     /// <summary>
@@ -170,7 +170,7 @@ public class Attack
     /// <param name="target">Target rigid body from which you are removing velocity</param>
     /// <param name="time">Time, in seconds, after which veloctiy is removed. Default=0</param>
     /// <returns></returns>
-    public static IEnumerator RemovePhysics(Rigidbody target, float time=0.0f)
+    public IEnumerator RemovePhysics(Rigidbody target, float time=0.0f)
     {
         yield return new WaitForSeconds(time);
 

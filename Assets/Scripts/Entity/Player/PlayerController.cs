@@ -121,6 +121,10 @@ public class PlayerController : MonoBehaviour {
 
         }
 
+        #region new key-bound attacks
+
+
+
         #region hadouken
         if (Input.GetKeyDown(KeyCode.B))
         {

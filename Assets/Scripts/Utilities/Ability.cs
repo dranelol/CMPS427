@@ -27,42 +27,42 @@ public enum DamageType
     AIR
 };
 
-public class Ability 
+public abstract class Ability 
 {
 
     #region Properties
 
-    private AttackType attackType;
+    protected AttackType attackType;
     public AttackType Attack_Type
     {
         get { return attackType; }
     }
 
-    private DamageType damageType;
+    protected DamageType damageType;
     public DamageType Damage_Type
     {
         get { return damageType; }
     }
 
-    private float range;
+    protected float range;
     public float Range
     {
         get { return range; }
     }
     
-    private float angle;
+    protected float angle;
     public float Angle
     {
         get { return angle; }
     }
     
-    private float cooldown;
+    protected float cooldown;
     public float Cooldown
     {
         get { return cooldown; }
     }
 
-    private string readable;
+    protected string readable;
     public string Name
     {
         get { return readable; }
@@ -71,7 +71,7 @@ public class Ability
     /// <summary>
     /// Base modifier from which damage is calculated
     /// </summary>
-    private float damageMod;
+    protected float damageMod;
     public float DamageMod
     {
         get { return damageMod; }
@@ -95,20 +95,21 @@ public class Ability
     /// </summary>
     /// <param name="attacker"></param>
     /// <returns>Returns a list of gameobjects this attack will affect</returns>
-    public List<GameObject> OnAttack(Transform attacker)
-    {
-        return Attack.OnAttack(attacker, angle, range, this.attackType, Vector3.zero);
-    }
+    public virtual List<GameObject> OnAttack(Transform attacker);
 
     /// <summary>
     /// Do damage with this attack
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <param name="defender">The gameobject defending against the attack</param>
-    public void DoDamage(GameObject attacker, GameObject defender)
-    {
-        Attack.DoDamage(attacker, defender);
-    }
+    public virtual void DoDamage(GameObject attacker, GameObject defender);
+
+    /// <summary>
+    /// Certain attacks have a physics component to them; this resolves those effects
+    /// </summary>
+    /// <param name="attacker">Gameobject doing the attacking</param>
+    /// <param name="defender">Gameobject affected by the attack</param>
+    public virtual void DoPhysics(GameObject attacker, GameObject defende, AttackType attackType);
 
 
 
