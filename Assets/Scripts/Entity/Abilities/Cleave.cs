@@ -104,13 +104,4 @@ public class Cleave : Ability
         defender.renderer.material.color = new Color(1.0f, ratio, ratio);
     }
 
-    /// <summary>
-    /// Certain attacks have a physics component to them; this resolves those effects
-    /// </summary>
-    /// <param name="attacker">Gameobject doing the attacking</param>
-    /// <param name="defender">Gameobject affected by the attack</param>
-    public override void DoPhysics(GameObject attacker, GameObject defender)
-    {
-
-    }
 }

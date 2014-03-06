@@ -109,14 +109,18 @@ public abstract class Ability
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <param name="defender">The gameobject defending against the attack</param>
-    public abstract void DoDamage(GameObject attacker, GameObject defender);
+    public virtual void DoDamage(GameObject attacker, GameObject defender)
+    {
+    }
 
     /// <summary>
     /// Certain attacks have a physics component to them; this resolves those effects
     /// </summary>
     /// <param name="attacker">Gameobject doing the attacking</param>
     /// <param name="defender">Gameobject affected by the attack</param>
-    public abstract void DoPhysics(GameObject attacker, GameObject defender);
+    public virtual void DoPhysics(GameObject attacker, GameObject defender)
+    {
+    }
 
 
 

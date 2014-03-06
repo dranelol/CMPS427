@@ -15,7 +15,15 @@ public class Entity : MonoBehaviour
 
     public void Awake()
     {
-        abilities = new List<Ability>();
+        abilities = new List<Ability>(6);
+
+        for (int i = 0; i < abilities.Capacity; i++)
+        {
+            abilities.Add(null);
+        }
+
+
+
         currentAtt = new Attributes();
         equipAtt = new Attributes();
         buffAtt = new Attributes();
