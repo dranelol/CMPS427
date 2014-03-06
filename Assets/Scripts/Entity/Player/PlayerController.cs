@@ -132,26 +132,47 @@ public class PlayerController : MonoBehaviour {
         #region ability 1
         if (Input.GetKeyDown(KeyCode.Q))
         {
-
-            entity.abilities[2].AttackHandler(gameObject);
+            if (combatFSM.IsIdle() == true)
+            {
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                entity.abilities[2].AttackHandler(gameObject);
+            }
         }
 
+        #endregion
+
+        #region ability 2
         if (Input.GetKeyDown(KeyCode.W))
         {
-
-            entity.abilities[3].AttackHandler(gameObject);
+            if (combatFSM.IsIdle() == true)
+            {
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                entity.abilities[3].AttackHandler(gameObject);
+            }
         }
+        #endregion
+
+        #region ability 3
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-
-            entity.abilities[4].AttackHandler(gameObject);
+            if (combatFSM.IsIdle() == true)
+            {
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                entity.abilities[4].AttackHandler(gameObject);
+            }
         }
+        #endregion
+
+        #region ability 4
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-
-            entity.abilities[5].AttackHandler(gameObject);
+            if (combatFSM.IsIdle() == true)
+            {
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                entity.abilities[5].AttackHandler(gameObject);
+            }
         }
         #endregion
 

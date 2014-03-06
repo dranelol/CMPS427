@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 
     public static Dictionary<string, Ability> Abilities;
 
-    public static const float GLOBAL_COOLDOWN = 0.5f;
+    public static float GLOBAL_COOLDOWN = 0.5f;
 
 	// Use this for initialization
 	void Start () 
