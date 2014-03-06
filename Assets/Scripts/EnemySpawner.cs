@@ -100,14 +100,7 @@ public class EnemySpawner : MonoBehaviour
 
             newEnemy.transform.GetChild(0).gameObject.AddComponent<AggroRadius>();
             newEnemy.AddComponent<AIController>();
-            //newEnemy.GetComponent<Entity>().currentAtt = new Attributes();
-            //equipment tempequip = new equipment();
-            //tempequip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GM>().EquipmentFact.randomEquipment();
-            //Debug.Log("equipment: " + tempequip.equipmentName + " " + tempequip.equipmentAttributes.Power.ToString());
-            //bool newbool = newEnemy.GetComponent<Entity>().addEquipment(tempequip.validSlot, tempequip);
-            
-            //Debug.Log(newEnemy.GetComponent<Entity>().currentAtt.Defense.ToString() + " " + newEnemy.GetComponent<Entity>().currentAtt.Power.ToString() + " " + newEnemy.GetComponent<Entity>().currentAtt.MaxDamage.ToString());
-        }
+          }
 
         else
         {
