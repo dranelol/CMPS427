@@ -95,14 +95,14 @@ public abstract class Ability
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <param name="defender">The gameobject defending against the attack</param>
-    public abstract void AttackHandler(GameObject attacker);
+    public abstract void AttackHandler(GameObject attacker, bool isPlayer);
 
     /// <summary>
     /// Figure out who will be affected by this attack
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <returns>Returns a list of gameobjects this attack will affect</returns>
-    public abstract List<GameObject> OnAttack(Transform attacker);
+    public abstract List<GameObject> OnAttack(Transform attacker, bool isPlayer);
 
     /// <summary>
     /// Do damage with this attack

@@ -15,9 +15,9 @@ public class Deathgrip : Ability
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <param name="defender">The gameobject defending against the attack</param>
-    public override void AttackHandler(GameObject attacker)
+    public override void AttackHandler(GameObject attacker, bool isPlayer)
     {
-        List<GameObject> attacked = OnAttack(attacker.transform);
+        List<GameObject> attacked = OnAttack(attacker.transform, isPlayer);
 
         Debug.Log(attacked.Count);
 
@@ -39,7 +39,7 @@ public class Deathgrip : Ability
     /// </summary>
     /// <param name="attacker"></param>
     /// <returns>Returns a list of gameobjects this attack will affect</returns>
-    public override List<GameObject> OnAttack(Transform attacker)
+    public override List<GameObject> OnAttack(Transform attacker, bool isPlayer)
     {
         List<GameObject> enemiesToAttack = new List<GameObject>();
 
