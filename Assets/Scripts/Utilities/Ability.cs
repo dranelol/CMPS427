@@ -27,8 +27,10 @@ public enum DamageType
     AIR
 };
 
+
 public abstract class Ability
 {
+
 
     #region Properties
 
@@ -68,6 +70,7 @@ public abstract class Ability
         get { return readable; }
     }
 
+
     /// <summary>
     /// Base modifier from which damage is calculated
     /// </summary>
@@ -76,6 +79,7 @@ public abstract class Ability
     {
         get { return damageMod; }
     }
+
     
     #endregion
 
@@ -121,7 +125,6 @@ public abstract class Ability
     public virtual void DoPhysics(GameObject attacker, GameObject defender)
     {
     }
-
 
 
     

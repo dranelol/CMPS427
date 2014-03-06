@@ -6,6 +6,8 @@ public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemyPrefab;
 
+    public SphereCollider trigger;
+
     public int enemyCount;
     public float spawnRadius;
 
@@ -16,6 +18,7 @@ public class EnemySpawner : MonoBehaviour
     public bool isTrigger;
     public float triggerRadius; // The radius in which a player must be before to trigger generation
     public int spawnInterval; // The time in between spawns while a player is within the radius
+
     private float spawnCounter = 0;
 
     void Awake()
@@ -46,6 +49,7 @@ public class EnemySpawner : MonoBehaviour
             Destroy(trigger);
             spawnCounter = spawnInterval;
 
+
             for (int i = 0; i < enemyCount; i++)
             {
                 GenerateEnemy();
@@ -53,14 +57,18 @@ public class EnemySpawner : MonoBehaviour
 
             if (!isStatic)
             {
+
                 this.enabled = false;
+
             }
         }
     }
 
     void Update()
     {
+
         if (transform.childCount < enemyCount)
+
         {
             if (spawnCounter > 0)
             {
@@ -94,6 +102,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void GenerateEnemy()
     {
+
         Vector3 newPosition = transform.position + new Vector3(UnityEngine.Random.Range(-spawnRadius, spawnRadius), 0, UnityEngine.Random.Range(-spawnRadius, spawnRadius));
 
         NavMeshHit meshLocation;
@@ -108,12 +117,15 @@ public class EnemySpawner : MonoBehaviour
             newEnemy.AddComponent<AIController>();
         }
 
+
         else
         {
             this.gameObject.SetActive(false);
+
             throw new NullReferenceException("Could not find a place to spawn enemy. Check node location.");
         }
     }
+
 
     public const int ENEMY_COUNT_MIN = 1;
     public const int ENEMY_COUNT_MAX = 20;

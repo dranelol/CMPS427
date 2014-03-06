@@ -5,6 +5,7 @@ using System;
 [CustomEditor(typeof(EnemySpawner))]
 public class EnemySpawnerEditor : Editor
 {
+
     public override void OnInspectorGUI()
     {
         if (!Application.isPlaying)
@@ -46,10 +47,12 @@ public class EnemySpawnerEditor : Editor
                 GUI.changed = false;
                 spawner.triggerRadius = Mathf.Clamp(_triggerRadius, EnemySpawner.TRIGGER_RADIUS_MIN, EnemySpawner.TRIGGER_RADIUS_MAX);
                 CheckDirty(spawner);
+
             }
 
             EditorGUILayout.EndToggleGroup();
         }
+
     }
 
     private void CheckDirty(EnemySpawner script)
@@ -57,6 +60,7 @@ public class EnemySpawnerEditor : Editor
         if (GUI.changed)
         {
             EditorUtility.SetDirty(script);
+
         }
     }
 

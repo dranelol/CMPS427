@@ -26,9 +26,11 @@ public class PlayerController : MonoBehaviour {
 		agent.acceleration = 100f;
         agent.updateRotation = false;
         agent.avoidancePriority = 1;
+
         entity = GetComponent<PlayerEntity>();
         moveFSM = GetComponent<MovementFSM>();
         combatFSM = GetComponent<CombatFSM>();
+
 	}
 	
 	// Update is called once per frame
@@ -95,15 +97,21 @@ public class PlayerController : MonoBehaviour {
         // If the move/attack key was pressed...
         if (Input.GetAxis("Move/Attack") != 0) 
         {
+
             int terrainMask= LayerMask.NameToLayer("Terrain");
+
             int enemyMask = LayerMask.NameToLayer("Enemy");
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            
 			RaycastHit target;
 
             // If the raycast hit a collider...
-			if (Physics.Raycast(ray, out target, 1 << terrainMask))
+
+			if (Physics.Raycast(ray, out target, Mathf.Infinity, 1 << terrainMask))
 			{
+               // Debug.Log(target.collider.gameObject.layer);
+                //Debug.Log(target.collider.name);
 
                 // If the collider was an enemy...
                 if (target.collider.gameObject.tag == "Enemy")
@@ -118,7 +126,9 @@ public class PlayerController : MonoBehaviour {
 
                     // Otherwise, move towards the point of collision.
                     targetPosition = Vector3.zero;
+
                     moveFSM.SetPath(target.point);
+
 
                 }
 			}
@@ -129,12 +139,14 @@ public class PlayerController : MonoBehaviour {
 
 
 
+
         #region ability 1
         if (Input.GetKeyDown(KeyCode.Q))
         {
             if (combatFSM.IsIdle() == true)
             {
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
 
                 Debug.Log(entity.abilities[2].ToString());
                 entity.abilities[2].AttackHandler(gameObject, true);
@@ -146,10 +158,12 @@ public class PlayerController : MonoBehaviour {
         #region ability 2
         if (Input.GetKeyDown(KeyCode.W))
         {
+
             if (combatFSM.IsIdle() == true)
             {
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 entity.abilities[3].AttackHandler(gameObject, true);
+
             }
         }
         #endregion
@@ -160,8 +174,10 @@ public class PlayerController : MonoBehaviour {
         {
             if (combatFSM.IsIdle() == true)
             {
+
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 entity.abilities[4].AttackHandler(gameObject, true);
+
             }
         }
         #endregion
@@ -172,8 +188,10 @@ public class PlayerController : MonoBehaviour {
         {
             if (combatFSM.IsIdle() == true)
             {
+
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 entity.abilities[5].AttackHandler(gameObject, true);
+
             }
         }
         #endregion

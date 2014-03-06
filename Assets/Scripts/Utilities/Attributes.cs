@@ -8,7 +8,7 @@ using System.Collections.Generic;
 /// If an entity needs more attributes than what this class provides, this class should be extended to include
 /// the extra attributes.
 /// </summary>
-public class Attributes : UnityEngine.Object
+public class Attributes 
 {
     // Since different objects can have different limits, these need to be set on a per object basis.
     private float attackSpeedMin, attackSpeedMax;
@@ -26,13 +26,14 @@ public class Attributes : UnityEngine.Object
 
     };
 
-    private Dictionary<Stats, float> statList = new Dictionary<Stats,float>();
+    private Dictionary<Stats, float> statList;
 
     /// <summary>
     /// Adds the required keys to the dictionary.
     /// </summary>
     public Attributes()
     {
+        statList = new Dictionary<Stats, float>();
 		// Default values for clamps, to prevent errors.
 		attackSpeedMin = moveSpeedMin = 0.5f;
 		attackSpeedMax = moveSpeedMax = 2.0f;
@@ -49,9 +50,9 @@ public class Attributes : UnityEngine.Object
             {
                 return statList[Stats.HEALTH];
             }
-            catch (KeyNotFoundException noKey)
+            catch (Exception e)
             {
-                Debug.LogException(noKey, this);
+                Debug.Log(e);
                 AddKey(Stats.HEALTH, 0);
                 return 0;
             }
@@ -62,9 +63,9 @@ public class Attributes : UnityEngine.Object
             {
                 statList[Stats.HEALTH] = value;
             }
-            catch (KeyNotFoundException noKey)
+            catch (Exception e)
             {
-                Debug.LogException(noKey, this);
+                Debug.Log(e);
                 AddKey(Stats.HEALTH, value);
             }
         }
@@ -80,9 +81,9 @@ public class Attributes : UnityEngine.Object
             {
                 return statList[Stats.RESOURCE];
             }
-            catch (KeyNotFoundException noKey)
+            catch (Exception e)
             {
-                Debug.LogException(noKey, this);
+                Debug.Log(e);
                 AddKey(Stats.RESOURCE, 0);
                 return 0;
             }
@@ -93,9 +94,9 @@ public class Attributes : UnityEngine.Object
             {
                 statList[Stats.RESOURCE] = value;
             }
-            catch (KeyNotFoundException noKey)
+            catch (Exception e)
             {
-                Debug.LogException(noKey, this);
+                Debug.Log(e);
                 AddKey(Stats.RESOURCE, value);
             }
         }
@@ -111,9 +112,9 @@ public class Attributes : UnityEngine.Object
             {
                 return statList[Stats.POWER];
             }
-            catch (KeyNotFoundException noKey)
+            catch (Exception e)
             {
-                Debug.LogException(noKey, this);
+                Debug.Log(e);
                 AddKey(Stats.POWER, 0);
                 return 0;
             }
@@ -124,9 +125,9 @@ public class Attributes : UnityEngine.Object
             {
                 statList[Stats.POWER] = value;
             }
-            catch (KeyNotFoundException noKey)
+            catch (Exception e)
             {
-                Debug.LogException(noKey, this);
+                Debug.Log(e);
                 AddKey(Stats.POWER, value);
             }
         }
@@ -142,9 +143,9 @@ public class Attributes : UnityEngine.Object
             {
                 return statList[Stats.DEFENSE];
             }
-            catch (KeyNotFoundException noKey)
+            catch (Exception e)
             {
-                Debug.LogException(noKey, this);
+                Debug.Log(e);
                 AddKey(Stats.DEFENSE, 0);
                 return 0;
             }
@@ -155,9 +156,9 @@ public class Attributes : UnityEngine.Object
             {
                 statList[Stats.DEFENSE] = value;
             }
-            catch (KeyNotFoundException noKey)
+            catch (Exception e)
             {
-                Debug.LogException(noKey, this);
+                Debug.Log(e);
                 AddKey(Stats.DEFENSE, value);
             }
         }
@@ -173,9 +174,9 @@ public class Attributes : UnityEngine.Object
             {
                 return statList[Stats.ATTACK_SPEED];
             }
-            catch (KeyNotFoundException noKey)
+            catch (Exception e)
             {
-                Debug.LogException(noKey, this);
+                Debug.Log(e);
                 AddKey(Stats.ATTACK_SPEED, 0);
                 return 0;
             }
@@ -187,9 +188,9 @@ public class Attributes : UnityEngine.Object
             {
 				statList[Stats.ATTACK_SPEED] = newValue;
             }
-            catch (KeyNotFoundException noKey)
+            catch (Exception e)
             {
-                Debug.LogException(noKey, this);
+                Debug.Log(e);
                 AddKey(Stats.ATTACK_SPEED, newValue);
             }
         }
@@ -205,9 +206,9 @@ public class Attributes : UnityEngine.Object
             {
                 return statList[Stats.MOVEMENT_SPEED];
             }
-            catch (KeyNotFoundException noKey)
+            catch (Exception e)
             {
-                Debug.LogException(noKey, this);
+                Debug.Log(e);
                 AddKey(Stats.MOVEMENT_SPEED, 0);
                 return 0;
             }
@@ -219,9 +220,9 @@ public class Attributes : UnityEngine.Object
             {
                 statList[Stats.MOVEMENT_SPEED] = newValue;
             }
-            catch (KeyNotFoundException noKey)
+            catch (Exception e)
             {
-                Debug.LogException(noKey, this);
+                Debug.Log(e);
                 AddKey(Stats.MOVEMENT_SPEED, newValue);
             }
         }

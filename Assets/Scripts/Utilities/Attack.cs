@@ -22,6 +22,7 @@ public class Attack : MonoBehaviour
         int enemyMask = LayerMask.NameToLayer("Enemy");
         int playerMask = LayerMask.NameToLayer("Player");
 
+
         switch(attackType)
         {
             case AttackType.PBAOE:
@@ -31,6 +32,7 @@ public class Attack : MonoBehaviour
                     Collider[] colliders = Physics.OverlapSphere(attacker.position, attackRange, 1 << enemyMask);
 
                     foreach (Collider collider in colliders)
+>>>>>>> upstream/master
                     {
                         Debug.Log(collider.ToString());
 
@@ -156,6 +158,7 @@ public class Attack : MonoBehaviour
     }
 
     /// <summary>
+
     /// Certain attacks have a physics component to them; this resolves those effects
     /// </summary>
     /// <param name="attacker">Gameobject doing the attacking</param>
@@ -171,6 +174,7 @@ public class Attack : MonoBehaviour
         
     }
     /// <summary>
+
     /// Completely removes the velocity from a rigidbody
     /// Note: This is used in most of the force-based attacks
     /// </summary>
@@ -181,10 +185,12 @@ public class Attack : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
 
+
         if (target != null)
         {
             target.isKinematic = true;
         }
+
 
         yield break;
     }

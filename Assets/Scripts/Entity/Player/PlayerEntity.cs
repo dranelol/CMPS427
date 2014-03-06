@@ -5,6 +5,7 @@ public class PlayerEntity : Entity {
     public float power, defense, attackSpeed, movementSpeed, minDamage, maxDamage;
 
 	// Use this for initialization
+
 	void Start () 
     {
         base.Start();
@@ -12,6 +13,7 @@ public class PlayerEntity : Entity {
         abilities[3] = GameManager.Abilities["fusrodah"];
         abilities[4] = GameManager.Abilities["hadouken"];
         abilities[5] = GameManager.Abilities["deathgrip"];
+
 	}
 	
 	// Update is called once per frame
