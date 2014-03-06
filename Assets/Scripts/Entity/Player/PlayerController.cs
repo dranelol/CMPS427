@@ -135,6 +135,8 @@ public class PlayerController : MonoBehaviour {
             if (combatFSM.IsIdle() == true)
             {
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                Debug.Log(entity.abilities[2].ToString());
                 entity.abilities[2].AttackHandler(gameObject);
             }
         }

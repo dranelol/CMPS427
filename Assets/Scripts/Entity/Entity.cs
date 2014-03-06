@@ -9,39 +9,27 @@ public class Entity : MonoBehaviour
     public Attributes currentAtt; // The entity's current total attributes
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
-
-    public List<Ability> abilities; // list of abilties the entity has access to
-    // ability indices:
-    // 0 = main attack (left click)
-    // 1 = alt attack (right click)
-    // 2 = ability1
-    // 3 = ability2
-    // 4 = ability3
-    // 5 = ability4
-
+    public List<Ability> abilities;
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
 
+
+    public void Awake()
+    {
+        abilities = new List<Ability>();
+        currentAtt = new Attributes();
+        equipAtt = new Attributes();
+        buffAtt = new Attributes();
+
+        currentAtt.Power = 100;
+
+        maxHP = currentHP = 50f;
+    }
     /// <summary>
     /// Creates the entity with a given set of base attributes,
     /// </summary>
     public void Start()
     {
-        currentAtt = new Attributes();
-        equipAtt = new Attributes();
-        buffAtt = new Attributes();
-
-        abilities = new List<Ability>(6);
         
-        // change this to something cleaner?
-
-        for (int i = 0; i < abilities.Capacity; i++)
-        {
-            abilities.Add(null);
-        }
-
-        currentAtt.Power = 100;
-
-        maxHP = currentHP = 50f;
     }
 
     /// <summary>
@@ -55,10 +43,7 @@ public class Entity : MonoBehaviour
     public bool addEquipment(equipSlots.slots slot , equipment item)
     {
         if (this.equippedEquip.ContainsKey(slot))
-        {
             return false;
-        }
-
         else
         {
             this.equippedEquip.Add(slot, item);
@@ -84,9 +69,7 @@ public class Entity : MonoBehaviour
             return true;
         }
         else
-        {
             return false;
-        }
     }
 
     /// <summary>
@@ -94,39 +77,14 @@ public class Entity : MonoBehaviour
     /// Can be used for both taking damage and gaining health.
     /// </summary>
     /// <param name="value">Delta value to modify current health.</param>
-    public void ModifyHealth(float delta) 
-    { 
-        currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); 
-    }
+    public void ModifyHealth(float delta) { currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); }
 
     /// <summary>
     /// Kind of obvious.
     /// </summary>
     /// <returns>True if the dude is dead.</returns>
-    public bool IsDead() 
-    { 
-        return currentHP <= 0; 
-    }
+    public bool IsDead() { return currentHP <= 0; }
 
-    /// <summary>
-    /// Adds an ability to the entity
-    /// </summary>
-    /// <param name="toAdd">Name key of the ability to add</param>
-    /// <param name="index">Index of the ability list to add </param>
-    public void AddAbility(string toAdd, int index)
-    {
-        abilities[index] = GameManager.Abilities[toAdd];
-    }
-
-    /// <summary>
-    /// Removes an ability from the entity
-    /// </summary>
-    /// <param name="toRemove">Name key of the ability to remove</param>
-    public void RemoveAbility(string toRemove)
-    {
-        //abilities.RemoveAt(index);
-        abilities.Remove(GameManager.Abilities[toRemove]);
-    }
     #region Buffs
     /// <summary>
     /// Adds a buff to the entity. The buff is given by an attributes object that is added to the entity's current

@@ -5,7 +5,7 @@ public class PlayerEntity : Entity {
     public float power, defense, attackSpeed, movementSpeed, minDamage, maxDamage;
 
 	// Use this for initialization
-	new void Start () 
+	void Start () 
     {
         base.Start();
         abilities[2] = GameManager.Abilities["cleave"];
