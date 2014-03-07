@@ -200,13 +200,13 @@ public class PlayerController : MonoBehaviour {
         {
             // small sword
 
-            Debug.Log("min damage before equip change to low sword: " + entity.currentAtt.MinDamage);
-            Debug.Log("max damage before equip change to low sword: " + entity.currentAtt.MinDamage);
-
-            if(entity.HasEquipped(equipSlots.slots.Main))
+            if (entity.HasEquipped(equipSlots.slots.Main))
             {
-                Debug.Log("bro has a sword! its called: " + entity.GetEquip(equipSlots.slots.Main).equipmentName);
+                Debug.Log("bro has a sword already! its called: " + entity.GetEquip(equipSlots.slots.Main).equipmentName);
             }
+
+            Debug.Log("min damage before equip change to low sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage before equip change to low sword: " + entity.currentAtt.MaxDamage);
 
             bool result = entity.removeEquipment(equipSlots.slots.Main);
 
@@ -214,7 +214,7 @@ public class PlayerController : MonoBehaviour {
             entity.addEquipment(equipSlots.slots.Main, tempEquip);
 
             Debug.Log("min damage after equip change to low sword: " + entity.currentAtt.MinDamage);
-            Debug.Log("max damage after equip change to low sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage after equip change to low sword: " + entity.currentAtt.MaxDamage);
 
 
         }
@@ -222,14 +222,15 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.S))
         {
             // better sword
-
-            Debug.Log("min damage before equip change to high sword: " + entity.currentAtt.MinDamage);
-            Debug.Log("max damage before equip change to high sword: " + entity.currentAtt.MinDamage);
-
             if (entity.HasEquipped(equipSlots.slots.Main))
             {
-                Debug.Log("bro has a sword! its called: " + entity.GetEquip(equipSlots.slots.Main).equipmentName);
+                Debug.Log("bro has a sword already! its called: " + entity.GetEquip(equipSlots.slots.Main).equipmentName);
             }
+
+
+            Debug.Log("min damage before equip change to high sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage before equip change to high sword: " + entity.currentAtt.MaxDamage);
+
 
 
             bool result = entity.removeEquipment(equipSlots.slots.Main);
@@ -238,7 +239,7 @@ public class PlayerController : MonoBehaviour {
             entity.addEquipment(equipSlots.slots.Main, tempEquip);
 
             Debug.Log("min damage after equip change to high sword: " + entity.currentAtt.MinDamage);
-            Debug.Log("max damage after equip change to high sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage after equip change to high sword: " + entity.currentAtt.MaxDamage);
 
         }
 
