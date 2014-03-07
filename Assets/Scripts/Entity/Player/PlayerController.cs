@@ -13,6 +13,12 @@ public class PlayerController : MonoBehaviour {
 	public float RotationSpeed = 10f;
     public NavMeshAgent agent;
 
+    private bool hadouken = false;
+
+    public PlayerEntity entity;
+    public MovementFSM moveFSM;
+    public CombatFSM combatFSM;
+
 	// Use this for initialization
 	void Start () {
 		targetPosition = Vector3.zero;
@@ -20,6 +26,11 @@ public class PlayerController : MonoBehaviour {
 		agent.acceleration = 100f;
         agent.updateRotation = false;
         agent.avoidancePriority = 1;
+
+        entity = GetComponent<PlayerEntity>();
+        moveFSM = GetComponent<MovementFSM>();
+        combatFSM = GetComponent<CombatFSM>();
+
 	}
 	
 	// Update is called once per frame
@@ -73,16 +84,13 @@ public class PlayerController : MonoBehaviour {
             Vector3 diff = targetPosition - transform.position;
             if (diff.magnitude <= attackRange)
             {
-                // TODO: Attack the enemy.
-                Debug.Log("WE'Z GONNA ATTACK NAO");
+                // attack enemy
                 targetPosition = Vector3.zero;
-                GetComponent<MovementFSM>().Stop();
+                moveFSM.Stop();
             }
             else
             {
-                // Otherwise, move towards the enemy.
-                Debug.Log("We chasin' da enemy.");
-                GetComponent<MovementFSM>().SetPath(targetPosition);
+                moveFSM.SetPath(targetPosition);
             }
         }
 
@@ -90,10 +98,8 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetAxis("Move/Attack") != 0) 
         {
 
+            int terrainMask= LayerMask.NameToLayer("Terrain");
 
-
-
-            int terrainMask =  LayerMask.NameToLayer("Terrain");
             int enemyMask = LayerMask.NameToLayer("Enemy");
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -101,10 +107,12 @@ public class PlayerController : MonoBehaviour {
 			RaycastHit target;
 
             // If the raycast hit a collider...
+
 			if (Physics.Raycast(ray, out target, Mathf.Infinity, 1 << terrainMask))
 			{
-                Debug.Log(target.collider.gameObject.layer);
+               // Debug.Log(target.collider.gameObject.layer);
                 //Debug.Log(target.collider.name);
+
                 // If the collider was an enemy...
                 if (target.collider.gameObject.tag == "Enemy")
                 {
@@ -118,130 +126,126 @@ public class PlayerController : MonoBehaviour {
 
                     // Otherwise, move towards the point of collision.
                     targetPosition = Vector3.zero;
-                    GetComponent<MovementFSM>().SetPath(target.point);
+
+                    moveFSM.SetPath(target.point);
+
 
                 }
 			}
 
         }
 
-        #region hadouken
-        if (Input.GetKeyDown(KeyCode.B))
+        #region new key-bound attacks
+
+
+
+
+        #region ability 1
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            /*
-            if (hadouken == false)
+            if (combatFSM.IsIdle() == true)
             {
-                agent.radius = 10f;
-                hadouken = true;
-            }
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
-            else
-            {
-                agent.radius = 0.5f;
-                hadouken = false;
-            }
-             * */
-            List<GameObject> attacked = Attack.OnAttack(transform, 360f, 5f);
-            //Debug.Log(attacked.Count);
-            foreach (GameObject enemy in attacked)
-            {
-                if (enemy.GetComponent<AIController>().IsResetting() == false
-                    && enemy.GetComponent<AIController>().IsDead() == false)
-                {
-                    Vector3 relativeVector = (enemy.transform.position - transform.position);
-                    float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
-                    float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
-                    enemy.GetComponent<MovementFSM>().Stop(0.2f);
-                    enemy.rigidbody.isKinematic = false;
-                    enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
-                    
-                    //enemy.rigidbody.AddForceAtPosition(50f, 
-                    //enemy.rigidbody.AddExplosionForce(50f, transform.position, 5f, 3f);
-                    //Destroy(enemy.rigidbody);
-                    
-                    Attack.DoDamage(gameObject, enemy);
-                    StartCoroutine(Attack.RemovePhysics(enemy.rigidbody, 0.2f));
-                }
-            }
 
+                Debug.Log(entity.abilities[2].ToString());
+                entity.abilities[2].AttackHandler(gameObject, true);
+            }
         }
 
         #endregion
 
-        #region reverse hadouken
-        if (Input.GetKeyDown(KeyCode.V))
+        #region ability 2
+        if (Input.GetKeyDown(KeyCode.W))
         {
-            List<GameObject> attacked = Attack.OnAttack(transform, 360f, 5f);
-            //Debug.Log(attacked.Count);
-            foreach (GameObject enemy in attacked)
+
+            if (combatFSM.IsIdle() == true)
             {
-                
-                if (enemy.GetComponent<AIController>().IsResetting() == false
-                    && enemy.GetComponent<AIController>().IsDead() == false)
-                {
-                    Vector3 relativeVector = (enemy.transform.position - transform.position);
-                    float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                entity.abilities[3].AttackHandler(gameObject, true);
 
-
-                    
-                    float force = (-1) * (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
-                    enemy.GetComponent<MovementFSM>().Stop(0.2f);
-                    enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
-                    
-                    //enemy.rigidbody.AddForceAtPosition(50f, 
-                    //enemy.rigidbody.AddExplosionForce(50f, transform.position, 5f, 3f);
-                    //Destroy(enemy.rigidbody);
-                    Attack.DoDamage(gameObject, enemy);
-                    StartCoroutine(Attack.RemovePhysics(enemy.rigidbody, 0.2f));
-                }
             }
-
         }
-
         #endregion
 
-        #region cleave
+        #region ability 3
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (combatFSM.IsIdle() == true)
+            {
+
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                entity.abilities[4].AttackHandler(gameObject, true);
+
+            }
+        }
+        #endregion
+
+        #region ability 4
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (combatFSM.IsIdle() == true)
+            {
+
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                entity.abilities[5].AttackHandler(gameObject, true);
+
+            }
+        }
+        #endregion
+
         if (Input.GetKeyDown(KeyCode.A))
         {
-            Debug.Log("lelele");
-            List<GameObject> attacked = Attack.OnAttack(transform, 45f, 5f);
-            foreach (GameObject enemy in attacked)
+            // small sword
+
+            Debug.Log("min damage before equip change to low sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage before equip change to low sword: " + entity.currentAtt.MinDamage);
+
+            if(entity.HasEquipped(equipSlots.slots.Main))
             {
-                if (enemy.GetComponent<AIController>().IsResetting() == false
-                    && enemy.GetComponent<AIController>().IsDead() == false)
-                {
-                    Debug.Log(enemy.GetInstanceID().ToString());
-                    Attack.DoDamage(gameObject, enemy);
-                }
+                Debug.Log("bro has a sword! its called: " + entity.GetEquip(equipSlots.slots.Main).equipmentName);
             }
+
+            bool result = entity.removeEquipment(equipSlots.slots.Main);
+
+            equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(0, equipSlots.slots.Main);
+            entity.addEquipment(equipSlots.slots.Main, tempEquip);
+
+            Debug.Log("min damage after equip change to low sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage after equip change to low sword: " + entity.currentAtt.MinDamage);
+
+
         }
 
-        #endregion
-
-        #region fusrodah
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.S))
         {
-            Debug.Log("lelele");
-            List<GameObject> attacked = Attack.OnAttack(transform, 45f, 5f);
-            foreach (GameObject enemy in attacked)
+            // better sword
+
+            Debug.Log("min damage before equip change to high sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage before equip change to high sword: " + entity.currentAtt.MinDamage);
+
+            if (entity.HasEquipped(equipSlots.slots.Main))
             {
-                if (enemy.GetComponent<AIController>().IsResetting() == false
-                    && enemy.GetComponent<AIController>().IsDead() == false)
-                {
-                    Vector3 relativeVector = (enemy.transform.position - transform.position);
-                    float normalizedMagnitude = 5f - Vector3.Distance(enemy.transform.position, transform.position);
-
-
-                    
-                    float force = (normalizedMagnitude / (Mathf.Pow(0.35f, 2)));
-                    enemy.GetComponent<MovementFSM>().Stop(0.17f);
-                    enemy.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
-                    
-                    Attack.DoDamage(gameObject, enemy);
-                    StartCoroutine(Attack.RemovePhysics(enemy.rigidbody, 0.17f));
-                }
+                Debug.Log("bro has a sword! its called: " + entity.GetEquip(equipSlots.slots.Main).equipmentName);
             }
+
+
+            bool result = entity.removeEquipment(equipSlots.slots.Main);
+
+            equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Main);
+            entity.addEquipment(equipSlots.slots.Main, tempEquip);
+
+            Debug.Log("min damage after equip change to high sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage after equip change to high sword: " + entity.currentAtt.MinDamage);
+
         }
+
+
+
+
+
         #endregion
     }
 }

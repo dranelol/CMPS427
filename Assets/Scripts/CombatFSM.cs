@@ -52,6 +52,19 @@ public class CombatFSM : StateMachine
         }
     }
 
+    public bool IsIdle()
+    {
+        if ((CombatStates)CurrentState == CombatStates.idle)
+        {
+            return true;
+        }
+
+        else
+        {
+            return false;
+        }
+    }
+
     #endregion
 
     #region idle functions

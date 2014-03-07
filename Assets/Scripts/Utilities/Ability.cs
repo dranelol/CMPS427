@@ -27,69 +27,105 @@ public enum DamageType
     AIR
 };
 
-public class Ability {
 
-    
+public abstract class Ability
+{
+
 
     #region Properties
 
-    private AttackType attackType;
+    protected AttackType attackType;
     public AttackType Attack_Type
     {
         get { return attackType; }
     }
 
-    private DamageType damageType;
+    protected DamageType damageType;
     public DamageType Damage_Type
     {
         get { return damageType; }
     }
 
-    private float range;
+    protected float range;
     public float Range
     {
         get { return range; }
     }
     
-    private float radius;
-    public float Radius
+    protected float angle;
+    public float Angle
     {
-        get { return radius; }
+        get { return angle; }
     }
     
-    private float cooldown;
+    protected float cooldown;
     public float Cooldown
     {
         get { return cooldown; }
     }
 
-    private string readable;
+    protected string readable;
     public string Name
     {
         get { return readable; }
     }
 
+
     /// <summary>
     /// Base modifier from which damage is calculated
     /// </summary>
-    private float damageMod;
+    protected float damageMod;
     public float DamageMod
     {
         get { return damageMod; }
     }
+
     
     #endregion
 
-    public Ability(AttackType attackType, DamageType damageType, float range, float radius, float cooldown, float damageMod, string id, string readable)
+    public Ability(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable)
     {
         this.attackType = attackType;
         this.damageType = damageType;
         this.range = range;
-        this.radius = radius;
+        this.angle = angle;
         this.cooldown = cooldown;
         this.readable = readable;
         this.damageMod = damageMod;
     }
+
+    /// <summary>
+    /// Handler for this attack; figures out who will be attacked, and carries out everything needed for the attack to occur
+    /// </summary>
+    /// <param name="attacker">The gameobject carrying out the attack</param>
+    /// <param name="defender">The gameobject defending against the attack</param>
+    public abstract void AttackHandler(GameObject attacker, bool isPlayer);
+
+    /// <summary>
+    /// Figure out who will be affected by this attack
+    /// </summary>
+    /// <param name="attacker">The gameobject carrying out the attack</param>
+    /// <returns>Returns a list of gameobjects this attack will affect</returns>
+    public abstract List<GameObject> OnAttack(Transform attacker, bool isPlayer);
+
+    /// <summary>
+    /// Do damage with this attack
+    /// </summary>
+    /// <param name="attacker">The gameobject carrying out the attack</param>
+    /// <param name="defender">The gameobject defending against the attack</param>
+    public virtual void DoDamage(GameObject attacker, GameObject defender)
+    {
+    }
+
+    /// <summary>
+    /// Certain attacks have a physics component to them; this resolves those effects
+    /// </summary>
+    /// <param name="attacker">Gameobject doing the attacking</param>
+    /// <param name="defender">Gameobject affected by the attack</param>
+    public virtual void DoPhysics(GameObject attacker, GameObject defender)
+    {
+    }
+
 
     
 }
