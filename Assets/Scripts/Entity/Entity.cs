@@ -24,6 +24,7 @@ public class Entity : MonoBehaviour
         }
 
         currentAtt = new Attributes();
+        Debug.Log(currentAtt.ToString());
         equipAtt = new Attributes();
         buffAtt = new Attributes();
 
