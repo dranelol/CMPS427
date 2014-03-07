@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour {
 			//  transform.rotation = quat;
 			
 			Vector3 tempRotation = transform.rotation.eulerAngles ;
-			tempRotation.y = Mathf.LerpAngle(transform.rotation.eulerAngles.y,  Quaternion.LookRotation(target).eulerAngles.y,Time.deltaTime * RotationSpeed);
+			//tempRotation.y = Mathf.LerpAngle(transform.rotation.eulerAngles.y,  Quaternion.LookRotation(target).eulerAngles.y,Time.deltaTime * RotationSpeed);
 			transform.rotation = Quaternion.Euler(tempRotation);
 		}
 	}
