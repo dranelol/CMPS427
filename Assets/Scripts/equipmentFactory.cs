@@ -596,7 +596,7 @@ public class equipmentFactory {
 
 
         //grab a random equipment out of the list appropriate for the tier
-        if (tier <= 3)
+        if (tier >= 3)
         {
 
             ArrayList templist = new ArrayList();

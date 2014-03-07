@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class Attack : MonoBehaviour
 {
     /// <summary>
+
+
     /// Completely removes the velocity from a rigidbody
     /// Note: This is used in most of the force-based attacks
     /// </summary>
