@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Entity : MonoBehaviour
-{ 
+{
+    public int level;
     public float currentHP; // Currently unused.
     public float maxHP; // max HP
     public Attributes currentAtt; // The entity's current total attributes
@@ -29,7 +30,7 @@ public class Entity : MonoBehaviour
         buffAtt = new Attributes();
 
         currentAtt.Power = 100;
-
+        level = 1;
         maxHP = currentHP = 50f;
     }
     /// <summary>

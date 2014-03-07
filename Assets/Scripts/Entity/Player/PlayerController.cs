@@ -201,7 +201,7 @@ public class PlayerController : MonoBehaviour {
             // small sword
 
             Debug.Log("min damage before equip change to low sword: " + entity.currentAtt.MinDamage);
-            Debug.Log("max damage before equip change to low sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage before equip change to low sword: " + entity.currentAtt.MaxDamage);
 
             if(entity.HasEquipped(equipSlots.slots.Main))
             {
@@ -214,7 +214,7 @@ public class PlayerController : MonoBehaviour {
             entity.addEquipment(equipSlots.slots.Main, tempEquip);
 
             Debug.Log("min damage after equip change to low sword: " + entity.currentAtt.MinDamage);
-            Debug.Log("max damage after equip change to low sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage after equip change to low sword: " + entity.currentAtt.MaxDamage);
 
 
         }
@@ -224,7 +224,7 @@ public class PlayerController : MonoBehaviour {
             // better sword
 
             Debug.Log("min damage before equip change to high sword: " + entity.currentAtt.MinDamage);
-            Debug.Log("max damage before equip change to high sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage before equip change to high sword: " + entity.currentAtt.MaxDamage);
 
             if (entity.HasEquipped(equipSlots.slots.Main))
             {
@@ -238,7 +238,7 @@ public class PlayerController : MonoBehaviour {
             entity.addEquipment(equipSlots.slots.Main, tempEquip);
 
             Debug.Log("min damage after equip change to high sword: " + entity.currentAtt.MinDamage);
-            Debug.Log("max damage after equip change to high sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage after equip change to high sword: " + entity.currentAtt.MaxDamage);
 
         }
 
