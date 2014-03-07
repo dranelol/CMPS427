@@ -104,6 +104,16 @@ public class Entity : MonoBehaviour
         StartCoroutine(newbuff(statChange, duration));
     }
 
+    /// <summary>
+    /// Does the current entity have an item equipped in this slot
+    /// </summary>
+    /// <param name="slot">The slot to check</param>
+    /// <returns>Returns false if entity does not have slot equipped; true if they do</returns>
+    public bool HasEquipped(equipSlots.slots slot)
+    {
+        return equippedEquip.ContainsKey(slot);
+    }
+
 
     private IEnumerator newbuff(Attributes s, float d)
     {
