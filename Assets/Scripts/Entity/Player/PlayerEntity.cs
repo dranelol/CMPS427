@@ -5,8 +5,13 @@ public class PlayerEntity : Entity {
     public float power, defense, attackSpeed, movementSpeed, minDamage, maxDamage;
 
 	// Use this for initialization
+    public void Awake()
+    {
+        base.Awake();
+    }
 
-	void Start () 
+
+	public void Start () 
     {
         base.Start();
         abilities[2] = GameManager.Abilities["cleave"];
@@ -17,7 +22,7 @@ public class PlayerEntity : Entity {
 	}
 	
 	// Update is called once per frame
-	void Update () 
+	public void Update () 
     {
         // update these on-demand instead of every update
 

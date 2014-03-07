@@ -4,12 +4,14 @@ import random
 import math
 
 #DEFINES
+
 minDamage = 10.0
 maxDamage = 40.0
 attackPower = 1.0
 defense = 1.0
 magicNumber = 200.0
 startHP = 60.0
+
 #ENDDEF
 
 hitCounter=0
@@ -24,7 +26,9 @@ while(counter < 1000):
 	hitCounter=0
 	currentHP = startHP
 
+
 	while(currentHP >0):
+
 		hitCounter+=1
 		# DEFAULT COMPUTATION
 		range = maxDamage - minDamage
@@ -52,13 +56,16 @@ while(counter < 1000):
 		
 		currentHP -= final
 		
+
 	#print("it took " + str(hitCounter) + " hits to kill!")
+
 	
 	avg += hitCounter
 	
 	counter+=1
 	
 print(avg / 1000.0)
+
 
 
 hitCounter=0
@@ -110,6 +117,7 @@ while(counter < 1000):
 print(avg / 1000.0)
 
 input("press enter")
+
 	
 	
 

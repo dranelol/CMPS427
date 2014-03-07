@@ -196,6 +196,56 @@ public class PlayerController : MonoBehaviour {
         }
         #endregion
 
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            // small sword
+
+            Debug.Log("min damage before equip change to low sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage before equip change to low sword: " + entity.currentAtt.MinDamage);
+
+            if(entity.HasEquipped(equipSlots.slots.Main))
+            {
+                Debug.Log("bro has a sword! its called: " + entity.GetEquip(equipSlots.slots.Main).equipmentName);
+            }
+
+            bool result = entity.removeEquipment(equipSlots.slots.Main);
+
+            equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(0, equipSlots.slots.Main);
+            entity.addEquipment(equipSlots.slots.Main, tempEquip);
+
+            Debug.Log("min damage after equip change to low sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage after equip change to low sword: " + entity.currentAtt.MinDamage);
+
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            // better sword
+
+            Debug.Log("min damage before equip change to high sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage before equip change to high sword: " + entity.currentAtt.MinDamage);
+
+            if (entity.HasEquipped(equipSlots.slots.Main))
+            {
+                Debug.Log("bro has a sword! its called: " + entity.GetEquip(equipSlots.slots.Main).equipmentName);
+            }
+
+
+            bool result = entity.removeEquipment(equipSlots.slots.Main);
+
+            equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Main);
+            entity.addEquipment(equipSlots.slots.Main, tempEquip);
+
+            Debug.Log("min damage after equip change to high sword: " + entity.currentAtt.MinDamage);
+            Debug.Log("max damage after equip change to high sword: " + entity.currentAtt.MinDamage);
+
+        }
+
+
+
+
+
         #endregion
     }
 }

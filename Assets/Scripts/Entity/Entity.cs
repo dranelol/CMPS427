@@ -24,6 +24,7 @@ public class Entity : MonoBehaviour
         }
 
         currentAtt = new Attributes();
+        Debug.Log(currentAtt.ToString());
         equipAtt = new Attributes();
         buffAtt = new Attributes();
 
@@ -102,6 +103,34 @@ public class Entity : MonoBehaviour
     public void addBuff(Attributes statChange, float duration)
     {
         StartCoroutine(newbuff(statChange, duration));
+    }
+
+    /// <summary>
+    /// Does the current entity have an item equipped in this slot
+    /// </summary>
+    /// <param name="slot">The slot to check</param>
+    /// <returns>Returns false if entity does not have slot equipped; true if they do</returns>
+    public bool HasEquipped(equipSlots.slots slot)
+    {
+        return equippedEquip.ContainsKey(slot);
+    }
+
+    /// <summary>
+    /// Returns the equipped item of that slot
+    /// </summary>
+    /// <param name="slot">Slot to return item</param>
+    /// <returns>Throws exception if the entity doesn't have anything equipped there, else returns the item equipped</returns>
+    public equipment GetEquip(equipSlots.slots slot)
+    {
+        if (HasEquipped(slot) == false)
+        {
+            throw new KeyNotFoundException("Entity does not have this item equipped!");
+        }
+
+        else
+        {
+            return equippedEquip[slot];
+        }
     }
 
 

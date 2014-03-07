@@ -41,7 +41,7 @@ public class EnemySpawner : MonoBehaviour
     {
         //renderer.enabled = false;
 
-        SphereCollider trigger = GetComponent<SphereCollider>();
+        trigger = GetComponent<SphereCollider>();
         trigger.radius = triggerRadius;
 
         if (!isStatic || !isTrigger)
@@ -102,21 +102,19 @@ public class EnemySpawner : MonoBehaviour
 
     private void GenerateEnemy()
     {
-
         Vector3 newPosition = transform.position + new Vector3(UnityEngine.Random.Range(-spawnRadius, spawnRadius), 0, UnityEngine.Random.Range(-spawnRadius, spawnRadius));
 
         NavMeshHit meshLocation;
 
         if (NavMesh.SamplePosition(newPosition, out meshLocation, SPAWN_RADIUS_MAX, 1 << LayerMask.NameToLayer("Default")))
         {
-            GameObject newEnemy = Instantiate(enemyPrefab, newPosition, Quaternion.identity) as GameObject;
+            GameObject newEnemy = Instantiate(enemyPrefab, meshLocation.position, Quaternion.identity) as GameObject;
             newEnemy.name = "Enemy(" + newEnemy.GetInstanceID() + ")";
             newEnemy.transform.parent = transform;
 
             newEnemy.transform.GetChild(0).gameObject.AddComponent<AggroRadius>();
             newEnemy.AddComponent<AIController>();
         }
-
 
         else
         {
@@ -125,7 +123,6 @@ public class EnemySpawner : MonoBehaviour
             throw new NullReferenceException("Could not find a place to spawn enemy. Check node location.");
         }
     }
-
 
     public const int ENEMY_COUNT_MIN = 1;
     public const int ENEMY_COUNT_MAX = 20;
