@@ -203,7 +203,10 @@ public class PlayerController : MonoBehaviour {
             Debug.Log("min damage before equip change to low sword: " + entity.currentAtt.MinDamage);
             Debug.Log("max damage before equip change to low sword: " + entity.currentAtt.MinDamage);
 
-            
+            if(entity.HasEquipped(equipSlots.slots.Main)
+            {
+                Debug.Log("bro has a sword! its called: " + 
+            }
 
             bool result = entity.removeEquipment(equipSlots.slots.Main);
 

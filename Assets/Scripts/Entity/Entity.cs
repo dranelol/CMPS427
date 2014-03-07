@@ -114,6 +114,24 @@ public class Entity : MonoBehaviour
         return equippedEquip.ContainsKey(slot);
     }
 
+    /// <summary>
+    /// Returns the equipped item of that slot
+    /// </summary>
+    /// <param name="slot">Slot to return item</param>
+    /// <returns>Throws exception if the entity doesn't have anything equipped there, else returns the item equipped</returns>
+    public equipment GetEquip(equipSlots.slots slot)
+    {
+        if (HasEquipped(slot) == false)
+        {
+            throw new KeyNotFoundException("Entity does not have this item equipped!");
+        }
+
+        else
+        {
+            return equippedEquip[slot];
+        }
+    }
+
 
     private IEnumerator newbuff(Attributes s, float d)
     {
