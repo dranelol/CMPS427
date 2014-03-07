@@ -109,6 +109,7 @@ public class EnemySpawner : MonoBehaviour
         if (NavMesh.SamplePosition(newPosition, out meshLocation, SPAWN_RADIUS_MAX, 1 << LayerMask.NameToLayer("Default")))
         {
             GameObject newEnemy = Instantiate(enemyPrefab, meshLocation.position, Quaternion.identity) as GameObject;
+            newEnemy.rigidbody.Sleep();
             newEnemy.name = "Enemy(" + newEnemy.GetInstanceID() + ")";
             newEnemy.transform.parent = transform;
 

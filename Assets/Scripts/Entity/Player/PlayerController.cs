@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour {
         
         if (Vector3.Distance(transform.position, agent.destination) < 1.0f)
         {
-            agent.ResetPath();
+            moveFSM.Stop();
         }
         // If we have a target...
 
@@ -140,14 +140,14 @@ public class PlayerController : MonoBehaviour {
 
 
 
-        #region ability 1
+        #region ability 1q
         if (Input.GetKeyDown(KeyCode.Q))
         {
             if (combatFSM.IsIdle() == true)
             {
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
-
+                Debug.Log(entity.ToString());
                 Debug.Log(entity.abilities[2].ToString());
                 entity.abilities[2].AttackHandler(gameObject, true);
             }
@@ -174,7 +174,7 @@ public class PlayerController : MonoBehaviour {
         {
             if (combatFSM.IsIdle() == true)
             {
-
+                Debug.Log(transform.position);
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 entity.abilities[4].AttackHandler(gameObject, true);
 

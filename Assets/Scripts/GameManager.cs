@@ -9,10 +9,10 @@ public class GameManager : MonoBehaviour
 
     public static Dictionary<string, Ability> Abilities;
 
-    public static float GLOBAL_COOLDOWN = 0.5f;
+    public static float GLOBAL_COOLDOWN = 0.0f;
 
 	// Use this for initialization
-	void Start () 
+	void Awake () 
     {
         EquipmentFactory = new equipmentFactory();
 

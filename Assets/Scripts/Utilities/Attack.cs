@@ -29,10 +29,9 @@ public class Attack : MonoBehaviour
                 #region Point-blank AoE
                 {
                     // get a list of all the enemies in range of the attack
-                    Collider[] colliders = Physics.OverlapSphere(attacker.position, attackRange, 1 << enemyMask);
+                    Collider[] colliders = Physics.OverlapSphere(attacker.gameObject.transform.position, attackRange, 1 << enemyMask);
 
                     foreach (Collider collider in colliders)
->>>>>>> upstream/master
                     {
                         Debug.Log(collider.ToString());
 
@@ -168,7 +167,7 @@ public class Attack : MonoBehaviour
         Vector3 relativeVector = (defender.transform.position - attacker.transform.position);
         float normalizedMagnitude = 5f - Vector3.Distance(defender.transform.position, attacker.transform.position);
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
-        defender.GetComponent<MovementFSM>().Stop(0.2f);
+        //defender.GetComponent<MovementFSM>().Stop(0.2f);
         defender.rigidbody.isKinematic = false;
         defender.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
         

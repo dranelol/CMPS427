@@ -15,9 +15,6 @@ public class AIPursuit : StateMachine
     private MovementFSM MoveFSM;
     private NavMeshAgent NavAgent;
 
-    public bool wuduriketomakingfuk = false;
-    public bool katamarimdoe = false;
-
     private GameObject currentTarget = null;
 
     private float attackRange = 4; // The range the enemy must be within in order to attack
@@ -70,45 +67,32 @@ public class AIPursuit : StateMachine
 
     void seek_Update()
     {
-        if (!wuduriketomakingfuk)
+        Vector3 directionToTarget = currentTarget.transform.position - transform.position;
+
+        if (directionToTarget.magnitude < attackRange)
         {
+            RaycastHit hit;
 
+            // Cast a ray from the enemy to the player, ignoring other enemy colliders.
+            bool raycastSuccess = Physics.Raycast(transform.position, directionToTarget, out hit, attackRange,  ~(1 << LayerMask.NameToLayer("Enemy")));
 
-            if (Vector3.Distance(transform.position, currentTarget.transform.position) < attackRange)
+            // if we succeeded our raycast, and we hit the player first: we're in attack range and LoS
+            if (raycastSuccess == true && hit.transform.tag == "Player")
             {
-                Vector3 directionToTarget = currentTarget.transform.position - transform.position;
-                RaycastHit hit;
-                bool raycastSuccess = Physics.Raycast(transform.position, directionToTarget, out hit, 1 << LayerMask.NameToLayer("Player"));
-
-                // if we succeeded our raycast, and we hit the player first: we're in attack range and LoS
-                if (raycastSuccess == true && hit.transform.tag == "Player")
-                {
-                    MoveFSM.Stop();
-                }
-
-                // raycast was false, we either hit nothing, or hit something that wasnt the player
-                else
-                {
-                    MoveFSM.SetPath(currentTarget.transform.position);
-                }
-               
+                MoveFSM.Stop();
             }
 
-            // we're outside of range
+            // raycast was false, we either hit nothing, or hit something that wasnt the player
             else
             {
                 MoveFSM.SetPath(currentTarget.transform.position);
             }
         }
 
+        // we're outside of range
         else
         {
-            transform.position = currentTarget.transform.position + UnityEngine.Random.insideUnitSphere * 5;
-        }
-
-        if (katamarimdoe)
-        {
-            NavAgent.Warp(currentTarget.transform.position);
+            MoveFSM.SetPath(currentTarget.transform.position);
         }
     }
 
