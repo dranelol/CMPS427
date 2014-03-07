@@ -32,7 +32,7 @@ public class Attack : MonoBehaviour
                     Collider[] colliders = Physics.OverlapSphere(attacker.position, attackRange, 1 << enemyMask);
 
                     foreach (Collider collider in colliders)
->>>>>>> upstream/master
+
                     {
                         Debug.Log(collider.ToString());
 
