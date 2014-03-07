@@ -767,7 +767,7 @@ public class equipmentFactory {
                     templist.Add(e);
                 }
             }
-            return (affix)affixeslist[UnityEngine.Random.Range(0, templist.Count)];
+            return (affix)templist[UnityEngine.Random.Range(0, templist.Count)];
 
     }
 
@@ -781,7 +781,7 @@ public class equipmentFactory {
                 templist.Add(e);
             }
         }
-        return (affix)affixeslist[UnityEngine.Random.Range(0, templist.Count)];
+        return (affix)templist[UnityEngine.Random.Range(0, templist.Count)];
 
     }
 }
