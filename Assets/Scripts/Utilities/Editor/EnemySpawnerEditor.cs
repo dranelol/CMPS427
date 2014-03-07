@@ -20,10 +20,8 @@ public class EnemySpawnerEditor : Editor
             spawner.enemyCount = EditorGUILayout.IntSlider("Enemy Count", spawner.enemyCount, EnemySpawner.ENEMY_COUNT_MIN, EnemySpawner.ENEMY_COUNT_MAX);
             CheckDirty(spawner);
 
-            float _spawnRadius = EditorGUILayout.FloatField("Spawn Radius", spawner.spawnRadius);
-
             GUI.changed = false;
-            spawner.spawnRadius = Mathf.Clamp(_spawnRadius, EnemySpawner.SPAWN_RADIUS_MIN, EnemySpawner.SPAWN_RADIUS_MAX);
+            spawner.spawnRadius = Mathf.Clamp(EditorGUILayout.FloatField("Spawn Radius", spawner.spawnRadius), EnemySpawner.SPAWN_RADIUS_MIN, EnemySpawner.SPAWN_RADIUS_MAX);
             CheckDirty(spawner);
 
             EditorGUILayout.Space();
@@ -42,10 +40,8 @@ public class EnemySpawnerEditor : Editor
 
             if (spawner.isTrigger)
             {
-                float _triggerRadius = EditorGUILayout.FloatField(_padding + "○ Radius", spawner.triggerRadius);
-
                 GUI.changed = false;
-                spawner.triggerRadius = Mathf.Clamp(_triggerRadius, EnemySpawner.TRIGGER_RADIUS_MIN, EnemySpawner.TRIGGER_RADIUS_MAX);
+                spawner.triggerRadius = Mathf.Clamp(EditorGUILayout.FloatField(_padding + "○ Radius", spawner.triggerRadius), EnemySpawner.TRIGGER_RADIUS_MIN, EnemySpawner.TRIGGER_RADIUS_MAX);
                 CheckDirty(spawner);
 
             }
