@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using System;
+using System.Linq;
 
 public class AIPursuit : StateMachine 
 {
@@ -14,13 +15,12 @@ public class AIPursuit : StateMachine
 
     private MovementFSM MoveFSM;
     private NavMeshAgent NavAgent;
-
-    public bool wuduriketomakingfuk = false;
-    public bool katamarimdoe = false;
+    private Entity entity;
+    private CombatFSM combatFSM;
 
     private GameObject currentTarget = null;
 
-    private float attackRange = 4; // The range the enemy must be within in order to attack
+    private List<Ability> _abilityList = new List<Ability>(); // List of usuable abilities. This will be sorted by cooldown time then damagemod (for now)
     
     void Awake()
     {
@@ -38,7 +38,19 @@ public class AIPursuit : StateMachine
 
         MoveFSM = GetComponent<MovementFSM>();
         NavAgent = GetComponent<NavMeshAgent>();
+        entity = GetComponent<Entity>();
+        combatFSM = GetComponent<CombatFSM>();
     }
+
+    void Start()
+    {
+        // Make Enemy Entity class later
+        entity.abilities[0] = GameManager.Abilities["cleave"];
+
+        _abilityList.Add(entity.abilities[0]);
+    }
+
+    #region public functions
 
     public void Pursue(GameObject target)
     {
@@ -53,6 +65,8 @@ public class AIPursuit : StateMachine
     {
         Transition(PursuitStates.inactive);
     }
+
+    #endregion
 
     #region state based functions
 
@@ -70,45 +84,63 @@ public class AIPursuit : StateMachine
 
     void seek_Update()
     {
-        if (!wuduriketomakingfuk)
+        if (currentTarget != null)
         {
-
-
-            if (Vector3.Distance(transform.position, currentTarget.transform.position) < attackRange)
+            if (combatFSM.IsIdle()) // && _abilityList[nextAbilityIndex].OnCooldown == false) MATT DO THIS
             {
                 Vector3 directionToTarget = currentTarget.transform.position - transform.position;
-                RaycastHit hit;
-                bool raycastSuccess = Physics.Raycast(transform.position, directionToTarget, out hit, 1 << LayerMask.NameToLayer("Player"));
 
-                // if we succeeded our raycast, and we hit the player first: we're in attack range and LoS
-                if (raycastSuccess == true && hit.transform.tag == "Player")
+                // If the enemy is within range of its next attack, transition to attack.
+                if (directionToTarget.magnitude < _abilityList[0].Range)
                 {
-                    MoveFSM.Stop();
+                    RaycastHit hit;
+
+                    // Cast a ray from the enemy to the player, ignoring other enemy colliders.
+                    bool raycastSuccess = Physics.Raycast(transform.position, directionToTarget, out hit, _abilityList[0].Range, ~(1 << LayerMask.NameToLayer("Enemy")));
+
+                    // if we succeeded our raycast, and we hit the player first: we're in attack range and LoS
+                    if (raycastSuccess == true && hit.transform.tag == "Player")
+                    {
+                        MoveFSM.Stop();
+                        Transition(PursuitStates.attack);
+                    }
                 }
 
-                // raycast was false, we either hit nothing, or hit something that wasnt the player
+                // Otherwise, get closer
                 else
                 {
                     MoveFSM.SetPath(currentTarget.transform.position);
                 }
-               
             }
+        }
 
-            // we're outside of range
-            else
-            {
-                MoveFSM.SetPath(currentTarget.transform.position);
-            }
+        // Go idle if target does not exist
+        else
+        {
+            Transition(PursuitStates.inactive);
+        }
+    }
+
+    #endregion
+
+    #region attack functions
+
+    void attack_Update()
+    {
+        if (currentTarget != null)
+        {
+            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+            Debug.Log("ATTACK!");
+            Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
+            /*
+            _abilityList[0].AttackHandler(gameObject, false);
+            _abilityList.OrderBy(Ability => Ability.Cooldown).ThenBy(Ability => Ability.DamageMod); Use this later */
+            Transition(PursuitStates.seek);
         }
 
         else
         {
-            transform.position = currentTarget.transform.position + UnityEngine.Random.insideUnitSphere * 5;
-        }
-
-        if (katamarimdoe)
-        {
-            NavAgent.Warp(currentTarget.transform.position);
+            Transition(PursuitStates.inactive);
         }
     }
 

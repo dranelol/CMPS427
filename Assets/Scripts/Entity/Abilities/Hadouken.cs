@@ -19,7 +19,7 @@ public class Hadouken : Ability
     {
         List<GameObject> attacked = OnAttack(attacker.transform, isPlayer);
 
-        Debug.Log(attacked.Count);
+        //Debug.Log(attacked.Count);
 
         foreach (GameObject enemy in attacked)
         {
@@ -49,7 +49,7 @@ public class Hadouken : Ability
         int playerMask = LayerMask.NameToLayer("Player");
 
         Collider[] colliders = Physics.OverlapSphere(attacker.position, range, 1 << enemyMask);
-
+        Debug.Log(colliders.Length);
         foreach (Collider collider in colliders)
         {
             //Debug.Log(collider.ToString());
@@ -114,13 +114,10 @@ public class Hadouken : Ability
     /// <param name="defender">Gameobject affected by the attack</param>
     public override void DoPhysics(GameObject attacker, GameObject defender)
     {
-        Vector3 relativeVector = (defender.transform.position - attacker.transform.position);
+        Vector3 relativeVector = (defender.transform.position - attacker.transform.position).normalized;
         float normalizedMagnitude = 5f - Vector3.Distance(defender.transform.position, attacker.transform.position);
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
-        defender.GetComponent<MovementFSM>().Stop(0.2f);
-        defender.rigidbody.isKinematic = false;
-        defender.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RemovePhysics(defender.rigidbody, 0.2f);
-        
+
+        defender.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force * 2, 0.2f, ForceMode.Impulse);
     }
 }

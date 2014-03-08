@@ -114,13 +114,9 @@ public class Deathgrip : Ability
     /// <param name="defender">Gameobject affected by the attack</param>
     public override void DoPhysics(GameObject attacker, GameObject defender)
     {
-        Vector3 relativeVector = (defender.transform.position - attacker.transform.position);
-        float normalizedMagnitude = 5f - Vector3.Distance(defender.transform.position, attacker.transform.position);
-        float force = (-1) * (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
-        defender.GetComponent<MovementFSM>().Stop(0.2f);
-        defender.rigidbody.isKinematic = false;
-        defender.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RemovePhysics(defender.rigidbody, 0.2f);
-
+        Vector3 relativeVector = (attacker.transform.position - defender.transform.position).normalized;
+        float normalizedMagnitude = Vector3.Distance(defender.transform.position, attacker.transform.position);
+        float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
+        defender.GetComponent<MovementFSM>().AddForce(relativeVector * force * 2, 0.1f, ForceMode.Impulse);
     }
 }
