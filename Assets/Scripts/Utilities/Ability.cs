@@ -35,7 +35,7 @@ public abstract class Ability
     #region Properties
 
     protected AttackType attackType;
-    public AttackType Attack_Type
+    public AttackType AttackType
     {
         get { return attackType; }
     }
