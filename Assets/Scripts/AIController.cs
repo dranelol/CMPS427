@@ -53,7 +53,6 @@ public class AIController : StateMachine
     private AIGroupController Group; // The script managing the group of enemies
     private AggroRadius Aggro; // The script managing the aggro
     private MovementFSM MoveFSM; // The Movement FSM the enemy uses
-    private NavMeshAgent NavAgent; // NavMeshAgent for this enemy
     private AIPursuit PursuitFSM; // The script that managers AI behavior when pursuing a target
     private Entity EntityObject; // our entity object
     // Reset variables
@@ -68,7 +67,6 @@ public class AIController : StateMachine
         Group = transform.parent.GetComponent<AIGroupController>();
         Aggro = GetComponentInChildren<AggroRadius>();
         MoveFSM = GetComponent<MovementFSM>();
-        NavAgent = GetComponent<NavMeshAgent>();
         EntityObject = GetComponent<Entity>();
     }
 
@@ -262,7 +260,7 @@ public class AIController : StateMachine
 
         else
         {
-            if (!TargetInRange())
+            if (!TargetInRange() || target.GetComponent<Entity>().IsDead())
             {
                 Group.RemoveTarget(target);
             }
