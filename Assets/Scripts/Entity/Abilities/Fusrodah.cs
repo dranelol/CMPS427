@@ -26,7 +26,7 @@ public class Fusrodah : Ability
             if (enemy.GetComponent<AIController>().IsResetting() == false
                 && enemy.GetComponent<AIController>().IsDead() == false)
             {
-                DoDamage(attacker, enemy);
+                DoDamage(attacker, enemy, isPlayer);
 
                 // this is a physics attack, so do physics applies
                 DoPhysics(attacker, enemy);
@@ -92,7 +92,7 @@ public class Fusrodah : Ability
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <param name="defender">The gameobject defending against the attack</param>
-    public override void DoDamage(GameObject attacker, GameObject defender)
+    public override void DoDamage(GameObject attacker, GameObject defender, bool isPlayer)
     {
         //Debug.Log(defender.ToString());
         Entity attackerEntity = attacker.GetComponent<Entity>();

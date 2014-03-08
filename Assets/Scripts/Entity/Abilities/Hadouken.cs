@@ -20,16 +20,30 @@ public class Hadouken : Ability
         List<GameObject> attacked = OnAttack(attacker.transform, isPlayer);
 
         //Debug.Log(attacked.Count);
-
-        foreach (GameObject enemy in attacked)
+        if (isPlayer == true)
         {
-            if (enemy.GetComponent<AIController>().IsResetting() == false
-                && enemy.GetComponent<AIController>().IsDead() == false)
+            foreach (GameObject enemy in attacked)
             {
-                DoDamage(attacker, enemy);
+                if (enemy.GetComponent<AIController>().IsResetting() == false
+                    && enemy.GetComponent<AIController>().IsDead() == false)
+                {
+                    DoDamage(attacker, enemy, isPlayer);
+
+                    // this is a physics attack, so do physics applies
+                    DoPhysics(attacker, enemy);
+                }
+            }
+        }
+
+        else
+        {
+            foreach (GameObject enemy in attacked)
+            {
+                DoDamage(attacker, enemy, isPlayer);
 
                 // this is a physics attack, so do physics applies
                 DoPhysics(attacker, enemy);
+                
             }
         }
     }
@@ -48,8 +62,19 @@ public class Hadouken : Ability
         int enemyMask = LayerMask.NameToLayer("Enemy");
         int playerMask = LayerMask.NameToLayer("Player");
 
-        Collider[] colliders = Physics.OverlapSphere(attacker.position, range, 1 << enemyMask);
-        Debug.Log(colliders.Length);
+        Collider[] colliders;
+
+        if (isPlayer == true)
+        {
+            colliders = Physics.OverlapSphere(attacker.position, range, 1 << enemyMask);
+        }
+
+        else
+        {
+            colliders = Physics.OverlapSphere(attacker.position, range, 1 << playerMask);
+        }
+
+
         foreach (Collider collider in colliders)
         {
             //Debug.Log(collider.ToString());
@@ -66,19 +91,42 @@ public class Hadouken : Ability
                 Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
                 Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
 
-                // try to cast a ray from the enemy to the player
-                bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, 1 << playerMask);
 
-                if (!rayCastHit)
+                if (isPlayer == true)
                 {
+                    // try to cast a ray from the enemy to the player
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, 1 << playerMask);
 
+                    if (!rayCastHit)
+                    {
+
+                    }
+                    // if the ray hits, the enemy is in line of sight of the player, this is a successful attack hit
+                    else
+                    {
+                        if (hit.collider.gameObject.tag == "Player")
+                        {
+                            enemiesToAttack.Add(collider.gameObject);
+                        }
+                    }
                 }
-                // if the ray hits, the enemy is in line of sight of the player, this is a successful attack hit
+
                 else
                 {
-                    if (hit.collider.gameObject.tag == "Player")
+                    // try to cast a ray from the player to the enemy
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, 1 << enemyMask);
+
+                    if (!rayCastHit)
                     {
-                        enemiesToAttack.Add(collider.gameObject);
+
+                    }
+                    // if the ray hits, the player is in line of sight of the enemy, this is a successful attack hit
+                    else
+                    {
+                        if (hit.collider.gameObject.tag == "Enemy")
+                        {
+                            enemiesToAttack.Add(collider.gameObject);
+                        }
                     }
                 }
             }
@@ -92,7 +140,7 @@ public class Hadouken : Ability
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <param name="defender">The gameobject defending against the attack</param>
-    public override void DoDamage(GameObject attacker, GameObject defender)
+    public override void DoDamage(GameObject attacker, GameObject defender, bool isPlayer)
     {
         //Debug.Log(defender.ToString());
         Entity attackerEntity = attacker.GetComponent<Entity>();
@@ -104,7 +152,10 @@ public class Hadouken : Ability
 
         float ratio = (defenderEntity.currentHP / defenderEntity.maxHP);
 
-        defender.renderer.material.color = new Color(1.0f, ratio, ratio);
+        if (isPlayer == true)
+        {
+            defender.renderer.material.color = new Color(1.0f, ratio, ratio);
+        }
     }
 
     /// <summary>

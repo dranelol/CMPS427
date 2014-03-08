@@ -42,7 +42,6 @@ public class MovementFSM : StateMachine
     {
         if ((MoveStates)CurrentState != MoveStates.moveLocked)
         {
-            Debug.Log("moving!");
             Transition(MoveStates.moving);
             _navMeshAgent.SetDestination(targetPosition); 
         }
