@@ -7,9 +7,8 @@ using UnityEngine;
 
 public class MovementFSM : StateMachine 
 {
-    private NavMeshAgent thisAgent;
-    private bool timedLock = false;
-    private float lockTime = 0;
+    private NavMeshAgent _navMeshAgent;
+    private float _lockTimer;
 
     public enum MoveStates
     {
@@ -18,30 +17,23 @@ public class MovementFSM : StateMachine
         moveLocked
     }
 
-    void Start()
+    void Awake()
     {
-        thisAgent = GetComponent<NavMeshAgent>();
+        _navMeshAgent = GetComponent<NavMeshAgent>();
+        _navMeshAgent.stoppingDistance = _navMeshAgent.radius;
+        _lockTimer = 0;
 
         SetupMachine(MoveStates.idle);
-
-        HashSet<Enum> idleTransitions = new HashSet<Enum>();
-        idleTransitions.Add(MoveStates.moving);
-        idleTransitions.Add(MoveStates.moveLocked);
-
-        HashSet<Enum> movingTransitions = new HashSet<Enum>();
-        movingTransitions.Add(MoveStates.idle);
-        movingTransitions.Add(MoveStates.moveLocked);
 
         HashSet<Enum> moveLockedTransitions = new HashSet<Enum>();
         moveLockedTransitions.Add(MoveStates.idle);
         moveLockedTransitions.Add(MoveStates.moveLocked);
 
-        AddTransitionsFrom(MoveStates.idle, idleTransitions);
-        AddTransitionsFrom(MoveStates.moving, movingTransitions);
+        AddAllTransitionsFrom(MoveStates.idle);
+        AddAllTransitionsFrom(MoveStates.moving);
         AddTransitionsFrom(MoveStates.moveLocked, moveLockedTransitions);
 
         StartMachine(MoveStates.idle);
-
     }
 
     #region public functions
@@ -50,49 +42,61 @@ public class MovementFSM : StateMachine
     {
         if ((MoveStates)CurrentState != MoveStates.moveLocked)
         {
-            thisAgent.SetDestination(targetPosition);
+            Transition(MoveStates.moving);
+            _navMeshAgent.SetDestination(targetPosition); 
         }
     }
 
-    public void Stop(float time = 0)
+    public void Stop()
     {
-        lockTime = Mathf.Max(time, 0);
-        timedLock = true;
-        Transition(MoveStates.moveLocked);
+        if ((MoveStates)CurrentState == MoveStates.moving)
+        {
+            _navMeshAgent.ResetPath();
+            Transition(MoveStates.idle);
+        }
     }
 
-    public void LockMovement()
+    public void LockMovement(float duration)
     {
-        timedLock = false;
-        Transition(MoveStates.moveLocked);
+        if (duration > 0)
+        {
+            _lockTimer = Mathf.Max(_lockTimer, duration);
+
+            if ((MoveStates)CurrentState != MoveStates.moveLocked)
+            {
+                Transition(MoveStates.moveLocked);
+            }
+        }
     }
 
     public void UnlockMovement()
     {
-        Transition(MoveStates.idle);
+        if ((MoveStates)CurrentState == MoveStates.moveLocked)
+        {
+            Transition(MoveStates.idle);
+        }
     }
 
-    #endregion
-
-    #region idle functions
-
-    void idle_Update()
+    public void AddForce(Vector3 force, float duration, ForceMode forceMode = ForceMode.Force)
     {
-        if (thisAgent.velocity != Vector3.zero)
+        if (force.magnitude > 0)
         {
-            Transition(MoveStates.moving);
+            LockMovement(duration);
+            rigidbody.AddForce(force, forceMode);
         }
     }
 
     #endregion
+
+    #region state behaviour
 
     #region moving functions
 
     void moving_Update()
     {
-        if (thisAgent.velocity == Vector3.zero)
+        if (!_navMeshAgent.hasPath)
         {
-            Transition(MoveStates.idle);
+            Stop();
         }
     }
 
@@ -100,32 +104,32 @@ public class MovementFSM : StateMachine
 
     #region moveLocked functions
 
-    IEnumerator moveLocked_EnterState()
+    private IEnumerator moveLocked_EnterState()
     {
-        thisAgent.ResetPath();
-        yield break;
+        _navMeshAgent.ResetPath();
+        _navMeshAgent.enabled = false;
+        yield return null;
     }
 
-    void moveLocked_Update()
+    private void moveLocked_Update()
     {
-        if (timedLock == true)
-        {
-            lockTime -= Time.deltaTime;
+        _lockTimer -= Time.deltaTime;
 
-            if (lockTime <= 0)
-            {
-                Transition(MoveStates.idle);
-            }
+        if (_lockTimer <= 0)
+        {
+            Transition(MoveStates.idle);
         }
     }
 
-    IEnumerator moveLocked_ExitState()
+    private IEnumerator moveLocked_ExitState()
     {
-        timedLock = false;
-        lockTime = 0;
-        thisAgent.ResetPath();
-        yield break;
+        _navMeshAgent.enabled = true;
+        _navMeshAgent.ResetPath();
+        _lockTimer = 0;
+        yield return null;
     }
+
+    #endregion
 
     #endregion
 }

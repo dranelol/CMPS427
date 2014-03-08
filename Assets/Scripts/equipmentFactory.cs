@@ -169,7 +169,7 @@ public class equipmentFactory {
             Debug.Log("equipmentlist fail");
         }
 
-        Debug.Log("after load");
+        //Debug.Log("after load");
 
         //Debug.Log(equipList.InnerXml);
         
@@ -185,7 +185,7 @@ public class equipmentFactory {
 
 
             XmlNode tempnode = item.SelectSingleNode("name");
-            Debug.Log(tempnode.InnerText);
+            //Debug.Log(tempnode.InnerText);
 
             //since this is base, with no affixes, the item name and type are the same
             newE.equipmentName = tempnode.InnerText;
@@ -194,7 +194,7 @@ public class equipmentFactory {
             tempnode = item.SelectSingleNode("slot");
 
             newE.setslot(tempnode.InnerText);
-            Debug.Log(tempnode.InnerText);
+            //Debug.Log(tempnode.InnerText);
 
             //min and max lvl
             tempnode = item.SelectSingleNode("minlvl");
@@ -257,7 +257,7 @@ public class equipmentFactory {
                     Debug.Log("CAUTION: " + att.InnerText + " is not in the Factory!");
                 }
 
-                Debug.Log(att.InnerText + " " + att.Attributes.GetNamedItem("value").InnerText);
+                //Debug.Log(att.InnerText + " " + att.Attributes.GetNamedItem("value").InnerText);
                 
                 
             }
@@ -291,7 +291,7 @@ public class equipmentFactory {
             Debug.Log("affixlist fail");
         }
 
-        Debug.Log("after affix load");
+        //Debug.Log("after affix load");
 
         //Debug.Log(affixList.InnerXml);
 
@@ -308,7 +308,7 @@ public class equipmentFactory {
             newA.affixType = affix.Attributes.GetNamedItem("category").InnerText;
 
             XmlNode tempnode = affix.SelectSingleNode("name");
-            Debug.Log(tempnode.InnerText);
+            //Debug.Log(tempnode.InnerText);
 
             
             newA.affixName = tempnode.InnerText;
@@ -321,7 +321,7 @@ public class equipmentFactory {
             foreach (XmlNode att in atts)
             {
                 newA.addslot(att.InnerText);
-                Debug.Log(att.InnerText);
+                //Debug.Log(att.InnerText);
             }
 
 
@@ -368,7 +368,7 @@ public class equipmentFactory {
                     Debug.Log("CAUTION: " + att.InnerText + " is not in the Factory!");
                 }
 
-                Debug.Log(att.InnerText + " " + att.Attributes.GetNamedItem("value").InnerText);
+                //Debug.Log(att.InnerText + " " + att.Attributes.GetNamedItem("value").InnerText);
 
             }
 
@@ -414,7 +414,7 @@ public class equipmentFactory {
         else
         {
             int lootroll = UnityEngine.Random.Range(0, basesList.Count);
-            tempEquipment = (equipment)basesList[randint];
+            tempEquipment = (equipment)basesList[lootroll];
         }
         randEquipment.equipmentName = tempEquipment.equipmentName;
         randEquipment.equipmentType = tempEquipment.equipmentType;
@@ -481,6 +481,107 @@ public class equipmentFactory {
 
     }
 
+    /// <summary>
+    /// generate a random equipment
+    /// </summary>
+    /// <param name="level">the desired level</param>
+    /// <returns>a random equipment of the desired level</returns>
+    public equipment randomEquipmentByLevel(int level)
+    {
+
+        equipment randEquipment = new equipment();
+        equipment tempEquipment;
+
+        //roll the dice to see if we get affixes
+        int randint = UnityEngine.Random.Range(0, 100);
+
+        if (randint >= 97)
+        {
+            ArrayList templist = new ArrayList();
+            foreach (equipment e in uniqueslist)
+            {
+                if (e.maxlvl >= level && e.minlvl <= level)
+                {
+                    templist.Add(e);
+                }
+            }
+            tempEquipment = (equipment)templist[UnityEngine.Random.Range(0, templist.Count)];
+        }
+        else
+        {
+            ArrayList templist = new ArrayList();
+            foreach (equipment e in basesList)
+            {
+                if (e.maxlvl >= level && e.minlvl <= level)
+                {
+                    templist.Add(e);
+                }
+            }
+            tempEquipment = (equipment)templist[UnityEngine.Random.Range(0, templist.Count)];
+        }
+        randEquipment.equipmentName = tempEquipment.equipmentName;
+        randEquipment.equipmentType = tempEquipment.equipmentType;
+        randEquipment.validSlot = tempEquipment.validSlot;
+        randEquipment.maxlvl = tempEquipment.maxlvl;
+        randEquipment.minlvl = tempEquipment.minlvl;
+        randEquipment.flavorText = tempEquipment.flavorText;
+        randEquipment.tier = tempEquipment.tier;
+
+
+        randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
+
+        int tier = 0;
+        if (randint > 60 && randint <= 85)
+            tier = 1;
+        if (randint > 85 && randint < 97)
+            tier = 2;
+
+        doaffixes(randEquipment, tier);
+
+        return randEquipment;
+
+
+    }
+
+    /// <summary>
+    /// get a unique equipment from the list
+    /// </summary>
+    /// <param name="name">the name of the equipment</param>
+    /// <returns>the unique equipment</returns>
+    public equipment getUnique(string name)
+    {
+
+        equipment randEquipment = new equipment();
+        equipment tempEquipment;
+
+
+        
+        ArrayList templist = new ArrayList();
+        foreach (equipment e in uniqueslist)
+        {
+            if (e.equipmentName == name)
+            {
+                templist.Add(e);
+            }
+        }
+        tempEquipment = (equipment)templist[UnityEngine.Random.Range(0, templist.Count)];
+
+        randEquipment.equipmentName = tempEquipment.equipmentName;
+        randEquipment.equipmentType = tempEquipment.equipmentType;
+        randEquipment.validSlot = tempEquipment.validSlot;
+        randEquipment.maxlvl = tempEquipment.maxlvl;
+        randEquipment.minlvl = tempEquipment.minlvl;
+        randEquipment.flavorText = tempEquipment.flavorText;
+        randEquipment.tier = tempEquipment.tier;
+
+        randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
+
+        return randEquipment;
+
+
+    }
+
+
  /// <summary>
  /// function to generate a random equipment
  /// </summary>
@@ -495,7 +596,7 @@ public class equipmentFactory {
 
 
         //grab a random equipment out of the list appropriate for the tier
-        if (tier <= 3)
+        if (tier >= 3)
         {
 
             ArrayList templist = new ArrayList();
@@ -666,7 +767,7 @@ public class equipmentFactory {
                     templist.Add(e);
                 }
             }
-            return (affix)affixeslist[UnityEngine.Random.Range(0, templist.Count)];
+            return (affix)templist[UnityEngine.Random.Range(0, templist.Count)];
 
     }
 
@@ -680,7 +781,7 @@ public class equipmentFactory {
                 templist.Add(e);
             }
         }
-        return (affix)affixeslist[UnityEngine.Random.Range(0, templist.Count)];
+        return (affix)templist[UnityEngine.Random.Range(0, templist.Count)];
 
     }
 }

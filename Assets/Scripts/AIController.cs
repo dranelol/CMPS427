@@ -53,7 +53,6 @@ public class AIController : StateMachine
     private AIGroupController Group; // The script managing the group of enemies
     private AggroRadius Aggro; // The script managing the aggro
     private MovementFSM MoveFSM; // The Movement FSM the enemy uses
-    private NavMeshAgent NavAgent; // NavMeshAgent for this enemy
     private AIPursuit PursuitFSM; // The script that managers AI behavior when pursuing a target
     private Entity EntityObject; // our entity object
     // Reset variables
@@ -68,7 +67,6 @@ public class AIController : StateMachine
         Group = transform.parent.GetComponent<AIGroupController>();
         Aggro = GetComponentInChildren<AggroRadius>();
         MoveFSM = GetComponent<MovementFSM>();
-        NavAgent = GetComponent<NavMeshAgent>();
         EntityObject = GetComponent<Entity>();
     }
 
@@ -151,6 +149,15 @@ public class AIController : StateMachine
         get { return target; }
     }
 
+    public bool IsDead()
+    {
+        return (AIStates)CurrentState == AIStates.dead;
+    }
+
+    public bool IsResetting()
+    {
+        return (AIStates)CurrentState == AIStates.reset;
+    }
     #endregion
 
     #region private functions
@@ -218,10 +225,6 @@ public class AIController : StateMachine
 
     #endregion
 
-    #region private functions
-
-    #endregion
-
     #region state based functions
 
     #region idle functions
@@ -257,7 +260,7 @@ public class AIController : StateMachine
 
         else
         {
-            if (!TargetInRange())
+            if (!TargetInRange() || target.GetComponent<Entity>().IsDead())
             {
                 Group.RemoveTarget(target);
             }
@@ -298,10 +301,7 @@ public class AIController : StateMachine
 
         else
         {
-            if (NavAgent.destination != localHomePosition)
-            {
-                MoveFSM.SetPath(localHomePosition);
-            }
+            MoveFSM.SetPath(localHomePosition);
         }
     }
 
@@ -311,8 +311,16 @@ public class AIController : StateMachine
 
     IEnumerator dead_EnterState()
     {
-        PursuitFSM.StopPursuit();
+        Destroy(this.gameObject);
+
+        /*PursuitFSM.StopPursuit();
         MoveFSM.LockMovement();
+
+        GetComponent<CapsuleCollider>().enabled = false;
+        NavAgent.enabled = false;
+        transform.GetChild(0).gameObject.SetActive(false);
+        Destroy(rigidbody, 2f);
+        */
         yield return null;
     }
 

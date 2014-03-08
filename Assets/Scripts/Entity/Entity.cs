@@ -10,20 +10,34 @@ public class Entity : MonoBehaviour
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
 
+    public List<Ability> abilities;
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
 
-    /// <summary>
-    /// Creates the entity with a given set of base attributes,
-    /// </summary>
-    public void Start()
+
+    public void Awake()
     {
+        abilities = new List<Ability>(6);
+
+        for (int i = 0; i < abilities.Capacity; i++)
+        {
+            abilities.Add(null);
+        }
+
         currentAtt = new Attributes();
+        Debug.Log(currentAtt.ToString());
         equipAtt = new Attributes();
         buffAtt = new Attributes();
 		
         currentAtt.Power = 100;
 
-        maxHP = currentHP = 50f;
+        maxHP = currentHP = 50;
+    }
+    /// <summary>
+    /// Creates the entity with a given set of base attributes,
+    /// </summary>
+    public void Start()
+    {
+        
     }
 
     /// <summary>
@@ -89,6 +103,34 @@ public class Entity : MonoBehaviour
     public void addBuff(Attributes statChange, float duration)
     {
         StartCoroutine(newbuff(statChange, duration));
+    }
+
+    /// <summary>
+    /// Does the current entity have an item equipped in this slot
+    /// </summary>
+    /// <param name="slot">The slot to check</param>
+    /// <returns>Returns false if entity does not have slot equipped; true if they do</returns>
+    public bool HasEquipped(equipSlots.slots slot)
+    {
+        return equippedEquip.ContainsKey(slot);
+    }
+
+    /// <summary>
+    /// Returns the equipped item of that slot
+    /// </summary>
+    /// <param name="slot">Slot to return item</param>
+    /// <returns>Throws exception if the entity doesn't have anything equipped there, else returns the item equipped</returns>
+    public equipment GetEquip(equipSlots.slots slot)
+    {
+        if (HasEquipped(slot) == false)
+        {
+            throw new KeyNotFoundException("Entity does not have this item equipped!");
+        }
+
+        else
+        {
+            return equippedEquip[slot];
+        }
     }
 
 
