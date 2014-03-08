@@ -39,7 +39,9 @@ public class HUD_GUI : MonoBehaviour {
 	public float native_height;
 	public Rect InfoBox;
 
-	public float health = 0.5f;
+    public Entity player;
+
+	public float health = 0.0f;
 	void Start () {
 		native_width = Screen.width;
 		native_height = Screen.height;
@@ -67,6 +69,8 @@ public class HUD_GUI : MonoBehaviour {
 		HealthGroupSize.y = Screen.height * .21834f;//100f;//.21834f
 
 		InfoBox = new Rect(Screen.width * .5f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
+
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Entity>();
 	}
 
 	void OnGUI(){
@@ -77,6 +81,8 @@ public class HUD_GUI : MonoBehaviour {
 
 
 		//health = GUI.VerticalSlider(new Rect(10f,10f,20f,50f),health,1f,0f);
+        health = (player.currentHP / player.maxHP);
+
 		if(health <0)health = 0f;
 		if(health >1)health = 1f;
 
@@ -132,7 +138,7 @@ public class HUD_GUI : MonoBehaviour {
 		
 		}GUI.EndGroup();
 		GUI.backgroundColor = Color.green;
-		GUI.Label(InfoBox,"L M B = Attack \nR M B = Haduken",infoBoxStyle);
+		GUI.Label(InfoBox,"L M B = Attack \nR M B = Hadouken",infoBoxStyle);
 
 	}
 }
