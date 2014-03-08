@@ -39,6 +39,7 @@ public class Hadouken : Ability
         {
             foreach (GameObject enemy in attacked)
             {
+                
                 DoDamage(attacker, enemy, isPlayer);
 
                 // this is a physics attack, so do physics applies

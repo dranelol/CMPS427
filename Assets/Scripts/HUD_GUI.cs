@@ -37,7 +37,8 @@ public class HUD_GUI : MonoBehaviour {
 
 	public float native_width;
 	public float native_height;
-	public Rect InfoBox;
+    public Rect InfoBox1;
+    public Rect InfoBox2;
 
     public Entity player;
 
@@ -68,7 +69,8 @@ public class HUD_GUI : MonoBehaviour {
 		HealthGroupSize.x = Screen.width * .491f;//300f;//.491f
 		HealthGroupSize.y = Screen.height * .21834f;//100f;//.21834f
 
-		InfoBox = new Rect(Screen.width * .5f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
+        InfoBox1 = new Rect(Screen.width * .5f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
+        InfoBox2 = new Rect(Screen.width * .9f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
 
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Entity>();
 	}
@@ -138,7 +140,17 @@ public class HUD_GUI : MonoBehaviour {
 		
 		}GUI.EndGroup();
 		GUI.backgroundColor = Color.green;
-		GUI.Label(InfoBox,"L M B = Attack \nR M B = Hadouken",infoBoxStyle);
+        //GUI.color = Color.white;
+        infoBoxStyle.normal.textColor = Color.white;
+        string attackList = "Q = Cleave \n"
+                          + "W = Fud Ro Dah \n"
+                          + "E = Hadouken \n"
+                          + "R = Deathgrip \n";
+
+        string version = "Week5v1";
+
+        GUI.Label(InfoBox1, attackList, infoBoxStyle);
+        GUI.Label(InfoBox2, version, infoBoxStyle);
 
 	}
 }
