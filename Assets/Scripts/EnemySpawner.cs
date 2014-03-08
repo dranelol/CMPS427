@@ -39,8 +39,6 @@ public class EnemySpawner : MonoBehaviour
 
     void Start()
     {
-        //renderer.enabled = false;
-
         trigger = GetComponent<SphereCollider>();
         trigger.radius = triggerRadius;
 
@@ -57,18 +55,14 @@ public class EnemySpawner : MonoBehaviour
 
             if (!isStatic)
             {
-
                 this.enabled = false;
-
             }
         }
     }
 
     void Update()
     {
-
         if (transform.childCount < enemyCount)
-
         {
             if (spawnCounter > 0)
             {

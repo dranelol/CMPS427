@@ -107,6 +107,7 @@ public class MovementFSM : StateMachine
     private IEnumerator moveLocked_EnterState()
     {
         _navMeshAgent.ResetPath();
+        _navMeshAgent.enabled = false;
         yield return null;
     }
 
@@ -122,6 +123,7 @@ public class MovementFSM : StateMachine
 
     private IEnumerator moveLocked_ExitState()
     {
+        _navMeshAgent.enabled = true;
         _navMeshAgent.ResetPath();
         _lockTimer = 0;
         yield return null;

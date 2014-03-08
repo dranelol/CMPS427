@@ -30,7 +30,7 @@ public class Entity : MonoBehaviour
 
         currentAtt.Power = 100;
 
-        maxHP = currentHP = Mathf.Infinity;
+        maxHP = currentHP = 300;
     }
     /// <summary>
     /// Creates the entity with a given set of base attributes,
