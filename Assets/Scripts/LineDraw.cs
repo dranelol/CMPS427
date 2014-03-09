@@ -22,7 +22,7 @@ public class LineDraw : MonoBehaviour {
     private float currentTime;
 
 
-    public float timeToLerp = 100f;
+    public float timeToLerp = 1.0f;
 
 
 	void Start () 
@@ -72,13 +72,26 @@ public class LineDraw : MonoBehaviour {
         if (currentColor == Color.blue)
         {
             StopCoroutine("lerpColor");
+
+            StartCoroutine(lerpColor(false));
+        }
+
+        if (currentWidth == lineWidthStart)
+        {
+            StartCoroutine(lerpWidth(true));
+        }
+
+        if (currentWidth == lineWidthEnd)
+        {
+            StopCoroutine("lerpWidth");
+            StartCoroutine(lerpWidth(false));
         }
 
         
         
         //currentColor = Color.Lerp(currentColor, colorEnd, Time.time/100f);
         lineRenderer.SetColors(currentColor, currentColor);
-        lineRenderer.SetWidth(currentWidth * Time.time, currentWidth * Time.time);
+        lineRenderer.SetWidth(currentWidth, currentWidth);
 
         
 	}
@@ -90,20 +103,39 @@ public class LineDraw : MonoBehaviour {
 
         while (tColor < 1.0f)
         {
-            Debug.Log(tColor);
             tColor += (Time.deltaTime * lerpRate);
-            currentColor = Color.Lerp(colorStart, colorEnd, tColor);
-            //yield return new WaitForEndOfFrame();
+            if (fromStart == true)
+            {
+                currentColor = Color.Lerp(colorStart, colorEnd, tColor);
+            }
+
+            else
+            {
+                currentColor = Color.Lerp(colorEnd, colorStart, tColor);
+            }
+            yield return new WaitForEndOfFrame();
         }
-
-        yield return null;
-
-
     }
 
     IEnumerator lerpWidth(bool fromStart)
     {
-        yield return null;
+        float tWidth = 0.0f;
+        float lerpRate = 1.0f / timeToLerp;
+
+        while (tWidth < 1.0f)
+        {
+            tWidth += (Time.deltaTime * lerpRate);
+            if (fromStart == true)
+            {
+                currentWidth = Mathf.Lerp(lineWidthStart, lineWidthEnd, tWidth);
+            }
+
+            else
+            {
+                currentWidth = Mathf.Lerp(lineWidthEnd, lineWidthStart, tWidth);
+            }
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     
