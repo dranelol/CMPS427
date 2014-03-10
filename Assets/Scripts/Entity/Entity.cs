@@ -27,7 +27,7 @@ public class Entity : MonoBehaviour
         Debug.Log(currentAtt.ToString());
         equipAtt = new Attributes();
         buffAtt = new Attributes();
-
+		
         currentAtt.Power = 100;
 
         maxHP = currentHP = 500;
