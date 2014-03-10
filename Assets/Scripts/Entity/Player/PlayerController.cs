@@ -97,6 +97,7 @@ public class PlayerController : MonoBehaviour {
         // If the move/attack key was pressed...
         if (Input.GetAxis("Move/Attack") != 0) 
         {
+
             int terrainMask= LayerMask.NameToLayer("Terrain");
 
             int enemyMask = LayerMask.NameToLayer("Enemy");
@@ -125,6 +126,7 @@ public class PlayerController : MonoBehaviour {
 
                     // Otherwise, move towards the point of collision.
                     targetPosition = Vector3.zero;
+
                     moveFSM.SetPath(target.point);
 
 
@@ -138,7 +140,7 @@ public class PlayerController : MonoBehaviour {
 
 
 
-        #region ability 1
+        #region ability 1q
         if (Input.GetKeyDown(KeyCode.Q))
         {
             if (combatFSM.IsIdle() == true)

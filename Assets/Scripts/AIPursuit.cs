@@ -91,18 +91,23 @@ public class AIPursuit : StateMachine
                 Vector3 directionToTarget = currentTarget.transform.position - transform.position;
 
                 // If the enemy is within range of its next attack, transition to attack.
-                if (directionToTarget.magnitude < _abilityList[0].Range)
+                if (directionToTarget.magnitude < _abilityList[0].Range - 0.5f)
                 {
                     RaycastHit hit;
 
                     // Cast a ray from the enemy to the player, ignoring other enemy colliders.
-                    bool raycastSuccess = Physics.Raycast(transform.position, directionToTarget, out hit, _abilityList[0].Range, ~(1 << LayerMask.NameToLayer("Enemy")));
+                    bool raycastSuccess = Physics.Raycast(transform.position, directionToTarget, out hit, _abilityList[0].Range - 0.5f, ~(1 << LayerMask.NameToLayer("Enemy")));
 
                     // if we succeeded our raycast, and we hit the player first: we're in attack range and LoS
                     if (raycastSuccess == true && hit.transform.tag == "Player")
                     {
                         MoveFSM.Stop();
                         Transition(PursuitStates.attack);
+                    }
+
+                    else
+                    {
+                        MoveFSM.SetPath(currentTarget.transform.position);
                     }
                 }
 
@@ -130,8 +135,8 @@ public class AIPursuit : StateMachine
         if (currentTarget != null)
         {
             combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-            Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
-            entity.abilities[1].AttackHandler(gameObject, false);
+            //Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
+            _abilityList[0].AttackHandler(gameObject, false);
             /*
             _abilityList[0].AttackHandler(gameObject, false);
             _abilityList.OrderBy(Ability => Ability.Cooldown).ThenBy(Ability => Ability.DamageMod); Use this later */

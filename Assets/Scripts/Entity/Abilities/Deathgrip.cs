@@ -4,11 +4,13 @@ using System.Collections.Generic;
 
 public class Deathgrip : Ability
 {
-    public Deathgrip(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable)
+    public Deathgrip(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject darkPrefab)
         : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable)
     {
-       
+        DarkEnergyPrefab = darkPrefab;
     }
+
+    public GameObject DarkEnergyPrefab;
 
     /// <summary>
     /// Handler for this attack; figures out who will be attacked, and carries out everything needed for the attack to occur
@@ -28,6 +30,8 @@ public class Deathgrip : Ability
             {
                 DoDamage(attacker, enemy, isPlayer);
 
+                GameObject _energyEffect = GameObject.Instantiate(DarkEnergyPrefab, enemy.transform.position, Quaternion.identity) as GameObject;
+                _energyEffect.GetComponent<DarkLightning>().Activate(attacker, enemy, 0.4f);
                 // this is a physics attack, so do physics applies
                 DoPhysics(attacker, enemy);
             }

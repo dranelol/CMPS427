@@ -11,10 +11,11 @@ public class GameManager : MonoBehaviour
 
     public static float GLOBAL_COOLDOWN = 0.5f;
 
+    public GameObject thing;
 	// Use this for initialization
 	public void Awake () 
     {
-        EquipmentFactory = new equipmentFactory();
+        //EquipmentFactory = new equipmentFactory();
 
         #region ability initialization
         Abilities = new Dictionary<string, Ability>();
@@ -22,8 +23,8 @@ public class GameManager : MonoBehaviour
         // Attack type, damage type, range, angle, cooldown, damagemod
 
         Abilities["hadouken"] = new Hadouken(AttackType.PBAOE, DamageType.FIRE, 5.0f, 360.0f, 3.0f, 1.0f, "hadouken", "Hadouken");
-        Abilities["deathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.FIRE, 5.0f, 360.0f, 3.0f, 1.0f, "deathgrip", "AoE Deathgrip");
-        Abilities["cleave"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 5.0f, 45.0f, 5.0f, 1.0f, "cleave", "Cleave");
+        Abilities["deathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.FIRE, 25.0f, 360.0f, 3.0f, 1.0f, "deathgrip", "AoE Deathgrip", thing);
+        Abilities["cleave"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 5.0f, 1.0f, "cleave", "Cleave");
         Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 5.0f, 45.0f, 10.0f, 1.0f, "fusrodah", "Fus Roh Dah");
 
         #endregion

@@ -19,8 +19,6 @@ public class Cleave : Ability
     {
         List<GameObject> attacked = OnAttack(attacker.transform, isPlayer);
 
-        Debug.Log(attacked.Count);
-
         if (isPlayer == true)
         {
             // this is player -> enemy
