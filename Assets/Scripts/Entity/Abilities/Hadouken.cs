@@ -19,7 +19,6 @@ public class Hadouken : Ability
     {
         List<GameObject> attacked = OnAttack(attacker.transform, isPlayer);
 
-        //Debug.Log(attacked.Count);
         if (isPlayer == true)
         {
             foreach (GameObject enemy in attacked)
@@ -89,14 +88,13 @@ public class Hadouken : Ability
             if (Vector3.Angle(forward, enemyVector) < angle)
             {
                 RaycastHit hit = new RaycastHit();
-                Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+                
 
 
                 if (isPlayer == true)
                 {
                     // try to cast a ray from the enemy to the player
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, 1 << playerMask);
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
 
                     if (!rayCastHit)
                     {
@@ -107,6 +105,8 @@ public class Hadouken : Ability
                     {
                         if (hit.collider.gameObject.tag == "Player")
                         {
+                            Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                            Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
                             enemiesToAttack.Add(collider.gameObject);
                         }
                     }
@@ -115,7 +115,7 @@ public class Hadouken : Ability
                 else
                 {
                     // try to cast a ray from the player to the enemy
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, 1 << enemyMask);
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
 
                     if (!rayCastHit)
                     {
@@ -126,6 +126,8 @@ public class Hadouken : Ability
                     {
                         if (hit.collider.gameObject.tag == "Enemy")
                         {
+                            Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                            Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
                             enemiesToAttack.Add(collider.gameObject);
                         }
                     }

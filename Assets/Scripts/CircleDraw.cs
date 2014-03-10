@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LineDraw : MonoBehaviour {
+public class CircleDraw : MonoBehaviour
+{
     public LineRenderer lineRenderer;
-	// Use this for initialization
+    // Use this for initialization
 
     public float alphaDelta = 0.1f;
 
-    public float lineLength = 5;
+    public int vertices = 0;
+    public float radius = 2.0f;
     public float lineWidthStart = 0.1f;
     public float lineWidthEnd = 1f;
-
-    public float angleFromForward = 45;
 
     public GameObject player;
 
@@ -25,38 +25,40 @@ public class LineDraw : MonoBehaviour {
     public float timeToLerp = 1.0f;
 
 
-	void Awake () 
+    void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
         //lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
         lineRenderer.SetColors(Color.white, Color.white);
         lineRenderer.SetWidth(lineWidthStart, lineWidthStart);
-        lineRenderer.SetVertexCount(2);
-        
+        lineRenderer.SetVertexCount(vertices+1);
+
 
         player = GameObject.FindGameObjectWithTag("Player");
 
         currentColor = colorStart;
         currentWidth = lineWidthStart;
-	}
-	
-	// Update is called once per frame
-	void Update () 
+    }
+
+    // Update is called once per frame
+    void Update()
     {
         transform.position = player.transform.position;
-        //transform.forward = transform.parent.transform.forward;
-        //transform.rotation = player.transform.rotation;
         //lineRenderer.SetPosition(0, transform.parent.transform.position);
+        float angle = 0.0f;
+        for (int i = 0; i < vertices + 1; i++)
+        {
+            float x = Mathf.Sin(Mathf.Deg2Rad * angle);
+            float z = Mathf.Cos(Mathf.Deg2Rad * angle);
 
-        lineRenderer.SetPosition(0, Vector3.zero);
-
-        Vector3 pos = Rotations.RotateAboutY(new Vector3(player.transform.forward.x, player.transform.forward.y, player.transform.forward.z), angleFromForward) * lineLength;
-        lineRenderer.SetPosition(1, pos);
-        
+            Vector3 pos = new Vector3(x, 0, z) * radius;
+            lineRenderer.SetPosition(i, pos);
+            angle += (360.0f / vertices);
+        }
 
         float lerpTime = Mathf.PingPong(Time.time, timeToLerp) / timeToLerp;
 
-        
+
         currentWidth = Mathf.Lerp(lineWidthStart, lineWidthEnd, lerpTime);
         //Debug.Log(lerpTime);
         //Debug.Log(currentWidth);
@@ -66,7 +68,7 @@ public class LineDraw : MonoBehaviour {
             StartCoroutine(lerpColor(true));
         }
 
-        
+
 
         if (currentColor == Color.blue)
         {
@@ -86,14 +88,14 @@ public class LineDraw : MonoBehaviour {
             StartCoroutine(lerpWidth(false));
         }
 
-        
-        
+
+
         //currentColor = Color.Lerp(currentColor, colorEnd, Time.time/100f);
         lineRenderer.SetColors(currentColor, currentColor);
         lineRenderer.SetWidth(currentWidth, currentWidth);
 
-        
-	}
+
+    }
 
     IEnumerator lerpColor(bool fromStart)
     {
@@ -137,7 +139,7 @@ public class LineDraw : MonoBehaviour {
         }
     }
 
-    
+
 
 
 }
