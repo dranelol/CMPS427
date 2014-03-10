@@ -165,12 +165,11 @@ public class Fusrodah : Ability
     /// <param name="defender">Gameobject affected by the attack</param>
     public override void DoPhysics(GameObject attacker, GameObject defender)
     {
-        Debug.Log("fus ro physics");
         Vector3 relativeVector = (defender.transform.position - attacker.transform.position).normalized;
-        float normalizedMagnitude = 5f - Vector3.Distance(defender.transform.position, attacker.transform.position);
+        float normalizedMagnitude = 6f - Vector3.Distance(defender.transform.position, attacker.transform.position);
         float force = (normalizedMagnitude / (Mathf.Pow(0.35f, 2)));
         //defender.GetComponent<MovementFSM>().Stop(0.17f);
 
-        defender.GetComponent<MovementFSM>().AddForce(force * relativeVector, 0.1f, ForceMode.Impulse);
+        defender.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force * 2, 0.2f, ForceMode.Impulse);
     }
 }
