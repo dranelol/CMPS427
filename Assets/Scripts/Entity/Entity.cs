@@ -15,7 +15,6 @@ public class Entity : MonoBehaviour
 
     public void Awake()
     {
-        Debug.Log("her");
         abilities = new List<Ability>(6);
 
         for (int i = 0; i < abilities.Capacity; i++)
