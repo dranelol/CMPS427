@@ -19,10 +19,15 @@ public class UIController : MonoBehaviour {
         set { guiState = value; }
     }
 
+    private PlayerEntity player;
+    public PlayerEntity Player { get { return player; } }
+
     private UIStateMachine stateMachine;
 
 	// Use this for initialization
 	void Start () {
+        player = GameObject.FindWithTag("Player").GetComponent<PlayerEntity>();
+
 		guiState = States.INGAME;
 
         stateMachine = new UIStateMachine((int)States.MACHINE_ROOT, this);

@@ -40,4 +40,9 @@ public class PlayerEntity : Entity {
 
         //Debug.Log(abilities.Count);
 	}
+
+    public Attributes GetAttributes()
+    {
+        return currentAtt;
+    }
 }

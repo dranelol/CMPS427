@@ -230,7 +230,6 @@ public class Attributes
 
     #endregion
 
-
     #region Min Damage
     public float MinDamage
     {
@@ -239,7 +238,6 @@ public class Attributes
     }
 
     #endregion
-
 
     #region Max Damage
     public float MaxDamage
