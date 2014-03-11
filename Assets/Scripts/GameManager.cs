@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public static float GLOBAL_COOLDOWN = 0.5f;
 
 	// Use this for initialization
-	void Start () 
+	public void Awake () 
     {
         EquipmentFactory = new equipmentFactory();
 
