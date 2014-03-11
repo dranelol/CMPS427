@@ -39,8 +39,6 @@ public class EnemySpawner : MonoBehaviour
 
     void Start()
     {
-        //renderer.enabled = false;
-
         trigger = GetComponent<SphereCollider>();
         trigger.radius = triggerRadius;
 
@@ -57,18 +55,14 @@ public class EnemySpawner : MonoBehaviour
 
             if (!isStatic)
             {
-
                 this.enabled = false;
-
             }
         }
     }
 
     void Update()
     {
-
         if (transform.childCount < enemyCount)
-
         {
             if (spawnCounter > 0)
             {
@@ -109,11 +103,14 @@ public class EnemySpawner : MonoBehaviour
         if (NavMesh.SamplePosition(newPosition, out meshLocation, SPAWN_RADIUS_MAX, 1 << LayerMask.NameToLayer("Default")))
         {
             GameObject newEnemy = Instantiate(enemyPrefab, meshLocation.position, Quaternion.identity) as GameObject;
+            newEnemy.rigidbody.Sleep();
             newEnemy.name = "Enemy(" + newEnemy.GetInstanceID() + ")";
             newEnemy.transform.parent = transform;
 
             newEnemy.transform.GetChild(0).gameObject.AddComponent<AggroRadius>();
             newEnemy.AddComponent<AIController>();
+            newEnemy.GetComponent<Entity>().abilities[0] = GameManager.Abilities["cleave"];
+            newEnemy.GetComponent<Entity>().abilities[1] = GameManager.Abilities["hadouken"];
         }
 
         else

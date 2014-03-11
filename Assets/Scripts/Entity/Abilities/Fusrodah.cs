@@ -26,7 +26,7 @@ public class Fusrodah : Ability
             if (enemy.GetComponent<AIController>().IsResetting() == false
                 && enemy.GetComponent<AIController>().IsDead() == false)
             {
-                DoDamage(attacker, enemy);
+                DoDamage(attacker, enemy, isPlayer);
 
                 // this is a physics attack, so do physics applies
                 DoPhysics(attacker, enemy);
@@ -92,7 +92,7 @@ public class Fusrodah : Ability
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <param name="defender">The gameobject defending against the attack</param>
-    public override void DoDamage(GameObject attacker, GameObject defender)
+    public override void DoDamage(GameObject attacker, GameObject defender, bool isPlayer)
     {
         //Debug.Log(defender.ToString());
         Entity attackerEntity = attacker.GetComponent<Entity>();
@@ -115,13 +115,11 @@ public class Fusrodah : Ability
     public override void DoPhysics(GameObject attacker, GameObject defender)
     {
         Debug.Log("fus ro physics");
-        Vector3 relativeVector = (defender.transform.position - attacker.transform.position);
+        Vector3 relativeVector = (defender.transform.position - attacker.transform.position).normalized;
         float normalizedMagnitude = 5f - Vector3.Distance(defender.transform.position, attacker.transform.position);
         float force = (normalizedMagnitude / (Mathf.Pow(0.35f, 2)));
-        defender.GetComponent<MovementFSM>().Stop(0.17f);
-        defender.rigidbody.isKinematic = false;
-        defender.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RemovePhysics(defender.rigidbody, 0.17f);
+        //defender.GetComponent<MovementFSM>().Stop(0.17f);
 
+        defender.GetComponent<MovementFSM>().AddForce(force * relativeVector, 0.1f, ForceMode.Impulse);
     }
 }

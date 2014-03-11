@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour {
         
         if (Vector3.Distance(transform.position, agent.destination) < 1.0f)
         {
-            agent.ResetPath();
+            moveFSM.Stop();
         }
         // If we have a target...
 
@@ -97,7 +97,6 @@ public class PlayerController : MonoBehaviour {
         // If the move/attack key was pressed...
         if (Input.GetAxis("Move/Attack") != 0) 
         {
-
             int terrainMask= LayerMask.NameToLayer("Terrain");
 
             int enemyMask = LayerMask.NameToLayer("Enemy");
@@ -126,7 +125,6 @@ public class PlayerController : MonoBehaviour {
 
                     // Otherwise, move towards the point of collision.
                     targetPosition = Vector3.zero;
-
                     moveFSM.SetPath(target.point);
 
 
@@ -147,7 +145,7 @@ public class PlayerController : MonoBehaviour {
             {
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
-
+                Debug.Log(entity.ToString());
                 Debug.Log(entity.abilities[2].ToString());
                 entity.abilities[2].AttackHandler(gameObject, true);
             }
@@ -174,7 +172,7 @@ public class PlayerController : MonoBehaviour {
         {
             if (combatFSM.IsIdle() == true)
             {
-
+                Debug.Log(transform.position);
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 entity.abilities[4].AttackHandler(gameObject, true);
 
@@ -200,13 +198,14 @@ public class PlayerController : MonoBehaviour {
         {
             // small sword
 
+
+            if (entity.HasEquipped(equipSlots.slots.Main))
+            {
+                Debug.Log("bro has a sword already! its called: " + entity.GetEquip(equipSlots.slots.Main).equipmentName);
+            }
+
             Debug.Log("min damage before equip change to low sword: " + entity.currentAtt.MinDamage);
             Debug.Log("max damage before equip change to low sword: " + entity.currentAtt.MaxDamage);
-
-            if(entity.HasEquipped(equipSlots.slots.Main))
-            {
-                Debug.Log("bro has a sword! its called: " + entity.GetEquip(equipSlots.slots.Main).equipmentName);
-            }
 
             bool result = entity.removeEquipment(equipSlots.slots.Main);
 
@@ -222,14 +221,15 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.S))
         {
             // better sword
+            if (entity.HasEquipped(equipSlots.slots.Main))
+            {
+                Debug.Log("bro has a sword already! its called: " + entity.GetEquip(equipSlots.slots.Main).equipmentName);
+            }
+
 
             Debug.Log("min damage before equip change to high sword: " + entity.currentAtt.MinDamage);
             Debug.Log("max damage before equip change to high sword: " + entity.currentAtt.MaxDamage);
 
-            if (entity.HasEquipped(equipSlots.slots.Main))
-            {
-                Debug.Log("bro has a sword! its called: " + entity.GetEquip(equipSlots.slots.Main).equipmentName);
-            }
 
 
             bool result = entity.removeEquipment(equipSlots.slots.Main);

@@ -113,7 +113,7 @@ public abstract class Ability
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <param name="defender">The gameobject defending against the attack</param>
-    public virtual void DoDamage(GameObject attacker, GameObject defender)
+    public virtual void DoDamage(GameObject attacker, GameObject defender, bool isPlayer)
     {
     }
 

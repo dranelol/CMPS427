@@ -26,7 +26,7 @@ public class Deathgrip : Ability
             if (enemy.GetComponent<AIController>().IsResetting() == false
                 && enemy.GetComponent<AIController>().IsDead() == false)
             {
-                DoDamage(attacker, enemy);
+                DoDamage(attacker, enemy, isPlayer);
 
                 // this is a physics attack, so do physics applies
                 DoPhysics(attacker, enemy);
@@ -92,7 +92,7 @@ public class Deathgrip : Ability
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <param name="defender">The gameobject defending against the attack</param>
-    public override void DoDamage(GameObject attacker, GameObject defender)
+    public override void DoDamage(GameObject attacker, GameObject defender, bool isPlayer)
     {
         //Debug.Log(defender.ToString());
         Entity attackerEntity = attacker.GetComponent<Entity>();
@@ -114,13 +114,9 @@ public class Deathgrip : Ability
     /// <param name="defender">Gameobject affected by the attack</param>
     public override void DoPhysics(GameObject attacker, GameObject defender)
     {
-        Vector3 relativeVector = (defender.transform.position - attacker.transform.position);
-        float normalizedMagnitude = 5f - Vector3.Distance(defender.transform.position, attacker.transform.position);
-        float force = (-1) * (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
-        defender.GetComponent<MovementFSM>().Stop(0.2f);
-        defender.rigidbody.isKinematic = false;
-        defender.rigidbody.AddForce(relativeVector.normalized * force, ForceMode.Impulse);
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RemovePhysics(defender.rigidbody, 0.2f);
-
+        Vector3 relativeVector = (attacker.transform.position - defender.transform.position).normalized;
+        float normalizedMagnitude = Vector3.Distance(defender.transform.position, attacker.transform.position);
+        float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
+        defender.GetComponent<MovementFSM>().AddForce(relativeVector * force * 2, 0.1f, ForceMode.Impulse);
     }
 }
