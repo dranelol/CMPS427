@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 	// Use this for initialization
 	public void Awake () 
     {
-        //EquipmentFactory = new equipmentFactory();
+        EquipmentFactory = new equipmentFactory();
 
         #region ability initialization
         Abilities = new Dictionary<string, Ability>();
