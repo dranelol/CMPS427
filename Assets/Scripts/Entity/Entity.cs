@@ -28,12 +28,10 @@ public class Entity : MonoBehaviour
         Debug.Log(currentAtt.ToString());
         equipAtt = new Attributes();
         buffAtt = new Attributes();
-
+		
         currentAtt.Power = 100;
-
         level = 1;
-        maxHP = currentHP = 50f;
-
+        maxHP = currentHP = 500;
     }
     /// <summary>
     /// Creates the entity with a given set of base attributes,

@@ -19,12 +19,25 @@ public class Fusrodah : Ability
     {
         List<GameObject> attacked = OnAttack(attacker.transform, isPlayer);
 
-        Debug.Log(attacked.Count);
-
-        foreach (GameObject enemy in attacked)
+        if (isPlayer == true)
         {
-            if (enemy.GetComponent<AIController>().IsResetting() == false
-                && enemy.GetComponent<AIController>().IsDead() == false)
+
+            foreach (GameObject enemy in attacked)
+            {
+                if (enemy.GetComponent<AIController>().IsResetting() == false
+                    && enemy.GetComponent<AIController>().IsDead() == false)
+                {
+                    DoDamage(attacker, enemy, isPlayer);
+
+                    // this is a physics attack, so do physics applies
+                    DoPhysics(attacker, enemy);
+                }
+            }
+        }
+
+        else
+        {
+            foreach (GameObject enemy in attacked)
             {
                 DoDamage(attacker, enemy, isPlayer);
 
@@ -48,7 +61,17 @@ public class Fusrodah : Ability
         int enemyMask = LayerMask.NameToLayer("Enemy");
         int playerMask = LayerMask.NameToLayer("Player");
 
-        Collider[] colliders = Physics.OverlapSphere(attacker.position, range, 1 << enemyMask);
+        Collider[] colliders;
+
+        if (isPlayer == true)
+        {
+            colliders = Physics.OverlapSphere(attacker.position, range, 1 << enemyMask);
+        }
+
+        else
+        {
+            colliders = Physics.OverlapSphere(attacker.position, range, 1 << playerMask);
+        }
 
         foreach (Collider collider in colliders)
         {
@@ -63,22 +86,47 @@ public class Fusrodah : Ability
             if (Vector3.Angle(forward, enemyVector) < angle)
             {
                 RaycastHit hit = new RaycastHit();
-                Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+                
 
-                // try to cast a ray from the enemy to the player
-                bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, 1 << playerMask);
-
-                if (!rayCastHit)
+                if (isPlayer == true)
                 {
+                    // try to cast a ray from the enemy to the player
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
 
+                    if (!rayCastHit)
+                    {
+
+                    }
+                    // if the ray hits, the enemy is in line of sight of the player, this is a successful attack hit
+                    else
+                    {
+                        if (hit.collider.gameObject.tag == "Player")
+                        {
+                            Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                            Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+                            enemiesToAttack.Add(collider.gameObject);
+                        }
+                    }
                 }
-                // if the ray hits, the enemy is in line of sight of the player, this is a successful attack hit
+
                 else
                 {
-                    if (hit.collider.gameObject.tag == "Player")
+                    // try to cast a ray from the player to the enemy
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
+
+                    if (!rayCastHit)
                     {
-                        enemiesToAttack.Add(collider.gameObject);
+
+                    }
+                    // if the ray hits, the player is in line of sight of the enemy, this is a successful attack hit
+                    else
+                    {
+                        if (hit.collider.gameObject.tag == "Enemy")
+                        {
+                            Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                            Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+                            enemiesToAttack.Add(collider.gameObject);
+                        }
                     }
                 }
             }
@@ -104,7 +152,10 @@ public class Fusrodah : Ability
 
         float ratio = (defenderEntity.currentHP / defenderEntity.maxHP);
 
-        defender.renderer.material.color = new Color(1.0f, ratio, ratio);
+        if (isPlayer == true)
+        {
+            defender.renderer.material.color = new Color(1.0f, ratio, ratio);
+        }
     }
 
     /// <summary>
@@ -114,12 +165,11 @@ public class Fusrodah : Ability
     /// <param name="defender">Gameobject affected by the attack</param>
     public override void DoPhysics(GameObject attacker, GameObject defender)
     {
-        Debug.Log("fus ro physics");
         Vector3 relativeVector = (defender.transform.position - attacker.transform.position).normalized;
-        float normalizedMagnitude = 5f - Vector3.Distance(defender.transform.position, attacker.transform.position);
+        float normalizedMagnitude = 6f - Vector3.Distance(defender.transform.position, attacker.transform.position);
         float force = (normalizedMagnitude / (Mathf.Pow(0.35f, 2)));
         //defender.GetComponent<MovementFSM>().Stop(0.17f);
 
-        defender.GetComponent<MovementFSM>().AddForce(force * relativeVector, 0.1f, ForceMode.Impulse);
+        defender.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force * 2, 0.2f, ForceMode.Impulse);
     }
 }
