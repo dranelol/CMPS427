@@ -135,62 +135,90 @@ public class PlayerController : MonoBehaviour {
 
         }
 
+
+
         #region new key-bound attacks
 
 
 
 
         #region ability 1
+
+        if (entity.currentAbilityCoolDowns[2] > Time.time)
+        {
+            float timeLeft = entity.currentAbilityCoolDowns[2] - Time.time;
+            Debug.Log("Cooldown Left: "+ timeLeft.ToString());
+        }
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            if (combatFSM.IsIdle() == true)
+            if (combatFSM.IsIdle() == true && entity.currentAbilityCoolDowns[2] <= Time.time)
             {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);                
                 Debug.Log(entity.ToString());
                 Debug.Log(entity.abilities[2].ToString());
                 entity.abilities[2].AttackHandler(gameObject, true);
+                entity.currentAbilityCoolDowns[2] = Time.time + entity.abilities[2].Cooldown;
             }
         }
 
         #endregion
 
         #region ability 2
+
+        if (entity.currentAbilityCoolDowns[3] > Time.time)
+        {
+            float timeLeft = entity.currentAbilityCoolDowns[3] - Time.time;
+            Debug.Log("Cooldown Left: " + timeLeft.ToString());
+        }
+
         if (Input.GetKeyDown(KeyCode.W))
         {
 
-            if (combatFSM.IsIdle() == true)
+            if (combatFSM.IsIdle() == true && entity.currentAbilityCoolDowns[3] <= Time.time)
             {
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
                 entity.abilities[3].AttackHandler(gameObject, true);
+                entity.currentAbilityCoolDowns[3] = Time.time + entity.abilities[3].Cooldown;
 
             }
         }
         #endregion
 
         #region ability 3
-
+        if (entity.currentAbilityCoolDowns[4] > Time.time)
+        {
+            float timeLeft = entity.currentAbilityCoolDowns[4] - Time.time;
+            Debug.Log("Cooldown Left: " + timeLeft.ToString());
+        }
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (combatFSM.IsIdle() == true)
+            if (combatFSM.IsIdle() == true && entity.currentAbilityCoolDowns[4] <= Time.time)
             {
                 Debug.Log(transform.position);
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 entity.abilities[4].AttackHandler(gameObject, true);
+                entity.currentAbilityCoolDowns[4] = Time.time + entity.abilities[4].Cooldown;
 
             }
         }
         #endregion
 
         #region ability 4
-
+        if (entity.currentAbilityCoolDowns[5] > Time.time)
+        {
+            float timeLeft = entity.currentAbilityCoolDowns[5] - Time.time;
+            Debug.Log("Cooldown Left: " + timeLeft.ToString());
+        }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            if (combatFSM.IsIdle() == true)
+            if (combatFSM.IsIdle() == true && entity.currentAbilityCoolDowns[5] <= Time.time)
             {
 
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 entity.abilities[5].AttackHandler(gameObject, true);
+                entity.currentAbilityCoolDowns[5] = Time.time + entity.abilities[5].Cooldown;
 
             }
         }

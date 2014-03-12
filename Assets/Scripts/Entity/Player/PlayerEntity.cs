@@ -26,8 +26,8 @@ public class PlayerEntity : Entity {
 	// Update is called once per frame
 	public void Update () 
     {
-        abilities[4].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
-        abilities[5].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
+        //abilities[4].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
+        //abilities[5].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
 
         // update these on-demand instead of every update
 
