@@ -26,6 +26,9 @@ public class PlayerEntity : Entity {
 	// Update is called once per frame
 	public void Update () 
     {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        Debug.DrawRay(ray.origin, ray.direction, Color.yellow);
         //abilities[4].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
         //abilities[5].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
 
