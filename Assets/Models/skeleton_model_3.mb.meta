@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e42ebff4789fc7b43b3be64ab75cc1a2
+guid: 5feb424d974efc04daf6a8c33ec91df5
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
@@ -527,16 +527,6 @@ ModelImporter:
     4300046: L_Arm_Socket1
     4300048: L_Arm_Forearm1
     4300050: L_Hand1
-    6400000: L_backCollar
-    6400002: L_CollarBone
-    6400004: L_NeckCollar
-    6400006: L_ShoulderBlade
-    6400008: L_Socket
-    6400010: R_backCollar
-    6400012: R_CollarBone
-    6400014: R_NeckCollar
-    6400016: R_ShoulderBlade
-    6400018: R_Socket
     9500000: //RootNode
     13700000: Chest
     13700002: Jaw
@@ -573,8 +563,8 @@ ModelImporter:
   meshes:
     lODScreenPercentages: []
     globalScale: 1
-    meshCompression: 3
-    addColliders: 1
+    meshCompression: 0
+    addColliders: 0
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
