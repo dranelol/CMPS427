@@ -19,6 +19,12 @@ public class PlayerController : MonoBehaviour {
     public MovementFSM moveFSM;
     public CombatFSM combatFSM;
 
+    private Rect CDBox1;
+    private Rect CDBox2;
+    private Rect CDBox3;
+    private Rect CDBox4;
+    private GUIStyle CDBox;
+
 	// Use this for initialization
 	void Start () {
 		targetPosition = Vector3.zero;
@@ -31,6 +37,14 @@ public class PlayerController : MonoBehaviour {
         entity = GetComponent<PlayerEntity>();
         moveFSM = GetComponent<MovementFSM>();
         combatFSM = GetComponent<CombatFSM>();
+
+
+        CDBox1 = new Rect(Screen.width * .5f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
+        //CDBox2 = new Rect(Screen.width * .5f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
+        //CDBox3 = new Rect(Screen.width * .5f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
+        //CDBox4 = new Rect(Screen.width * .5f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
+
+        CDBox.normal.textColor = Color.white;
 	}
 	
 	// Update is called once per frame
@@ -147,8 +161,10 @@ public class PlayerController : MonoBehaviour {
         if (entity.currentAbilityCoolDowns[2] > Time.time)
         {
             float timeLeft = entity.currentAbilityCoolDowns[2] - Time.time;
-            Debug.Log("Cooldown Left: "+ timeLeft.ToString());
+            //Debug.Log("Cooldown Left: " + timeLeft.ToString());
         }
+
+        
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -276,5 +292,29 @@ public class PlayerController : MonoBehaviour {
 
 
         #endregion
+
+
+        
     }
+
+    #region ability cooldown GUI
+
+    void OnGUI()
+    {
+
+        float timeLeft;
+
+        if (entity.currentAbilityCoolDowns[2] > Time.time)
+        {
+            timeLeft = entity.currentAbilityCoolDowns[2] - Time.time;
+        }
+        else
+        {
+            timeLeft = 0;
+        }
+        
+        GUI.Label(CDBox1, "Cleave CD Remaining: " + timeLeft.ToString() + "s", CDBox);
+    }
+
+    #endregion
 }
