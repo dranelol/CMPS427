@@ -7,7 +7,6 @@ public class PlayerEntity : Entity {
 	// Use this for initialization
     public void Awake()
     {
-        
         base.Awake();
         maxHP = 3000;
         currentHP = 3000;
@@ -17,7 +16,6 @@ public class PlayerEntity : Entity {
 	public void Start () 
     {
         base.Start();
-        
         abilities[2] = GameManager.Abilities["cleave"];
         abilities[3] = GameManager.Abilities["fusrodah"];
         abilities[4] = GameManager.Abilities["hadouken"];

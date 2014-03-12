@@ -41,7 +41,6 @@ public class PlayerController : MonoBehaviour {
 			Vector3 newVector = (transform.position + agent.velocity.normalized);
 			Vector3 target = newVector - transform.position;
 			
-			
 			//	Quaternion quat = Quaternion.LookRotation(target);
 			//  transform.rotation = quat;
 			
@@ -199,7 +198,6 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.A))
         {
             // small sword
-
 
             if (entity.HasEquipped(equipSlots.slots.Main))
             {
