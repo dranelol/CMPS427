@@ -11,22 +11,27 @@ public class PlayerEntity : Entity
         base.Awake();
         maxHP = 3000;
         currentHP = 3000;
+
+
     }
 
 
 	public void Start () 
     {
         base.Start();
-        abilities[2] = GameManager.Abilities["cleave"];
-        abilities[3] = GameManager.Abilities["fusrodah"];
-        abilities[4] = GameManager.Abilities["hadouken"];
-        abilities[5] = GameManager.Abilities["deathgrip"];
 
+        abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
+        abilityManager.AddAbility(GameManager.Abilities["fusrodah"], 3);
+        abilityManager.AddAbility(GameManager.Abilities["hadouken"], 4);
+        abilityManager.AddAbility(GameManager.Abilities["deathgrip"], 5);
+
+        
 	}
 	
 	// Update is called once per frame
 	public void Update () 
     {
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit target;
         Physics.Raycast(ray, out target, Mathf.Infinity);
@@ -34,6 +39,7 @@ public class PlayerEntity : Entity
         Vector3 normalizedVectorToMouse = new Vector3(vectorToMouse.x, gameObject.transform.forward.y, vectorToMouse.z);
         Debug.DrawRay(gameObject.transform.position, normalizedVectorToMouse.normalized * 5.0f, Color.yellow);
         //Debug.Log(ray.direction);
+
 
         //abilities[4].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
         //abilities[5].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);

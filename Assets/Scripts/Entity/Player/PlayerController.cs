@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour {
     public MovementFSM moveFSM;
     public CombatFSM combatFSM;
 
+    
+
 	// Use this for initialization
 	void Start () {
 		targetPosition = Vector3.zero;
@@ -31,7 +33,8 @@ public class PlayerController : MonoBehaviour {
         entity = GetComponent<PlayerEntity>();
         moveFSM = GetComponent<MovementFSM>();
         combatFSM = GetComponent<CombatFSM>();
-	}
+
+    }
 	
 	// Update is called once per frame
 	void FixedUpdate()
@@ -134,63 +137,70 @@ public class PlayerController : MonoBehaviour {
 
         }
 
+
+
         #region new key-bound attacks
 
 
 
 
         #region ability 1
-        
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            if (combatFSM.IsIdle() == true)
+            if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[2] <= Time.time)
             {
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-
-                Debug.Log(entity.ToString());
-                Debug.Log(entity.abilities[2].ToString());
-                entity.abilities[2].AttackHandler(gameObject, true);
+                entity.abilityManager.abilities[2].AttackHandler(gameObject, true);
+                entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
             }
         }
 
         #endregion
 
         #region ability 2
+
+        
+
         if (Input.GetKeyDown(KeyCode.W))
         {
 
-            if (combatFSM.IsIdle() == true)
+            if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[3] <= Time.time)
             {
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                entity.abilities[3].AttackHandler(gameObject, true);
+
+                entity.abilityManager.abilities[3].AttackHandler(gameObject, true);
+                entity.abilityManager.activeCoolDowns[3] = Time.time + entity.abilityManager.abilities[3].Cooldown;
 
             }
         }
         #endregion
 
         #region ability 3
-
+        
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (combatFSM.IsIdle() == true)
+            if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[4] <= Time.time)
             {
                 Debug.Log(transform.position);
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                entity.abilities[4].AttackHandler(gameObject, true);
+                entity.abilityManager.abilities[4].AttackHandler(gameObject, true);
+                entity.abilityManager.activeCoolDowns[4] = Time.time + entity.abilityManager.abilities[4].Cooldown;
 
             }
         }
         #endregion
 
         #region ability 4
-
+        
         if (Input.GetKeyDown(KeyCode.R))
         {
-            if (combatFSM.IsIdle() == true)
+            if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[5] <= Time.time)
             {
 
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                entity.abilities[5].AttackHandler(gameObject, true);
+                entity.abilityManager.abilities[5].AttackHandler(gameObject, true);
+                entity.abilityManager.activeCoolDowns[5] = Time.time + entity.abilityManager.abilities[5].Cooldown;
 
             }
         }
@@ -248,5 +258,10 @@ public class PlayerController : MonoBehaviour {
 
 
         #endregion
+
+
+        
     }
+
+    
 }
