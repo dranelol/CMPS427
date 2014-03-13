@@ -19,11 +19,7 @@ public class PlayerController : MonoBehaviour {
     public MovementFSM moveFSM;
     public CombatFSM combatFSM;
 
-    private Rect CDBox1;
-    private Rect CDBox2;
-    private Rect CDBox3;
-    private Rect CDBox4;
-    private GUIStyle CDBox;
+    
 
 	// Use this for initialization
 	void Start () {
@@ -37,19 +33,6 @@ public class PlayerController : MonoBehaviour {
         entity = GetComponent<PlayerEntity>();
         moveFSM = GetComponent<MovementFSM>();
         combatFSM = GetComponent<CombatFSM>();
-
-
-        #region Cooldown GUI init
-
-        CDBox1 = new Rect(Screen.width * .65f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
-        CDBox2 = new Rect(Screen.width * .65f, Screen.height * .925f, Screen.width * .45f, Screen.height * .1f);
-        CDBox3 = new Rect(Screen.width * .65f, Screen.height * .950f, Screen.width * .45f, Screen.height * .1f);
-        CDBox4 = new Rect(Screen.width * .65f, Screen.height * .975f, Screen.width * .45f, Screen.height * .1f);
-        CDBox = new GUIStyle();
-
-        #endregion
-
-
 
     }
 	
@@ -164,21 +147,17 @@ public class PlayerController : MonoBehaviour {
 
         #region ability 1
 
-        if (entity.currentAbilityCoolDowns[2] > Time.time)
-        {
-            float timeLeft = entity.currentAbilityCoolDowns[2] - Time.time;
-            //Debug.Log("Cooldown Left: " + timeLeft.ToString());
-        }
+        
 
         
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            if (combatFSM.IsIdle() == true && entity.currentAbilityCoolDowns[2] <= Time.time)
+            if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[2] <= Time.time)
             {
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                entity.abilities[2].AttackHandler(gameObject, true);
-                entity.currentAbilityCoolDowns[2] = Time.time + entity.abilities[2].Cooldown;
+                entity.abilityManager.abilities[2].AttackHandler(gameObject, true);
+                entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
             }
         }
 
@@ -186,59 +165,47 @@ public class PlayerController : MonoBehaviour {
 
         #region ability 2
 
-        if (entity.currentAbilityCoolDowns[3] > Time.time)
-        {
-            float timeLeft = entity.currentAbilityCoolDowns[3] - Time.time;
-            //Debug.Log("Cooldown Left: " + timeLeft.ToString());
-        }
+        
 
         if (Input.GetKeyDown(KeyCode.W))
         {
 
-            if (combatFSM.IsIdle() == true && entity.currentAbilityCoolDowns[3] <= Time.time)
+            if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[3] <= Time.time)
             {
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
-                entity.abilities[3].AttackHandler(gameObject, true);
-                entity.currentAbilityCoolDowns[3] = Time.time + entity.abilities[3].Cooldown;
+                entity.abilityManager.abilities[3].AttackHandler(gameObject, true);
+                entity.abilityManager.activeCoolDowns[3] = Time.time + entity.abilityManager.abilities[3].Cooldown;
 
             }
         }
         #endregion
 
         #region ability 3
-        if (entity.currentAbilityCoolDowns[4] > Time.time)
-        {
-            float timeLeft = entity.currentAbilityCoolDowns[4] - Time.time;
-            //Debug.Log("Cooldown Left: " + timeLeft.ToString());
-        }
+        
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (combatFSM.IsIdle() == true && entity.currentAbilityCoolDowns[4] <= Time.time)
+            if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[4] <= Time.time)
             {
                 Debug.Log(transform.position);
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                entity.abilities[4].AttackHandler(gameObject, true);
-                entity.currentAbilityCoolDowns[4] = Time.time + entity.abilities[4].Cooldown;
+                entity.abilityManager.abilities[4].AttackHandler(gameObject, true);
+                entity.abilityManager.activeCoolDowns[4] = Time.time + entity.abilityManager.abilities[4].Cooldown;
 
             }
         }
         #endregion
 
         #region ability 4
-        if (entity.currentAbilityCoolDowns[5] > Time.time)
-        {
-            float timeLeft = entity.currentAbilityCoolDowns[5] - Time.time;
-            //Debug.Log("Cooldown Left: " + timeLeft.ToString());
-        }
+        
         if (Input.GetKeyDown(KeyCode.R))
         {
-            if (combatFSM.IsIdle() == true && entity.currentAbilityCoolDowns[5] <= Time.time)
+            if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[5] <= Time.time)
             {
 
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                entity.abilities[5].AttackHandler(gameObject, true);
-                entity.currentAbilityCoolDowns[5] = Time.time + entity.abilities[5].Cooldown;
+                entity.abilityManager.abilities[5].AttackHandler(gameObject, true);
+                entity.abilityManager.activeCoolDowns[5] = Time.time + entity.abilityManager.abilities[5].Cooldown;
 
             }
         }
@@ -301,61 +268,5 @@ public class PlayerController : MonoBehaviour {
         
     }
 
-    #region ability cooldown GUI
-
-    void OnGUI()
-    {
-
-        float timeLeft = 0;
-
-        CDBox.normal.textColor = Color.white;
-
-        if (entity.currentAbilityCoolDowns[2] > Time.time)
-        {
-            timeLeft = entity.currentAbilityCoolDowns[2] - Time.time;
-        }
-        else
-        {
-            timeLeft = 0;
-        }
-
-        GUI.Label(CDBox1, "Cleave CD Remaining: " + timeLeft.ToString("F") + "s", CDBox);
-
-        if (entity.currentAbilityCoolDowns[3] > Time.time)
-        {
-            timeLeft = entity.currentAbilityCoolDowns[3] - Time.time;
-        }
-        else
-        {
-            timeLeft = 0;
-        }
-
-        GUI.Label(CDBox2, "Fus Ro Dah CD Remaining: " + timeLeft.ToString("F") + "s", CDBox);
-
-        if (entity.currentAbilityCoolDowns[4] > Time.time)
-        {
-            timeLeft = entity.currentAbilityCoolDowns[4] - Time.time;
-        }
-        else
-        {
-            timeLeft = 0;
-        }
-
-        GUI.Label(CDBox3, "Hadouken CD Remaining: " + timeLeft.ToString("F") + "s", CDBox);
-
-        if (entity.currentAbilityCoolDowns[5] > Time.time)
-        {
-            timeLeft = entity.currentAbilityCoolDowns[5] - Time.time;
-        }
-        else
-        {
-            timeLeft = 0;
-        }
-
-
-
-        GUI.Label(CDBox4, "Death Grip CD Remaining: " + timeLeft.ToString("F") + "s", CDBox);
-    }
-
-    #endregion
+    
 }

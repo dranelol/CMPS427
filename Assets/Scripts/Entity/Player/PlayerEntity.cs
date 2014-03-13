@@ -10,17 +10,19 @@ public class PlayerEntity : Entity {
         base.Awake();
         maxHP = 3000;
         currentHP = 3000;
+
+
     }
 
 
 	public void Start () 
     {
         base.Start();
-        abilities[2] = GameManager.Abilities["cleave"];
-        abilities[3] = GameManager.Abilities["fusrodah"];
-        abilities[4] = GameManager.Abilities["hadouken"];
-        abilities[5] = GameManager.Abilities["deathgrip"];
 
+        abilityManager.abilities[2] = GameManager.Abilities["cleave"];
+        abilityManager.abilities[3] = GameManager.Abilities["fusrodah"];
+        abilityManager.abilities[4] = GameManager.Abilities["hadouken"];
+        abilityManager.abilities[5] = GameManager.Abilities["deathgrip"];
 	}
 	
 	// Update is called once per frame

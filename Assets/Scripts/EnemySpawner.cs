@@ -115,8 +115,8 @@ public class EnemySpawner : MonoBehaviour
 
             newEnemy.transform.GetChild(0).gameObject.AddComponent<AggroRadius>();
             newEnemy.AddComponent<AIController>();
-            newEnemy.GetComponent<Entity>().abilities[0] = GameManager.Abilities["cleave"];
-            newEnemy.GetComponent<Entity>().abilities[1] = GameManager.Abilities["hadouken"];
+            newEnemy.GetComponent<Entity>().abilityManager.abilities[0] = GameManager.Abilities["cleave"];
+            newEnemy.GetComponent<Entity>().abilityManager.abilities[1] = GameManager.Abilities["hadouken"];
 
             
         }

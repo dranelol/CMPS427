@@ -10,21 +10,14 @@ public class Entity : MonoBehaviour
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
 
-    public List<Ability> abilities;
-    public List<float> currentAbilityCoolDowns;
+    public AbilityManager abilityManager;
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
 
 
     public void Awake()
     {
-        abilities = new List<Ability>(6);
-        currentAbilityCoolDowns = new List<float>(6);
 
-        for (int i = 0; i < abilities.Capacity; i++)
-        {
-            abilities.Add(null);
-            currentAbilityCoolDowns.Add(0.0f);
-        }
+        abilityManager = gameObject.GetComponent<AbilityManager>();
 
         currentAtt = new Attributes();
         Debug.Log(currentAtt.ToString());
