@@ -40,10 +40,7 @@ public class PlayerController : MonoBehaviour {
 		{
 			Vector3 newVector = (transform.position + agent.velocity.normalized);
 			Vector3 target = newVector - transform.position;
-			
-			//	Quaternion quat = Quaternion.LookRotation(target);
-			//  transform.rotation = quat;
-			
+
 			Vector3 tempRotation = transform.rotation.eulerAngles ;
 			tempRotation.y = Mathf.LerpAngle(transform.rotation.eulerAngles.y,  Quaternion.LookRotation(target).eulerAngles.y,Time.deltaTime * RotationSpeed);
 			transform.rotation = Quaternion.Euler(tempRotation);
@@ -58,10 +55,9 @@ public class PlayerController : MonoBehaviour {
         //Debug.DrawRay(transform.position, Rotations.RotateAboutY(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f), 22.5f));
         
         // if our agent actually has a path to move to
-        
-
         if (agent.hasPath == true)
         {
+            /*
             // find the next steering target and his current position, without caring about y-axis
             Vector3 steeringTarget = new Vector3(agent.steeringTarget.x, 0, agent.steeringTarget.z);
             Vector3 playerPosition = new Vector3(transform.position.x, 0, transform.position.z);
@@ -71,6 +67,7 @@ public class PlayerController : MonoBehaviour {
 
             //apply quaternion to the player's rotation
             //transform.rotation = quat;
+            */
         }
         
         if (Vector3.Distance(transform.position, agent.destination) < 1.0f)
@@ -122,8 +119,6 @@ public class PlayerController : MonoBehaviour {
 
                 else
                 {
-
-
                     // Otherwise, move towards the point of collision.
                     targetPosition = Vector3.zero;
                     moveFSM.SetPath(target.point);
@@ -134,9 +129,7 @@ public class PlayerController : MonoBehaviour {
 
         }
 
-        #region new key-bound attacks
-
-
+        #region abilities
 
 
         #region ability 1

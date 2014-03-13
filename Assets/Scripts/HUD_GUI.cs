@@ -41,6 +41,7 @@ public class HUD_GUI : MonoBehaviour {
     public Rect InfoBox2;
 
     public Entity player;
+    
 
 	public float health = 0.0f;
 	void Start () {
@@ -147,7 +148,7 @@ public class HUD_GUI : MonoBehaviour {
                           + "E = Hadouken \n"
                           + "R = Deathgrip \n";
 
-        string version = "Week5v1";
+        string version = "Week6v1";
 
         GUI.Label(InfoBox1, attackList, infoBoxStyle);
         GUI.Label(InfoBox2, version, infoBoxStyle);
