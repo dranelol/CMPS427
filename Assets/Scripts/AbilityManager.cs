@@ -6,6 +6,7 @@ public class AbilityManager : MonoBehaviour
 {
     public List<Ability> abilities;
     public List<float> activeCoolDowns;
+    private Dictionary<int, List<Ability>> entityToAbilities;
 
     private float timeLeft;
 
@@ -44,7 +45,7 @@ public class AbilityManager : MonoBehaviour
 
 	void Start () 
     {
-	
+	    
 	}
 	
 	// Update is called once per frame
