@@ -204,7 +204,12 @@ public class Fusrodah : Ability
 
         yield return new WaitForSeconds(time);
 
-        GameObject.Destroy(particles);
+        ParticleSystem[] particleSystems = source.GetComponents<ParticleSystem>();
+
+        foreach (ParticleSystem particle in particleSystems)
+        {
+            particle.Stop();
+        }
         
         yield return null;
     }

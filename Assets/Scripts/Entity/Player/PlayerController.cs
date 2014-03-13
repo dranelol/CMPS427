@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour {
     public MovementFSM moveFSM;
     public CombatFSM combatFSM;
 
+    public GameObject fusRoDahParticles;
+
 	// Use this for initialization
 	void Start () {
 		targetPosition = Vector3.zero;
@@ -155,7 +157,7 @@ public class PlayerController : MonoBehaviour {
             if (combatFSM.IsIdle() == true)
             {
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                //entity.abilities[3].AttackHandler(gameObject, true);
+                entity.abilities[3].AttackHandler(gameObject, true, fusRoDahParticles);
 
             }
         }
