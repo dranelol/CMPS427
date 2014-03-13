@@ -99,7 +99,7 @@ public abstract class Ability
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <param name="defender">The gameobject defending against the attack</param>
-    public abstract void AttackHandler(GameObject attacker, bool isPlayer);
+    public abstract void AttackHandler(GameObject attacker, bool isPlayer, GameObject particleAnimation);
 
     /// <summary>
     /// Figure out who will be affected by this attack
@@ -125,8 +125,17 @@ public abstract class Ability
     public virtual void DoPhysics(GameObject attacker, GameObject defender)
     {
     }
+    
 
-
+    /// <summary>
+    /// Certain attacks have an animation associated with them; this resolves those effects
+    /// </summary>
+    /// <param name="attacker">Gameobject doing the attacking</param>
+    /// <param name="defender">Gameobject affected by the attack; default null if the attack only has an animation for the attacker</param>
+    public virtual IEnumerator DoAnimation(GameObject attacker, GameObject source, float time, GameObject defender = null)
+    {
+        yield return null;
+    }
     
 }
 

@@ -142,7 +142,7 @@ public class PlayerController : MonoBehaviour {
 
                 Debug.Log(entity.ToString());
                 Debug.Log(entity.abilities[2].ToString());
-                entity.abilities[2].AttackHandler(gameObject, true);
+                //entity.abilities[2].AttackHandler(gameObject, true);
             }
         }
 
@@ -155,7 +155,7 @@ public class PlayerController : MonoBehaviour {
             if (combatFSM.IsIdle() == true)
             {
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                entity.abilities[3].AttackHandler(gameObject, true);
+                //entity.abilities[3].AttackHandler(gameObject, true);
 
             }
         }
@@ -169,7 +169,7 @@ public class PlayerController : MonoBehaviour {
             {
                 Debug.Log(transform.position);
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                entity.abilities[4].AttackHandler(gameObject, true);
+                //entity.abilities[4].AttackHandler(gameObject, true);
 
             }
         }
@@ -183,7 +183,7 @@ public class PlayerController : MonoBehaviour {
             {
 
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                entity.abilities[5].AttackHandler(gameObject, true);
+                //entity.abilities[5].AttackHandler(gameObject, true);
 
             }
         }

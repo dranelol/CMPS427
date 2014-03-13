@@ -131,7 +131,7 @@ public class AIPursuit : StateMachine
         {
             combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
             Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
-            entity.abilities[0].AttackHandler(gameObject, false);
+            //entity.abilities[0].AttackHandler(gameObject, false);
             /*
             _abilityList[0].AttackHandler(gameObject, false);
             _abilityList.OrderBy(Ability => Ability.Cooldown).ThenBy(Ability => Ability.DamageMod); Use this later */

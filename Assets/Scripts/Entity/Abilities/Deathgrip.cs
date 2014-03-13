@@ -15,7 +15,7 @@ public class Deathgrip : Ability
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <param name="defender">The gameobject defending against the attack</param>
-    public override void AttackHandler(GameObject attacker, bool isPlayer)
+    public override void AttackHandler(GameObject attacker, bool isPlayer, GameObject particleAnimation)
     {
         List<GameObject> attacked = OnAttack(attacker.transform, isPlayer);
 
@@ -186,4 +186,5 @@ public class Deathgrip : Ability
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
         defender.GetComponent<MovementFSM>().AddForce(relativeVector * force * 2, 0.1f, ForceMode.Impulse);
     }
+
 }

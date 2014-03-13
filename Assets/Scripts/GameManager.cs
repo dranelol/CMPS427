@@ -45,4 +45,23 @@ public class GameManager : MonoBehaviour
 
         yield break;
     }
+    /*
+    IEnumerator runParticleSystemForSeconds(Transform source, GameObject particleSystem, float time)
+    {
+        GameObject particles = (GameObject)GameObject.Instantiate(particleSystem, source.position, source.rotation);
+
+        particles.transform.parent = source;
+
+        yield return new WaitForSeconds(time);
+
+        Destroy(particles);
+
+        yield return null;
+    }
+    */
+
+    public void RunParticleSystem(IEnumerator coroutine)
+    {
+        StartCoroutine(coroutine);
+    }
 }

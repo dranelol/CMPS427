@@ -15,7 +15,7 @@ public class Cleave : Ability
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <param name="defender">The gameobject defending against the attack</param>
-    public override void AttackHandler(GameObject attacker, bool isPlayer)
+    public override void AttackHandler(GameObject attacker, bool isPlayer, GameObject particleAnimation)
     {
         List<GameObject> attacked = OnAttack(attacker.transform, isPlayer);
 
