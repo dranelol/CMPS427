@@ -39,18 +39,19 @@ public class PlayerController : MonoBehaviour {
         combatFSM = GetComponent<CombatFSM>();
 
 
+        #region Cooldown GUI init
+
         CDBox1 = new Rect(Screen.width * .65f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
         CDBox2 = new Rect(Screen.width * .65f, Screen.height * .925f, Screen.width * .45f, Screen.height * .1f);
         CDBox3 = new Rect(Screen.width * .65f, Screen.height * .950f, Screen.width * .45f, Screen.height * .1f);
         CDBox4 = new Rect(Screen.width * .65f, Screen.height * .975f, Screen.width * .45f, Screen.height * .1f);
-
-
-
         CDBox = new GUIStyle();
 
-        
+        #endregion
 
-	}
+
+
+    }
 	
 	// Update is called once per frame
 	void FixedUpdate()
@@ -175,9 +176,7 @@ public class PlayerController : MonoBehaviour {
         {
             if (combatFSM.IsIdle() == true && entity.currentAbilityCoolDowns[2] <= Time.time)
             {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);                
-                Debug.Log(entity.ToString());
-                Debug.Log(entity.abilities[2].ToString());
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 entity.abilities[2].AttackHandler(gameObject, true);
                 entity.currentAbilityCoolDowns[2] = Time.time + entity.abilities[2].Cooldown;
             }
