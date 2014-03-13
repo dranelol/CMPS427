@@ -44,7 +44,6 @@ public class PlayerController : MonoBehaviour {
 			Vector3 newVector = (transform.position + agent.velocity.normalized);
 			Vector3 target = newVector - transform.position;
 			
-			
 			//	Quaternion quat = Quaternion.LookRotation(target);
 			//  transform.rotation = quat;
 			
