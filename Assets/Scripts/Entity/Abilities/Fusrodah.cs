@@ -210,7 +210,8 @@ public class Fusrodah : Ability
         {
             particle.Stop();
         }
-        
+
+        GameObject.Destroy(particles);
         yield return null;
     }
 
