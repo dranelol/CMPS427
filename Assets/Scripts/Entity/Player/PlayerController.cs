@@ -146,10 +146,6 @@ public class PlayerController : MonoBehaviour {
 
         #region ability 1
 
-        
-
-        
-
         if (Input.GetKeyDown(KeyCode.Q))
         {
             if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[2] <= Time.time)
