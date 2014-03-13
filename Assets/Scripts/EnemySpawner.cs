@@ -21,8 +21,7 @@ public class EnemySpawner : MonoBehaviour
 
     private float spawnCounter = 0;
 
-    //IGNORE ME
-    private bool yolo = true;
+    
 
     void Awake()
     {
@@ -106,7 +105,7 @@ public class EnemySpawner : MonoBehaviour
 
         NavMeshHit meshLocation;
 
-        if (NavMesh.SamplePosition(newPosition, out meshLocation, SPAWN_RADIUS_MAX, 1 << LayerMask.NameToLayer("Default")) && yolo == true)
+        if (NavMesh.SamplePosition(newPosition, out meshLocation, SPAWN_RADIUS_MAX, 1 << LayerMask.NameToLayer("Default")))
         {
             
             GameObject newEnemy = Instantiate(enemyPrefab, meshLocation.position, Quaternion.identity) as GameObject;
@@ -119,10 +118,10 @@ public class EnemySpawner : MonoBehaviour
             newEnemy.GetComponent<Entity>().abilities[0] = GameManager.Abilities["cleave"];
             newEnemy.GetComponent<Entity>().abilities[1] = GameManager.Abilities["hadouken"];
 
-            yolo = false;
+            
         }
 
-        else if(yolo != false)
+        else
         {
             this.gameObject.SetActive(false);
 
