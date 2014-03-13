@@ -35,8 +35,11 @@ public class PlayerEntity : Entity
         Debug.DrawRay(gameObject.transform.position, normalizedVectorToMouse.normalized * 5.0f, Color.yellow);
         //Debug.Log(ray.direction);
 
-        //abilities[4].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
-        //abilities[5].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
+
+        Debug.DrawRay(ray.origin, ray.direction, Color.yellow);
+        abilities[4].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
+        abilities[5].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
+
 
         // update these on-demand instead of every update
 
