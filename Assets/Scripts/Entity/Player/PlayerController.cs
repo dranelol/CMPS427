@@ -39,12 +39,17 @@ public class PlayerController : MonoBehaviour {
         combatFSM = GetComponent<CombatFSM>();
 
 
-        CDBox1 = new Rect(Screen.width * .5f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
-        //CDBox2 = new Rect(Screen.width * .5f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
-        //CDBox3 = new Rect(Screen.width * .5f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
-        //CDBox4 = new Rect(Screen.width * .5f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
+        CDBox1 = new Rect(Screen.width * .65f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
+        CDBox2 = new Rect(Screen.width * .65f, Screen.height * .925f, Screen.width * .45f, Screen.height * .1f);
+        CDBox3 = new Rect(Screen.width * .65f, Screen.height * .950f, Screen.width * .45f, Screen.height * .1f);
+        CDBox4 = new Rect(Screen.width * .65f, Screen.height * .975f, Screen.width * .45f, Screen.height * .1f);
 
-        CDBox.normal.textColor = Color.white;
+
+
+        CDBox = new GUIStyle();
+
+        
+
 	}
 	
 	// Update is called once per frame
@@ -185,7 +190,7 @@ public class PlayerController : MonoBehaviour {
         if (entity.currentAbilityCoolDowns[3] > Time.time)
         {
             float timeLeft = entity.currentAbilityCoolDowns[3] - Time.time;
-            Debug.Log("Cooldown Left: " + timeLeft.ToString());
+            //Debug.Log("Cooldown Left: " + timeLeft.ToString());
         }
 
         if (Input.GetKeyDown(KeyCode.W))
@@ -206,7 +211,7 @@ public class PlayerController : MonoBehaviour {
         if (entity.currentAbilityCoolDowns[4] > Time.time)
         {
             float timeLeft = entity.currentAbilityCoolDowns[4] - Time.time;
-            Debug.Log("Cooldown Left: " + timeLeft.ToString());
+            //Debug.Log("Cooldown Left: " + timeLeft.ToString());
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -225,7 +230,7 @@ public class PlayerController : MonoBehaviour {
         if (entity.currentAbilityCoolDowns[5] > Time.time)
         {
             float timeLeft = entity.currentAbilityCoolDowns[5] - Time.time;
-            Debug.Log("Cooldown Left: " + timeLeft.ToString());
+            //Debug.Log("Cooldown Left: " + timeLeft.ToString());
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -302,7 +307,9 @@ public class PlayerController : MonoBehaviour {
     void OnGUI()
     {
 
-        float timeLeft;
+        float timeLeft = 0;
+
+        CDBox.normal.textColor = Color.white;
 
         if (entity.currentAbilityCoolDowns[2] > Time.time)
         {
@@ -312,8 +319,43 @@ public class PlayerController : MonoBehaviour {
         {
             timeLeft = 0;
         }
-        
-        GUI.Label(CDBox1, "Cleave CD Remaining: " + timeLeft.ToString() + "s", CDBox);
+
+        GUI.Label(CDBox1, "Cleave CD Remaining: " + timeLeft.ToString("F") + "s", CDBox);
+
+        if (entity.currentAbilityCoolDowns[3] > Time.time)
+        {
+            timeLeft = entity.currentAbilityCoolDowns[3] - Time.time;
+        }
+        else
+        {
+            timeLeft = 0;
+        }
+
+        GUI.Label(CDBox2, "Fus Ro Dah CD Remaining: " + timeLeft.ToString("F") + "s", CDBox);
+
+        if (entity.currentAbilityCoolDowns[4] > Time.time)
+        {
+            timeLeft = entity.currentAbilityCoolDowns[4] - Time.time;
+        }
+        else
+        {
+            timeLeft = 0;
+        }
+
+        GUI.Label(CDBox3, "Hadouken CD Remaining: " + timeLeft.ToString("F") + "s", CDBox);
+
+        if (entity.currentAbilityCoolDowns[5] > Time.time)
+        {
+            timeLeft = entity.currentAbilityCoolDowns[5] - Time.time;
+        }
+        else
+        {
+            timeLeft = 0;
+        }
+
+
+
+        GUI.Label(CDBox4, "Death Grip CD Remaining: " + timeLeft.ToString("F") + "s", CDBox);
     }
 
     #endregion
