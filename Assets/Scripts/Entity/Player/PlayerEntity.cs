@@ -20,10 +20,12 @@ public class PlayerEntity : Entity
     {
         base.Start();
 
-        abilityManager.abilities[2] = GameManager.Abilities["cleave"];
-        abilityManager.abilities[3] = GameManager.Abilities["fusrodah"];
-        abilityManager.abilities[4] = GameManager.Abilities["hadouken"];
-        abilityManager.abilities[5] = GameManager.Abilities["deathgrip"];
+        abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
+        abilityManager.AddAbility(GameManager.Abilities["fusrodah"], 3);
+        abilityManager.AddAbility(GameManager.Abilities["hadouken"], 4);
+        abilityManager.AddAbility(GameManager.Abilities["deathgrip"], 5);
+
+        
 	}
 	
 	// Update is called once per frame
