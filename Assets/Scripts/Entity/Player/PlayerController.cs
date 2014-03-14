@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour {
 		{
 			Vector3 newVector = (transform.position + agent.velocity.normalized);
 			Vector3 target = newVector - transform.position;
-
+                                                                                                                                                                                                                                                        //yolo swag lolololol
 			Vector3 tempRotation = transform.rotation.eulerAngles ;
 			tempRotation.y = Mathf.LerpAngle(transform.rotation.eulerAngles.y,  Quaternion.LookRotation(target).eulerAngles.y,Time.deltaTime * RotationSpeed);
 			transform.rotation = Quaternion.Euler(tempRotation);

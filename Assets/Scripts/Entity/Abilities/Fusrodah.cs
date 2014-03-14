@@ -14,7 +14,7 @@ public class Fusrodah : Ability
     /// Handler for this attack; figures out who will be attacked, and carries out everything needed for the attack to occur
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
-    /// <param name="defender">The gameobject defending against the attack</param>
+    /// <param name="defender">The gameobject defending against the attack</param>                                                  //swag
     public override void AttackHandler(GameObject attacker, bool isPlayer, GameObject particleAnimation)
     {
         List<GameObject> attacked = OnAttack(attacker.transform, isPlayer);
@@ -193,7 +193,7 @@ public class Fusrodah : Ability
 
     /// <summary>
     /// Certain attacks have an animation associated with them; this resolves those effects
-    /// </summary>
+    /// </summary>                                                                                              //yolo
     /// <param name="attacker">Gameobject doing the attacking</param>
     /// <param name="defender">Gameobject affected by the attack; default null if the attack only has an animation for the attacker</param>
     public override IEnumerator DoAnimation(GameObject attacker, GameObject source, float time, GameObject defender = null)
