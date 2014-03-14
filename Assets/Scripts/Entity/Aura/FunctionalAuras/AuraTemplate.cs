@@ -12,13 +12,13 @@ public class AuraTemplate : Aura
      * be used for anything other than outlining status effect information in one place. The base class stores properties to use
      * when referencing status effect information. Use those instead. */
 
-    private const string TEMPLATE_AURA_NAME = "name"; // Name of the status effect (must be non-empty and unique)
-    private const string TEMPLATE_AURA_DESCRIPTION = "description"; // Description of the status effect (should be non-empty)
-    private const string TEMPLATE_AURA_FLAVOR_TEXT = "..."; // Flavor text for the status effect (optional)
-    private const string TEMPLATE_AURA_ICON_TEXTURE_NAME = "default_aura_texture.png"; // The name of the texture for this aura to be displayed on the GUI.
-    private const AuraType TEMPLATE_AURA_AURATYPE = AuraType.Buff; // The type of aura, buff or debuff.
-    private const int TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS = 1; // The number of times this effect can stack. Must be between 1 and 99 (inclusive)
-    private const int TEMPLATE_AURA_DURATION = 10; // The number of seconds this aura will remain on a target. The duration is an INTEGER because 
+    internal const string TEMPLATE_AURA_NAME = "name"; // Name of the status effect (must be non-empty and unique)
+    internal const string TEMPLATE_AURA_DESCRIPTION = "description"; // Description of the status effect (should be non-empty)
+    internal const string TEMPLATE_AURA_FLAVOR_TEXT = "..."; // Flavor text for the status effect (optional)
+    internal const string TEMPLATE_AURA_ICON_TEXTURE_NAME = "default_aura_texture.png"; // The name of the texture for this aura to be displayed on the GUI.
+    internal const AuraType TEMPLATE_AURA_AURATYPE = AuraType.Buff; // The type of aura, buff or debuff.
+    internal const int TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS = 1; // The number of times this effect can stack. Must be between 1 and 99 (inclusive)
+    internal const int TEMPLATE_AURA_DURATION = 10; // The number of seconds this aura will remain on a target. The duration is an INTEGER because 
                                                    // status effects should have a finite number of seconds for the duration for simplicity.
 
     #endregion
@@ -32,7 +32,7 @@ public class AuraTemplate : Aura
     /// given name is unique.
     /// </summary>
     /// <param name="id">The unique integer ID.</param>
-    public AuraTemplate(int id)
+    protected AuraTemplate(int id)
         : base(id, TEMPLATE_AURA_NAME, TEMPLATE_AURA_DESCRIPTION, TEMPLATE_AURA_FLAVOR_TEXT, TEMPLATE_AURA_ICON_TEXTURE_NAME,
         TEMPLATE_AURA_AURATYPE, TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS, TEMPLATE_AURA_DURATION)
 

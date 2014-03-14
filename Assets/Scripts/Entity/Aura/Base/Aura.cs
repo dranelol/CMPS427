@@ -55,26 +55,20 @@ public abstract class Aura
         get { return _icon; }
     }
 
-    #endregion
-
-    #region Aura Properies
-
     private AuraType _type; // The type, debuff or buff, of this aura.
     public AuraType Type
     {
         get { return _type; }
     }
 
+    #endregion
+
+    #region Aura Properies
+
     private bool _isStaticAura; // Determines if this aura is static or timed.
     public bool IsStaticAura
     {
         get { return _isStaticAura; }
-    }
-
-    private int _timeRemaining; // The time remaining before the aura will fallout. Will be 0 if the aura is static.
-    public int TimeRemaining
-    {
-        get { return _timeRemaining; }
     }
 
     private int _duration; // The maximum amount of time remaining this aura can have.
@@ -83,16 +77,16 @@ public abstract class Aura
         get { return _duration; }
     }
 
-    private int _stackCount; // The current number of stacks of this aura the entity possesses. 
-    public int StackCount
-    {
-        get { return _stackCount; }
-    }
-
     private int _stackLimit; // The maximum number of stacks of this aura en entity may possess per caster.
     public int StackLimit
     {
         get { return _stackLimit; }
+    }
+
+    private bool _isLinked; // A boolean determining if this aura is linked to another one.
+    public bool IsLinked
+    {
+        get { return _isLinked; }
     }
 
     #endregion
@@ -117,34 +111,16 @@ public abstract class Aura
         get { return _caster; }
     }
 
-    private bool _isLinked; // A boolean determining if this aura is linked to another one.
-    public bool IsLinked
+    private int _timeRemaining; // The time remaining before the aura will fallout. Will be 0 if the aura is static.
+    public int TimeRemaining
     {
-        get { return _isLinked; }
+        get { return _timeRemaining; }
     }
 
-    private Aura _linkedAura; // The aura that is linked to this aura. When an aura is linked, they can must coexist. If one is removed, the other will be removed as well.
-    public Aura LinkedAura
+    private int _stackCount; // The current number of stacks of this aura the entity possesses. 
+    public int StackCount
     {
-        get { return _linkedAura; }
-    }
-
-    private HoT _hoTObject;
-    public HoT HoTObject
-    {
-        get { return _hoTObject; }
-    }
-
-    private DoT _doTObject;
-    public DoT DoTObject
-    {
-        get { return _doTObject; }
-    }
-
-    private List<AttributeModification> _attributeMods;
-    public IList<AttributeModification> AttributeModifications
-    {
-        get { return _attributeMods.AsReadOnly(); }
+        get { return _stackCount; }
     }
 
     #endregion
@@ -173,7 +149,7 @@ public abstract class Aura
     /// limit defined (internal stacking).</param>
     /// <param name="stackLimit">The maximum number of stacks for this aura. Clamped between 1 and 99. This will only affect non-static
     /// auras. Static auras always have a stack limit of 1.</param>
-    protected Aura(int id, string name, string description, string flavorText, string textureFileName, AuraType type, int duration, int stackLimit, params AuraModule[] auraMods)
+    protected Aura(int id, string name, string description, string flavorText, string textureFileName, AuraType type, int duration, int stackLimit, params Module[] auraMods)
     {
         if (id < 0)
         {
@@ -233,10 +209,7 @@ public abstract class Aura
             _stackLimit = Mathf.Clamp(stackLimit, 1, MAXIMUM_NUMBER_OF_STACKS);
         }
 
-        _hoTObject = null;
-        _doTObject = null;
-        _attributeMods = new List<AttributeModification>();
-
+        /*
         foreach (AuraModule module in auraMods)
         {
             if (module.GetType() == typeof(HoT))
@@ -274,7 +247,7 @@ public abstract class Aura
             {
                 Debug.LogWarning("Undefined AuraModule discarded.");
             }
-        }
+        }*/
 
         _timeRemaining = 0;
         _stackCount = 0;
@@ -308,15 +281,6 @@ public abstract class Aura
 
         _isStaticAura = protoType.IsStaticAura;
         _stackLimit = protoType.StackLimit;
-        _hoTObject = protoType.HoTObject;
-        _doTObject = protoType.DoTObject;
-
-        _attributeMods = new List<AttributeModification>();
-
-        foreach (AttributeModification attributeMod in protoType.AttributeModifications)
-        {
-            _attributeMods.Add(new AttributeModification(attributeMod, target));
-        }
 
         _timeRemaining = 0;
         _stackCount = 0;
@@ -324,9 +288,9 @@ public abstract class Aura
         _isPrototype = false;
     }
 
-    private void ConstructorHelper() { }
-
     #endregion
+
+    #region Methods
 
     #region Control Methods
 
@@ -434,6 +398,200 @@ public abstract class Aura
     protected virtual void OnRemovalAbstract() { }
 
     #endregion
+
+    #endregion
+
+    #region Modules
+
+    #region Functional Modules
+
+    protected class HoT : Tick
+    {
+        #region Constructors
+
+        /// <summary>
+        /// Define a Tick module that heals the target for an amount every second. If ModType is a Percentage, the target
+        /// will be healed for the given percentage of its health every second for the duration of the effect. If ModType is Value,
+        /// the target will be healed by some function of the given magnitude and the caster's ability to heal.
+        /// </summary>
+        /// <param name="modType">The type of healing to be done.</param>
+        /// <param name="magnitude">The percentage of health to heal by if ModType == Percentage, or the amount of raw healing to be
+        /// done if ModType == Value, each second where 0.03 = 3%. Must be greater than 0. </param>
+        public HoT(ModType modType, float magnitude) : base(Attributes.Stats.HEALTH, modType, magnitude, true) { }
+
+        #endregion
+    }
+
+    protected class DoT : Tick
+    {
+        #region Properties
+
+        private DamageType _damageType;
+        public DamageType TypeOfDamage
+        {
+            get { return _damageType; }
+        }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Define a Tick module that deals the given magnitude of the given damage type to a target 
+        /// every second for the duration of the effect.
+        /// </summary>
+        /// <param name="damageType">The type of damage to deal.</param>
+        /// <param name="magnitude">The amount of damage to deal using the given damage type. Must be positive.</param>
+        public DoT(DamageType damageType, float magnitude) : base(Attributes.Stats.HEALTH, ModType.Value, magnitude, true)
+        {
+            _damageType = damageType;
+        }
+
+        /// <summary>
+        /// Define a Tick module that deals a percentage of the target's health every second
+        /// for the duration of the effect. Damage type is not used.
+        /// </summary>
+        /// <param name="magnitude">The percentage of health to remove each second where 0.03 = 3%. Must be greater than 0. </param>
+        public DoT(float magnitude) : base(Attributes.Stats.HEALTH, ModType.Percentage, magnitude, true)
+        {
+            _damageType = DamageType.PHYSICAL;
+        }
+
+        #endregion
+    }
+
+    protected class RoT : Tick
+    {
+        #region Constructors
+
+        /// <summary>
+        /// Define a Tick module restores or removes an entity's resource over each second.
+        /// </summary>
+        /// <param name="magnitude">The percentage of resource to add or remove. Can be negative but not 0.</param>
+        public RoT(float magnitude) : base(Attributes.Stats.RESOURCE, ModType.Percentage, magnitude, false) { }
+
+        #endregion
+    }
+
+    protected class FortifyAttribute : AttributeModification
+    {
+        #region Constructors
+
+        /// <summary>
+        /// Define an AttributeModification module that increases an attribute once while the aura is in effect and returns the affected 
+        /// attributes to normal once the aura expires.
+        /// </summary>
+        /// <param name="attribute">The attribute to fortify.</param>
+        /// <param name="magnitude">The percentage of the attribute to alter where 0.03 = 3%. Must be greater than 0. </param>
+        public FortifyAttribute(Attributes.Stats attribute, float magnitude) : base(attribute, ModType.Percentage, magnitude, false) { }
+
+        #endregion
+    }
+
+    protected class DamageAttribute : AttributeModification
+    {
+        #region Constructors
+
+        /// <summary>
+        /// Define an AttributeModification module that decreases an attribute once while the aura is in effect and returns the affected 
+        /// attributes to normal once the aura expires.
+        /// </summary>
+        /// <param name="attribute">The attribute to damage.</param>
+        /// <param name="magnitude">The percentage of the attribute to alter where 0.03 = 3%. Must be greater than 0. </param>
+        public DamageAttribute(Attributes.Stats attribute, float magnitude) : base(attribute, ModType.Percentage, magnitude, false) { }
+
+        #endregion
+    }
+
+    #endregion
+
+    #region Abstract Module Classes
+
+    protected abstract class AttributeModification : Aura.Module
+    {
+        #region Properties
+
+        private Attributes.Stats _attribute;
+        public Attributes.Stats Attribute
+        {
+            get { return _attribute; }
+        }
+
+        private ModType _modType;
+        public ModType ModType
+        {
+            get { return _modType; }
+        }
+
+        private float _magnitude;
+        public float Magnitude
+        {
+            get { return _magnitude; }
+        }
+
+        #endregion
+
+        #region Constructors
+
+        protected AttributeModification(Attributes.Stats attribute, ModType modType, float magnitude, bool positiveOnly) : base()
+        {
+            _attribute = attribute;
+            _modType = modType;
+
+            if (magnitude == 0)
+            {
+                throw new ArgumentOutOfRangeException("You cannot create an AttributeModification obect that alters an attribute by 0%.");
+            }
+
+            else
+            {
+                if (positiveOnly && magnitude < 0)
+                {
+                    _magnitude = 0;
+                    throw new ArgumentOutOfRangeException("A negative magnitude is not allowed for this module.");
+                }
+
+                else
+                {
+                    _magnitude = magnitude;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Methods
+
+        //private abstract void Modify
+
+        #endregion
+    }
+
+    protected abstract class Tick : AttributeModification
+    {
+        #region Constructors
+
+        protected Tick(Attributes.Stats attribute, ModType modType, float magnitude, bool positiveOnly) : base(attribute, modType, magnitude, positiveOnly) { }
+
+        #endregion
+    }
+
+    #endregion
+
+    #region Base Module
+
+    protected abstract class Module
+    {
+        #region Constructor
+
+        protected Module() { }
+
+        #endregion
+    }
+
+    #endregion
+
+    #endregion
 }
 
 #region Enums
@@ -442,6 +600,12 @@ public enum AuraType
 {
     Buff,
     Debuff
+}
+
+public enum ModType
+{
+    Percentage,
+    Value,
 }
 
 #endregion
