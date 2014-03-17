@@ -83,12 +83,6 @@ public abstract class Aura
         get { return _stackLimit; }
     }
 
-    private bool _isLinked; // A boolean determining if this aura is linked to another one.
-    public bool IsLinked
-    {
-        get { return _isLinked; }
-    }
-
     #endregion
 
     #region Instance Properties
@@ -123,6 +117,9 @@ public abstract class Aura
         get { return _stackCount; }
     }
 
+    private List<Module> _allModules;
+    private List<TickAttribute> _tickAttributes;
+
     #endregion
 
     #endregion
@@ -141,12 +138,12 @@ public abstract class Aura
     /// <param name="flavorText">The flavor text of the aura. Can be empty.</param>
     /// <param name="textureFileName">The name of the texture for the GUI representation.</param>
     /// <param name="type">The type of aura: buff or debuff.</param>
-    /// <param name="duration">The duration of the aura. If the given value is greater than 0 and not Mathf.Infinity, the aura will be
-    /// treated as non-static and will falloff after the duration given. Otherwise, the aura will be treated as static and will remain on
-    /// the entity until it is removed by a manager. Static auras will have their stack limit clamped to one and will restrict an entity 
-    /// to only having one instance of this aura for any caster. Non-static auras may be applied multiple times to the same entity given 
-    /// that they are from differing sources (external stacking). Non-static auras applied by the same caster will stack up to the stack
-    /// limit defined (internal stacking).</param>
+    /// <param name="duration">The duration of the aura. If the given value is 0 or Mathf.Infinity, the aura will be treated as static and will 
+    /// remain on the entity until it is removed by a manager. Otherwise, the given value will be used as the duration for the effect and will 
+    /// be treated as a non-static aura. The maxium duration for non-static auras is 1 hour. Static auras will have their stack limit clamped to
+    /// one and will restrict an entity to only having one instance of this aura for any caster. Non-static auras may be applied multiple times 
+    /// to the same entity given that they are from differing sources (external stacking). Non-static auras applied by the same caster will 
+    /// stack up to the stack limit defined below (internal stacking).</param>
     /// <param name="stackLimit">The maximum number of stacks for this aura. Clamped between 1 and 99. This will only affect non-static
     /// auras. Static auras always have a stack limit of 1.</param>
     protected Aura(int id, string name, string description, string flavorText, string textureFileName, AuraType type, int duration, int stackLimit, params Module[] auraMods)
@@ -199,55 +196,29 @@ public abstract class Aura
         {
             _isStaticAura = true;
             _duration = 0;
-            _stackLimit = 1;
+            _stackLimit = MINIMUM_NUMBER_OF_STACKS;
         }
 
         else
         {
             _isStaticAura = false;
-            _duration = duration;
-            _stackLimit = Mathf.Clamp(stackLimit, 1, MAXIMUM_NUMBER_OF_STACKS);
+            _duration = Mathf.Clamp(duration, MINIMUM_DURATION, MAXIMUM_DURATION);
+            _stackLimit = Mathf.Clamp(stackLimit, MINIMUM_NUMBER_OF_STACKS, MAXIMUM_NUMBER_OF_STACKS);
         }
 
-        /*
-        foreach (AuraModule module in auraMods)
+        _allModules = new List<Module>();
+        _tickAttributes = new List<TickAttribute>();
+
+        
+        foreach (Aura.Module module in auraMods)
         {
-            if (module.GetType() == typeof(HoT))
+            _allModules.Add(module);
+
+            if (module.GetType().BaseType == typeof(TickAttribute))
             {
-                if (_hoTObject == null)
-                {
-                    _hoTObject = (HoT)module;
-                }
-
-                else
-                {
-                    Debug.LogWarning("A duplicate HoT object was defined for " + _name + ". It will be discarded.");
-                }
+                _tickAttributes.Add((TickAttribute)module);
             }
-
-            else if (module.GetType() == typeof(DoT))
-            {
-                if (_doTObject == null)
-                {
-                    _doTObject = (DoT)module;
-                }
-
-                else
-                {
-                    Debug.LogWarning("A duplicate DoT object was defined for " + _name + ". It will be discarded.");
-                }
-            }
-
-            else if (module.GetType() == typeof(AttributeModification))
-            {
-                _attributeMods.Add((AttributeModification)module);
-            }
-
-            else
-            {
-                Debug.LogWarning("Undefined AuraModule discarded.");
-            }
-        }*/
+        }
 
         _timeRemaining = 0;
         _stackCount = 0;
@@ -292,110 +263,146 @@ public abstract class Aura
 
     #region Methods
 
-    #region Control Methods
-
-    /// <summary>
-    /// Attempts to add the given number of stacks to the aura. Calling this method will add the given count to the number of applications
-    /// up to the stack limit in addition to refreshing the duration. Count is an optional parameter which defaults to 1. If the number of 
-    /// stacks increases, attributes will be updated and the OnApplication event will be called. If this is the first application of the aura, 
-    /// the OnStart event will be called in addition to, and before, the OnApplication event.
-    /// </summary>
-    /// <param name="count">The number of applications to apply.</param>
-    public void Apply(int count = 1)
-    {
-        if (_isPrototype)
-        {
-            throw new InvalidOperationException("Cannot call aura methods for prototypes.");
-        }
-
-        if (count > 0)
-        {
-
-        }
-    }
-
-    /// <summary>
-    /// Removes the given number of stacks from the aura. Count is an optional parameter. If count is not passed or if count is 0, all 
-    /// current stacks will be removed from the aura. If there are no more stacks on the aura, the OnRemoval event will be called but not
-    /// the OnFalloff event.
-    /// </summary>
-    /// <returns>Returns true if there are no more applications left, false otherwise.</returns>
-    public bool Remove(int count = 0)
-    {
-        if (_isPrototype)
-        {
-            throw new InvalidOperationException("Cannot call aura methods for prototypes.");
-        }
-
-        return false;
-    }
-
-    #endregion
-
     #region Event Methods
 
-    private void OnStart()
+    /// <summary>
+    /// Attempts to add the number of stacks given by count and refreshes the duration. If the stack count increases as a result of calling 
+    /// this function, all modules will be updated to perform the correct actions. Count must be greater than 0. When overriding this function,
+    /// you MUST call the base method first.
+    /// </summary>
+    /// <param name="count">The number of applications to apply. If count is not given, count is 0, or count is greater than the stack limit,
+    /// this will add the maximum number of stacks allowed by the stack limit.</param>
+    public virtual void Apply(int count = 1)
     {
+        if (_isPrototype)
+        {
+            throw new InvalidOperationException("Cannot call aura methods for prototypes.");
+        }
 
-    }
+        if (count > 0) // Check input
+        {
+            if (_stackCount == 0) // If this is the first time this aura is being applied,
+            {
+                OnStart(); // Call OnStart event
+            }
 
-    private void OnApplication()
-    {
+            if (_stackCount < _stackLimit) // If the stack count is not at the limit,
+            {
+                _stackCount = Mathf.Clamp(_stackCount + count, MINIMUM_NUMBER_OF_STACKS, _stackLimit); // Update the stack count
+                OnUpdate(); // Call OnUpdate event
+            }
 
+            if (!_isStaticAura) // If the aura is non-static
+            {
+                _timeRemaining = _duration; // Refresh the duration
+            }
+        }
 
-        // Do stuff
-
-        OnApplicationAbstract();
+        else
+        {
+            throw new ArgumentOutOfRangeException("The number applications applied must be greater than 0.");
+        }
     }
 
     /// <summary>
-    /// Called every second by the buff manager to handle DoTs and HoTs. This returns true if the aura has expired. Calls the OnFalloff 
+    /// Called every second by the buff manager to handle Ticks. This returns true if the aura has expired. Calls the OnFalloff 
     /// event in the derived class, then calls the OnRemoval event before returning true.
     /// </summary>
     /// <returns>Returns true if the aura has expired, false otherwise.</returns>
-    public bool OnTick()
+    public virtual bool Tick()
     {
-        OnTickAbstract();
-
-        if (!_isStaticAura)
+        if (_isPrototype)
         {
-            _timeRemaining--;
+            throw new InvalidOperationException("Cannot call aura methods for prototypes.");
+        }
 
-            if (_timeRemaining <= 0)
+        OnTick(); // Call OnTick event
+
+        if (!_isStaticAura) // If the aura is non-static
+        {
+            _timeRemaining--; // Decrement the time counter
+
+            if (_timeRemaining <= 0) // If the aura has expired,
             {
-                return true;
+                OnEnd(); // Call OnEnd event
+                return true; // return true
             }
         }
 
         return false;
     }
 
-    private void OnFalloff()
+
+    /// <summary>
+    /// Removes the given number of stacks from the aura up to the current number of stacks. All modules will be updated to perform correct 
+    /// actions. If the number of stacks is now 0, returns true.
+    /// </summary>
+    /// <returns>Returns true if there are no more applications left, false otherwise.</returns>
+    public virtual bool Remove(int count = 1)
     {
+        if (_isPrototype)
+        {
+            throw new InvalidOperationException("Cannot call aura methods for prototypes.");
+        }
 
-        // Do stuff
+        if (count > 0) // Check input
+        {
+            _stackCount = Mathf.Max(_stackCount - count, 0); // Update the stack count
 
-        OnFalloffAbstract();
-    }
+            if (_stackCount > 0) // If there are still stacks remaining
+            {
+                OnUpdate(); // Call OnUpdate event
+                return false; // return false
+            }
 
-    private void OnRemoval()
-    {
+            else
+            {
+                OnEnd(); // Call OnEnd event
+                return true; // return true
+            }
+        }
 
+        else
+        {
+            throw new ArgumentOutOfRangeException("The number applications removed must be greater than 0.");
+        }
     }
 
     #endregion
 
-    #region Virtual Event Methods
+    #region Private Methods
 
-    protected virtual void OnStartAbstract() { }
+    private void OnStart()
+    {
+        foreach (Module module in _allModules)
+        {
+            module.OnStart(Target);
+        }
+    }
 
-    protected virtual void OnApplicationAbstract() { }
+    private void OnUpdate()
+    {
+        foreach (Module module in _allModules)
+        {
+            module.OnUpdate(_stackCount);
+        }
+    }
 
-    protected virtual void OnTickAbstract() { }
+    private void OnTick()
+    {
+        foreach (TickAttribute tickModule in _tickAttributes)
+        {
+            tickModule.OnTick();
+        }
+    }
 
-    protected virtual void OnFalloffAbstract() { }
-
-    protected virtual void OnRemovalAbstract() { }
+    private void OnEnd()
+    {
+        foreach (Module module in _allModules)
+        {
+            module.OnEnd();
+        }
+    }
 
     #endregion
 
@@ -403,26 +410,44 @@ public abstract class Aura
 
     #region Modules
 
-    #region Functional Modules
+    #region Functional Modules (Top Tier)
 
-    protected class HoT : Tick
+    sealed protected class HoT : TickAttribute
     {
         #region Constructors
 
         /// <summary>
-        /// Define a Tick module that heals the target for an amount every second. If ModType is a Percentage, the target
+        /// Define a Tick module that heals the target for an amount every second. If ModType is Percentage, the target
         /// will be healed for the given percentage of its health every second for the duration of the effect. If ModType is Value,
         /// the target will be healed by some function of the given magnitude and the caster's ability to heal.
         /// </summary>
         /// <param name="modType">The type of healing to be done.</param>
-        /// <param name="magnitude">The percentage of health to heal by if ModType == Percentage, or the amount of raw healing to be
-        /// done if ModType == Value, each second where 0.03 = 3%. Must be greater than 0. </param>
-        public HoT(ModType modType, float magnitude) : base(Attributes.Stats.HEALTH, modType, magnitude, true) { }
+        /// <param name="magnitude">The percentage of health to heal by if ModType == Percentage  where 0.03 = 3%, or the amount of raw 
+        /// healing to be done if ModType == Value, each second. Must be positive. </param>
+        public HoT(ModType modType, float magnitude) : base(Attributes.Stats.HEALTH, modType, magnitude, 1) { }
+
+        #endregion
+
+        #region Methods
+
+        public override void OnTick()
+        {
+            if ((ModType)ModificationType == ModType.Percentage)
+            {
+                EntityAffected.ModifyHealth(EntityAffected.currentHP * Magnitude * Sign * Count);
+            }
+
+            else
+            {
+                Debug.Log("Static health change for now. Do we need to create a healing formula for this to use?");
+                EntityAffected.ModifyHealth(Magnitude * Sign * Count); // THIS NEEDS TO BE UPDATED
+            }
+        }
 
         #endregion
     }
 
-    protected class DoT : Tick
+    sealed protected class DoT : TickAttribute
     {
         #region Properties
 
@@ -442,38 +467,87 @@ public abstract class Aura
         /// </summary>
         /// <param name="damageType">The type of damage to deal.</param>
         /// <param name="magnitude">The amount of damage to deal using the given damage type. Must be positive.</param>
-        public DoT(DamageType damageType, float magnitude) : base(Attributes.Stats.HEALTH, ModType.Value, magnitude, true)
+        public DoT(DamageType damageType, float magnitude) : base(Attributes.Stats.HEALTH, ModType.Value, magnitude, -1)
         {
             _damageType = damageType;
         }
 
         /// <summary>
         /// Define a Tick module that deals a percentage of the target's health every second
-        /// for the duration of the effect. Damage type is not used.
+        /// for the duration of the effect. There is no damage type.
         /// </summary>
-        /// <param name="magnitude">The percentage of health to remove each second where 0.03 = 3%. Must be greater than 0. </param>
-        public DoT(float magnitude) : base(Attributes.Stats.HEALTH, ModType.Percentage, magnitude, true)
+        /// <param name="magnitude">The percentage of health to remove each second where 0.03 = 3%. Must be positive.</param>
+        public DoT(float magnitude) : base(Attributes.Stats.HEALTH, ModType.Percentage, magnitude, -1)
         {
             _damageType = DamageType.PHYSICAL;
         }
 
         #endregion
-    }
 
-    protected class RoT : Tick
-    {
-        #region Constructors
+        #region Methods
 
-        /// <summary>
-        /// Define a Tick module restores or removes an entity's resource over each second.
-        /// </summary>
-        /// <param name="magnitude">The percentage of resource to add or remove. Can be negative but not 0.</param>
-        public RoT(float magnitude) : base(Attributes.Stats.RESOURCE, ModType.Percentage, magnitude, false) { }
+        public override void OnTick()
+        {
+            if ((ModType)ModificationType == ModType.Percentage)
+            {
+                EntityAffected.ModifyHealth(EntityAffected.currentHP * Magnitude * Sign * Count);
+            }
+
+            else
+            {
+                Debug.Log("Static health change for now, use damage formula in the future.");
+                EntityAffected.ModifyHealth(Magnitude * Sign * Count); // THIS NEEDS TO GO THROUGH THE DAMAGE FORMULA
+            }
+        }
 
         #endregion
     }
 
-    protected class FortifyAttribute : AttributeModification
+    sealed protected class Invigorate : TickAttribute
+    {
+        #region Constructors
+
+        /// <summary>
+        /// Define a Tick module restores a percentage of an entity's resource each second for the duration of the aura.
+        /// </summary>
+        /// <param name="magnitude">The percentage of resource to restore each second. Must be positive.</param>
+        public Invigorate(float magnitude) : base(Attributes.Stats.RESOURCE, ModType.Percentage, magnitude, 1) { }
+
+        #endregion
+
+        #region Methods
+
+        public override void OnTick()
+        {
+            Debug.Log("Entity class needs implementation for adding/substracting resources.");
+        }
+
+        #endregion
+    }
+
+    sealed protected class Exhaust : TickAttribute
+    {
+        #region Constructors
+
+        /// <summary>
+        /// Define a Tick module removes a percentage of an entity's resource each second for the duration of the aura.
+        /// </summary>
+        /// <param name="magnitude">The percentage of resource to remove each second. Must be positive.</param>
+        public Exhaust(float magnitude) : base(Attributes.Stats.RESOURCE, ModType.Percentage, magnitude, -1) { }
+
+        #endregion
+
+        #region Methods
+
+        public override void OnTick()
+        {
+            Debug.Log("Entity class needs implementation for adding/substracting resources.");
+        }
+
+        #endregion
+    }
+
+    sealed protected class FortifyAttribute : StaticAttribute
     {
         #region Constructors
 
@@ -483,12 +557,12 @@ public abstract class Aura
         /// </summary>
         /// <param name="attribute">The attribute to fortify.</param>
         /// <param name="magnitude">The percentage of the attribute to alter where 0.03 = 3%. Must be greater than 0. </param>
-        public FortifyAttribute(Attributes.Stats attribute, float magnitude) : base(attribute, ModType.Percentage, magnitude, false) { }
+        public FortifyAttribute(Attributes.Stats attribute, float magnitude) : base(attribute, ModType.Percentage, magnitude, 1) { }
 
         #endregion
     }
 
-    protected class DamageAttribute : AttributeModification
+    sealed protected class DamageAttribute : StaticAttribute
     {
         #region Constructors
 
@@ -498,14 +572,67 @@ public abstract class Aura
         /// </summary>
         /// <param name="attribute">The attribute to damage.</param>
         /// <param name="magnitude">The percentage of the attribute to alter where 0.03 = 3%. Must be greater than 0. </param>
-        public DamageAttribute(Attributes.Stats attribute, float magnitude) : base(attribute, ModType.Percentage, magnitude, false) { }
+        public DamageAttribute(Attributes.Stats attribute, float magnitude) : base(attribute, ModType.Percentage, magnitude, -1) { }
 
         #endregion
     }
 
     #endregion
 
-    #region Abstract Module Classes
+    #region Abstract Modules (Lower Tier)
+
+    #region Tier 0 (Base Module)
+
+    protected abstract class Module
+    {
+        #region Properties
+
+        private Entity _entityAffected;
+        public Entity EntityAffected
+        {
+            get { return _entityAffected; }
+        }
+
+        private int _count;
+        public int Count
+        {
+            get { return _count; }
+        }
+
+        #endregion
+
+        #region Constructor
+
+        protected Module() 
+        { 
+            _entityAffected = null; 
+        }
+
+        #endregion
+
+        #region Virtual Methods
+
+        public virtual void OnStart(Entity entity) 
+        { 
+            _entityAffected = entity; 
+        }
+
+        public virtual void OnUpdate(int count) 
+        {
+            _count = Mathf.Max(count, 0);
+        }
+
+        public virtual void OnEnd() 
+        {
+            _count = 0;
+        }
+
+        #endregion
+    }
+
+    #endregion 
+
+    #region Tier 1 Modules
 
     protected abstract class AttributeModification : Aura.Module
     {
@@ -518,7 +645,7 @@ public abstract class Aura
         }
 
         private ModType _modType;
-        public ModType ModType
+        public ModType ModificationType
         {
             get { return _modType; }
         }
@@ -529,65 +656,115 @@ public abstract class Aura
             get { return _magnitude; }
         }
 
-        #endregion
-
-        #region Constructors
-
-        protected AttributeModification(Attributes.Stats attribute, ModType modType, float magnitude, bool positiveOnly) : base()
+        private short _sign;
+        public short Sign
         {
-            _attribute = attribute;
-            _modType = modType;
-
-            if (magnitude == 0)
-            {
-                throw new ArgumentOutOfRangeException("You cannot create an AttributeModification obect that alters an attribute by 0%.");
-            }
-
-            else
-            {
-                if (positiveOnly && magnitude < 0)
-                {
-                    _magnitude = 0;
-                    throw new ArgumentOutOfRangeException("A negative magnitude is not allowed for this module.");
-                }
-
-                else
-                {
-                    _magnitude = magnitude;
-                }
-            }
+            get { return _sign; }
         }
 
         #endregion
 
-        #region Methods
-
-        //private abstract void Modify
-
-        #endregion
-    }
-
-    protected abstract class Tick : AttributeModification
-    {
         #region Constructors
 
-        protected Tick(Attributes.Stats attribute, ModType modType, float magnitude, bool positiveOnly) : base(attribute, modType, magnitude, positiveOnly) { }
+        protected AttributeModification(Attributes.Stats attribute, ModType modType, float magnitude, short sign) : base()
+        {
+            _attribute = attribute;
+            _modType = modType;
+
+            if (magnitude > 0)
+            {
+                _magnitude = magnitude;
+            }
+
+            else
+            {
+                _magnitude = 0;
+                throw new ArgumentOutOfRangeException("You may only create an AttributeModification obect with a positive magnitude.");
+            }
+
+            _sign = sign;
+        }
 
         #endregion
     }
 
     #endregion
 
-    #region Base Module
+    #region Tier 2 Modules
 
-    protected abstract class Module
+    protected abstract class TickAttribute : AttributeModification
     {
-        #region Constructor
+        #region Constructors
 
-        protected Module() { }
+        protected TickAttribute(Attributes.Stats attribute, ModType modType, float magnitude, short sign) : base(attribute, modType, magnitude, sign) { }
+
+        #endregion
+
+        #region Virtual Methods
+
+        public abstract void OnTick();
 
         #endregion
     }
+
+    protected abstract class StaticAttribute : AttributeModification
+    {
+        #region Properties
+
+        private float _attributeSnapshot;
+        private float _attributeChange;
+
+        #endregion
+
+        #region Constructors
+
+        protected StaticAttribute(Attributes.Stats attribute, ModType modType, float magnitude, short sign) : base(attribute, modType, magnitude, sign) 
+        {
+            _attributeSnapshot = 0;
+            _attributeChange = 0;
+        }
+
+        #endregion
+
+        #region Abstract Methods
+
+        public override void OnStart(Entity entity)
+        {
+            base.OnStart(entity);
+            _attributeSnapshot = EntityAffected.currentAtt.GetValue(Attribute);
+        }
+
+        public override void OnUpdate(int count)
+        {
+            base.OnUpdate(count);
+
+            if (Count > 0)
+            {
+                float newAttributeChange = _attributeSnapshot * Magnitude * Count * Sign; // Calculate new change in attribute
+                float appliedAttribute = newAttributeChange - _attributeChange; // Get the difference from the old change
+
+                Attributes newAttribute = new Attributes();
+                // do something to newAttribute
+                //EntityAffected.currentAtt.Add(newAttribute); // Apply it
+
+                _attributeChange = newAttributeChange; // Set the old change to the new change
+            }
+        }
+
+        public override void OnEnd()
+        {
+            base.OnEnd();
+
+            Attributes newAttribute = new Attributes();
+            // do something to newAttribute (_attributeChange *= -1)
+            //EntityAffected.currentAtt.Add(newAttribute); // Apply it
+            _attributeChange = 0;
+        }
+
+        #endregion
+    }
+
+    #endregion
 
     #endregion
 

@@ -41,6 +41,16 @@ public class Attributes
             statList.Add(stat, 0);
     }
 
+    /// <summary>
+    /// A function to extract an individual value from an Attributes object. Readonly.
+    /// </summary>
+    /// <param name="key">The attribute to extract.</param>
+    /// <returns>The value of the attribute.</returns>
+    public float GetValue(Stats key)
+    {
+        return statList[key];
+    }
+
     #region Health
     public float Health
     {

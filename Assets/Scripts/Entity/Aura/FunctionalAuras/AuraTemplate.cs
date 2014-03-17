@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AuraTemplate : Aura
+sealed public class AuraTemplate : Aura
 {
     #region Template Constants
 
@@ -32,33 +32,17 @@ public class AuraTemplate : Aura
     /// given name is unique.
     /// </summary>
     /// <param name="id">The unique integer ID.</param>
-    protected AuraTemplate(int id)
+    public AuraTemplate(int id)
         : base(id, TEMPLATE_AURA_NAME, TEMPLATE_AURA_DESCRIPTION, TEMPLATE_AURA_FLAVOR_TEXT, TEMPLATE_AURA_ICON_TEXTURE_NAME,
         TEMPLATE_AURA_AURATYPE, TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS, TEMPLATE_AURA_DURATION)
 
         /* ----------------------------------------MODIFY THE REST HERE------------------------------------------------- *
          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-        /* * * * * * * Should health be incremented/decremented over time? * * * * * * * */
-        // new HealthTick(HealthTick.ModType.None), 
-        
-        /* * * * * * * What attributes does this status effect modify? * * * * * * * */
-        //new AttributeModification(Attributes.Stats.HEALTH, AttributeModification(ModificationType.Percentage, 0.5f))
     { }
 
     #endregion
 
     #region Events
-
-    protected override void OnStartAbstract() { }
-
-    protected override void OnApplicationAbstract() { }
-
-    protected override void OnTickAbstract() { }
-
-    protected override void OnFalloffAbstract() { }
-
-    protected override void OnRemovalAbstract() { }
 
     #endregion
 
