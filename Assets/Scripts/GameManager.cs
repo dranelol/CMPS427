@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     public equipmentFactory EquipmentFactory;
 
     public static Dictionary<string, Ability> Abilities;
+    public static Dictionary<int, Aura> Auras;
+    public static Dictionary<string, int> AuraStringToIntMap;
 
     public static float GLOBAL_COOLDOWN = 0.5f;
 
@@ -28,6 +30,30 @@ public class GameManager : MonoBehaviour
         Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 5.0f, 45.0f, 10.0f, 1.0f, "fusrodah", "Fus Roh Dah");
 
         #endregion
+
+        #region Aura Initialization
+        // quite shittily done, will revisit soon
+
+        Auras = new Dictionary<int, Aura>();
+        AuraStringToIntMap = new Dictionary<string, int>();
+
+        NewAura(new AuraTemplate(Auras.Count)); // repeat for each aura
+
+        #endregion
+    }
+
+    private void NewAura(Aura auraToAdd)
+    {
+        if (!AuraStringToIntMap.ContainsKey(auraToAdd.Name))
+        {
+            Auras.Add(auraToAdd.ID, auraToAdd);
+            AuraStringToIntMap.Add(auraToAdd.Name, auraToAdd.ID);
+        }
+
+        else
+        {
+            Debug.LogError("Duplicate name found for " + auraToAdd.Name + ". This aura was not added. Handle that shit.");
+        }
     }
 
     public void RemovePhysics(Rigidbody toRemove, float time = 0.0f)
