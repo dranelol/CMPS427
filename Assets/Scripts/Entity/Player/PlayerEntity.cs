@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerEntity : Entity {
+public class PlayerEntity : Entity 
+{
     public float power, defense, attackSpeed, movementSpeed, minDamage, maxDamage;
 
 	// Use this for initialization
@@ -27,10 +28,18 @@ public class PlayerEntity : Entity {
 	public void Update () 
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit target;
+        Physics.Raycast(ray, out target, Mathf.Infinity);
+        Vector3 vectorToMouse = target.point - gameObject.transform.position;
+        Vector3 normalizedVectorToMouse = new Vector3(vectorToMouse.x, gameObject.transform.forward.y, vectorToMouse.z);
+        Debug.DrawRay(gameObject.transform.position, normalizedVectorToMouse.normalized * 5.0f, Color.yellow);
+        //Debug.Log(ray.direction);
+
 
         Debug.DrawRay(ray.origin, ray.direction, Color.yellow);
-        //abilities[4].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
-        //abilities[5].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
+        abilities[4].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
+        abilities[5].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
+
 
         // update these on-demand instead of every update
 
