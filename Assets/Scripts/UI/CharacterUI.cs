@@ -8,11 +8,14 @@ public class CharacterUI : UIState {
 
     private Rect windowDimensions;
     private int selection = 0;
+    private int yOffset = 0;
+    private Vector2 scrollViewVector;
 
     public CharacterUI(int id, UIController controller)
         : base(id, controller) 
     {
         windowDimensions = new Rect(Screen.width - (WIDTH + 50), Screen.height / 2 - HEIGHT / 2, WIDTH, HEIGHT);
+        scrollViewVector = Vector2.zero;
     }
 
     public override void Enter()
@@ -39,17 +42,26 @@ public class CharacterUI : UIState {
     {
         selection = GUI.Toolbar(new Rect(10, 300, WIDTH - 20, 50), selection, HEADERS);
 
-        DrawStats();
+        if (selection == 0)
+            DrawStats();
     }
 
     void DrawStats()
     {
-        GUI.BeginScrollView(new Rect(10, 350, WIDTH, 200), Vector2.zero, new Rect(0, 0, 220, 220));
+        int viewSize = Controller.Player.currentAtt.StatList.Count * 30;
 
-        GUI.skin.label.alignment = TextAnchor.MiddleLeft;
-        GUI.Label(new Rect(0, 0, WIDTH - 20, 20), "Health: ");
-        GUI.skin.label.alignment = TextAnchor.MiddleRight;
-        GUI.Label(new Rect(0, 0, WIDTH - 20, 20), "" + Controller.Player.currentAtt.Health);
+        scrollViewVector = GUI.BeginScrollView(new Rect(10, 350, WIDTH - 10, 150), scrollViewVector, 
+            new Rect(0, 0, 10, viewSize));
+
+        yOffset = 0;
+        foreach (var pair in Controller.Player.currentAtt.StatList)
+        {
+            GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+            GUI.Label(new Rect(0, yOffset, WIDTH - 30, 20), pair.Key.ToString());
+            GUI.skin.label.alignment = TextAnchor.MiddleRight;
+            GUI.Label(new Rect(0, yOffset, WIDTH - 30, 20), "" + pair.Value.ToString());
+            yOffset += 30;
+        }
 
         GUI.EndScrollView();
     }

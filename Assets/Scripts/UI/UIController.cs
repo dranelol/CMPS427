@@ -22,10 +22,16 @@ public class UIController : MonoBehaviour {
     private PlayerEntity player;
     public PlayerEntity Player { get { return player; } }
 
+    private Vector2 nativeResolution;
+    public Vector2 NativeResolution { get { return nativeResolution; } }
+
     private UIStateMachine stateMachine;
 
 	// Use this for initialization
 	void Start () {
+        nativeResolution.x = Screen.width;
+        nativeResolution.y = Screen.height;
+
         player = GameObject.FindWithTag("Player").GetComponent<PlayerEntity>();
 
 		guiState = States.INGAME;
@@ -68,6 +74,10 @@ public class UIController : MonoBehaviour {
 
     void OnGUI()
     {
+        float rx = Screen.width / nativeResolution.x;
+        float ry = Screen.height / nativeResolution.y;
+        GUI.matrix = Matrix4x4.TRS(new Vector3(0f, 0f, 0f), Quaternion.identity, new Vector3(rx, ry, 1));
+
         stateMachine.OnGui();
     }
 }

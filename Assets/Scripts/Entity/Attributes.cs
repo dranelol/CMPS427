@@ -41,6 +41,12 @@ public class Attributes
             statList.Add(stat, 0);
     }
 
+    #region All Stats (Readonly)
+
+    public Dictionary<Stats, float> StatList { get { return statList; } }
+
+    #endregion
+
     #region Health
     public float Health
     {
