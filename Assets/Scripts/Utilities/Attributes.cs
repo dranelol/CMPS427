@@ -35,8 +35,8 @@ public class Attributes
     {
         statList = new Dictionary<Stats, float>();
 		// Default values for clamps, to prevent errors.
-		attackSpeedMin = moveSpeedMin = 0.5f;
-		attackSpeedMax = moveSpeedMax = 2.0f;
+		attackSpeedMin = moveSpeedMin = 0.0f;
+		attackSpeedMax = moveSpeedMax = 2.5f;
         foreach (Stats stat in Enum.GetValues(typeof(Stats)))
             statList.Add(stat, 0);
     }

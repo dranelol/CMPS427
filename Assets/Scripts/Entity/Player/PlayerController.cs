@@ -241,7 +241,20 @@ public class PlayerController : MonoBehaviour {
             Debug.Log("max damage after equip change to high sword: " + entity.currentAtt.MaxDamage);
 
         }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            // chestpiece
+            if (entity.HasEquipped(equipSlots.slots.Chest))
+            {
+                Debug.Log("bro has a chestpiece already! its called: " + entity.GetEquip(equipSlots.slots.Chest).equipmentName);
+            }
 
+            bool result = entity.removeEquipment(equipSlots.slots.Chest);
+
+            equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Chest);
+            entity.addEquipment(equipSlots.slots.Chest, tempEquip);
+
+        }
 
 
 
