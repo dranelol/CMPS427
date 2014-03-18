@@ -4,6 +4,7 @@ using System.Collections;
 public class CharacterUI : UIState {
     private const float WIDTH = 400;
     private const float HEIGHT = 500;
+    private const int EQUIPMENT_SLOTS = 6;
     private string[] HEADERS = { "Stats", "Inventory", "Skills" };
 
     private Rect windowDimensions;
@@ -40,6 +41,23 @@ public class CharacterUI : UIState {
 
     void OnWindow(int windowID)
     {
+        // Equipment slots.
+        GUILayout.BeginArea(new Rect(5, 20, WIDTH, 300));
+        GUILayout.BeginVertical();
+
+        for (int i = 0; i < EQUIPMENT_SLOTS / 2; i++)
+        {
+            GUILayout.BeginHorizontal();
+
+            GUILayout.Box("", GUILayout.Width(50), GUILayout.Height(50));
+            GUILayout.Box("", GUILayout.Width(50), GUILayout.Height(50));
+
+            GUILayout.EndHorizontal();
+        }
+
+        GUILayout.EndVertical();
+        GUILayout.EndArea();
+
         selection = GUI.Toolbar(new Rect(10, 300, WIDTH - 20, 50), selection, HEADERS);
 
         if (selection == 0)

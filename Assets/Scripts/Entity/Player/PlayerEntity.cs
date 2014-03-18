@@ -5,6 +5,8 @@ public class PlayerEntity : Entity
 {
     public float power, defense, attackSpeed, movementSpeed, minDamage, maxDamage;
 
+    public Mesh mesh { get { return GetComponent<MeshFilter>().mesh; } }
+
 	// Use this for initialization
     public void Awake()
     {
@@ -21,7 +23,6 @@ public class PlayerEntity : Entity
         abilities[3] = GameManager.Abilities["fusrodah"];
         abilities[4] = GameManager.Abilities["hadouken"];
         abilities[5] = GameManager.Abilities["deathgrip"];
-
 	}
 	
 	// Update is called once per frame
