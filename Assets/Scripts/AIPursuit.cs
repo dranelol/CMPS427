@@ -45,9 +45,9 @@ public class AIPursuit : StateMachine
     void Start()
     {
         // Make Enemy Entity class later
-        entity.abilities[0] = GameManager.Abilities["cleave"];
+        
 
-        _abilityList.Add(entity.abilities[0]);
+        _abilityList.Add(entity.abilityManager.abilities[0]);
     }
 
     #region public functions
@@ -84,6 +84,12 @@ public class AIPursuit : StateMachine
 
     void seek_Update()
     {
+        if (entity.abilityManager.activeCoolDowns[0] > Time.time)
+        {
+            float timeLeft = entity.abilityManager.activeCoolDowns[0] - Time.time;
+            Debug.Log("Enemy Ability 1 Cooldown Left: " + timeLeft.ToString());
+        }
+        
         if (currentTarget != null)
         {
             if (combatFSM.IsIdle()) // && _abilityList[nextAbilityIndex].OnCooldown == false) MATT DO THIS
@@ -127,17 +133,25 @@ public class AIPursuit : StateMachine
 
     void attack_Update()
     {
-        if (currentTarget != null)
+
+        if (currentTarget != null && entity.abilityManager.activeCoolDowns[0] <= Time.time)
         {
             combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
             Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
-            //entity.abilities[0].AttackHandler(gameObject, false);
+
+            entity.abilityManager.abilities[0].AttackHandler(gameObject, false);
+            entity.abilityManager.activeCoolDowns[0] = Time.time + entity.abilityManager.abilities[0].Cooldown;
+
             /*
             _abilityList[0].AttackHandler(gameObject, false);
             _abilityList.OrderBy(Ability => Ability.Cooldown).ThenBy(Ability => Ability.DamageMod); Use this later */
             Transition(PursuitStates.seek);
         }
 
+        else if (entity.abilityManager.activeCoolDowns[0] > Time.time)
+        {
+            Transition(PursuitStates.seek);
+        }
         else
         {
             Transition(PursuitStates.inactive);

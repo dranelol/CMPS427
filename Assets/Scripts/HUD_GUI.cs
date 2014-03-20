@@ -43,6 +43,11 @@ public class HUD_GUI : MonoBehaviour {
     public Entity player;
     
 
+    private Rect CDBox1;
+    private Rect CDBox2;
+    private Rect CDBox3;
+    private Rect CDBox4;
+
 	public float health = 0.0f;
 	void Start () {
 		native_width = Screen.width;
@@ -74,6 +79,16 @@ public class HUD_GUI : MonoBehaviour {
         InfoBox2 = new Rect(Screen.width * .9f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
 
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Entity>();
+
+        #region Cooldown GUI init
+
+        CDBox1 = new Rect(Screen.width * .65f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
+        CDBox2 = new Rect(Screen.width * .65f, Screen.height * .925f, Screen.width * .45f, Screen.height * .1f);
+        CDBox3 = new Rect(Screen.width * .65f, Screen.height * .950f, Screen.width * .45f, Screen.height * .1f);
+        CDBox4 = new Rect(Screen.width * .65f, Screen.height * .975f, Screen.width * .45f, Screen.height * .1f);
+        
+
+        #endregion
 	}
 
 	void OnGUI(){
@@ -152,6 +167,59 @@ public class HUD_GUI : MonoBehaviour {
 
         GUI.Label(InfoBox1, attackList, infoBoxStyle);
         GUI.Label(InfoBox2, version, infoBoxStyle);
+
+        #region ability cooldown GUI
+
+   
+        float timeLeft = 0;
+
+        if (player.abilityManager.activeCoolDowns[2] > Time.time)
+        {
+            timeLeft = player.abilityManager.activeCoolDowns[2] - Time.time;
+        }
+        else
+        {
+            timeLeft = 0;
+        }
+
+        GUI.Label(CDBox1, "Cleave CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+
+        if (player.abilityManager.activeCoolDowns[3] > Time.time)
+        {
+            timeLeft = player.abilityManager.activeCoolDowns[3] - Time.time;
+        }
+        else
+        {
+            timeLeft = 0;
+        }
+
+        GUI.Label(CDBox2, "Fus Ro Dah CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+
+        if (player.abilityManager.activeCoolDowns[4] > Time.time)
+        {
+            timeLeft = player.abilityManager.activeCoolDowns[4] - Time.time;
+        }
+        else
+        {
+            timeLeft = 0;
+        }
+
+        GUI.Label(CDBox3, "Hadouken CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+
+        if (player.abilityManager.activeCoolDowns[5] > Time.time)
+        {
+            timeLeft = player.abilityManager.activeCoolDowns[5] - Time.time;
+        }
+        else
+        {
+            timeLeft = 0;
+        }
+
+
+
+        GUI.Label(CDBox4, "Death Grip CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+
+    #endregion
 
 	}
 }
