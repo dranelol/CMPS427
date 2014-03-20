@@ -14,7 +14,7 @@ public class Fusrodah : Ability
     /// Handler for this attack; figures out who will be attacked, and carries out everything needed for the attack to occur
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
-    /// <param name="defender">The gameobject defending against the attack</param>                                                  
+    /// <param name="defender">The gameobject defending against the attack</param>                                                  //swag
     public override void AttackHandler(GameObject attacker, bool isPlayer, GameObject particleAnimation)
     {
         List<GameObject> attacked = OnAttack(attacker.transform, isPlayer);
@@ -198,14 +198,27 @@ public class Fusrodah : Ability
     /// <param name="defender">Gameobject affected by the attack; default null if the attack only has an animation for the attacker</param>
     public override IEnumerator DoAnimation(GameObject attacker, GameObject source, float time, GameObject defender = null)
     {
-        GameObject particles = (GameObject)GameObject.Instantiate(source, attacker.transform.position, attacker.transform.rotation);
+        Vector3 newPosition = new Vector3(attacker.transform.position.x + attacker.transform.forward.x * 4.8f, attacker.transform.position.y, attacker.transform.position.z + attacker.transform.forward.z * 4.8f);
+        GameObject particles = (GameObject)GameObject.Instantiate(source, newPosition, attacker.transform.rotation);
 
         particles.transform.parent = attacker.transform;
 
         yield return new WaitForSeconds(time);
 
-        GameObject.Destroy(particles);
+        ParticleSystem[] particleSystems = source.GetComponentsInChildren<ParticleSystem>();
+
+        Debug.Log("fus");
+
+        foreach (Transform child in particles.transform)
+        {
+            child.GetComponent<ParticleSystem>().enableEmission = false;
+        }
         
+        GameObject.Destroy(particles);
+        yield return new WaitForSeconds(time * 5);
+
+        
+       // GameObject.Destroy(particles);
         yield return null;
     }
 
