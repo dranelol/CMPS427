@@ -201,7 +201,7 @@ public class Fusrodah : Ability
         Vector3 newPosition = new Vector3(attacker.transform.position.x + attacker.transform.forward.x * 4.8f, attacker.transform.position.y, attacker.transform.position.z + attacker.transform.forward.z * 4.8f);
         GameObject particles = (GameObject)GameObject.Instantiate(source, newPosition, attacker.transform.rotation);
 
-        particles.transform.parent = attacker.transform;
+        //particles.transform.parent = attacker.transform;
 
         yield return new WaitForSeconds(time);
 
@@ -211,12 +211,15 @@ public class Fusrodah : Ability
 
         foreach (Transform child in particles.transform)
         {
-            child.GetComponent<ParticleSystem>().enableEmission = false;
+            if (child.GetComponent<ParticleSystem>() != null)
+            {
+                child.GetComponent<ParticleSystem>().enableEmission = false;
+            }
         }
         
+        
+        yield return new WaitForSeconds(time * 2);
         GameObject.Destroy(particles);
-        yield return new WaitForSeconds(time * 5);
-
         
        // GameObject.Destroy(particles);
         yield return null;
