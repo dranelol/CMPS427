@@ -11,6 +11,7 @@ public class CharacterUI : UIState {
     private int selection = 0;
     private int yOffset = 0;
     private Vector2 scrollViewVector;
+    private Camera characterCamera;
 
     public CharacterUI(int id, UIController controller)
         : base(id, controller) 
@@ -21,12 +22,12 @@ public class CharacterUI : UIState {
 
     public override void Enter()
     {
-        Debug.Log("Entering Character state.");
+        Controller.Camera.enabled = true;
     }
 
     public override void Exit()
     {
-        Debug.Log("Exiting Character state.");
+        Controller.Camera.enabled = false;
     }
 
     public override void Update()
@@ -44,15 +45,18 @@ public class CharacterUI : UIState {
         // Equipment slots.
         GUILayout.BeginArea(new Rect(5, 20, WIDTH, 300));
         GUILayout.BeginVertical();
-
+        GUILayout.Space(10);
         for (int i = 0; i < EQUIPMENT_SLOTS / 2; i++)
         {
             GUILayout.BeginHorizontal();
 
             GUILayout.Box("", GUILayout.Width(50), GUILayout.Height(50));
+            GUILayout.Space(WIDTH - 115);
             GUILayout.Box("", GUILayout.Width(50), GUILayout.Height(50));
 
             GUILayout.EndHorizontal();
+
+            GUILayout.Space(50);
         }
 
         GUILayout.EndVertical();
