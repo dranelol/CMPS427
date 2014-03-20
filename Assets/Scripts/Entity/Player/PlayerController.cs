@@ -174,7 +174,14 @@ public class PlayerController : MonoBehaviour {
 
             if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[3] <= Time.time)
             {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                if (entity.abilityManager.abilities[3].Attack_Type == AttackType.MELEE)
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                }
+                else
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                }
 
                 entity.abilityManager.abilities[3].AttackHandler(gameObject, true);
                 entity.abilityManager.activeCoolDowns[3] = Time.time + entity.abilityManager.abilities[3].Cooldown;
@@ -190,7 +197,14 @@ public class PlayerController : MonoBehaviour {
             if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[4] <= Time.time)
             {
                 Debug.Log(transform.position);
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                if (entity.abilityManager.abilities[4].Attack_Type == AttackType.MELEE)
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                }
+                else
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                }
                 entity.abilityManager.abilities[4].AttackHandler(gameObject, true);
                 entity.abilityManager.activeCoolDowns[4] = Time.time + entity.abilityManager.abilities[4].Cooldown;
 
@@ -205,7 +219,14 @@ public class PlayerController : MonoBehaviour {
             if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[5] <= Time.time)
             {
 
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                if (entity.abilityManager.abilities[5].Attack_Type == AttackType.MELEE)
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                }
+                else
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                }
                 entity.abilityManager.abilities[5].AttackHandler(gameObject, true);
                 entity.abilityManager.activeCoolDowns[5] = Time.time + entity.abilityManager.abilities[5].Cooldown;
 
