@@ -150,7 +150,14 @@ public class PlayerController : MonoBehaviour {
         {
             if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[2] <= Time.time)
             {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                if (entity.abilityManager.abilities[2].Attack_Type == AttackType.MELEE)
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                }
+                else
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                }
                 entity.abilityManager.abilities[2].AttackHandler(gameObject, true);
                 entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
             }
