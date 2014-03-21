@@ -20,6 +20,8 @@ public class AIPursuit : StateMachine
 
     private GameObject currentTarget = null;
 
+    private GameManager gameManager;
+
     private List<Ability> _abilityList = new List<Ability>(); // List of usuable abilities. This will be sorted by cooldown time then damagemod (for now)
     
     void Awake()
@@ -40,6 +42,7 @@ public class AIPursuit : StateMachine
         NavAgent = GetComponent<NavMeshAgent>();
         entity = GetComponent<Entity>();
         combatFSM = GetComponent<CombatFSM>();
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
 
     void Start()
@@ -87,7 +90,7 @@ public class AIPursuit : StateMachine
         if (entity.abilityManager.activeCoolDowns[0] > Time.time)
         {
             float timeLeft = entity.abilityManager.activeCoolDowns[0] - Time.time;
-            Debug.Log("Enemy Ability 1 Cooldown Left: " + timeLeft.ToString());
+            //Debug.Log("Enemy Ability 1 Cooldown Left: " + timeLeft.ToString());
         }
         
         if (currentTarget != null)

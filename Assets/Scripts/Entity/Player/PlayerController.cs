@@ -19,7 +19,12 @@ public class PlayerController : MonoBehaviour {
     public MovementFSM moveFSM;
     public CombatFSM combatFSM;
 
-    public GameObject fusRoDahParticles;
+    private GameManager gameManager;
+
+    void Awake()
+    {
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+    }
 
 	// Use this for initialization
 	void Start () {
@@ -39,7 +44,7 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate()
 	{
-		if (agent.hasPath
+		if (agent.hasPath)
 		{
 			Vector3 newVector = (transform.position + agent.velocity.normalized);
 			Vector3 target = newVector - transform.position;
@@ -130,6 +135,7 @@ public class PlayerController : MonoBehaviour {
 			}
 
         }
+
         #region abilities
 
 
@@ -139,7 +145,7 @@ public class PlayerController : MonoBehaviour {
         {
             if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[2] <= Time.time)
             {
-                if (entity.abilityManager.abilities[2].Attack_Type == AttackType.MELEE)
+                if (entity.abilityManager.abilities[2].AttackType == AttackType.MELEE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                 }
@@ -163,7 +169,7 @@ public class PlayerController : MonoBehaviour {
 
             if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[3] <= Time.time)
             {
-                if (entity.abilityManager.abilities[3].Attack_Type == AttackType.MELEE)
+                if (entity.abilityManager.abilities[3].AttackType == AttackType.MELEE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                 }
@@ -186,7 +192,7 @@ public class PlayerController : MonoBehaviour {
             if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[4] <= Time.time)
             {
                 Debug.Log(transform.position);
-                if (entity.abilityManager.abilities[4].Attack_Type == AttackType.MELEE)
+                if (entity.abilityManager.abilities[4].AttackType == AttackType.MELEE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                 }
@@ -207,7 +213,7 @@ public class PlayerController : MonoBehaviour {
         {
             if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[5] <= Time.time)
             {
-                if (entity.abilityManager.abilities[5].Attack_Type == AttackType.MELEE)
+                if (entity.abilityManager.abilities[5].AttackType == AttackType.MELEE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                 }

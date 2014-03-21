@@ -70,6 +70,15 @@ public abstract class Ability
         get { return readable; }
     }
 
+    protected GameObject particleSystem;
+    public GameObject ParticleSystem
+    {
+        get
+        {
+            return particleSystem;
+        }
+    }
+
 
     /// <summary>
     /// Base modifier from which damage is calculated
@@ -83,7 +92,7 @@ public abstract class Ability
     
     #endregion
 
-    public Ability(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable)
+    public Ability(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
     {
         this.attackType = attackType;
         this.damageType = damageType;
@@ -92,6 +101,7 @@ public abstract class Ability
         this.cooldown = cooldown;
         this.readable = readable;
         this.damageMod = damageMod;
+        this.particleSystem = particles;
     }
 
     /// <summary>
@@ -99,7 +109,7 @@ public abstract class Ability
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
     /// <param name="defender">The gameobject defending against the attack</param>
-    public abstract void AttackHandler(GameObject attacker, bool isPlayer, GameObject particleAnimation);
+    public abstract void AttackHandler(GameObject attacker, bool isPlayer);
 
     /// <summary>
     /// Figure out who will be affected by this attack
