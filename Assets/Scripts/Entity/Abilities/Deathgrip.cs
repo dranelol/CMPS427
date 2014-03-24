@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class Deathgrip : Ability
 {
-    public Deathgrip(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable)
+    public Deathgrip(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
     {
        
     }
@@ -186,4 +186,5 @@ public class Deathgrip : Ability
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
         defender.GetComponent<MovementFSM>().AddForce(relativeVector * force * 2, 0.1f, ForceMode.Impulse);
     }
+
 }

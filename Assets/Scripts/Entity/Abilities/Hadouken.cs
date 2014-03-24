@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 public class Hadouken : Ability
 {
-    public Hadouken(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable)
+    public Hadouken(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
     {
-       
+
     }
 
     /// <summary>

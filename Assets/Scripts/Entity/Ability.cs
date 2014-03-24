@@ -35,7 +35,7 @@ public abstract class Ability
     #region Properties
 
     protected AttackType attackType;
-    public AttackType Attack_Type
+    public AttackType AttackType
     {
         get { return attackType; }
     }
@@ -70,6 +70,15 @@ public abstract class Ability
         get { return readable; }
     }
 
+    protected GameObject particleSystem;
+    public GameObject ParticleSystem
+    {
+        get
+        {
+            return particleSystem;
+        }
+    }
+
 
     /// <summary>
     /// Base modifier from which damage is calculated
@@ -83,7 +92,7 @@ public abstract class Ability
     
     #endregion
 
-    public Ability(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable)
+    public Ability(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
     {
         this.attackType = attackType;
         this.damageType = damageType;
@@ -92,6 +101,7 @@ public abstract class Ability
         this.cooldown = cooldown;
         this.readable = readable;
         this.damageMod = damageMod;
+        this.particleSystem = particles;
     }
 
     /// <summary>
@@ -125,8 +135,17 @@ public abstract class Ability
     public virtual void DoPhysics(GameObject attacker, GameObject defender)
     {
     }
+    
 
-
+    /// <summary>
+    /// Certain attacks have an animation associated with them; this resolves those effects
+    /// </summary>
+    /// <param name="attacker">Gameobject doing the attacking</param>
+    /// <param name="defender">Gameobject affected by the attack; default null if the attack only has an animation for the attacker</param>
+    public virtual IEnumerator DoAnimation(GameObject attacker, GameObject source, float time, GameObject defender = null)
+    {
+        yield return null;
+    }
     
 }
 
