@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class Deathgrip : Ability
 {
-    public Deathgrip(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable)
+    public Deathgrip(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
     {
        
     }
@@ -56,7 +56,17 @@ public class Deathgrip : Ability
     {
         List<GameObject> enemiesToAttack = new List<GameObject>();
 
-        Vector3 forward = attacker.forward.normalized;
+        Vector3 forward = new Vector3();
+
+        // this is a player attack, forward attack vector will be based on cursor position
+        if (isPlayer == true)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit target;
+            Physics.Raycast(ray, out target, Mathf.Infinity);
+            Vector3 vectorToMouse = target.point - attacker.position;
+            forward = new Vector3(vectorToMouse.x, attacker.forward.y, vectorToMouse.z).normalized;
+        }
 
         int enemyMask = LayerMask.NameToLayer("Enemy");
         int playerMask = LayerMask.NameToLayer("Player");
@@ -81,6 +91,12 @@ public class Deathgrip : Ability
 
             Vector3 enemyVector = collider.transform.position - attacker.position;
             Vector3 enemyVector2 = attacker.position - collider.transform.position;
+
+            // this is an enemy attack, forward attack vector will be based on target position
+            if (isPlayer == false)
+            {
+                forward = enemyVector;
+            }
 
             // if the angle between the forward vector of the attacker and the enemy vector is less than the angle of attack, the enemy is within the attack angle
             if (Vector3.Angle(forward, enemyVector) < angle)
@@ -170,4 +186,5 @@ public class Deathgrip : Ability
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
         defender.GetComponent<MovementFSM>().AddForce(relativeVector * force * 2, 0.1f, ForceMode.Impulse);
     }
+
 }
