@@ -1133,7 +1133,7 @@ public class equipmentFactory {
         affixeslist.Add(tempaffix);
         tempaffix = new affix("of the Nomad",       equipSlots.affixtype.Suffix,   0f,   0f,  5f,  0f,  0f,  0f,      0f,   0.1f, new equipSlots.slots[] {equipSlots.slots.Main, equipSlots.slots.Head, equipSlots.slots.Chest, equipSlots.slots.Legs, equipSlots.slots.Feet, equipSlots.slots.Off});
         affixeslist.Add(tempaffix);
-        tempaffix = new affix("of the Fencers",     equipSlots.affixtype.Suffix,   0f,   0f,  0f,  5f,  0f,  0f,    0.1f,     0f, new equipSlots.slots[] {equipSlots.slots.Main, equipSlots.slots.Head, equipSlots.slots.Chest, equipSlots.slots.Legs, equipSlots.slots.Feet, equipSlots.slots.Off});
+        tempaffix = new affix("of the Fencer",     equipSlots.affixtype.Suffix,   0f,   0f,  0f,  5f,  0f,  0f,    0.1f,     0f, new equipSlots.slots[] {equipSlots.slots.Main, equipSlots.slots.Head, equipSlots.slots.Chest, equipSlots.slots.Legs, equipSlots.slots.Feet, equipSlots.slots.Off});
         affixeslist.Add(tempaffix);
         tempaffix = new affix("of the Crusader",    equipSlots.affixtype.Suffix,   0f,   0f,  0f,  5f,  0f,  0f,      0f,   0.1f, new equipSlots.slots[] {equipSlots.slots.Main, equipSlots.slots.Head, equipSlots.slots.Chest, equipSlots.slots.Legs, equipSlots.slots.Feet, equipSlots.slots.Off});
         affixeslist.Add(tempaffix);
