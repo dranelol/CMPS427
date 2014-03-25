@@ -87,7 +87,7 @@ public class AIPursuit : StateMachine
         if (entity.abilityManager.activeCoolDowns[0] > Time.time)
         {
             float timeLeft = entity.abilityManager.activeCoolDowns[0] - Time.time;
-            Debug.Log("Enemy Ability 1 Cooldown Left: " + timeLeft.ToString());
+            //Debug.Log("Enemy Ability 1 Cooldown Left: " + timeLeft.ToString());
         }
         
         if (currentTarget != null)
