@@ -46,7 +46,8 @@ public class Fusrodah : Ability
             }
         }
 
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(attacker, particleSystem, 0.2f));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(attacker, particleSystem, 0.2f, isPlayer));
+    
     }
 
     /// <summary>
@@ -141,8 +142,8 @@ public class Fusrodah : Ability
                     {
                         if (hit.collider.gameObject.tag == "Enemy")
                         {
-                            Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                            Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+                            //Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                            //Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
                             enemiesToAttack.Add(collider.gameObject);
                         }
                     }
@@ -197,10 +198,28 @@ public class Fusrodah : Ability
     /// </summary>                                                                                              
     /// <param name="attacker">Gameobject doing the attacking</param>
     /// <param name="defender">Gameobject affected by the attack; default null if the attack only has an animation for the attacker</param>
-    public override IEnumerator DoAnimation(GameObject attacker, GameObject source, float time, GameObject defender = null)
+    public override IEnumerator DoAnimation(GameObject attacker, GameObject source, float time, bool isPlayer, GameObject defender = null)
     {
-        Vector3 newPosition = new Vector3(attacker.transform.position.x + attacker.transform.forward.x * 4.8f, attacker.transform.position.y, attacker.transform.position.z + attacker.transform.forward.z * 4.8f);
-        GameObject particles = (GameObject)GameObject.Instantiate(source, newPosition, attacker.transform.rotation);
+        
+        GameObject particles;
+
+
+        if (isPlayer == true)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit target;
+            Physics.Raycast(ray, out target, Mathf.Infinity);
+            Vector3 vectorToMouse = target.point - attacker.transform.position;
+            Vector3 cursorForward = new Vector3(vectorToMouse.x, attacker.transform.forward.y, vectorToMouse.z).normalized;
+            Quaternion rotation = Quaternion.LookRotation(cursorForward);
+            particles = (GameObject)GameObject.Instantiate(source, attacker.transform.position, rotation);
+        }
+
+        else
+        {
+            particles = (GameObject)GameObject.Instantiate(source, attacker.transform.position, attacker.transform.rotation);
+        }
+
 
         //particles.transform.parent = attacker.transform;
 

@@ -142,8 +142,8 @@ public class Hadouken : Ability
                     {
                         if (hit.collider.gameObject.tag == "Enemy")
                         {
-                            Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                            Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+                            //Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                            //Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
                             enemiesToAttack.Add(collider.gameObject);
                         }
                     }
