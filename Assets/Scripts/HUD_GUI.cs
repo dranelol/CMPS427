@@ -150,7 +150,7 @@ public class HUD_GUI : MonoBehaviour {
 			                         HealthOverlayPos.y,//0f
 			                         HealthOverlaySize.x,//200f,
 			                         HealthOverlaySize.y),//100f),
-			                HealthGlare);// texture
+			                         HealthGlare);// texture
 
 		
 		

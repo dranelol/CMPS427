@@ -14,11 +14,12 @@ public class Entity : MonoBehaviour
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
     private Inventory inventory;
 
+    public Inventory Inventory { get { return inventory; } }
 
     public void Awake()
     {
         inventory = new Inventory();
-        //abilities = new List<Ability>(6);
+        
 
         abilityManager = gameObject.GetComponent<AbilityManager>();
 
@@ -33,6 +34,8 @@ public class Entity : MonoBehaviour
 
         maxHP = currentHP = 50;
     }
+
+    public void Start() { }
 
     /// <summary>
     /// Add the attribute changes of an item to the entity. The item must correlate to one of the equipment slots,
@@ -86,6 +89,11 @@ public class Entity : MonoBehaviour
     /// </summary>
     /// <returns>True if the dude is dead.</returns>
     public bool IsDead() { return currentHP <= 0; }
+
+    private void LoadInventory()
+    {
+        
+    }
 
     #region Buffs
     /// <summary>

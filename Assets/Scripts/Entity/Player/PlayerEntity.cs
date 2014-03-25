@@ -31,7 +31,6 @@ public class PlayerEntity : Entity
 	// Update is called once per frame
 	public void Update () 
     {
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit target;
         Physics.Raycast(ray, out target, Mathf.Infinity);
@@ -46,13 +45,12 @@ public class PlayerEntity : Entity
         //abilities[5].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
 
         // update these on-demand instead of every update
-
-        //power = currentAtt.Power;
-        //defense = currentAtt.Defense;
-        //attackSpeed = currentAtt.AttackSpeed;
-        //movementSpeed = currentAtt.MovementSpeed;
-        //minDamage = currentAtt.MinDamage;
-        //maxDamage = currentAtt.MaxDamage;
+        power = currentAtt.Power;
+        defense = currentAtt.Defense;
+        attackSpeed = currentAtt.AttackSpeed;
+        movementSpeed = currentAtt.MovementSpeed;
+        minDamage = currentAtt.MinDamage;
+        maxDamage = currentAtt.MaxDamage;
 
         //Debug.Log(abilities.Count);
 	}

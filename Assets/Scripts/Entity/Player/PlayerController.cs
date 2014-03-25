@@ -250,6 +250,7 @@ public class PlayerController : MonoBehaviour {
 
             equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(0, equipSlots.slots.Main);
             entity.addEquipment(equipSlots.slots.Main, tempEquip);
+            entity.Inventory.AddItem(tempEquip);
 
             Debug.Log("min damage after equip change to low sword: " + entity.currentAtt.MinDamage);
             Debug.Log("max damage after equip change to low sword: " + entity.currentAtt.MaxDamage);

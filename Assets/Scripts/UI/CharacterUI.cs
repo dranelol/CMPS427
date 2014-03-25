@@ -66,6 +66,8 @@ public class CharacterUI : UIState {
 
         if (selection == 0)
             DrawStats();
+        if (selection == 1)
+            DrawInventory();
     }
 
     void DrawStats()
@@ -90,7 +92,20 @@ public class CharacterUI : UIState {
 
     void DrawInventory()
     {
+        int viewSize = Controller.Player.Inventory.Items.Count * 30;
 
+        scrollViewVector = GUI.BeginScrollView(new Rect(10, 350, WIDTH - 10, 150), scrollViewVector,
+            new Rect(0, 0, 10, viewSize));
+
+        yOffset = 0;
+        foreach (equipment item in Controller.Player.Inventory.Items)
+        {
+            GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+            GUI.Label(new Rect(0, yOffset, WIDTH - 30, 20), item.equipmentName);
+            yOffset += 30;
+        }
+
+        GUI.EndScrollView();
     }
 
     void DrawSkills()
