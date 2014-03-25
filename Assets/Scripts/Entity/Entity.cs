@@ -12,10 +12,12 @@ public class Entity : MonoBehaviour
 
     public List<Ability> abilities;
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
+    private Inventory inventory;
 
 
     public void Awake()
     {
+        inventory = new Inventory();
         abilities = new List<Ability>(6);
 
         for (int i = 0; i < abilities.Capacity; i++)
@@ -31,13 +33,6 @@ public class Entity : MonoBehaviour
         currentAtt.Power = 100;
 
         maxHP = currentHP = 50;
-    }
-    /// <summary>
-    /// Creates the entity with a given set of base attributes,
-    /// </summary>
-    public void Start()
-    {
-        
     }
 
     /// <summary>
