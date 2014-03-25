@@ -19,7 +19,8 @@ public class CombatFSM : StateMachine
     }
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+    {
 
         SetupMachine(CombatStates.idle);
 
@@ -44,6 +45,8 @@ public class CombatFSM : StateMachine
 
     public void Attack(float time)
     {
+        
+        
         attack = true;
         if (timeLocked == false)
         {

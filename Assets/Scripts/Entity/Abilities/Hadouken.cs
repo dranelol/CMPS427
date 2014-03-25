@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 public class Hadouken : Ability
 {
-    public Hadouken(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable)
+    public Hadouken(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
     {
-       
+
     }
 
     /// <summary>
@@ -142,8 +142,8 @@ public class Hadouken : Ability
                     {
                         if (hit.collider.gameObject.tag == "Enemy")
                         {
-                            Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                            Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+                            //Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                            //Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
                             enemiesToAttack.Add(collider.gameObject);
                         }
                     }
@@ -165,9 +165,10 @@ public class Hadouken : Ability
         Entity attackerEntity = attacker.GetComponent<Entity>();
         Entity defenderEntity = defender.GetComponent<Entity>();
 
-        // for now, always just take 10hp off
+        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
+        Debug.Log("damage: " + damageAmt);
 
-        defenderEntity.currentHP -= 10f;
+        defenderEntity.currentHP -= damageAmt;
 
         float ratio = (defenderEntity.currentHP / defenderEntity.maxHP);
 

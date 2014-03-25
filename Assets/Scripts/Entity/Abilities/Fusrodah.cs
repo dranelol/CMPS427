@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class Fusrodah : Ability
 {
-    public Fusrodah(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable)
+    public Fusrodah(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
     {
        
     }
@@ -14,7 +14,7 @@ public class Fusrodah : Ability
     /// Handler for this attack; figures out who will be attacked, and carries out everything needed for the attack to occur
     /// </summary>
     /// <param name="attacker">The gameobject carrying out the attack</param>
-    /// <param name="defender">The gameobject defending against the attack</param>
+    /// <param name="defender">The gameobject defending against the attack</param>                                                 
     public override void AttackHandler(GameObject attacker, bool isPlayer)
     {
         List<GameObject> attacked = OnAttack(attacker.transform, isPlayer);
@@ -45,6 +45,9 @@ public class Fusrodah : Ability
                 DoPhysics(attacker, enemy);
             }
         }
+
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(attacker, particleSystem, 0.2f, isPlayer));
+    
     }
 
     /// <summary>
@@ -139,8 +142,8 @@ public class Fusrodah : Ability
                     {
                         if (hit.collider.gameObject.tag == "Enemy")
                         {
-                            Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                            Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+                            //Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                            //Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
                             enemiesToAttack.Add(collider.gameObject);
                         }
                     }
@@ -162,9 +165,10 @@ public class Fusrodah : Ability
         Entity attackerEntity = attacker.GetComponent<Entity>();
         Entity defenderEntity = defender.GetComponent<Entity>();
 
-        // for now, always just take 10hp off
+        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
+        Debug.Log("damage: " + damageAmt);
 
-        defenderEntity.currentHP -= 10f;
+        defenderEntity.currentHP -= damageAmt;
 
         float ratio = (defenderEntity.currentHP / defenderEntity.maxHP);
 
@@ -188,4 +192,57 @@ public class Fusrodah : Ability
 
         defender.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force * 2, 0.2f, ForceMode.Impulse);
     }
+
+    /// <summary>
+    /// Certain attacks have an animation associated with them; this resolves those effects
+    /// </summary>                                                                                              
+    /// <param name="attacker">Gameobject doing the attacking</param>
+    /// <param name="defender">Gameobject affected by the attack; default null if the attack only has an animation for the attacker</param>
+    public override IEnumerator DoAnimation(GameObject attacker, GameObject source, float time, bool isPlayer, GameObject defender = null)
+    {
+        
+        GameObject particles;
+
+
+        if (isPlayer == true)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit target;
+            Physics.Raycast(ray, out target, Mathf.Infinity);
+            Vector3 vectorToMouse = target.point - attacker.transform.position;
+            Vector3 cursorForward = new Vector3(vectorToMouse.x, attacker.transform.forward.y, vectorToMouse.z).normalized;
+            Quaternion rotation = Quaternion.LookRotation(cursorForward);
+            particles = (GameObject)GameObject.Instantiate(source, attacker.transform.position, rotation);
+        }
+
+        else
+        {
+            particles = (GameObject)GameObject.Instantiate(source, attacker.transform.position, attacker.transform.rotation);
+        }
+
+
+        //particles.transform.parent = attacker.transform;
+
+        yield return new WaitForSeconds(time);
+
+        ParticleSystem[] particleSystems = source.GetComponentsInChildren<ParticleSystem>();
+
+        Debug.Log("fus");
+
+        foreach (Transform child in particles.transform)
+        {
+            if (child.GetComponent<ParticleSystem>() != null)
+            {
+                child.GetComponent<ParticleSystem>().enableEmission = false;
+            }
+        }
+        
+        
+        yield return new WaitForSeconds(time * 2);
+        GameObject.Destroy(particles);
+        
+       // GameObject.Destroy(particles);
+        yield return null;
+    }
+
 }
