@@ -165,9 +165,10 @@ public class Hadouken : Ability
         Entity attackerEntity = attacker.GetComponent<Entity>();
         Entity defenderEntity = defender.GetComponent<Entity>();
 
-        // for now, always just take 10hp off
+        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
+        Debug.Log("damage: " + damageAmt);
 
-        defenderEntity.currentHP -= 10f;
+        defenderEntity.currentHP -= damageAmt;
 
         float ratio = (defenderEntity.currentHP / defenderEntity.maxHP);
 
