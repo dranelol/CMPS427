@@ -25,10 +25,10 @@ public class GameManager : MonoBehaviour
 
         // Attack type, damage type, range, angle, cooldown, damagemod
 
-        Abilities["hadouken"] = new Hadouken(AttackType.PBAOE, DamageType.FIRE, 5.0f, 360.0f, 3.0f, 1.0f, "hadouken", "Hadouken", HadoukenParticles);
-        Abilities["deathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.FIRE, 5.0f, 360.0f, 3.0f, 1.0f, "deathgrip", "AoE Deathgrip", DeathgripParticles);
-        Abilities["cleave"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 5.0f, 45.0f, 5.0f, 1.0f, "cleave", "Cleave", CleaveParticles);
-        Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 5.0f, 45.0f, 10.0f, 1.0f, "fusrodah", "Fus Roh Dah", FusRoDahParticles);
+        Abilities["hadouken"] = new Hadouken(AttackType.PBAOE, DamageType.FIRE, 5.0f, 360.0f, 3.0f, 10.0f, "hadouken", "Hadouken", HadoukenParticles);
+        Abilities["deathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.FIRE, 5.0f, 360.0f, 3.0f, 15.0f, "deathgrip", "AoE Deathgrip", DeathgripParticles);
+        Abilities["cleave"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 5.0f, 45.0f, 0.0f, 5.0f, "cleave", "Cleave", CleaveParticles);
+        Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 5.0f, 45.0f, 1.0f, 10.0f, "fusrodah", "Fus Roh Dah", FusRoDahParticles);
 
         #endregion
     }

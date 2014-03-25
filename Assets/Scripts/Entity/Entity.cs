@@ -20,11 +20,13 @@ public class Entity : MonoBehaviour
         abilityManager = gameObject.GetComponent<AbilityManager>();
 
         currentAtt = new Attributes();
-        Debug.Log(currentAtt.ToString());
+        //Debug.Log(currentAtt.ToString());                                                                             /*I'm a white guy typing code. LOLZ! I wish I was a female cause I want to look pretty!*/
         equipAtt = new Attributes();
         buffAtt = new Attributes();
-		
-        currentAtt.Power = 100;
+
+        currentAtt.Power = 10;
+        currentAtt.Defense = 10;
+        currentAtt.AttackSpeed = 1.0f;
 
         maxHP = currentHP = 50;
     }

@@ -142,7 +142,7 @@ public abstract class Ability
     /// </summary>
     /// <param name="attacker">Gameobject doing the attacking</param>
     /// <param name="defender">Gameobject affected by the attack; default null if the attack only has an animation for the attacker</param>
-    public virtual IEnumerator DoAnimation(GameObject attacker, GameObject source, float time, GameObject defender = null)
+    public virtual IEnumerator DoAnimation(GameObject attacker, GameObject source, float time, bool isPlayer, GameObject defender = null)
     {
         yield return null;
     }
