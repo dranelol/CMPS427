@@ -10,7 +10,7 @@ public class Fusrodah : Ability
        
     }
                                             
-    public override void AttackHandler(GameObject source, bool isPlayer)
+    public override void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
     {
         List<GameObject> attacked = OnAttack(source, isPlayer);
 
@@ -22,9 +22,8 @@ public class Fusrodah : Ability
                 if (enemy.GetComponent<AIController>().IsResetting() == false
                     && enemy.GetComponent<AIController>().IsDead() == false)
                 {
-                    DoDamage(source, enemy, isPlayer);
-
-                    // this is a physics attack, so do physics applies
+                    Entity defender = enemy.GetComponent<Entity>();
+                    DoDamage(source, enemy, attacker, defender, isPlayer);
                     DoPhysics(source, enemy);
                 }
             }
@@ -34,14 +33,13 @@ public class Fusrodah : Ability
         {
             foreach (GameObject enemy in attacked)
             {
-                DoDamage(source, enemy, isPlayer);
-
-                // this is a physics attack, so do physics applies
+                Entity defender = enemy.GetComponent<Entity>();
+                DoDamage(source, enemy, attacker, defender, isPlayer);
                 DoPhysics(source, enemy);
             }
         }
 
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(attacker, particleSystem, 0.2f, isPlayer));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.2f, isPlayer));
     
     }
 
@@ -173,7 +171,7 @@ public class Fusrodah : Ability
         target.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force * 2, 0.2f, ForceMode.Impulse);
     }
 
-    public override IEnumerator DoAnimation(GameObject attacker, GameObject particlePrefab, float time, bool isPlayer, GameObject defender = null)
+    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
     {
         
         GameObject particles;
@@ -182,17 +180,17 @@ public class Fusrodah : Ability
         if (isPlayer == true)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit target;
-            Physics.Raycast(ray, out target, Mathf.Infinity);
-            Vector3 vectorToMouse = target.point - attacker.transform.position;
-            Vector3 cursorForward = new Vector3(vectorToMouse.x, attacker.transform.forward.y, vectorToMouse.z).normalized;
+            RaycastHit targetRay;
+            Physics.Raycast(ray, out targetRay, Mathf.Infinity);
+            Vector3 vectorToMouse = targetRay.point - source.transform.position;
+            Vector3 cursorForward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
             Quaternion rotation = Quaternion.LookRotation(cursorForward);
-            particles = (GameObject)GameObject.Instantiate(particlePrefab, attacker.transform.position, rotation);
+            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, rotation);
         }
 
         else
         {
-            particles = (GameObject)GameObject.Instantiate(particlePrefab, attacker.transform.position, attacker.transform.rotation);
+            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
         }
 
         //particles.transform.parent = attacker.transform;
