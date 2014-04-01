@@ -29,6 +29,7 @@ public class ProjectileBehaviour : MonoBehaviour
     /// </summary>
     public GameObject trailParticles;
 
+
     void Awake()
     {
 
@@ -38,15 +39,17 @@ public class ProjectileBehaviour : MonoBehaviour
     {
 	    
 	}
-	
 
 	void Update () 
     {
         timeToActivate -= Time.deltaTime;
 
+        velocity = rigidbody.velocity;
+
         if (timeToActivate <= 0.0f)
         {
             // do attack things
+            Debug.Log("explode!");
             
             // call do animation
 
@@ -56,23 +59,53 @@ public class ProjectileBehaviour : MonoBehaviour
         // update position of projectile
 
 	}
-
+    /*
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.tag == "Enemy" && owner.gameObject.tag == "Player")
         {
-            // do attack things
+            Debug.Log("attacked an enemy!");
 
+            Destroy(gameObject);
+
+            
         }
 
-        else if(collision.gameObject.tag == "Player")
+        else if (collision.gameObject.tag == "Player" && owner.gameObject.tag == "Enemy")
         {
-            // do attack things
-
+            Debug.Log("attacked a player");
         }
 
         // call do animation here
 
         // clean up and suicide
+
+        //Destroy(gameObject);
+
+
+    }
+    */
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Enemy" && owner.gameObject.tag == "Player")
+        {
+            Debug.Log("attacked an enemy!");
+
+            Destroy(gameObject);
+
+
+        }
+
+        else if (other.gameObject.tag == "Player" && owner.gameObject.tag == "Enemy")
+        {
+            Debug.Log("attacked a player");
+        }
+
+        // call do animation here
+
+        // clean up and suicide
+
+        //Destroy(gameObject);
     }
 }

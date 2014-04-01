@@ -247,7 +247,35 @@ public class PlayerController : MonoBehaviour {
             }
         }
         #endregion
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit target;
+            Physics.Raycast(ray, out target, Mathf.Infinity);
+            Vector3 vectorToMouse = target.point - gameObject.transform.position;
+            Vector3 forward = new Vector3(vectorToMouse.x, gameObject.transform.forward.y, vectorToMouse.z).normalized;
 
+            // check rotation to be sure
+            GameObject pewpewArrow = (GameObject)Instantiate(gameManager.Arrow, transform.position, Quaternion.Euler(forward));
+            
+
+            pewpewArrow.GetComponent<ProjectileBehaviour>().owner = gameObject;
+            
+            // apply velocity
+
+            pewpewArrow.rigidbody.velocity = forward * 20.0f;
+
+            pewpewArrow.GetComponent<ProjectileBehaviour>().timeToActivate = Mathf.Infinity;
+
+
+            
+        }
+
+        #region ABILITY TESTS
+
+
+        #endregion
+        #region equipment stuff
         if (Input.GetKeyDown(KeyCode.A))
         {
             // small sword
@@ -295,6 +323,8 @@ public class PlayerController : MonoBehaviour {
 
         }
 
+        #endregion
+
 
 
 
@@ -302,7 +332,7 @@ public class PlayerController : MonoBehaviour {
         #endregion
 
 
-        
+
     }
 
     

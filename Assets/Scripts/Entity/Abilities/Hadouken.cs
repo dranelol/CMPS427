@@ -21,12 +21,13 @@ public class Hadouken : Ability
 
         if (isPlayer == true)
         {
+            Debug.Log(attacked.Count);
             foreach (GameObject enemy in attacked)
             {
                 if (enemy.GetComponent<AIController>().IsResetting() == false
                     && enemy.GetComponent<AIController>().IsDead() == false)
                 {
-                    DoDamage(attacker, enemy, isPlayer);
+                    //DoDamage(attacker, enemy, isPlayer);
 
                     // this is a physics attack, so do physics applies
                     DoPhysics(attacker, enemy);
@@ -39,7 +40,7 @@ public class Hadouken : Ability
             foreach (GameObject enemy in attacked)
             {
                 
-                DoDamage(attacker, enemy, isPlayer);
+                //DoDamage(attacker, enemy, isPlayer);
 
                 // this is a physics attack, so do physics applies
                 DoPhysics(attacker, enemy);
