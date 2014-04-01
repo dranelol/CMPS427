@@ -144,10 +144,6 @@ public class Fusrodah : Ability
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
-        //Debug.Log(defender.ToString());
-        Entity attacker = source.GetComponent<Entity>();
-        Entity defender = target.GetComponent<Entity>();
-
         float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
         Debug.Log("damage: " + damageAmt);
 

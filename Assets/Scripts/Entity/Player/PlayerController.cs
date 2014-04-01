@@ -173,7 +173,7 @@ public class PlayerController : MonoBehaviour {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 }
 
-                entity.abilityManager.abilities[2].AttackHandler(gameObject, true);
+                entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
                 entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
             }
         }
@@ -198,7 +198,7 @@ public class PlayerController : MonoBehaviour {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 }
 
-                entity.abilityManager.abilities[3].AttackHandler(gameObject, true);
+                entity.abilityManager.abilities[3].AttackHandler(gameObject, entity, true);
                 entity.abilityManager.activeCoolDowns[3] = Time.time + entity.abilityManager.abilities[3].Cooldown;
 
             }
@@ -220,7 +220,7 @@ public class PlayerController : MonoBehaviour {
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 }
-                entity.abilityManager.abilities[4].AttackHandler(gameObject, true);
+                entity.abilityManager.abilities[4].AttackHandler(gameObject, entity, true);
                 entity.abilityManager.activeCoolDowns[4] = Time.time + entity.abilityManager.abilities[4].Cooldown;
 
             }
@@ -241,7 +241,7 @@ public class PlayerController : MonoBehaviour {
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 }
-                entity.abilityManager.abilities[5].AttackHandler(gameObject, true);
+                entity.abilityManager.abilities[5].AttackHandler(gameObject, entity, true);
                 entity.abilityManager.activeCoolDowns[5] = Time.time + entity.abilityManager.abilities[5].Cooldown;
 
             }

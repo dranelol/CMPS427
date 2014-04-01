@@ -142,7 +142,7 @@ public class AIPursuit : StateMachine
             combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
             Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
 
-            entity.abilityManager.abilities[0].AttackHandler(gameObject, false);
+            entity.abilityManager.abilities[0].AttackHandler(gameObject, entity, false);
             entity.abilityManager.activeCoolDowns[0] = Time.time + entity.abilityManager.abilities[0].Cooldown;
 
             /*
