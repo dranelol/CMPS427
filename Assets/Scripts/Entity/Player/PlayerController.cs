@@ -53,7 +53,9 @@ public class PlayerController : MonoBehaviour {
 			transform.rotation = Quaternion.Euler(tempRotation);
 		}
 	}
-	void Update () {
+	void Update () 
+    {
+        
         if (GameObject.FindWithTag("UI Controller").GetComponent<UIController>().GuiState != UIController.States.INGAME)
             return;
 
@@ -89,6 +91,7 @@ public class PlayerController : MonoBehaviour {
 
         if (targetPosition != Vector3.zero)
         {
+            Debug.Log("this shouldnt happen ever");
             // If we're in attack range...
             Vector3 diff = targetPosition - transform.position;
             if (diff.magnitude <= attackRange)
@@ -107,7 +110,9 @@ public class PlayerController : MonoBehaviour {
         // If the move/attack key was pressed...
         if (Input.GetAxis("Move/Attack") != 0) 
         {
-            int terrainMask= LayerMask.NameToLayer("Terrain");
+            Debug.Log("controller has path: " + agent.hasPath);
+
+            int terrainMask = LayerMask.NameToLayer("Terrain");
 
             int enemyMask = LayerMask.NameToLayer("Enemy");
 
@@ -120,12 +125,15 @@ public class PlayerController : MonoBehaviour {
 			if (Physics.Raycast(ray, out target, Mathf.Infinity, 1 << terrainMask))
 			{
                // Debug.Log(target.collider.gameObject.layer);
-                //Debug.Log(target.collider.name);
+                Debug.Log(target.collider.name);
+
+                
 
                 // If the collider was an enemy...
                 if (target.collider.gameObject.tag == "Enemy")
                 {
                     // Set the target position to the enemy's position.
+                    Debug.Log("this should also never happen");
                     targetPosition = target.collider.gameObject.transform.position;
                 }
 
@@ -133,8 +141,14 @@ public class PlayerController : MonoBehaviour {
                 {
                     // Otherwise, move towards the point of collision.
                     targetPosition = Vector3.zero;
-                    moveFSM.SetPath(target.point);
+                    NavMeshHit hit;
 
+                    if (NavMesh.SamplePosition(target.point, out hit, 20, 1 << LayerMask.NameToLayer("Default")))
+                    {
+                        Debug.Log("it should always reach here");
+                        Debug.Log("target: " + target);
+                        moveFSM.SetPath(hit.position);
+                    }
 
                 }
 			}
