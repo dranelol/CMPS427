@@ -10,14 +10,9 @@ public class Cleave : Ability
        
     }
 
-    /// <summary>
-    /// Handler for this attack; figures out who will be attacked, and carries out everything needed for the attack to occur
-    /// </summary>
-    /// <param name="attacker">The gameobject carrying out the attack</param>
-    /// <param name="defender">The gameobject defending against the attack</param>
-    public override void AttackHandler(GameObject attacker, bool isPlayer)
+    public override void AttackHandler(GameObject source, bool isPlayer)
     {
-        List<GameObject> attacked = OnAttack(attacker.transform, isPlayer);
+        List<GameObject> attacked = OnAttack(source, isPlayer);
 
 
         if (isPlayer == true)
@@ -28,7 +23,7 @@ public class Cleave : Ability
                 if (enemy.GetComponent<AIController>().IsResetting() == false
                     && enemy.GetComponent<AIController>().IsDead() == false)
                 {
-                    DoDamage(attacker, enemy, isPlayer);
+                    DoDamage(source, enemy, isPlayer);
                 }
             }
         }
@@ -39,18 +34,13 @@ public class Cleave : Ability
             foreach (GameObject enemy in attacked)
             {
                 // todo: check if player is dead
-                DoDamage(attacker, enemy, isPlayer);
+                DoDamage(source, enemy, isPlayer);
                 
             }
         }
     }
 
-    /// <summary>
-    /// Figure out who will be affected by this attack
-    /// </summary>
-    /// <param name="attacker"></param>
-    /// <returns>Returns a list of gameobjects this attack will affect</returns>
-    public override List<GameObject> OnAttack(Transform attacker, bool isPlayer)
+    public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
     {
         List<GameObject> enemiesToAttack = new List<GameObject>();
 
@@ -62,8 +52,8 @@ public class Cleave : Ability
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit target;
             Physics.Raycast(ray, out target, Mathf.Infinity);
-            Vector3 vectorToMouse = target.point - attacker.position;
-            forward = new Vector3(vectorToMouse.x, attacker.forward.y, vectorToMouse.z).normalized;
+            Vector3 vectorToMouse = target.point - source.transform.position;
+            forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
         }
 
 
@@ -74,12 +64,12 @@ public class Cleave : Ability
 
         if (isPlayer == true)
         {
-            colliders = Physics.OverlapSphere(attacker.position, range, 1 << enemyMask);
+            colliders = Physics.OverlapSphere(source.transform.position, range, 1 << enemyMask);
         }
 
         else
         {
-            colliders = Physics.OverlapSphere(attacker.position, range, 1 << playerMask);
+            colliders = Physics.OverlapSphere(source.transform.position, range, 1 << playerMask);
         }
 
         foreach (Collider collider in colliders)
@@ -88,8 +78,8 @@ public class Cleave : Ability
 
             // create a vector from the possible enemy to the attacker
 
-            Vector3 enemyVector = collider.transform.position - attacker.position;
-            Vector3 enemyVector2 = attacker.position - collider.transform.position;
+            Vector3 enemyVector = collider.transform.position - source.transform.position;
+            Vector3 enemyVector2 = source.transform.position - collider.transform.position;
 
             // this is an enemy attack, forward attack vector will be based on target position
             if (isPlayer == false)
@@ -150,16 +140,11 @@ public class Cleave : Ability
         return enemiesToAttack;
     }
 
-    /// <summary>
-    /// Do damage with this attack
-    /// </summary>
-    /// <param name="attacker">The gameobject carrying out the attack</param>
-    /// <param name="defender">The gameobject defending against the attack</param>
-    public override void DoDamage(GameObject attacker, GameObject defender, bool isPlayer)
+    public override void DoDamage(GameObject source, GameObject target, bool isPlayer)
     {
         //Debug.Log(defender.ToString());
-        Entity attackerEntity = attacker.GetComponent<Entity>();
-        Entity defenderEntity = defender.GetComponent<Entity>();
+        Entity attacker = source.GetComponent<Entity>();
+        Entity defender = target.GetComponent<Entity>();
 
         float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
 
@@ -168,13 +153,13 @@ public class Cleave : Ability
             Debug.Log("damage: " + damageAmt);
         }
 
-        defenderEntity.currentHP -= damageAmt;
+        defender.currentHP -= damageAmt;
 
-        float ratio = (defenderEntity.currentHP / defenderEntity.maxHP);
+        float ratio = (defender.currentHP / defender.maxHP);
 
         if (isPlayer == true)
         {
-            defender.renderer.material.color = new Color(1.0f, ratio, ratio);
+            target.renderer.material.color = new Color(1.0f, ratio, ratio);
         }
 
 
