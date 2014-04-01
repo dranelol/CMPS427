@@ -10,28 +10,27 @@ public class Arrow : Ability
        
     }
 
-    public override void AttackHandler(GameObject source, GameObject target, bool isPlayer)
+    public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
     {
         if (isPlayer == true)
         {
             if (target.GetComponent<AIController>().IsResetting() == false
                     && target.GetComponent<AIController>().IsDead() == false)
             {
-                DoDamage(source, target, isPlayer);
+                Entity defender = target.GetComponent<Entity>();
+                DoDamage(source, target, attacker, defender, isPlayer);
             }
         }
 
         else
         {
-            DoDamage(source, target, isPlayer);
+            Entity defender = target.GetComponent<Entity>();
+            DoDamage(source, target, attacker, defender, isPlayer);
         }
     }
 
-    public override void DoDamage(GameObject source, GameObject target, bool isPlayer)
+    public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
-        //Debug.Log(defender.ToString());
-        Entity attacker = source.GetComponent<Entity>();
-        Entity defender = target.GetComponent<Entity>();
 
         float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
 

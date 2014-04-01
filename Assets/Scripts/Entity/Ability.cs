@@ -109,7 +109,7 @@ public abstract class Ability
 
     }
 
-    public virtual void AttackHandler(GameObject source, Entity attacker, Entity defender, bool isPlayer)
+    public virtual void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
     {
 
     }
