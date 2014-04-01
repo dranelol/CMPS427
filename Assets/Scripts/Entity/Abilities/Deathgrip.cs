@@ -10,7 +10,7 @@ public class Deathgrip : Ability
        
     }
 
-    public override void AttackHandler(GameObject source, bool isPlayer)
+    public override void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
     {
         List<GameObject> attacked = OnAttack(source, isPlayer);
 
@@ -22,9 +22,8 @@ public class Deathgrip : Ability
                 if (enemy.GetComponent<AIController>().IsResetting() == false
                     && enemy.GetComponent<AIController>().IsDead() == false)
                 {
-                    DoDamage(source, enemy, isPlayer);
-
-                    // this is a physics attack, so do physics applies
+                    Entity defender = enemy.GetComponent<Entity>();
+                    DoDamage(source, enemy, attacker, defender, isPlayer);
                     DoPhysics(source, enemy);
                 }
             }
@@ -34,9 +33,8 @@ public class Deathgrip : Ability
         {
             foreach (GameObject enemy in attacked)
             {
-                DoDamage(source, enemy, isPlayer);
-
-                // this is a physics attack, so do physics applies
+                Entity defender = enemy.GetComponent<Entity>();
+                DoDamage(source, enemy, attacker, defender, isPlayer);
                 DoPhysics(source, enemy);
             }
         }
@@ -141,11 +139,8 @@ public class Deathgrip : Ability
         return enemiesToAttack;
     }
 
-    public override void DoDamage(GameObject source, GameObject target, bool isPlayer)
+    public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
-        //Debug.Log(defender.ToString());
-        Entity attacker = source.GetComponent<Entity>();
-        Entity defender = target.GetComponent<Entity>();
 
         float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
         Debug.Log("damage: " + damageAmt);
