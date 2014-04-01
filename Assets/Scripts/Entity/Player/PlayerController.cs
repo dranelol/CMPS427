@@ -77,10 +77,14 @@ public class PlayerController : MonoBehaviour {
             */
         }
         
+        /*
         if (Vector3.Distance(transform.position, agent.destination) < 1.0f)
         {
+            Debug.Log("Destination: " + agent.destination);
+            Debug.Log("STOPPING 1");
             moveFSM.Stop();
         }
+        */
         // If we have a target...
 
         if (targetPosition != Vector3.zero)
@@ -91,6 +95,7 @@ public class PlayerController : MonoBehaviour {
             {
                 // attack enemy
                 targetPosition = Vector3.zero;
+                Debug.Log("STOPPING 2");
                 moveFSM.Stop();
             }
             else
@@ -153,6 +158,7 @@ public class PlayerController : MonoBehaviour {
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 }
+
                 entity.abilityManager.abilities[2].AttackHandler(gameObject, true);
                 entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
             }
