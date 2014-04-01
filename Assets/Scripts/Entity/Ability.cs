@@ -121,7 +121,7 @@ public abstract class Ability
         return attacked;
     }
 
-    public virtual void DoDamage(GameObject source, GameObject target, bool isPlayer)
+    public virtual void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
     }
 

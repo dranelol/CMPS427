@@ -144,7 +144,7 @@ public class Fusrodah : Ability
         return enemiesToAttack;
     }
 
-    public override void DoDamage(GameObject source, GameObject target, bool isPlayer)
+    public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
         //Debug.Log(defender.ToString());
         Entity attacker = source.GetComponent<Entity>();

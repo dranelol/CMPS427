@@ -10,7 +10,7 @@ public class Cleave : Ability
        
     }
 
-    public override void AttackHandler(GameObject source, bool isPlayer)
+    public override void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
     {
         List<GameObject> attacked = OnAttack(source, isPlayer);
 
@@ -23,7 +23,8 @@ public class Cleave : Ability
                 if (enemy.GetComponent<AIController>().IsResetting() == false
                     && enemy.GetComponent<AIController>().IsDead() == false)
                 {
-                    DoDamage(source, enemy, isPlayer);
+                    Entity defender = enemy.GetComponent<Entity>();
+                    DoDamage(source, enemy, attacker, defender, isPlayer);
                 }
             }
         }
@@ -34,7 +35,8 @@ public class Cleave : Ability
             foreach (GameObject enemy in attacked)
             {
                 // todo: check if player is dead
-                DoDamage(source, enemy, isPlayer);
+                Entity defender = enemy.GetComponent<Entity>();
+                DoDamage(source, enemy, attacker, defender, isPlayer);
                 
             }
         }
@@ -140,12 +142,8 @@ public class Cleave : Ability
         return enemiesToAttack;
     }
 
-    public override void DoDamage(GameObject source, GameObject target, bool isPlayer)
+    public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
-        //Debug.Log(defender.ToString());
-        Entity attacker = source.GetComponent<Entity>();
-        Entity defender = target.GetComponent<Entity>();
-
         float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
 
         if (isPlayer == true)
@@ -161,8 +159,6 @@ public class Cleave : Ability
         {
             target.renderer.material.color = new Color(1.0f, ratio, ratio);
         }
-
-
     }
 
 }
