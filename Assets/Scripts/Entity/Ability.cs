@@ -128,9 +128,9 @@ public abstract class Ability
     public virtual void DoPhysics(GameObject source, GameObject target)
     {
     }
-    
 
-    public virtual IEnumerator DoAnimation(GameObject attacker, GameObject source, float time, bool isPlayer, GameObject defender = null)
+
+    public virtual IEnumerator DoAnimation(GameObject attacker, GameObject particlePrefab, float time, bool isPlayer, GameObject defender = null)
     {
         yield return null;
     }
