@@ -175,17 +175,20 @@ public class HUD_GUI : MonoBehaviour {
 
         if (player.abilityManager.activeCoolDowns[2] > Time.time)
         {
+
+            
             timeLeft = player.abilityManager.activeCoolDowns[2] - Time.time;
         }
         else
         {
             timeLeft = 0;
-        }
+        }        
 
         GUI.Label(CDBox1, "Cleave CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
 
         if (player.abilityManager.activeCoolDowns[3] > Time.time)
         {
+            
             timeLeft = player.abilityManager.activeCoolDowns[3] - Time.time;
         }
         else
@@ -214,8 +217,6 @@ public class HUD_GUI : MonoBehaviour {
         {
             timeLeft = 0;
         }
-
-
 
         GUI.Label(CDBox4, "Death Grip CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
 

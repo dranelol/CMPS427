@@ -169,6 +169,7 @@ public class PlayerController : MonoBehaviour {
                 entity.abilityManager.abilities[2].AttackHandler(gameObject, true);
                 entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
                 
+                
             }
         }
 
