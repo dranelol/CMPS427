@@ -19,7 +19,12 @@ public class PlayerController : MonoBehaviour {
     public MovementFSM moveFSM;
     public CombatFSM combatFSM;
 
-    
+    private GameManager gameManager;
+
+    void Awake()
+    {
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+    }
 
 	// Use this for initialization
 	void Start () {
@@ -43,10 +48,6 @@ public class PlayerController : MonoBehaviour {
 		{
 			Vector3 newVector = (transform.position + agent.velocity.normalized);
 			Vector3 target = newVector - transform.position;
-			
-			//	Quaternion quat = Quaternion.LookRotation(target);
-			//  transform.rotation = quat;
-			
 			Vector3 tempRotation = transform.rotation.eulerAngles ;
 			tempRotation.y = Mathf.LerpAngle(transform.rotation.eulerAngles.y,  Quaternion.LookRotation(target).eulerAngles.y,Time.deltaTime * RotationSpeed);
 			transform.rotation = Quaternion.Euler(tempRotation);
@@ -61,10 +62,9 @@ public class PlayerController : MonoBehaviour {
         //Debug.DrawRay(transform.position, Rotations.RotateAboutY(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f), 22.5f));
         
         // if our agent actually has a path to move to
-        
-
         if (agent.hasPath == true)
         {
+            /*
             // find the next steering target and his current position, without caring about y-axis
             Vector3 steeringTarget = new Vector3(agent.steeringTarget.x, 0, agent.steeringTarget.z);
             Vector3 playerPosition = new Vector3(transform.position.x, 0, transform.position.z);
@@ -74,12 +74,17 @@ public class PlayerController : MonoBehaviour {
 
             //apply quaternion to the player's rotation
             //transform.rotation = quat;
+            */
         }
         
+        /*
         if (Vector3.Distance(transform.position, agent.destination) < 1.0f)
         {
+            Debug.Log("Destination: " + agent.destination);
+            Debug.Log("STOPPING 1");
             moveFSM.Stop();
         }
+        */
         // If we have a target...
 
         if (targetPosition != Vector3.zero)
@@ -90,6 +95,7 @@ public class PlayerController : MonoBehaviour {
             {
                 // attack enemy
                 targetPosition = Vector3.zero;
+                Debug.Log("STOPPING 2");
                 moveFSM.Stop();
             }
             else
@@ -125,8 +131,6 @@ public class PlayerController : MonoBehaviour {
 
                 else
                 {
-
-
                     // Otherwise, move towards the point of collision.
                     targetPosition = Vector3.zero;
                     moveFSM.SetPath(target.point);
@@ -137,11 +141,7 @@ public class PlayerController : MonoBehaviour {
 
         }
 
-
-
-        #region new key-bound attacks
-
-
+        #region abilities
 
 
         #region ability 1
@@ -156,7 +156,8 @@ public class PlayerController : MonoBehaviour {
 
                 Debug.Log("Attack Speed: " + entity.currentAtt.AttackSpeed.ToString());
                 
-                if (entity.abilityManager.abilities[2].Attack_Type == AttackType.MELEE)
+
+                if (entity.abilityManager.abilities[2].AttackType == AttackType.MELEE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                 }
@@ -164,6 +165,7 @@ public class PlayerController : MonoBehaviour {
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 }
+
                 entity.abilityManager.abilities[2].AttackHandler(gameObject, true);
                 entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
                 
@@ -181,7 +183,7 @@ public class PlayerController : MonoBehaviour {
 
             if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[3] <= Time.time)
             {
-                if (entity.abilityManager.abilities[3].Attack_Type == AttackType.MELEE)
+                if (entity.abilityManager.abilities[3].AttackType == AttackType.MELEE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                 }
@@ -204,7 +206,7 @@ public class PlayerController : MonoBehaviour {
             if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[4] <= Time.time)
             {
                 Debug.Log(transform.position);
-                if (entity.abilityManager.abilities[4].Attack_Type == AttackType.MELEE)
+                if (entity.abilityManager.abilities[4].AttackType == AttackType.MELEE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                 }
@@ -225,8 +227,7 @@ public class PlayerController : MonoBehaviour {
         {
             if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[5] <= Time.time)
             {
-
-                if (entity.abilityManager.abilities[5].Attack_Type == AttackType.MELEE)
+                if (entity.abilityManager.abilities[5].AttackType == AttackType.MELEE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                 }

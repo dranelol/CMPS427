@@ -20,6 +20,8 @@ public class AIPursuit : StateMachine
 
     private GameObject currentTarget = null;
 
+    private GameManager gameManager;
+
     private List<Ability> _abilityList = new List<Ability>(); // List of usuable abilities. This will be sorted by cooldown time then damagemod (for now)
     
     void Awake()
@@ -40,6 +42,7 @@ public class AIPursuit : StateMachine
         NavAgent = GetComponent<NavMeshAgent>();
         entity = GetComponent<Entity>();
         combatFSM = GetComponent<CombatFSM>();
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
 
     void Start()
@@ -138,8 +141,10 @@ public class AIPursuit : StateMachine
         {
             combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
             Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
+
             entity.abilityManager.abilities[0].AttackHandler(gameObject, false);
             entity.abilityManager.activeCoolDowns[0] = Time.time + entity.abilityManager.abilities[0].Cooldown;
+
             /*
             _abilityList[0].AttackHandler(gameObject, false);
             _abilityList.OrderBy(Ability => Ability.Cooldown).ThenBy(Ability => Ability.DamageMod); Use this later */
