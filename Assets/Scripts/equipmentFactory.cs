@@ -519,6 +519,14 @@ public class equipmentFactory {
                                      //NAME                               TYPE                           SLOT               tier  level     h     r    p    d  mndg mxdg      ms      as   flavortext 
         tempequip = new equipment("Dux's Leek",                equipSlots.equipmentType.Sword,       equipSlots.slots.Main,   3,  1, 20,   0f,   0f,  0f,  0f,  1f,  1f,      0f,     1f, "Able to CUT the mightiest bush!");
         uniqueslist.Add(tempequip);
+        tempequip = new equipment("Shankin' Stick",            equipSlots.equipmentType.Dagger,      equipSlots.slots.Main,   3,  1,  4,   0f,   0f,  0f,  0f, 20f, 50f,    0.5f,     2f, "Dis end da pointy one!");
+        uniqueslist.Add(tempequip);
+        tempequip = new equipment("Mirror Shard",              equipSlots.equipmentType.Dagger,      equipSlots.slots.Main,   0,  5,  9,  50f,   0f,  0f,  0f, 30f, 60f,    0.5f,   2.0f, "There isn't really a good way to hold this thing.");
+        basesList.Add(tempequip);
+        tempequip = new equipment("Ritual Dagger",             equipSlots.equipmentType.Dagger,      equipSlots.slots.Main,   0, 15, 20,   0f,   0f,  0f,  0f, 40f, 70f,      0f,   2.0f, "");
+        basesList.Add(tempequip);
+
+
 
         #endregion
 
