@@ -365,6 +365,11 @@ public class PlayerController : MonoBehaviour {
 
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.webequip();
+        }
+
 
 
 
