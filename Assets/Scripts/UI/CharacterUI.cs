@@ -12,6 +12,7 @@ public class CharacterUI : UIState {
     private int yOffset = 0;
     private Vector2 scrollViewVector;
     private Camera characterCamera;
+    private GUITexture titsMcGee;
 
     public CharacterUI(int id, UIController controller)
         : base(id, controller) 
@@ -23,11 +24,13 @@ public class CharacterUI : UIState {
     public override void Enter()
     {
         Controller.Camera.enabled = true;
+        titsMcGee = null;
     }
 
     public override void Exit()
     {
         Controller.Camera.enabled = false;
+        titsMcGee = Controller.Camera.guiTexture;
     }
 
     public override void Update()
@@ -53,6 +56,7 @@ public class CharacterUI : UIState {
             GUILayout.Box("", GUILayout.Width(50), GUILayout.Height(50));
             GUILayout.Space(WIDTH - 115);
             GUILayout.Box("", GUILayout.Width(50), GUILayout.Height(50));
+            //GUI.DrawTexture
 
             GUILayout.EndHorizontal();
 
@@ -100,9 +104,8 @@ public class CharacterUI : UIState {
         yOffset = 0;
         foreach (equipment item in Controller.Player.Inventory.Items)
         {
-            GUI.skin.label.alignment = TextAnchor.MiddleLeft;
-            GUI.Label(new Rect(0, yOffset, WIDTH - 30, 20), item.equipmentName);
-            yOffset += 30;
+            if (GUI.Button(new Rect(0, yOffset, WIDTH - 30, 50), item.equipmentName, Controller.style)) { }
+            yOffset += 60;
         }
 
         GUI.EndScrollView();

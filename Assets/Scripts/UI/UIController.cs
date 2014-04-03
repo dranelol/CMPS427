@@ -19,6 +19,8 @@ public class UIController : MonoBehaviour {
         set { guiState = value; }
     }
 
+    public GUIStyle style;
+
     private PlayerEntity player;
     public PlayerEntity Player { get { return player; } }
 
