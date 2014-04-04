@@ -11,12 +11,10 @@ public class PlayerEntity : Entity
         base.Awake();
         maxHP = 3000;
         currentHP = 3000;
-
-
     }
 
 
-	public void Start () 
+	public void Start() 
     {
         base.Start();
 
@@ -24,8 +22,6 @@ public class PlayerEntity : Entity
         abilityManager.AddAbility(GameManager.Abilities["fusrodah"], 3);
         abilityManager.AddAbility(GameManager.Abilities["hadouken"], 4);
         abilityManager.AddAbility(GameManager.Abilities["deathgrip"], 5);
-
-        
 	}
 	
 	// Update is called once per frame

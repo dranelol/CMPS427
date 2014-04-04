@@ -247,6 +247,8 @@ public class PlayerController : MonoBehaviour {
             }
         }
         #endregion
+
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -265,7 +267,7 @@ public class PlayerController : MonoBehaviour {
 
             pewpewArrow.rigidbody.velocity = forward * 20.0f;
 
-            pewpewArrow.GetComponent<ProjectileBehaviour>().timeToActivate = Mathf.Infinity;
+            pewpewArrow.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
 
 
             

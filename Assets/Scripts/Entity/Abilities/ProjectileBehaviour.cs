@@ -44,6 +44,8 @@ public class ProjectileBehaviour : MonoBehaviour
     {
         timeToActivate -= Time.deltaTime;
 
+        //Debug.Log(timeToActivate);
+
         velocity = rigidbody.velocity;
 
         if (timeToActivate <= 0.0f)
