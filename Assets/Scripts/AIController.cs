@@ -277,7 +277,7 @@ public class AIController : StateMachine
 
             if (Vector3.Distance(nodePosition, targetPosition) > wanderDistanceFromNode)
             {
-                Debug.Log("Target Distance from node: " + Vector3.Distance(nodePosition, targetPosition).ToString());
+                
                 
                 Vector3 newDirection = (nodePosition-transform.position).normalized * wanderDistance;
 
