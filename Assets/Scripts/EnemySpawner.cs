@@ -118,6 +118,9 @@ public class EnemySpawner : MonoBehaviour
 
             Entity enemyEntity = newEnemy.GetComponent<Entity>();
 
+            # region giving enemies abilities
+
+
             enemyEntity.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
             enemyEntity.abilityManager.abilities[1] = GameManager.Abilities["hadouken"];
 
@@ -125,8 +128,8 @@ public class EnemySpawner : MonoBehaviour
             enemyEntity.abilityIndexDict["hadouken"] = 1;
 
 
+            #endregion
 
-            
         }
 
         else

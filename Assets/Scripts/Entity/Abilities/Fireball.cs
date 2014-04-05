@@ -10,30 +10,43 @@ public class Fireball : Ability
 
     }
 
-    public override void SpawnProjectile(GameObject source, GameObject owner, string abilityID, bool isPlayer)
+    public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
-        
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit target;
-        Physics.Raycast(ray, out target, Mathf.Infinity);
-        Vector3 vectorToMouse = target.point - source.transform.position;
-        Vector3 forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
+        int segments = 8;
+        for(int i = 0; i < segments; i++)
+        {
 
-        GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position, Quaternion.LookRotation(forward));
+            GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position + Rotations.RotateAboutY(forward, (360 / segments) * i) * 2, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
 
-        projectile.GetComponent<ProjectileBehaviour>().owner = owner;
-        projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
-        projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
+            projectile.GetComponent<ProjectileBehaviour>().owner = owner;
+            projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
+            projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
 
-        // apply velocity
-
-        projectile.rigidbody.velocity = forward * 20.0f;
+            projectile.rigidbody.velocity = Rotations.RotateAboutY(forward, (360 / segments) * i) * 20.0f;
+        }
     }
 
     public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
     {
-        //SpawnProjectile(target, source, "fireball", true);
-       // SpawnProjectile(target, source, "fireball", true);
+        /*
+        Vector3 forward = Vector3.zero;
+
+        // if its a player, attack based on mouse
+        if (isPlayer == true)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit rayCastTarget;
+            Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+            Vector3 vectorToMouse = rayCastTarget.point - source.transform.position;
+            forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
+        }
+
+        // if its an enemy, attack based on forward vector
+        else
+        {
+            forward = source.transform.forward;
+        }
+         */
 
         if (isPlayer == true)
         {

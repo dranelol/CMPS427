@@ -97,12 +97,12 @@ public class ProjectileBehaviour : MonoBehaviour
 
             int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
 
-            ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
+            ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), false);
 
             DetachParticleSystem();
             Destroy(gameObject);
         }
-
+            /*
         else if (other.gameObject.tag == "Enemy" && owner.gameObject.tag == "Enemy")
         {
             Debug.Log("attacked a friendly enemy");
@@ -116,7 +116,7 @@ public class ProjectileBehaviour : MonoBehaviour
             DetachParticleSystem();
             Destroy(gameObject);
         }
-
+        */
         // call attackhandler on this projectile's ability
 
         
@@ -136,8 +136,10 @@ public class ProjectileBehaviour : MonoBehaviour
             item.transform.parent = null;
             item.emissionRate = 0;
             item.enableEmission = false; 
+
         }
 
+        
         //particles.GetComponent<ParticleAnimator>().autodestruct = true;
     }
 }
