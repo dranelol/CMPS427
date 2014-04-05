@@ -229,12 +229,22 @@ public class equipmentFactory {
 
         #endregion
 
+        #region twohand
+
+                                     //NAME                               TYPE                           SLOT               tier  level     h     r    p    d  mndg mxdg      ms      as   flavortext 
+        tempequip = new equipment("BIGASS SWORD",              equipSlots.equipmentType.Sword,       equipSlots.slots.Main,   1,  1, 20,   0f,   0f,  0f,  0f,  10f,150f,      0f,     1f, "",true,false);
+        basesList.Add(tempequip);
+        tempequip = new equipment("BIGASS THROWING SWORD",     equipSlots.equipmentType.Sword,       equipSlots.slots.Main,   1,  1, 20,   0f,   0f,  0f,  0f,  10f,150f,      0f,     1f, "",true,true);
+        basesList.Add(tempequip);         
+
+        #endregion
+
         #endregion
 
         #region armor
 
-            #region head
-                                     //NAME                              TYPE                            SLOT             tier  level      h     r    p    d  mndg mxdg     ms     as   flavortext 
+        #region head
+        //NAME                              TYPE                            SLOT             tier  level      h     r    p    d  mndg mxdg     ms     as   flavortext 
         tempequip = new equipment("Cloth Cap",                 equipSlots.equipmentType.ClothHelm,   equipSlots.slots.Head, 0,  1,  4,    0f,  25f,  0f,  0f,  0f,  0f,     0f,    0f, "");
         basesList.Add(tempequip);
         tempequip = new equipment("Scholar's Hat",             equipSlots.equipmentType.ClothHelm,   equipSlots.slots.Head, 0,  5,  9,    0f,  60f,  0f,  0f,  0f,  0f,     0f,    0f, "");

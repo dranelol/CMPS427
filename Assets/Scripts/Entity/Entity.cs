@@ -22,7 +22,7 @@ public class Entity : MonoBehaviour
         currentAtt = new Attributes();
         //Debug.Log(currentAtt.ToString());                                                                             /*I'm a white guy typing code. LOLZ! I wish I was a female cause I want to look pretty!*/
         equipAtt = new Attributes();
-        buffAtt = new Attributes();
+        buffAtt = new Attributes();                                                                                     /*  Wut.  */
 
         currentAtt.Power = 10;
         currentAtt.Defense = 10;
@@ -49,6 +49,10 @@ public class Entity : MonoBehaviour
     public bool addEquipment(equipSlots.slots slot , equipment item)
     {
         if (this.equippedEquip.ContainsKey(slot))
+            return false;
+        else if (item.twohand == true && this.equippedEquip.ContainsKey(equipSlots.slots.Off))
+            return false;
+        else if (slot == equipSlots.slots.Off && equippedEquip[equipSlots.slots.Main].twohand == true)
             return false;
         else
         {
