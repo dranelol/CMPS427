@@ -160,20 +160,34 @@ public class PlayerController : MonoBehaviour {
 
         #region ability 1
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKey(KeyCode.Q))
         {
             if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[2] <= Time.time)
             {
                 if (entity.abilityManager.abilities[2].AttackType == AttackType.MELEE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                    entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
+                }
+
+                else if (entity.abilityManager.abilities[2].AttackType == AttackType.PROJECTILE)
+                {
+                    combatFSM.Attack(0.0f);
+                    // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                    // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+                    entity.abilityManager.abilities[2].SpawnProjectile(gameObject, 2);
+
                 }
                 else
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                    entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
+
+
                 }
 
-                entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
+                
                 entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
             }
         }
@@ -251,23 +265,7 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit target;
-            Physics.Raycast(ray, out target, Mathf.Infinity);
-            Vector3 vectorToMouse = target.point - gameObject.transform.position;
-            Vector3 forward = new Vector3(vectorToMouse.x, gameObject.transform.forward.y, vectorToMouse.z).normalized;
 
-            // check rotation to be sure
-            GameObject pewpewArrow = (GameObject)Instantiate(gameManager.Arrow, transform.position, Quaternion.Euler(forward));
-            
-
-            pewpewArrow.GetComponent<ProjectileBehaviour>().owner = gameObject;
-            
-            // apply velocity
-
-            pewpewArrow.rigidbody.velocity = forward * 20.0f;
-
-            pewpewArrow.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
 
 
             
