@@ -67,6 +67,8 @@ public class AIController : StateMachine
     private float wanderInterval; //Time between wanders in seconds
     private float wanderDistance; //Radius around the wanderer that it will travel
     private float nextWander;    //Time the next wander will take place.
+    private float wanderDistanceFromNode; //Max distance the enemy will wander away from the node.
+    private Vector3 nodePosition; //Position of the EnemyNode
 
     void Awake()
     {
@@ -81,8 +83,11 @@ public class AIController : StateMachine
         PursuitFSM = GetComponent<AIPursuit>();
         localHomePosition = transform.position;
 
-        wanderDistance = 5.0f;
-        wanderInterval = 5.0f;
+        wanderDistance = 3.0f;
+        wanderInterval = 3.0f;
+        wanderDistanceFromNode = 7.0f;
+
+        nodePosition = new Vector3(transform.parent.position.x, transform.position.y, transform.parent.position.z);
 
         nextWander = Time.time + wanderInterval;
 
@@ -266,19 +271,25 @@ public class AIController : StateMachine
             targetPosition += transform.position;
             targetPosition.y = transform.position.y;
 
-            //transform.LookAt(new Vector3(targetPosition.x, transform.position.y, targetPosition.z));
+            
 
-            Debug.DrawRay(transform.position, targetPosition - transform.position, Color.blue); // Draw vector to target position
+            
 
-            Debug.Log(targetPosition.ToString());
+            if (Vector3.Distance(nodePosition, targetPosition) > wanderDistanceFromNode)
+            {
+                Debug.Log("Target Distance from node: " + Vector3.Distance(nodePosition, targetPosition).ToString());
+                
+                Vector3 newDirection = (nodePosition-transform.position).normalized * wanderDistance;
 
-            //Debug.Log("world target: " + transform.TransformPoint(targetPosition).ToString());
-
+                targetPosition = new Vector3(newDirection.x, 0, newDirection.y);
+                targetPosition += transform.position;
+                targetPosition.y = transform.position.y;
+            }
 
 
             MoveFSM.SetPath(targetPosition);
 
-            //NavAgent.SetDestination(targetPosition);
+            
 
             nextWander = Time.time + wanderInterval;
         }
