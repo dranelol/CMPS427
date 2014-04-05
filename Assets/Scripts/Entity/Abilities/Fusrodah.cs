@@ -9,15 +9,10 @@ public class Fusrodah : Ability
     {
        
     }
-
-    /// <summary>
-    /// Handler for this attack; figures out who will be attacked, and carries out everything needed for the attack to occur
-    /// </summary>
-    /// <param name="attacker">The gameobject carrying out the attack</param>
-    /// <param name="defender">The gameobject defending against the attack</param>                                                 
-    public override void AttackHandler(GameObject attacker, bool isPlayer)
+                                            
+    public override void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
     {
-        List<GameObject> attacked = OnAttack(attacker.transform, isPlayer);
+        List<GameObject> attacked = OnAttack(source, isPlayer);
 
         if (isPlayer == true)
         {
@@ -27,10 +22,9 @@ public class Fusrodah : Ability
                 if (enemy.GetComponent<AIController>().IsResetting() == false
                     && enemy.GetComponent<AIController>().IsDead() == false)
                 {
-                    DoDamage(attacker, enemy, isPlayer);
-
-                    // this is a physics attack, so do physics applies
-                    DoPhysics(attacker, enemy);
+                    Entity defender = enemy.GetComponent<Entity>();
+                    DoDamage(source, enemy, attacker, defender, isPlayer);
+                    DoPhysics(source, enemy);
                 }
             }
         }
@@ -39,23 +33,17 @@ public class Fusrodah : Ability
         {
             foreach (GameObject enemy in attacked)
             {
-                DoDamage(attacker, enemy, isPlayer);
-
-                // this is a physics attack, so do physics applies
-                DoPhysics(attacker, enemy);
+                Entity defender = enemy.GetComponent<Entity>();
+                DoDamage(source, enemy, attacker, defender, isPlayer);
+                DoPhysics(source, enemy);
             }
         }
 
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(attacker, particleSystem, 0.2f, isPlayer));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.2f, isPlayer));
     
     }
 
-    /// <summary>
-    /// Figure out who will be affected by this attack
-    /// </summary>
-    /// <param name="attacker"></param>
-    /// <returns>Returns a list of gameobjects this attack will affect</returns>
-    public override List<GameObject> OnAttack(Transform attacker, bool isPlayer)
+    public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
     {
         List<GameObject> enemiesToAttack = new List<GameObject>();
 
@@ -67,8 +55,8 @@ public class Fusrodah : Ability
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit target;
             Physics.Raycast(ray, out target, Mathf.Infinity);
-            Vector3 vectorToMouse = target.point - attacker.position;
-            forward = new Vector3(vectorToMouse.x, attacker.forward.y, vectorToMouse.z).normalized;
+            Vector3 vectorToMouse = target.point - source.transform.position;
+            forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
         }
 
         int enemyMask = LayerMask.NameToLayer("Enemy");
@@ -78,12 +66,12 @@ public class Fusrodah : Ability
 
         if (isPlayer == true)
         {
-            colliders = Physics.OverlapSphere(attacker.position, range, 1 << enemyMask);
+            colliders = Physics.OverlapSphere(source.transform.position, range, 1 << enemyMask);
         }
 
         else
         {
-            colliders = Physics.OverlapSphere(attacker.position, range, 1 << playerMask);
+            colliders = Physics.OverlapSphere(source.transform.position, range, 1 << playerMask);
         }
 
         foreach (Collider collider in colliders)
@@ -92,8 +80,8 @@ public class Fusrodah : Ability
 
             // create a vector from the possible enemy to the attacker
 
-            Vector3 enemyVector = collider.transform.position - attacker.position;
-            Vector3 enemyVector2 = attacker.position - collider.transform.position;
+            Vector3 enemyVector = collider.transform.position - source.transform.position;
+            Vector3 enemyVector2 = source.transform.position - collider.transform.position;
 
             // this is an enemy attack, forward attack vector will be based on target position
             if (isPlayer == false)
@@ -154,78 +142,58 @@ public class Fusrodah : Ability
         return enemiesToAttack;
     }
 
-    /// <summary>
-    /// Do damage with this attack
-    /// </summary>
-    /// <param name="attacker">The gameobject carrying out the attack</param>
-    /// <param name="defender">The gameobject defending against the attack</param>
-    public override void DoDamage(GameObject attacker, GameObject defender, bool isPlayer)
+    public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
-        //Debug.Log(defender.ToString());
-        Entity attackerEntity = attacker.GetComponent<Entity>();
-        Entity defenderEntity = defender.GetComponent<Entity>();
-
         float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
         Debug.Log("damage: " + damageAmt);
 
-        defenderEntity.currentHP -= damageAmt;
+        defender.currentHP -= damageAmt;
 
-        float ratio = (defenderEntity.currentHP / defenderEntity.maxHP);
+        float ratio = (defender.currentHP / defender.maxHP);
 
         if (isPlayer == true)
         {
-            defender.renderer.material.color = new Color(1.0f, ratio, ratio);
+            target.renderer.material.color = new Color(1.0f, ratio, ratio);
         }
     }
 
-    /// <summary>
-    /// Certain attacks have a physics component to them; this resolves those effects
-    /// </summary>
-    /// <param name="attacker">Gameobject doing the attacking</param>
-    /// <param name="defender">Gameobject affected by the attack</param>
-    public override void DoPhysics(GameObject attacker, GameObject defender)
+    public override void DoPhysics(GameObject source, GameObject target)
     {
-        Vector3 relativeVector = (defender.transform.position - attacker.transform.position).normalized;
-        float normalizedMagnitude = 6f - Vector3.Distance(defender.transform.position, attacker.transform.position);
+        Vector3 relativeVector = (target.transform.position - source.transform.position).normalized;
+        float normalizedMagnitude = 6f - Vector3.Distance(target.transform.position, source.transform.position);
         float force = (normalizedMagnitude / (Mathf.Pow(0.35f, 2)));
         //defender.GetComponent<MovementFSM>().Stop(0.17f);
 
-        defender.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force * 2, 0.2f, ForceMode.Impulse);
+        target.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force * 2, 0.2f, ForceMode.Impulse);
     }
 
-    /// <summary>
-    /// Certain attacks have an animation associated with them; this resolves those effects
-    /// </summary>                                                                                              
-    /// <param name="attacker">Gameobject doing the attacking</param>
-    /// <param name="defender">Gameobject affected by the attack; default null if the attack only has an animation for the attacker</param>
-    public override IEnumerator DoAnimation(GameObject attacker, GameObject source, float time, bool isPlayer, GameObject defender = null)
+    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
     {
         
         GameObject particles;
 
-
+        // if the player is casting the ability, we need to activate it based on the position of the cursor, not the transform's forward
         if (isPlayer == true)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit target;
-            Physics.Raycast(ray, out target, Mathf.Infinity);
-            Vector3 vectorToMouse = target.point - attacker.transform.position;
-            Vector3 cursorForward = new Vector3(vectorToMouse.x, attacker.transform.forward.y, vectorToMouse.z).normalized;
+            RaycastHit targetRay;
+            Physics.Raycast(ray, out targetRay, Mathf.Infinity);
+            Vector3 vectorToMouse = targetRay.point - source.transform.position;
+            Vector3 cursorForward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
             Quaternion rotation = Quaternion.LookRotation(cursorForward);
-            particles = (GameObject)GameObject.Instantiate(source, attacker.transform.position, rotation);
+            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, rotation);
         }
 
         else
         {
-            particles = (GameObject)GameObject.Instantiate(source, attacker.transform.position, attacker.transform.rotation);
+            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
         }
-
 
         //particles.transform.parent = attacker.transform;
 
         yield return new WaitForSeconds(time);
 
-        ParticleSystem[] particleSystems = source.GetComponentsInChildren<ParticleSystem>();
+        ParticleSystem[] particleSystems = particlePrefab.GetComponentsInChildren<ParticleSystem>();
 
         Debug.Log("fus");
 
@@ -236,12 +204,10 @@ public class Fusrodah : Ability
                 child.GetComponent<ParticleSystem>().enableEmission = false;
             }
         }
-        
-        
+
         yield return new WaitForSeconds(time * 2);
         GameObject.Destroy(particles);
-        
-       // GameObject.Destroy(particles);
+
         yield return null;
     }
 

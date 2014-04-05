@@ -158,12 +158,12 @@ public class HUD_GUI : MonoBehaviour {
 		GUI.backgroundColor = Color.green;
         //GUI.color = Color.white;
         infoBoxStyle.normal.textColor = Color.white;
-        string attackList = "Q = Cleave \n"
-                          + "W = Fud Ro Dah \n"
-                          + "E = Hadouken \n"
-                          + "R = Deathgrip \n";
+        string attackList = "Q = " + player.abilityManager.abilities[2].Name + " \n"
+                          + "W = " + player.abilityManager.abilities[3].Name + " \n"
+                          + "E = " + player.abilityManager.abilities[4].Name + " \n"
+                          + "R = " + player.abilityManager.abilities[5].Name + " \n";
 
-        string version = "Week6v1";
+        string version = "Week9v1";
 
         GUI.Label(InfoBox1, attackList, infoBoxStyle);
         GUI.Label(InfoBox2, version, infoBoxStyle);
@@ -173,6 +173,7 @@ public class HUD_GUI : MonoBehaviour {
    
         float timeLeft = 0;
 
+        #region ability 1
         if (player.abilityManager.activeCoolDowns[2] > Time.time)
         {
 
@@ -184,8 +185,10 @@ public class HUD_GUI : MonoBehaviour {
             timeLeft = 0;
         }        
 
-        GUI.Label(CDBox1, "Cleave CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
-
+        GUI.Label(CDBox1, player.abilityManager.abilities[2].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+        #endregion
+        
+        #region ability 2
         if (player.abilityManager.activeCoolDowns[3] > Time.time)
         {
             
@@ -196,8 +199,10 @@ public class HUD_GUI : MonoBehaviour {
             timeLeft = 0;
         }
 
-        GUI.Label(CDBox2, "Fus Ro Dah CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+        GUI.Label(CDBox2, player.abilityManager.abilities[3].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+        #endregion
 
+        #region ability 3
         if (player.abilityManager.activeCoolDowns[4] > Time.time)
         {
             timeLeft = player.abilityManager.activeCoolDowns[4] - Time.time;
@@ -207,8 +212,10 @@ public class HUD_GUI : MonoBehaviour {
             timeLeft = 0;
         }
 
-        GUI.Label(CDBox3, "Hadouken CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+        GUI.Label(CDBox3, player.abilityManager.abilities[4].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+        #endregion
 
+        #region ability 4
         if (player.abilityManager.activeCoolDowns[5] > Time.time)
         {
             timeLeft = player.abilityManager.activeCoolDowns[5] - Time.time;
@@ -218,9 +225,12 @@ public class HUD_GUI : MonoBehaviour {
             timeLeft = 0;
         }
 
-        GUI.Label(CDBox4, "Death Grip CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
 
-    #endregion
+        GUI.Label(CDBox4, player.abilityManager.abilities[5].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+        #endregion
 
-	}
+        #endregion
+
+    }
+
 }
