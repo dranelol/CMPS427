@@ -173,7 +173,7 @@ public class PlayerController : MonoBehaviour {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 }
 
-                entity.abilityManager.abilities[2].AttackHandler(gameObject, true);
+                entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
                 entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
             }
         }
@@ -198,7 +198,7 @@ public class PlayerController : MonoBehaviour {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 }
 
-                entity.abilityManager.abilities[3].AttackHandler(gameObject, true);
+                entity.abilityManager.abilities[3].AttackHandler(gameObject, entity, true);
                 entity.abilityManager.activeCoolDowns[3] = Time.time + entity.abilityManager.abilities[3].Cooldown;
 
             }
@@ -220,7 +220,7 @@ public class PlayerController : MonoBehaviour {
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 }
-                entity.abilityManager.abilities[4].AttackHandler(gameObject, true);
+                entity.abilityManager.abilities[4].AttackHandler(gameObject, entity, true);
                 entity.abilityManager.activeCoolDowns[4] = Time.time + entity.abilityManager.abilities[4].Cooldown;
 
             }
@@ -241,13 +241,43 @@ public class PlayerController : MonoBehaviour {
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 }
-                entity.abilityManager.abilities[5].AttackHandler(gameObject, true);
+                entity.abilityManager.abilities[5].AttackHandler(gameObject, entity, true);
                 entity.abilityManager.activeCoolDowns[5] = Time.time + entity.abilityManager.abilities[5].Cooldown;
 
             }
         }
         #endregion
 
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit target;
+            Physics.Raycast(ray, out target, Mathf.Infinity);
+            Vector3 vectorToMouse = target.point - gameObject.transform.position;
+            Vector3 forward = new Vector3(vectorToMouse.x, gameObject.transform.forward.y, vectorToMouse.z).normalized;
+
+            // check rotation to be sure
+            GameObject pewpewArrow = (GameObject)Instantiate(gameManager.Arrow, transform.position, Quaternion.Euler(forward));
+            
+
+            pewpewArrow.GetComponent<ProjectileBehaviour>().owner = gameObject;
+            
+            // apply velocity
+
+            pewpewArrow.rigidbody.velocity = forward * 20.0f;
+
+            pewpewArrow.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
+
+
+            
+        }
+
+        #region ABILITY TESTS
+
+
+        #endregion
+        #region equipment stuff
         if (Input.GetKeyDown(KeyCode.A))
         {
             // small sword
@@ -295,6 +325,8 @@ public class PlayerController : MonoBehaviour {
 
         }
 
+        #endregion
+
 
 
 
@@ -302,7 +334,7 @@ public class PlayerController : MonoBehaviour {
         #endregion
 
 
-        
+
     }
 
     

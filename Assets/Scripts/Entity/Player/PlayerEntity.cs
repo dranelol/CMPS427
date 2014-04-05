@@ -11,12 +11,10 @@ public class PlayerEntity : Entity
         base.Awake();
         maxHP = 3000;
         currentHP = 3000;
-
-
     }
 
 
-	public void Start () 
+	public void Start() 
     {
         base.Start();
 
@@ -24,8 +22,6 @@ public class PlayerEntity : Entity
         abilityManager.AddAbility(GameManager.Abilities["fusrodah"], 3);
         abilityManager.AddAbility(GameManager.Abilities["hadouken"], 4);
         abilityManager.AddAbility(GameManager.Abilities["deathgrip"], 5);
-
-        
 	}
 	
 	// Update is called once per frame
@@ -41,7 +37,7 @@ public class PlayerEntity : Entity
         //Debug.Log(ray.direction);
 
 
-        Debug.DrawRay(ray.origin, ray.direction, Color.yellow);
+        //Debug.DrawRay(ray.origin, ray.direction, Color.yellow);
         //abilities[4].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
         //abilities[5].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
 

@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public GameObject CleaveParticles;
     public GameObject DeathgripParticles;
     public GameObject HadoukenParticles;
+    public GameObject Arrow;
 
     public equipmentFactory EquipmentFactory;
 

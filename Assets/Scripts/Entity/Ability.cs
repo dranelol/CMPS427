@@ -104,52 +104,37 @@ public abstract class Ability
         this.particleSystem = particles;
     }
 
-    /// <summary>
-    /// Handler for this attack; figures out who will be attacked, and carries out everything needed for the attack to occur
-    /// </summary>
-    /// <param name="attacker">The gameobject carrying out the attack</param>
-    /// <param name="defender">The gameobject defending against the attack</param>
-    public abstract void AttackHandler(GameObject attacker, bool isPlayer);
+    public virtual void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
+    {
 
-    /// <summary>
-    /// Figure out who will be affected by this attack
-    /// </summary>
-    /// <param name="attacker">The gameobject carrying out the attack</param>
-    /// <returns>Returns a list of gameobjects this attack will affect</returns>
-    public abstract List<GameObject> OnAttack(Transform attacker, bool isPlayer);
+    }
 
-    /// <summary>
-    /// Do damage with this attack
-    /// </summary>
-    /// <param name="attacker">The gameobject carrying out the attack</param>
-    /// <param name="defender">The gameobject defending against the attack</param>
-    public virtual void DoDamage(GameObject attacker, GameObject defender, bool isPlayer)
+    public virtual void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
+    {
+
+    }
+
+    public virtual List<GameObject> OnAttack(GameObject source, bool isPlayer)
+    {
+        List<GameObject> attacked = new List<GameObject>();
+
+        return attacked;
+    }
+
+    public virtual void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
     }
 
-    /// <summary>
-    /// Certain attacks have a physics component to them; this resolves those effects
-    /// </summary>
-    /// <param name="attacker">Gameobject doing the attacking</param>
-    /// <param name="defender">Gameobject affected by the attack</param>
-    public virtual void DoPhysics(GameObject attacker, GameObject defender)
-    {
-    }
     
 
-    /// <summary>
-    /// Certain attacks have an animation associated with them; this resolves those effects
-    /// </summary>
-    /// <param name="attacker">Gameobject doing the attacking</param>
-    /// <param name="defender">Gameobject affected by the attack; default null if the attack only has an animation for the attacker</param>
-    public virtual IEnumerator DoAnimation(GameObject attacker, GameObject source, float time, bool isPlayer, GameObject defender = null)
+    public virtual void DoPhysics(GameObject source, GameObject target)
+    {
+    }
+
+
+    public virtual IEnumerator DoAnimation(GameObject attacker, GameObject particlePrefab, float time, bool isPlayer, GameObject defender = null)
     {
         yield return null;
     }
     
 }
-
-// The following is a list of example abilities.
-    //Ability fireball = new Ability(AttackType.PROJECTILE, DamageType.FIRE, 5.0f, 10.0f, 3.0f, "fireball", "Fireball");
-    //Ability cleave = new Ability(AttackType.MELEE, DamageType.PHYSICAL, 1.0f, 45.0f, 5.0f, "cleave", "Cleave");
-    //Ability shout = new Ability(AttackType.PBAOE, DamageType.AIR, 20.0f, 360.0f, 10.0f, "fusrodah", "Fus Roh Dah");
