@@ -160,20 +160,34 @@ public class PlayerController : MonoBehaviour {
 
         #region ability 1
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKey(KeyCode.Q))
         {
             if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[2] <= Time.time)
             {
                 if (entity.abilityManager.abilities[2].AttackType == AttackType.MELEE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                    entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
+                }
+
+                else if (entity.abilityManager.abilities[2].AttackType == AttackType.PROJECTILE)
+                {
+                    combatFSM.Attack(0.0f);
+                    // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                    // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+                    entity.abilityManager.abilities[2].SpawnProjectile(gameObject, 2);
+
                 }
                 else
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                    entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
+
+
                 }
 
-                entity.abilityManager.abilities[2].AttackHandler(gameObject, true);
+                
                 entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
             }
         }
@@ -198,7 +212,7 @@ public class PlayerController : MonoBehaviour {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 }
 
-                entity.abilityManager.abilities[3].AttackHandler(gameObject, true);
+                entity.abilityManager.abilities[3].AttackHandler(gameObject, entity, true);
                 entity.abilityManager.activeCoolDowns[3] = Time.time + entity.abilityManager.abilities[3].Cooldown;
 
             }
@@ -220,7 +234,7 @@ public class PlayerController : MonoBehaviour {
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 }
-                entity.abilityManager.abilities[4].AttackHandler(gameObject, true);
+                entity.abilityManager.abilities[4].AttackHandler(gameObject, entity, true);
                 entity.abilityManager.activeCoolDowns[4] = Time.time + entity.abilityManager.abilities[4].Cooldown;
 
             }
@@ -241,13 +255,27 @@ public class PlayerController : MonoBehaviour {
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                 }
-                entity.abilityManager.abilities[5].AttackHandler(gameObject, true);
+                entity.abilityManager.abilities[5].AttackHandler(gameObject, entity, true);
                 entity.abilityManager.activeCoolDowns[5] = Time.time + entity.abilityManager.abilities[5].Cooldown;
 
             }
         }
         #endregion
 
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+
+
+
+            
+        }
+
+        #region ABILITY TESTS
+
+
+        #endregion
+        #region equipment stuff
         if (Input.GetKeyDown(KeyCode.A))
         {
             // small sword
@@ -330,6 +358,7 @@ public class PlayerController : MonoBehaviour {
                 Debug.Log("bro has a feets already! its called: " + entity.GetEquip(equipSlots.slots.Feet).equipmentName);
             }
 
+
             bool result = entity.removeEquipment(equipSlots.slots.Feet);
 
             equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Feet);
@@ -371,7 +400,7 @@ public class PlayerController : MonoBehaviour {
         #endregion
 
 
-        
+
     }
 
     

@@ -23,7 +23,8 @@ public class CharacterUI : UIState {
     public override void Exit()
     {
         Debug.Log("Exiting Character state.");
-    }
+    }
+
     public override void Update()
     {
         

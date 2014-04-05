@@ -30,6 +30,7 @@ public class CombatFSM : StateMachine
 
         HashSet<Enum> attackingTransitions = new HashSet<Enum>();
         attackingTransitions.Add(CombatStates.combatLocked);
+        attackingTransitions.Add(CombatStates.attacking);
 
         HashSet<Enum> combatLockedTransitions = new HashSet<Enum>();
         combatLockedTransitions.Add(CombatStates.idle);

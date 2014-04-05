@@ -142,9 +142,30 @@ public class AIPursuit : StateMachine
             combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
             Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
 
-            entity.abilityManager.abilities[0].AttackHandler(gameObject, false);
-            entity.abilityManager.activeCoolDowns[0] = Time.time + entity.abilityManager.abilities[0].Cooldown;
+            if (entity.abilityManager.abilities[0].AttackType == AttackType.MELEE)
+            {
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                entity.abilityManager.abilities[0].AttackHandler(gameObject, entity, false);
+            }
 
+            else if (entity.abilityManager.abilities[0].AttackType == AttackType.PROJECTILE)
+            {
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+                //entity.abilityManager.abilities[0].SpawnProjectile(gameObject, 2, false);
+
+            }
+            else
+            {
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                entity.abilityManager.abilities[0].AttackHandler(gameObject, entity, false);
+
+
+            }
+
+            entity.abilityManager.activeCoolDowns[0] = Time.time + entity.abilityManager.abilities[0].Cooldown;
             /*
             _abilityList[0].AttackHandler(gameObject, false);
             _abilityList.OrderBy(Ability => Ability.Cooldown).ThenBy(Ability => Ability.DamageMod); Use this later */
