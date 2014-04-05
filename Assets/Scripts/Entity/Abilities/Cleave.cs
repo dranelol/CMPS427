@@ -146,10 +146,8 @@ public class Cleave : Ability
     {
         float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
 
-        if (isPlayer == true)
-        {
-            Debug.Log("damage: " + damageAmt);
-        }
+        Debug.Log("damage: " + damageAmt);
+        
 
         defender.currentHP -= damageAmt;
 

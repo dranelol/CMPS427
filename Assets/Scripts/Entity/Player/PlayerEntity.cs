@@ -18,7 +18,7 @@ public class PlayerEntity : Entity
     {
         base.Start();
 
-        abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
+        abilityManager.AddAbility(GameManager.Abilities["fireball"], 2);
         abilityManager.AddAbility(GameManager.Abilities["fusrodah"], 3);
         abilityManager.AddAbility(GameManager.Abilities["hadouken"], 4);
         abilityManager.AddAbility(GameManager.Abilities["deathgrip"], 5);
