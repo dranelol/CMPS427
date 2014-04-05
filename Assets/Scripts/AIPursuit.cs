@@ -11,8 +11,10 @@ public class AIPursuit : StateMachine
         inactive,
         seek,
         attack,
+        wander
     }
 
+    
     private MovementFSM MoveFSM;
     private NavMeshAgent NavAgent;
     private Entity entity;
@@ -23,6 +25,11 @@ public class AIPursuit : StateMachine
     private GameManager gameManager;
 
     private List<Ability> _abilityList = new List<Ability>(); // List of usuable abilities. This will be sorted by cooldown time then damagemod (for now)
+
+    public float wanderInterval;
+    public float wanderDistance;
+    private float nextWander;
+
     
     void Awake()
     {
@@ -32,17 +39,23 @@ public class AIPursuit : StateMachine
         inactiveTransitions.Add(PursuitStates.seek);
         AddTransitionsFrom(PursuitStates.inactive, inactiveTransitions);
 
+        AddAllTransitionsTo(PursuitStates.wander);
+        AddAllTransitionsFrom(PursuitStates.wander);
         AddAllTransitionsFrom(PursuitStates.seek);
         AddAllTransitionsTo(PursuitStates.seek);
         AddAllTransitionsTo(PursuitStates.inactive);
 
-        StartMachine(PursuitStates.inactive);
+        StartMachine(PursuitStates.wander);
 
         MoveFSM = GetComponent<MovementFSM>();
         NavAgent = GetComponent<NavMeshAgent>();
         entity = GetComponent<Entity>();
         combatFSM = GetComponent<CombatFSM>();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+
+
+
+        nextWander = Time.time + wanderInterval;
     }
 
     void Start()
@@ -162,6 +175,52 @@ public class AIPursuit : StateMachine
     }
 
     #endregion
+
+    #region wander functions
+
+    void wander_Update()
+    {
+        
+        
+        if (currentTarget == null)
+        {
+            if (Time.time >= nextWander)
+            {
+                Vector2 randomDirection = UnityEngine.Random.insideUnitCircle.normalized * wanderDistance; // Pick a random point on the edge of the circle
+
+                Vector3 targetPosition = new Vector3(randomDirection.x, 0, randomDirection.y);
+
+                
+
+                targetPosition += transform.position;
+                targetPosition.y = transform.position.y;
+
+                //transform.LookAt(new Vector3(targetPosition.x, transform.position.y, targetPosition.z));
+                
+                Debug.DrawRay(transform.position, targetPosition - transform.position, Color.blue); // Draw vector to target position
+
+                Debug.Log(targetPosition.ToString());
+
+                //Debug.Log("world target: " + transform.TransformPoint(targetPosition).ToString());
+
+                
+                
+                MoveFSM.SetPath(targetPosition);
+
+                //NavAgent.SetDestination(targetPosition);
+
+                nextWander = Time.time + wanderInterval;
+            }
+
+        }
+        else
+        {
+            //Transition(PursuitStates.seek);
+        }
+
+    }
+
+    #endregion 
 
     #endregion
 }
