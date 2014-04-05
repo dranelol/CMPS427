@@ -10,7 +10,7 @@ public class Fireball : Ability
 
     }
 
-    public override void SpawnProjectile(GameObject source, int abilityIndex, bool isPlayer)
+    public override void SpawnProjectile(GameObject source, string abilityID, bool isPlayer)
     {
         
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -23,7 +23,7 @@ public class Fireball : Ability
 
         projectile.GetComponent<ProjectileBehaviour>().owner = source;
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
-        projectile.GetComponent<ProjectileBehaviour>().abilityIndex = abilityIndex;
+        projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
 
         // apply velocity
 
@@ -32,8 +32,8 @@ public class Fireball : Ability
 
     public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
     {
-        //SpawnProjectile(target, 2);
-        //SpawnProjectile(target, 2);
+        SpawnProjectile(target, "fireball", true);
+        SpawnProjectile(target, "fireball", true);
 
         if (isPlayer == true)
         {

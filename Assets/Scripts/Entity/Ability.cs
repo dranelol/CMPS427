@@ -119,7 +119,7 @@ public abstract class Ability
 
     }
 
-    public virtual void SpawnProjectile(GameObject source, int abilityIndex, bool isPlayer)
+    public virtual void SpawnProjectile(GameObject source, string abilityID, bool isPlayer)
     {
 
     }

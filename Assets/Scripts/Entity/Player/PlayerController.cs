@@ -176,7 +176,7 @@ public class PlayerController : MonoBehaviour {
                     // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                     // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
 
-                    entity.abilityManager.abilities[2].SpawnProjectile(gameObject, 2);
+                    entity.abilityManager.abilities[2].SpawnProjectile(gameObject, 2, true);
 
                 }
                 else
