@@ -129,7 +129,14 @@ public abstract class Ability
 
     }
 
-    public virtual void SpawnProjectile(GameObject source, string abilityID, bool isPlayer)
+    /// <summary>
+    /// Spawns a projectile at the position of source, owned by owner, tied to abilityID
+    /// </summary>
+    /// <param name="source">Source of the projectile</param>
+    /// <param name="owner">Owner of the projectile</param>
+    /// <param name="abilityID">The game abilityID of the ability tied to this projectile's onhit</param>
+    /// <param name="isPlayer">Whether or not the owner is a player</param>
+    public virtual void SpawnProjectile(GameObject source, GameObject owner, string abilityID, bool isPlayer)
     {
 
     }
