@@ -11,7 +11,8 @@ public enum AttackType
     AOE,
     PBAOE,      // Point Blank Area of Effect
     MELEE,
-    STATUS      // Maybe an attack type that just inflicts conditions?
+    STATUS,      // Maybe an attack type that just inflicts conditions?
+    GROUND     // ground aoe effects: death and decay, effloresence, etc
 };
 
 /// <summary>
@@ -24,7 +25,8 @@ public enum DamageType
     FIRE,
     WATER,
     EARTH,
-    AIR
+    AIR,
+    SHADOW
 };
 
 
@@ -79,6 +81,8 @@ public abstract class Ability
         }
     }
 
+    protected GameManager gameManager;
+
 
     /// <summary>
     /// Base modifier from which damage is calculated
@@ -109,7 +113,13 @@ public abstract class Ability
 
     }
 
+    // Projectiles
     public virtual void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
+    {
+
+    }
+
+    public virtual void SpawnProjectile(GameObject source, int abilityIndex, bool isPlayer)
     {
 
     }

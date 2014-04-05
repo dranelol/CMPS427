@@ -15,6 +15,11 @@ public class ProjectileBehaviour : MonoBehaviour
     public Vector3 velocity;
 
     /// <summary>
+    /// Index into the ability list for this projectile's ability
+    /// </summary>
+    public int abilityIndex;
+
+    /// <summary>
     /// Constant of acceleration to apply to the projectile. For a consistant speed, this is default set to 0.0f
     /// </summary>
     public float accelerationConstant = 0.0f;
@@ -24,15 +29,15 @@ public class ProjectileBehaviour : MonoBehaviour
     /// </summary>
     public float timeToActivate;
 
-    /// <summary>
-    /// The particle system applied to the projectile, if any
-    /// </summary>
-    public GameObject trailParticles;
-
-
     void Awake()
     {
-
+        ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
+        /*
+        foreach (ParticleSystem item in particles)
+        {
+            item.transform.localScale = new Vector3(1, 1, 1);
+        }
+        */
     }
 
 	void Start () 
@@ -56,37 +61,13 @@ public class ProjectileBehaviour : MonoBehaviour
             // call do animation
 
             // clean up and suicide
+            DetachParticleSystem();
+            Destroy(gameObject);
         }
 
         // update position of projectile
 
 	}
-    /*
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "Enemy" && owner.gameObject.tag == "Player")
-        {
-            Debug.Log("attacked an enemy!");
-
-            Destroy(gameObject);
-
-            
-        }
-
-        else if (collision.gameObject.tag == "Player" && owner.gameObject.tag == "Enemy")
-        {
-            Debug.Log("attacked a player");
-        }
-
-        // call do animation here
-
-        // clean up and suicide
-
-        //Destroy(gameObject);
-
-
-    }
-    */
 
     void OnTriggerEnter(Collider other)
     {
@@ -94,6 +75,9 @@ public class ProjectileBehaviour : MonoBehaviour
         {
             Debug.Log("attacked an enemy!");
 
+            owner.GetComponent<Entity>().abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
+
+            DetachParticleSystem();
             Destroy(gameObject);
 
 
@@ -102,12 +86,43 @@ public class ProjectileBehaviour : MonoBehaviour
         else if (other.gameObject.tag == "Player" && owner.gameObject.tag == "Enemy")
         {
             Debug.Log("attacked a player");
+
+            owner.GetComponent<Entity>().abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), false);
+
+            DetachParticleSystem();
+            Destroy(gameObject);
         }
 
-        // call do animation here
+        else if (other.gameObject.tag == "Enemy" && owner.gameObject.tag == "Enemy")
+        {
+            Debug.Log("attacked a friendly enemy");
 
+            owner.GetComponent<Entity>().abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), false);
+
+            DetachParticleSystem();
+            Destroy(gameObject);
+        }
+
+        // call attackhandler on this projectile's ability
+
+        
         // clean up and suicide
 
+        
+
         //Destroy(gameObject);
+    }
+
+    public void DetachParticleSystem()
+    {
+        ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem item in particles)
+        {
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false; 
+        }
+        //particles.GetComponent<ParticleAnimator>().autodestruct = true;
     }
 }
