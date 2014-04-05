@@ -83,6 +83,15 @@ public abstract class Ability
 
     protected GameManager gameManager;
 
+    protected string id;
+    public string ID
+    {
+        get
+        {
+            return id;
+        }
+    }
+
 
     /// <summary>
     /// Base modifier from which damage is calculated
@@ -106,6 +115,7 @@ public abstract class Ability
         this.readable = readable;
         this.damageMod = damageMod;
         this.particleSystem = particles;
+        this.id = id;
     }
 
     public virtual void AttackHandler(GameObject source, Entity attacker, bool isPlayer)

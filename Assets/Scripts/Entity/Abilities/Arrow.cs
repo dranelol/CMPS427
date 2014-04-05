@@ -10,7 +10,7 @@ public class Arrow : Ability
        
     }
 
-    public override void SpawnProjectile(GameObject source, int abilityIndex, bool isPlayer)
+    public override void SpawnProjectile(GameObject source, string abilityID, bool isPlayer)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit target;
@@ -22,6 +22,7 @@ public class Arrow : Ability
 
         projectile.GetComponent<ProjectileBehaviour>().owner = source;
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
+        projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
 
         // apply velocity
 
