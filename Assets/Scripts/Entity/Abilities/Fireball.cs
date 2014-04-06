@@ -13,11 +13,12 @@ public class Fireball : Ability
 
     public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
-        int segments = 8;
+        
+        int segments = 1;
         for(int i = 0; i < segments; i++)
         {
-
-            GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position + Rotations.RotateAboutY(forward, (360 / segments) * i) * 2, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
+            
+            GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().FireballProjectile, source.transform.position + Rotations.RotateAboutY(forward, (360 / segments) * i) * 2, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
 
             projectile.GetComponent<ProjectileBehaviour>().owner = owner;
             projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
@@ -68,6 +69,8 @@ public class Fireball : Ability
             Entity defender = target.GetComponent<Entity>();
             DoDamage(source, target, attacker, defender, isPlayer);
         }
+
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.2f, isPlayer));
     }
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
@@ -89,4 +92,33 @@ public class Fireball : Ability
             target.renderer.material.color = new Color(1.0f, ratio, ratio);
         }
     }
+
+
+
+    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
+    {
+        GameObject particles;
+
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
+
+        yield return new WaitForSeconds(time);
+
+        ParticleSystem[] particleSystems = particlePrefab.GetComponentsInChildren<ParticleSystem>();
+
+        Debug.Log("fus");
+
+        foreach (Transform child in particles.transform)
+        {
+            if (child.GetComponent<ParticleSystem>() != null)
+            {
+                child.GetComponent<ParticleSystem>().enableEmission = false;
+            }
+        }
+
+        yield return new WaitForSeconds(time * 2);
+        GameObject.Destroy(particles);
+
+        yield return null;
+    }
+    
 }
