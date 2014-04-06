@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-sealed public class AuraTemplate : Aura
+sealed public class Heal : Aura
 {
     #region Template Constants
 
@@ -19,7 +19,7 @@ sealed public class AuraTemplate : Aura
     private const int TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS = 50; // The number of times this effect can stack. Must be between 1 and 99 (inclusive)
     private const int TEMPLATE_AURA_INITIAL_NUMBER_OF_STACKS = 1; // The number of stacks this aura starts with.
     private const int TEMPLATE_AURA_DURATION = 10; // The number of seconds this aura will remain on a target. The duration is an INTEGER because 
-                                                   // status effects should have a finite number of seconds for the duration for simplicity.
+    // status effects should have a finite number of seconds for the duration for simplicity.
 
     #endregion
 
@@ -32,13 +32,13 @@ sealed public class AuraTemplate : Aura
     /// given name is unique.
     /// </summary>
     /// <param name="id">The unique integer ID.</param>
-    public AuraTemplate(string name)
+    public Heal(string name)
         : base(name, TEMPLATE_AURA_DESCRIPTION, TEMPLATE_AURA_FLAVOR_TEXT, TEMPLATE_AURA_ICON_TEXTURE_NAME,
         TEMPLATE_AURA_AURATYPE, TEMPLATE_AURA_DURATION, TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS, TEMPLATE_AURA_INITIAL_NUMBER_OF_STACKS
 
         /* ----------------------------------------MODIFY THE REST HERE------------------------------------------------- *
          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-        , new DoT(0.01f), new Stun())
+        , new HoT(ModType.Percentage, 0.01f))
     { }
 
     #endregion
@@ -58,33 +58,14 @@ sealed public class AuraTemplate : Aura
     /// <returns></returns>
     public override Aura Clone(Entity target, Entity caster, Aura prototpe)
     {
-        return new AuraTemplate(target, caster, prototpe);
+        return new Heal(target, caster, prototpe);
     }
 
     #endregion
 
-    protected class Stun : Module
-    {
-        public Stun() : base() { }
-
-        public override void OnStart(Entity entity, int count)
-        {
-            base.OnStart(entity, count);
-
-            EntityAffected.GetComponent<MovementFSM>().LockMovement(60000);
-        }
-
-        public override void OnEnd()
-        {
-            base.OnEnd();
-
-            EntityAffected.GetComponent<MovementFSM>().UnlockMovement();
-        }
-    }
-
     #region Private Constructor
 
-    private AuraTemplate(Entity target, Entity caster, Aura prototype) : base(target, caster, prototype) { }
+    private Heal(Entity target, Entity caster, Aura prototype) : base(target, caster, prototype) { }
 
     #endregion
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Collections;
 
 public abstract class Aura
 {
@@ -24,12 +25,6 @@ public abstract class Aura
     #region Properties
 
     #region Information
-
-    private int _id; // A unique integer ID for this aura.
-    public int ID
-    {
-        get { return _id; }
-    }
 
     private string _name; // A unique name for this aura.
     public string Name
@@ -81,6 +76,12 @@ public abstract class Aura
     public int StackLimit
     {
         get { return _stackLimit; }
+    }
+
+    private int _initialStackCount; // The number of stacks this aura has when it is first applied.
+    public int InitialStackCount
+    {
+        get { return _initialStackCount; }
     }
 
     #endregion
@@ -138,7 +139,7 @@ public abstract class Aura
     /// <param name="flavorText">The flavor text of the aura. Can be empty.</param>
     /// <param name="textureFileName">The name of the texture for the GUI representation.</param>
     /// <param name="type">The type of aura: buff or debuff.</param>
-    /// <param name="duration">The duration of the aura. If the given value is 0 or Mathf.Infinity, the aura will be treated as static and will 
+    /// <param name="duration">The duration of the aura. If the given value is 0, the aura will be treated as static and will 
     /// remain on the entity until it is removed by a manager. Otherwise, the given value will be used as the duration for the effect and will 
     /// be treated as a non-static aura. The maxium duration for non-static auras is 1 hour. Static auras will have their stack limit clamped to
     /// one and will restrict an entity to only having one instance of this aura for any caster. Non-static auras may be applied multiple times 
@@ -146,21 +147,14 @@ public abstract class Aura
     /// stack up to the stack limit defined below (internal stacking).</param>
     /// <param name="stackLimit">The maximum number of stacks for this aura. Clamped between 1 and 99. This will only affect non-static
     /// auras. Static auras always have a stack limit of 1.</param>
-    protected Aura(int id, string name, string description, string flavorText, string textureFileName, AuraType type, int duration, int stackLimit, params Module[] auraMods)
+    protected Aura(string name, string description, string flavorText, string textureFileName, AuraType type, int duration, int stackLimit, int initialStackCount, params Module[] auraMods)
     {
-        if (id < 0)
-        {
-            throw new FormatException("The aura ID cannot be a negative number");
-        }
-
-        _id = id;
-
-        _name = "";
-
-        if (!String.IsNullOrEmpty(name))
+        if (String.IsNullOrEmpty(name))
         {
             throw new FormatException("The name cannot be null or empty");
         }
+
+        _name = name;
 
         _description = "";
 
@@ -192,11 +186,12 @@ public abstract class Aura
 
         _type = type;
 
-        if (_duration <= 0 || _duration == Mathf.Infinity)
+        if (duration <= 0)
         {
             _isStaticAura = true;
             _duration = 0;
             _stackLimit = MINIMUM_NUMBER_OF_STACKS;
+            _initialStackCount = 1;
         }
 
         else
@@ -204,6 +199,7 @@ public abstract class Aura
             _isStaticAura = false;
             _duration = Mathf.Clamp(duration, MINIMUM_DURATION, MAXIMUM_DURATION);
             _stackLimit = Mathf.Clamp(stackLimit, MINIMUM_NUMBER_OF_STACKS, MAXIMUM_NUMBER_OF_STACKS);
+            _initialStackCount = Mathf.Clamp(initialStackCount, MINIMUM_NUMBER_OF_STACKS, _stackLimit);
         }
 
         _allModules = new List<Module>();
@@ -242,7 +238,6 @@ public abstract class Aura
 
         _target = target;
         _caster = caster;
-        _id = protoType.ID;
         _name = protoType.Name;
         _description = protoType.Description;
         _flavorText = protoType.FlavorText;
@@ -253,8 +248,12 @@ public abstract class Aura
         _isStaticAura = protoType.IsStaticAura;
         _stackLimit = protoType.StackLimit;
 
+        _allModules = new List<Module>(protoType._allModules);
+        _tickAttributes = new List<TickAttribute>(protoType._tickAttributes);
+
         _timeRemaining = 0;
         _stackCount = 0;
+        _initialStackCount = protoType.InitialStackCount;
 
         _isPrototype = false;
     }
@@ -263,7 +262,54 @@ public abstract class Aura
 
     #region Methods
 
-    #region Event Methods
+    #region Virtual Methods
+
+    public virtual Aura Clone(Entity target, Entity caster, Aura prototpe)
+    {
+        return null;
+    }
+  
+    #endregion
+
+    #region Control Methods
+
+    /// <summary>
+    /// Called when the aura is first applied. 
+    /// </summary>
+    public IEnumerator Activate()
+    {
+        if (!_isPrototype)
+        {
+            _stackCount = _initialStackCount;
+            _timeRemaining = _duration;
+
+            OnStart();
+
+            while (_stackCount > 0)
+            {
+                OnTick(); // Call OnTick event
+
+                if (!_isStaticAura) // If the aura is non-static
+                {
+                    _timeRemaining--; // Decrement the time counter
+
+                    if (_timeRemaining <= 0) // If the aura has expired,
+                    {
+                        OnEnd(); // Call OnEnd event
+                        _target.GetComponent<EntityAuraManager>().Remove(_name, _caster);
+                        yield return null;
+                    }
+                }
+
+                yield return new WaitForSeconds(1);
+            }
+        }
+
+        else
+        {
+            throw new NullReferenceException("Cannot activate a prototype Aura");
+        }
+    }
 
     /// <summary>
     /// Attempts to add the number of stacks given by count and refreshes the duration. If the stack count increases as a result of calling 
@@ -272,111 +318,65 @@ public abstract class Aura
     /// </summary>
     /// <param name="count">The number of applications to apply. If count is not given, count is 0, or count is greater than the stack limit,
     /// this will add the maximum number of stacks allowed by the stack limit.</param>
-    public virtual void Apply(int count = 1)
+    public void Add(int count = 1)
     {
         if (_isPrototype)
         {
             throw new InvalidOperationException("Cannot call aura methods for prototypes.");
         }
 
-        if (count > 0) // Check input
+        count = Mathf.Max(count, MINIMUM_NUMBER_OF_STACKS);
+        if (_stackCount < _stackLimit) // If the stack count is not at the limit,
         {
-            if (_stackCount == 0) // If this is the first time this aura is being applied,
-            {
-                OnStart(); // Call OnStart event
-            }
-
-            if (_stackCount < _stackLimit) // If the stack count is not at the limit,
-            {
-                _stackCount = Mathf.Clamp(_stackCount + count, MINIMUM_NUMBER_OF_STACKS, _stackLimit); // Update the stack count
-                OnUpdate(); // Call OnUpdate event
-            }
-
-            if (!_isStaticAura) // If the aura is non-static
-            {
-                _timeRemaining = _duration; // Refresh the duration
-            }
+            _stackCount = Mathf.Clamp(_stackCount + count, MINIMUM_NUMBER_OF_STACKS, _stackLimit); // Update the stack count
+            OnUpdate(); // Call OnUpdate event
         }
-
-        else
-        {
-            throw new ArgumentOutOfRangeException("The number applications applied must be greater than 0.");
-        }
-    }
-
-    /// <summary>
-    /// Called every second by the buff manager to handle Ticks. This returns true if the aura has expired. Calls the OnFalloff 
-    /// event in the derived class, then calls the OnRemoval event before returning true.
-    /// </summary>
-    /// <returns>Returns true if the aura has expired, false otherwise.</returns>
-    public virtual bool Tick()
-    {
-        if (_isPrototype)
-        {
-            throw new InvalidOperationException("Cannot call aura methods for prototypes.");
-        }
-
-        OnTick(); // Call OnTick event
 
         if (!_isStaticAura) // If the aura is non-static
         {
-            _timeRemaining--; // Decrement the time counter
-
-            if (_timeRemaining <= 0) // If the aura has expired,
-            {
-                OnEnd(); // Call OnEnd event
-                return true; // return true
-            }
+            _timeRemaining = _duration; // Refresh the duration
         }
-
-        return false;
     }
-
 
     /// <summary>
     /// Removes the given number of stacks from the aura up to the current number of stacks. All modules will be updated to perform correct 
     /// actions. If the number of stacks is now 0, returns true.
     /// </summary>
     /// <returns>Returns true if there are no more applications left, false otherwise.</returns>
-    public virtual bool Remove(int count = 1)
+    public void Remove(int count = 0)
     {
         if (_isPrototype)
         {
             throw new InvalidOperationException("Cannot call aura methods for prototypes.");
         }
 
-        if (count > 0) // Check input
+        if (count <= 0)
         {
-            _stackCount = Mathf.Max(_stackCount - count, 0); // Update the stack count
+            count = _stackCount;
+        }
 
-            if (_stackCount > 0) // If there are still stacks remaining
-            {
-                OnUpdate(); // Call OnUpdate event
-                return false; // return false
-            }
+        _stackCount = Mathf.Max(_stackCount - count, 0); // Update the stack count
 
-            else
-            {
-                OnEnd(); // Call OnEnd event
-                return true; // return true
-            }
+        if (_stackCount > 0) // If there are still stacks remaining
+        {
+            OnUpdate(); // Call OnUpdate event
         }
 
         else
         {
-            throw new ArgumentOutOfRangeException("The number applications removed must be greater than 0.");
+            OnEnd(); // Call OnEnd event
         }
     }
 
     #endregion
 
-    #region Private Methods
+    #region Module Events
 
-    private void OnStart()
+    public void OnStart()
     {
         foreach (Module module in _allModules)
         {
-            module.OnStart(Target);
+            module.OnStart(Target, _stackCount);
         }
     }
 
@@ -434,7 +434,9 @@ public abstract class Aura
         {
             if ((ModType)ModificationType == ModType.Percentage)
             {
-                EntityAffected.ModifyHealth(EntityAffected.currentHP * Magnitude * Sign * Count);
+
+                Debug.LogWarning((EntityAffected.maxHP * Magnitude * Sign * Count).ToString() + " health");
+                EntityAffected.ModifyHealth(EntityAffected.maxHP * Magnitude * Sign * Count);
             }
 
             else
@@ -490,7 +492,7 @@ public abstract class Aura
         {
             if ((ModType)ModificationType == ModType.Percentage)
             {
-                EntityAffected.ModifyHealth(EntityAffected.currentHP * Magnitude * Sign * Count);
+                EntityAffected.ModifyHealth(EntityAffected.maxHP * Magnitude * Sign * Count);
             }
 
             else
@@ -612,8 +614,9 @@ public abstract class Aura
 
         #region Virtual Methods
 
-        public virtual void OnStart(Entity entity) 
-        { 
+        public virtual void OnStart(Entity entity, int count) 
+        {
+            _count = Mathf.Max(count, 0);
             _entityAffected = entity; 
         }
 
@@ -728,9 +731,9 @@ public abstract class Aura
 
         #region Abstract Methods
 
-        public override void OnStart(Entity entity)
+        public override void OnStart(Entity entity, int count)
         {
-            base.OnStart(entity);
+            base.OnStart(entity, count);
             _attributeSnapshot = EntityAffected.currentAtt.GetValue(Attribute);
         }
 

@@ -27,7 +27,7 @@ public class Entity : MonoBehaviour
 
         currentAtt.Power = 100;
 
-        maxHP = currentHP = 50000;
+        maxHP = currentHP = 500;
     }
     /// <summary>
     /// Creates the entity with a given set of base attributes,
@@ -82,7 +82,7 @@ public class Entity : MonoBehaviour
     /// Can be used for both taking damage and gaining health.
     /// </summary>
     /// <param name="value">Delta value to modify current health.</param>
-    public void ModifyHealth(float delta) { currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); }
+    public void ModifyHealth(float delta) { currentHP = Mathf.Clamp(currentHP + delta, 0, maxHP); }
 
     /// <summary>
     /// Kind of obvious.
