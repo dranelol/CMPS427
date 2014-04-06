@@ -37,9 +37,16 @@ public class HUD_GUI : MonoBehaviour {
 
 	public float native_width;
 	public float native_height;
-	public Rect InfoBox;
+    public Rect InfoBox1;
+    public Rect InfoBox2;
 
     public Entity player;
+    
+
+    private Rect CDBox1;
+    private Rect CDBox2;
+    private Rect CDBox3;
+    private Rect CDBox4;
 
 	public float health = 0.0f;
 	void Start () {
@@ -68,9 +75,20 @@ public class HUD_GUI : MonoBehaviour {
 		HealthGroupSize.x = Screen.width * .491f;//300f;//.491f
 		HealthGroupSize.y = Screen.height * .21834f;//100f;//.21834f
 
-		InfoBox = new Rect(Screen.width * .5f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
+        InfoBox1 = new Rect(Screen.width * .5f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
+        InfoBox2 = new Rect(Screen.width * .9f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
 
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Entity>();
+
+        #region Cooldown GUI init
+
+        CDBox1 = new Rect(Screen.width * .65f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
+        CDBox2 = new Rect(Screen.width * .65f, Screen.height * .925f, Screen.width * .45f, Screen.height * .1f);
+        CDBox3 = new Rect(Screen.width * .65f, Screen.height * .950f, Screen.width * .45f, Screen.height * .1f);
+        CDBox4 = new Rect(Screen.width * .65f, Screen.height * .975f, Screen.width * .45f, Screen.height * .1f);
+        
+
+        #endregion
 	}
 
 	void OnGUI(){
@@ -138,7 +156,81 @@ public class HUD_GUI : MonoBehaviour {
 		
 		}GUI.EndGroup();
 		GUI.backgroundColor = Color.green;
-		GUI.Label(InfoBox,"L M B = Attack \nR M B = Hadouken",infoBoxStyle);
+        //GUI.color = Color.white;
+        infoBoxStyle.normal.textColor = Color.white;
+        string attackList = "Q = " + player.abilityManager.abilities[2].Name + " \n"
+                          + "W = " + player.abilityManager.abilities[3].Name + " \n"
+                          + "E = " + player.abilityManager.abilities[4].Name + " \n"
+                          + "R = " + player.abilityManager.abilities[5].Name + " \n";
 
-	}
+        string version = "Week9v1";
+
+        GUI.Label(InfoBox1, attackList, infoBoxStyle);
+        GUI.Label(InfoBox2, version, infoBoxStyle);
+
+        #region ability cooldown GUI
+
+   
+        float timeLeft = 0;
+
+        #region ability 1
+        if (player.abilityManager.activeCoolDowns[2] > Time.time)
+        {
+
+            
+            timeLeft = player.abilityManager.activeCoolDowns[2] - Time.time;
+        }
+        else
+        {
+            timeLeft = 0;
+        }        
+
+        GUI.Label(CDBox1, player.abilityManager.abilities[2].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+        #endregion
+        
+        #region ability 2
+        if (player.abilityManager.activeCoolDowns[3] > Time.time)
+        {
+            
+            timeLeft = player.abilityManager.activeCoolDowns[3] - Time.time;
+        }
+        else
+        {
+            timeLeft = 0;
+        }
+
+        GUI.Label(CDBox2, player.abilityManager.abilities[3].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+        #endregion
+
+        #region ability 3
+        if (player.abilityManager.activeCoolDowns[4] > Time.time)
+        {
+            timeLeft = player.abilityManager.activeCoolDowns[4] - Time.time;
+        }
+        else
+        {
+            timeLeft = 0;
+        }
+
+        GUI.Label(CDBox3, player.abilityManager.abilities[4].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+        #endregion
+
+        #region ability 4
+        if (player.abilityManager.activeCoolDowns[5] > Time.time)
+        {
+            timeLeft = player.abilityManager.activeCoolDowns[5] - Time.time;
+        }
+        else
+        {
+            timeLeft = 0;
+        }
+
+
+        GUI.Label(CDBox4, player.abilityManager.abilities[5].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+        #endregion
+
+        #endregion
+
+    }
+
 }

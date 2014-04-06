@@ -21,7 +21,6 @@ public class EnemySpawner : MonoBehaviour
 
     private float spawnCounter = 0;
 
-   // public GameObject man;
 
     void Awake()
     {
@@ -101,18 +100,37 @@ public class EnemySpawner : MonoBehaviour
 
     private void GenerateEnemy()
     {
+
+        
+        
         Vector3 newPosition = transform.position + new Vector3(UnityEngine.Random.Range(-spawnRadius, spawnRadius), 0, UnityEngine.Random.Range(-spawnRadius, spawnRadius));
 
         NavMeshHit meshLocation;
 
         if (NavMesh.SamplePosition(newPosition, out meshLocation, SPAWN_RADIUS_MAX, 1 << LayerMask.NameToLayer("Default")))
         {
+            
             GameObject newEnemy = Instantiate(enemyPrefab, meshLocation.position, Quaternion.identity) as GameObject;
             newEnemy.rigidbody.Sleep();
             newEnemy.name = "Enemy(" + newEnemy.GetInstanceID() + ")";
             newEnemy.transform.parent = transform;
             newEnemy.transform.GetChild(0).gameObject.AddComponent<AggroRadius>();
             newEnemy.AddComponent<AIController>();
+
+            Entity enemyEntity = newEnemy.GetComponent<Entity>();
+
+            # region giving enemies abilities
+
+
+            enemyEntity.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
+            enemyEntity.abilityManager.abilities[1] = GameManager.Abilities["hadouken"];
+
+            enemyEntity.abilityIndexDict["cleave"] = 0;
+            enemyEntity.abilityIndexDict["hadouken"] = 1;
+
+
+            #endregion
+
         }
 
         else

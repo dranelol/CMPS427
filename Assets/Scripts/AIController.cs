@@ -47,6 +47,7 @@ public class AIController : StateMachine
         pursuit,
         dead,
         reset,
+        wander
     }
 
     // Script references
@@ -62,6 +63,13 @@ public class AIController : StateMachine
     private Dictionary<GameObject, Hostile> ThreatTable; // A dictionary of all threat targets
     private GameObject target; // The Target object that holds information about the current target
 
+
+    private float wanderInterval; //Time between wanders in seconds
+    private float wanderDistance; //Radius around the wanderer that it will travel
+    private float nextWander;    //Time the next wander will take place.
+    private float wanderDistanceFromNode; //Max distance the enemy will wander away from the node.
+    private Vector3 nodePosition; //Position of the EnemyNode
+
     void Awake()
     {
         Group = transform.parent.GetComponent<AIGroupController>();
@@ -75,6 +83,14 @@ public class AIController : StateMachine
         PursuitFSM = GetComponent<AIPursuit>();
         localHomePosition = transform.position;
 
+        wanderDistance = 3.0f;
+        wanderInterval = 3.0f;
+        wanderDistanceFromNode = 7.0f;
+
+        nodePosition = new Vector3(transform.parent.position.x, transform.position.y, transform.parent.position.z);
+
+        nextWander = Time.time + wanderInterval;
+
         ThreatTable = new Dictionary<GameObject, Hostile>();
         target = null;
 
@@ -82,6 +98,7 @@ public class AIController : StateMachine
 
         HashSet<Enum> idleTransitions = new HashSet<Enum>();
         idleTransitions.Add(AIStates.pursuit);
+        idleTransitions.Add(AIStates.wander);
 
         HashSet<Enum> pursuitTransitions = new HashSet<Enum>();
         pursuitTransitions.Add(AIStates.dead);
@@ -90,11 +107,17 @@ public class AIController : StateMachine
         HashSet<Enum> resetTransitions = new HashSet<Enum>();
         resetTransitions.Add(AIStates.idle);
 
+        HashSet<Enum> wanderTransitions = new HashSet<Enum>();
+        wanderTransitions.Add(AIStates.idle);
+
         AddTransitionsFrom(AIStates.idle, idleTransitions);
         AddTransitionsFrom(AIStates.pursuit, pursuitTransitions);
         AddTransitionsFrom(AIStates.reset, resetTransitions);
+        AddTransitionsFrom(AIStates.wander, wanderTransitions);
 
         StartMachine(AIStates.idle);
+
+        
     }
 
     #region public functions
@@ -141,6 +164,16 @@ public class AIController : StateMachine
         }
     }
 
+
+    /// <summary>
+    /// Tells the enemy's group to attack the attacker
+    /// </summary>
+    /// <param name="attacker">The entity attacking.</param>
+    public void BeenAttacked(GameObject attacker)
+    {
+        Group.Threat(attacker, 1);
+    }
+
     /// <summary>
     /// Return the current target.
     /// </summary>
@@ -158,6 +191,13 @@ public class AIController : StateMachine
     {
         return (AIStates)CurrentState == AIStates.reset;
     }
+
+    public bool IsInCombat()
+    {
+        return (AIStates)CurrentState == AIStates.pursuit;
+    }
+
+
     #endregion
 
     #region private functions
@@ -215,6 +255,39 @@ public class AIController : StateMachine
         }
     }
 
+    /// <summary>
+    /// Initiates the wander behaviour
+    /// </summary>
+    /// <param name="currentPosition">Current location of the enemy</param>
+    /// <param name="centerPosition">Position the path needs to be around</param>
+    /// <param name="distance">How far to travel each wander.</param>
+    /// <param name="distanceFromCenter">Max distance to travel from the center</param>
+    private void Wander(Vector3 currentPosition, Vector3 centerPosition, float distance, float distanceFromCenter)
+    {
+        Vector2 randomDirection = UnityEngine.Random.insideUnitCircle.normalized * distance; // Pick a random point on the edge of the circle
+
+        Vector3 targetPosition = new Vector3(randomDirection.x, 0, randomDirection.y);
+
+
+
+        targetPosition += currentPosition;
+        targetPosition.y = currentPosition.y;
+
+        if (Vector3.Distance(centerPosition, targetPosition) > distanceFromCenter)
+        {
+
+
+            Vector3 newDirection = (centerPosition - currentPosition).normalized * distance;
+
+            targetPosition = new Vector3(newDirection.x, 0, newDirection.y);
+            targetPosition += currentPosition;
+            targetPosition.y = currentPosition.y;
+        }
+
+
+        MoveFSM.SetPath(targetPosition);
+    }
+
     private void Reset()
     {
         if (IsValidTransition((AIStates)CurrentState, AIStates.reset) == true)
@@ -233,6 +306,20 @@ public class AIController : StateMachine
     {
         Aggro.Trigger.enabled = true;
         yield break;
+    }
+
+    void idle_Update()
+    {
+
+        
+
+        if (Time.time >= nextWander)
+        {
+
+            Wander(transform.position, nodePosition, wanderDistance, wanderDistanceFromNode);            
+
+            nextWander = Time.time + wanderInterval;
+        }
     }
 
     IEnumerator idle_ExitState()
@@ -325,6 +412,45 @@ public class AIController : StateMachine
     }
 
     #endregion
+
+    #region wander functions WANDER IS CURRENTLY BEING DONE IN IDLE
+
+    /*
+    void wander_Update()
+    {        
+        if (Time.time >= nextWander)
+        {
+            Vector2 randomDirection = UnityEngine.Random.insideUnitCircle.normalized * wanderDistance; // Pick a random point on the edge of the circle
+
+            Vector3 targetPosition = new Vector3(randomDirection.x, 0, randomDirection.y);
+
+
+
+            targetPosition += transform.position;
+            targetPosition.y = transform.position.y;
+
+            //transform.LookAt(new Vector3(targetPosition.x, transform.position.y, targetPosition.z));
+
+            Debug.DrawRay(transform.position, targetPosition - transform.position, Color.blue); // Draw vector to target position
+
+            Debug.Log(targetPosition.ToString());
+
+            //Debug.Log("world target: " + transform.TransformPoint(targetPosition).ToString());
+
+
+
+            MoveFSM.SetPath(targetPosition);
+
+            //NavAgent.SetDestination(targetPosition);
+
+            nextWander = Time.time + wanderInterval;
+        }
+    }*/
+
+    #endregion 
+
+
+    
 
     #endregion
 }

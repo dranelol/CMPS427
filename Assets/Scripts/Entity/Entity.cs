@@ -10,22 +10,23 @@ public class Entity : MonoBehaviour
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
 
-    public List<Ability> abilities;
+    public AbilityManager abilityManager;
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
+
+    public Dictionary<string, int> abilityIndexDict = new Dictionary<string, int>();
 
     public void Awake()
     {
-        abilities = new List<Ability>(6);
+        abilityManager = gameObject.GetComponent<AbilityManager>();
 
-        for (int i = 0; i < abilities.Capacity; i++)
-        {
-            abilities.Add(null);
-        }
         currentAtt = new Attributes();
+        //Debug.Log(currentAtt.ToString()); 
         equipAtt = new Attributes();
-        buffAtt = new Attributes();
+        buffAtt = new Attributes();                                                                                     
 
-        currentAtt.Power = 100;
+        currentAtt.Power = 10;
+        currentAtt.Defense = 10;
+        currentAtt.AttackSpeed = 1.0f;
 
         maxHP = currentHP = 500;
     }
@@ -48,6 +49,10 @@ public class Entity : MonoBehaviour
     public bool addEquipment(equipSlots.slots slot , equipment item)
     {
         if (this.equippedEquip.ContainsKey(slot))
+            return false;
+        else if (item.twohand == true && this.equippedEquip.ContainsKey(equipSlots.slots.Off))
+            return false;
+        else if (slot == equipSlots.slots.Off && equippedEquip[equipSlots.slots.Main].twohand == true)
             return false;
         else
         {

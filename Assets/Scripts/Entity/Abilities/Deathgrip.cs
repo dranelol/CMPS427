@@ -4,55 +4,79 @@ using System.Collections.Generic;
 
 public class Deathgrip : Ability
 {
-    public Deathgrip(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject darkPrefab)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable)
+    public Deathgrip(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
     {
-        DarkEnergyPrefab = darkPrefab;
+       
     }
 
-    public GameObject DarkEnergyPrefab;
-
-    /// <summary>
-    /// Handler for this attack; figures out who will be attacked, and carries out everything needed for the attack to occur
-    /// </summary>
-    /// <param name="attacker">The gameobject carrying out the attack</param>
-    /// <param name="defender">The gameobject defending against the attack</param>
-    public override void AttackHandler(GameObject attacker, bool isPlayer)
+    public override void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
     {
-        List<GameObject> attacked = OnAttack(attacker.transform, isPlayer);
+        List<GameObject> attacked = OnAttack(source, isPlayer);
 
-        Debug.Log(attacked.Count);
-
-        foreach (GameObject enemy in attacked)
+        if (isPlayer == true)
         {
-            if (enemy.GetComponent<AIController>().IsResetting() == false
-                && enemy.GetComponent<AIController>().IsDead() == false)
-            {
-                DoDamage(attacker, enemy, isPlayer);
 
-                GameObject _energyEffect = GameObject.Instantiate(DarkEnergyPrefab, enemy.transform.position, Quaternion.identity) as GameObject;
-                _energyEffect.GetComponent<DarkLightning>().Activate(attacker, enemy, 0.4f);
-                // this is a physics attack, so do physics applies
-                DoPhysics(attacker, enemy);
+            foreach (GameObject enemy in attacked)
+            {
+                if (enemy.GetComponent<AIController>().IsResetting() == false
+                    && enemy.GetComponent<AIController>().IsDead() == false)
+                {
+                    Entity defender = enemy.GetComponent<Entity>();
+                    DoDamage(source, enemy, attacker, defender, isPlayer);
+                    DoPhysics(source, enemy);
+
+                    if (enemy.GetComponent<AIController>().IsInCombat() == false)
+                    {
+                        enemy.GetComponent<AIController>().BeenAttacked(source);
+                    }
+
+                }
+
+            }
+        }
+
+        else
+        {
+            foreach (GameObject enemy in attacked)
+            {
+                Entity defender = enemy.GetComponent<Entity>();
+                DoDamage(source, enemy, attacker, defender, isPlayer);
+                DoPhysics(source, enemy);
             }
         }
     }
 
-    /// <summary>
-    /// Figure out who will be affected by this attack
-    /// </summary>
-    /// <param name="attacker"></param>
-    /// <returns>Returns a list of gameobjects this attack will affect</returns>
-    public override List<GameObject> OnAttack(Transform attacker, bool isPlayer)
+    public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
     {
         List<GameObject> enemiesToAttack = new List<GameObject>();
 
-        Vector3 forward = attacker.forward.normalized;
+        Vector3 forward = new Vector3();
+
+        // this is a player attack, forward attack vector will be based on cursor position
+        if (isPlayer == true)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit target;
+            Physics.Raycast(ray, out target, Mathf.Infinity);
+            Vector3 vectorToMouse = target.point - source.transform.position;
+            forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
+        }
 
         int enemyMask = LayerMask.NameToLayer("Enemy");
         int playerMask = LayerMask.NameToLayer("Player");
 
-        Collider[] colliders = Physics.OverlapSphere(attacker.position, range, 1 << enemyMask);
+        Collider[] colliders;
+
+        if (isPlayer == true)
+        {
+            colliders = Physics.OverlapSphere(source.transform.position, range, 1 << enemyMask);
+        }
+
+        else
+        {
+            colliders = Physics.OverlapSphere(source.transform.position, range, 1 << playerMask);
+        }
 
         foreach (Collider collider in colliders)
         {
@@ -60,29 +84,60 @@ public class Deathgrip : Ability
 
             // create a vector from the possible enemy to the attacker
 
-            Vector3 enemyVector = collider.transform.position - attacker.position;
-            Vector3 enemyVector2 = attacker.position - collider.transform.position;
+            Vector3 enemyVector = collider.transform.position - source.transform.position;
+            Vector3 enemyVector2 = source.transform.position - collider.transform.position;
+
+            // this is an enemy attack, forward attack vector will be based on target position
+            if (isPlayer == false)
+            {
+                forward = enemyVector;
+            }
 
             // if the angle between the forward vector of the attacker and the enemy vector is less than the angle of attack, the enemy is within the attack angle
             if (Vector3.Angle(forward, enemyVector) < angle)
             {
                 RaycastHit hit = new RaycastHit();
-                Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
 
-                // try to cast a ray from the enemy to the player
-                bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, 1 << playerMask);
 
-                if (!rayCastHit)
+                if (isPlayer == true)
                 {
+                    // try to cast a ray from the enemy to the player
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
 
+                    if (!rayCastHit)
+                    {
+
+                    }
+                    // if the ray hits, the enemy is in line of sight of the player, this is a successful attack hit
+                    else
+                    {
+                        if (hit.collider.gameObject.tag == "Player")
+                        {
+                            Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                            Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+                            enemiesToAttack.Add(collider.gameObject);
+                        }
+                    }
                 }
-                // if the ray hits, the enemy is in line of sight of the player, this is a successful attack hit
+
                 else
                 {
-                    if (hit.collider.gameObject.tag == "Player")
+                    // try to cast a ray from the player to the enemy
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
+
+                    if (!rayCastHit)
                     {
-                        enemiesToAttack.Add(collider.gameObject);
+
+                    }
+                    // if the ray hits, the player is in line of sight of the enemy, this is a successful attack hit
+                    else
+                    {
+                        if (hit.collider.gameObject.tag == "Enemy")
+                        {
+                            //Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                            //Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+                            enemiesToAttack.Add(collider.gameObject);
+                        }
                     }
                 }
             }
@@ -91,36 +146,28 @@ public class Deathgrip : Ability
         return enemiesToAttack;
     }
 
-    /// <summary>
-    /// Do damage with this attack
-    /// </summary>
-    /// <param name="attacker">The gameobject carrying out the attack</param>
-    /// <param name="defender">The gameobject defending against the attack</param>
-    public override void DoDamage(GameObject attacker, GameObject defender, bool isPlayer)
+    public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
-        //Debug.Log(defender.ToString());
-        Entity attackerEntity = attacker.GetComponent<Entity>();
-        Entity defenderEntity = defender.GetComponent<Entity>();
 
-        // for now, always just take 10hp off
+        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
+        Debug.Log("damage: " + damageAmt);
 
-        defenderEntity.currentHP -= 10f;
+        defender.currentHP -= damageAmt;
 
-        float ratio = (defenderEntity.currentHP / defenderEntity.maxHP);
+        float ratio = (defender.currentHP / defender.maxHP);
 
-        defender.renderer.material.color = new Color(1.0f, ratio, ratio);
+        if (isPlayer == true)
+        {
+            target.renderer.material.color = new Color(1.0f, ratio, ratio);
+        }
     }
 
-    /// <summary>
-    /// Certain attacks have a physics component to them; this resolves those effects
-    /// </summary>
-    /// <param name="attacker">Gameobject doing the attacking</param>
-    /// <param name="defender">Gameobject affected by the attack</param>
-    public override void DoPhysics(GameObject attacker, GameObject defender)
+    public override void DoPhysics(GameObject source, GameObject target)
     {
-        Vector3 relativeVector = (attacker.transform.position - defender.transform.position).normalized;
-        float normalizedMagnitude = Vector3.Distance(defender.transform.position, attacker.transform.position);
+        Vector3 relativeVector = (source.transform.position - target.transform.position).normalized;
+        float normalizedMagnitude = Vector3.Distance(target.transform.position, source.transform.position);
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
-        defender.GetComponent<MovementFSM>().AddForce(relativeVector * force * 2, 0.1f, ForceMode.Impulse);
+        target.GetComponent<MovementFSM>().AddForce(relativeVector * force * 2, 0.1f, ForceMode.Impulse);
     }
+
 }

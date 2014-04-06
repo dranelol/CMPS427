@@ -19,7 +19,8 @@ public class CombatFSM : StateMachine
     }
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+    {
 
         SetupMachine(CombatStates.idle);
 
@@ -29,6 +30,7 @@ public class CombatFSM : StateMachine
 
         HashSet<Enum> attackingTransitions = new HashSet<Enum>();
         attackingTransitions.Add(CombatStates.combatLocked);
+        attackingTransitions.Add(CombatStates.attacking);
 
         HashSet<Enum> combatLockedTransitions = new HashSet<Enum>();
         combatLockedTransitions.Add(CombatStates.idle);
@@ -44,6 +46,8 @@ public class CombatFSM : StateMachine
 
     public void Attack(float time)
     {
+        
+        
         attack = true;
         if (timeLocked == false)
         {
@@ -100,6 +104,8 @@ public class CombatFSM : StateMachine
     {
         if (timeLocked == true)
         {
+            
+            
             lockedTime -= Time.deltaTime;
 
             if (lockedTime <= 0)
