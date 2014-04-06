@@ -20,18 +20,22 @@ public class GameManager : MonoBehaviour
     public equipmentFactory EquipmentFactory;
 
     public static Dictionary<string, Ability> Abilities;
+    public static Dictionary<int, Aura> Auras;
+    public static Dictionary<string, int> AuraStringToIntMap;
 
     public static float GLOBAL_COOLDOWN = 1.0f;
 
+    public GameObject thing;
 	// Use this for initialization
-	public void Awake () 
+    public void Awake()
     {
-        EquipmentFactory = new equipmentFactory();
+        //EquipmentFactory = new equipmentFactory();
 
         #region ability initialization
         Abilities = new Dictionary<string, Ability>();
 
         // Attack type, damage type, range, angle, cooldown, damagemod
+
 
         Abilities["hadouken"] = new Hadouken(AttackType.PBAOE, DamageType.AIR, 5.0f, 360.0f, 3.0f, 10.0f, "hadouken", "Hadouken", HadoukenParticles);
         Abilities["deathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 5.0f, 360.0f, 3.0f, 15.0f, "deathgrip", "AoE Deathgrip", DeathgripParticles);
@@ -42,6 +46,7 @@ public class GameManager : MonoBehaviour
         Abilities["firemine"] = new firemine(AttackType.PROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 4.0f, 1.0f, "firemine", "Fire Mine", FiremineParticles);
         Abilities["GETOVERHERE"] = new GETOVERHERE(AttackType.PROJECTILE, DamageType.SHADOW, 1.0f, 0.0f, 3.0f, 0.1f, "GETOVERHERE", "Shadow Pull", GETOVERHEREParticles);
         Abilities["normalmine"] = new normalmine(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 360.0f, 4.0f, 1.0f, "normalmine", "Mine", MineParticles);
+
 
         Abilities["ShockMine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 10.0f, "ShockMine", "Shock Mine", ShockMineProjectile);
         

@@ -12,7 +12,7 @@ public class EnemySpawner : MonoBehaviour
     public float spawnRadius;
 
     // Continuous generation
-    public bool isStatic = false; // This determines if the spawner should generate 1 group or continuously spawn enemies over time.
+    public bool isStatic; // This determines if the spawner should generate 1 group or continuously spawn enemies over time.
 
     // Only visible if continuous generation is selected
     public bool isTrigger;
@@ -21,7 +21,6 @@ public class EnemySpawner : MonoBehaviour
 
     private float spawnCounter = 0;
 
-    
 
     void Awake()
     {
@@ -37,18 +36,19 @@ public class EnemySpawner : MonoBehaviour
             this.gameObject.SetActive(false);
             throw new NullReferenceException("Place the node closer to the NavMesh.");
         }
+
+        trigger = GetComponent<SphereCollider>();
+        trigger.radius = triggerRadius;
     }
 
     void Start()
     {
-        trigger = GetComponent<SphereCollider>();
-        trigger.radius = triggerRadius;
+        //man = GameObject.Find("GameManager");
 
         if (!isStatic || !isTrigger)
         {
-            Destroy(trigger);
+            trigger.enabled = false;
             spawnCounter = spawnInterval;
-
 
             for (int i = 0; i < enemyCount; i++)
             {
@@ -64,6 +64,7 @@ public class EnemySpawner : MonoBehaviour
 
     void Update()
     {
+        /*
         if (transform.childCount < enemyCount)
         {
             if (spawnCounter > 0)
@@ -85,6 +86,7 @@ public class EnemySpawner : MonoBehaviour
                 }
             }
         }
+         */
     }
 
     void OnTriggerStay()
@@ -112,7 +114,6 @@ public class EnemySpawner : MonoBehaviour
             newEnemy.rigidbody.Sleep();
             newEnemy.name = "Enemy(" + newEnemy.GetInstanceID() + ")";
             newEnemy.transform.parent = transform;
-
             newEnemy.transform.GetChild(0).gameObject.AddComponent<AggroRadius>();
             newEnemy.AddComponent<AIController>();
 
@@ -135,7 +136,6 @@ public class EnemySpawner : MonoBehaviour
         else
         {
             this.gameObject.SetActive(false);
-
             throw new NullReferenceException("Could not find a place to spawn enemy. Check node location.");
         }
     }

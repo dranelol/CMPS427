@@ -41,6 +41,7 @@ public class Cleave : Ability
                 // todo: check if player is dead
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
+
                 
             }
         }
@@ -70,12 +71,15 @@ public class Cleave : Ability
 
         if (isPlayer == true)
         {
+
             colliders = Physics.OverlapSphere(source.transform.position, range, 1 << enemyMask);
+
         }
 
         else
         {
             colliders = Physics.OverlapSphere(source.transform.position, range, 1 << playerMask);
+
         }
 
         foreach (Collider collider in colliders)
@@ -97,12 +101,14 @@ public class Cleave : Ability
             if (Vector3.Angle(forward, enemyVector) < angle)
             {
                 RaycastHit hit = new RaycastHit();
-                
+
 
                 if (isPlayer == true)
                 {
                     // try to cast a ray from the enemy to the player
+
                     bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
+
 
                     if (!rayCastHit)
                     {
@@ -113,8 +119,10 @@ public class Cleave : Ability
                     {
                         if (hit.collider.gameObject.tag == "Player")
                         {
+
                             Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
                             Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+
                             enemiesToAttack.Add(collider.gameObject);
                         }
                     }
@@ -123,6 +131,7 @@ public class Cleave : Ability
                 else
                 {
                     // try to cast a ray from the player to the enemy
+
                     bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
 
                     if (!rayCastHit)
@@ -136,6 +145,7 @@ public class Cleave : Ability
                         {
                             //Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
                             //Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+
                             enemiesToAttack.Add(collider.gameObject);
                         }
                     }
@@ -146,7 +156,9 @@ public class Cleave : Ability
         return enemiesToAttack;
     }
 
+
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
+
     {
         float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
 
@@ -159,6 +171,7 @@ public class Cleave : Ability
 
         if (isPlayer == true)
         {
+
             target.renderer.material.color = new Color(1.0f, ratio, ratio);
         }
     }

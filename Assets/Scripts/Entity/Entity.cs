@@ -15,14 +15,12 @@ public class Entity : MonoBehaviour
 
     public Dictionary<string, int> abilityIndexDict = new Dictionary<string, int>();
 
-
     public void Awake()
     {
-
         abilityManager = gameObject.GetComponent<AbilityManager>();
 
         currentAtt = new Attributes();
-        //Debug.Log(currentAtt.ToString());                                                         
+        //Debug.Log(currentAtt.ToString()); 
         equipAtt = new Attributes();
         buffAtt = new Attributes();                                                                                     
 
@@ -30,7 +28,7 @@ public class Entity : MonoBehaviour
         currentAtt.Defense = 10;
         currentAtt.AttackSpeed = 1.0f;
 
-        maxHP = currentHP = 50;
+        maxHP = currentHP = 500;
     }
     /// <summary>
     /// Creates the entity with a given set of base attributes,
@@ -89,7 +87,7 @@ public class Entity : MonoBehaviour
     /// Can be used for both taking damage and gaining health.
     /// </summary>
     /// <param name="value">Delta value to modify current health.</param>
-    public void ModifyHealth(float delta) { currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); }
+    public void ModifyHealth(float delta) { currentHP = Mathf.Clamp(currentHP + delta, 0, maxHP); }
 
     /// <summary>
     /// Kind of obvious.
