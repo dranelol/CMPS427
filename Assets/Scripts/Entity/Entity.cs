@@ -28,7 +28,7 @@ public class Entity : MonoBehaviour
         currentAtt.Defense = 10;
         currentAtt.AttackSpeed = 1.0f;
 
-        maxHP = currentHP = 500;
+        maxHP = currentHP = 50;
     }
     /// <summary>
     /// Creates the entity with a given set of base attributes,

@@ -215,11 +215,6 @@ public class AIPursuit : StateMachine
                     {
                         MoveFSM.SetPath(currentTarget.transform.position);
                     }
-
-                    else
-                    {
-                        MoveFSM.SetPath(currentTarget.transform.position);
-                    }
                 }
             }
 
@@ -312,13 +307,6 @@ public class AIPursuit : StateMachine
 
         if (fleeEnd < Time.time)
         {
-            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-            //Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
-            _abilityList[0].AttackHandler(gameObject, false);
-            /*
-            _abilityList[0].AttackHandler(gameObject, false);
-            _abilityList.OrderBy(Ability => Ability.Cooldown).ThenBy(Ability => Ability.DamageMod); Use this later */
-
             Transition(PursuitStates.seek);
             
             
