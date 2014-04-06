@@ -10,18 +10,31 @@ public class Arrow : Ability
        
     }
 
-    public override void SpawnProjectile(GameObject source, int abilityIndex, bool isPlayer)
+
+    public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
+        /*
+>>>>>>> upstream/master
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit target;
         Physics.Raycast(ray, out target, Mathf.Infinity);
         Vector3 vectorToMouse = target.point - source.transform.position;
         Vector3 forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
+<<<<<<< HEAD
 
         GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position, Quaternion.Euler(forward));
 
         projectile.GetComponent<ProjectileBehaviour>().owner = source;
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
+=======
+        */
+
+        GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position, Quaternion.Euler(forward));
+
+        projectile.GetComponent<ProjectileBehaviour>().owner = owner;
+        projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
+        projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
+
 
         // apply velocity
 

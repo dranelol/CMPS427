@@ -83,6 +83,18 @@ public abstract class Ability
 
     protected GameManager gameManager;
 
+<<<<<<< HEAD
+=======
+    protected string id;
+    public string ID
+    {
+        get
+        {
+            return id;
+        }
+    }
+
+>>>>>>> upstream/master
 
     /// <summary>
     /// Base modifier from which damage is calculated
@@ -106,6 +118,7 @@ public abstract class Ability
         this.readable = readable;
         this.damageMod = damageMod;
         this.particleSystem = particles;
+        this.id = id;
     }
 
     public virtual void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
@@ -119,7 +132,17 @@ public abstract class Ability
 
     }
 
-    public virtual void SpawnProjectile(GameObject source, int abilityIndex, bool isPlayer)
+
+    /// <summary>
+    /// Spawns a projectile at the position of source, owned by owner, rotated by rotation, tied to abilityID
+    /// </summary>
+    /// <param name="source">Source of the projectile</param>
+    /// <param name="owner">Owner of the projectile</param>
+    /// <param name="forward">Direction forward of the projectile</param>
+    /// <param name="abilityID">The game abilityID of the ability tied to this projectile's onhit</param>
+    /// <param name="isPlayer">Whether or not the owner is a player</param>
+    public virtual void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
+
     {
 
     }

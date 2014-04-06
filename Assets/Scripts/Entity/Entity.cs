@@ -13,6 +13,8 @@ public class Entity : MonoBehaviour
     public AbilityManager abilityManager;
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
 
+    public Dictionary<string, int> abilityIndexDict = new Dictionary<string, int>();
+
 
     public void Awake()
     {
@@ -20,7 +22,7 @@ public class Entity : MonoBehaviour
         abilityManager = gameObject.GetComponent<AbilityManager>();
 
         currentAtt = new Attributes();
-        //Debug.Log(currentAtt.ToString());                                                                             /*I'm a white guy typing code. LOLZ! I wish I was a female cause I want to look pretty!*/
+        //Debug.Log(currentAtt.ToString());                                                         
         equipAtt = new Attributes();
         buffAtt = new Attributes();                                                                                     /*  Wut.  */
 

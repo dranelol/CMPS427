@@ -39,6 +39,7 @@ public class Fusrodah : Ability
             }
         }
 
+
         GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.2f, isPlayer));
     
     }
@@ -169,7 +170,6 @@ public class Fusrodah : Ability
 
     public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
     {
-        
         GameObject particles;
 
         // if the player is casting the ability, we need to activate it based on the position of the cursor, not the transform's forward
@@ -180,6 +180,8 @@ public class Fusrodah : Ability
             Physics.Raycast(ray, out targetRay, Mathf.Infinity);
             Vector3 vectorToMouse = targetRay.point - source.transform.position;
             Vector3 cursorForward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
+
+
             Quaternion rotation = Quaternion.LookRotation(cursorForward);
             particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, rotation);
         }
