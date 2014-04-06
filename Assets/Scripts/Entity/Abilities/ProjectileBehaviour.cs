@@ -36,6 +36,11 @@ public class ProjectileBehaviour : MonoBehaviour
     /// </summary>
     private bool hascollided = false;
 
+    /// <summary>
+    /// flag for if the projectile collides with other projectiles instead of players/enemies
+    /// </summary>
+    public bool CollidesWithProjectiles = false;
+
     void Awake()
     {
         ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
@@ -83,37 +88,64 @@ public class ProjectileBehaviour : MonoBehaviour
     {
         if (hascollided == false)
         {
-            if (other.gameObject.tag == "Enemy" && owner.gameObject.tag == "Player")
+            if (CollidesWithProjectiles)
             {
-                Debug.Log("attacked an enemy!");
+                if (other.gameObject.tag == "Projectile")
+                {
+                    if (other.gameObject.GetComponent<ProjectileBehaviour>().owner.tag == "Player")
+                    {
+                    Debug.Log("attacked an enemy!");
 
 
-                Entity ownerEntity = owner.GetComponent<Entity>();
+                    Entity ownerEntity = owner.GetComponent<Entity>();
 
-                int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
+                    int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
 
-                ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
+                    ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
 
-                hascollided = true;
-                DetachParticleSystem();
-                Destroy(gameObject);
+                    hascollided = true;
+                    DetachParticleSystem();
+                    Destroy(gameObject);
+                    }
 
-
+                }
             }
-
-            else if (other.gameObject.tag == "Player" && owner.gameObject.tag == "Enemy")
+            else
             {
-                Debug.Log("attacked a player");
 
 
-                Entity ownerEntity = owner.GetComponent<Entity>();
+                if (other.gameObject.tag == "Enemy" && owner.gameObject.tag == "Player")
+                {
+                    Debug.Log("attacked an enemy!");
 
-                int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
 
-                ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), false);
-                hascollided = true;
-                DetachParticleSystem();
-                Destroy(gameObject);
+                    Entity ownerEntity = owner.GetComponent<Entity>();
+
+                    int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
+
+                    ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
+
+                    hascollided = true;
+                    DetachParticleSystem();
+                    Destroy(gameObject);
+
+
+                }
+
+                else if (other.gameObject.tag == "Player" && owner.gameObject.tag == "Enemy")
+                {
+                    Debug.Log("attacked a player");
+
+
+                    Entity ownerEntity = owner.GetComponent<Entity>();
+
+                    int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
+
+                    ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), false);
+                    hascollided = true;
+                    DetachParticleSystem();
+                    Destroy(gameObject);
+                }
             }
             /*
         else if (other.gameObject.tag == "Enemy" && owner.gameObject.tag == "Enemy")
