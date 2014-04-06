@@ -70,7 +70,7 @@ public class Fireball : Ability
             DoDamage(source, target, attacker, defender, isPlayer);
         }
 
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.2f, isPlayer));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.2f, isPlayer, target));
     }
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
@@ -95,28 +95,23 @@ public class Fireball : Ability
 
 
 
-    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
+    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target)
     {
         GameObject particles;
 
-        particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position, source.transform.rotation);
 
         yield return new WaitForSeconds(time);
 
         ParticleSystem[] particleSystems = particlePrefab.GetComponentsInChildren<ParticleSystem>();
 
-        Debug.Log("fus");
-
-        foreach (Transform child in particles.transform)
+        foreach (ParticleSystem item in particleSystems)
         {
-            if (child.GetComponent<ParticleSystem>() != null)
-            {
-                child.GetComponent<ParticleSystem>().enableEmission = false;
-            }
-        }
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
 
-        yield return new WaitForSeconds(time * 2);
-        GameObject.Destroy(particles);
+        }
 
         yield return null;
     }

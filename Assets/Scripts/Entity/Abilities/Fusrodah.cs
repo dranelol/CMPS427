@@ -197,18 +197,13 @@ public class Fusrodah : Ability
 
         ParticleSystem[] particleSystems = particlePrefab.GetComponentsInChildren<ParticleSystem>();
 
-        Debug.Log("fus");
-
-        foreach (Transform child in particles.transform)
+        foreach (ParticleSystem item in particleSystems)
         {
-            if (child.GetComponent<ParticleSystem>() != null)
-            {
-                child.GetComponent<ParticleSystem>().enableEmission = false;
-            }
-        }
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
 
-        yield return new WaitForSeconds(time * 2);
-        GameObject.Destroy(particles);
+        }
 
         yield return null;
     }
