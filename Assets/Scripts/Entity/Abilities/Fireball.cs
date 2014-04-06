@@ -103,7 +103,7 @@ public class Fireball : Ability
 
         yield return new WaitForSeconds(time);
 
-        ParticleSystem[] particleSystems = particlePrefab.GetComponentsInChildren<ParticleSystem>();
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
 
         foreach (ParticleSystem item in particleSystems)
         {
@@ -112,6 +112,8 @@ public class Fireball : Ability
             item.enableEmission = false;
 
         }
+
+        GameObject.Destroy(particles);
 
         yield return null;
     }
