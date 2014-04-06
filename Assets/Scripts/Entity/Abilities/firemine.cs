@@ -42,6 +42,10 @@ public class firemine : Ability
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
                     DoPhysics(target, enemy);
+                    if (enemy.GetComponent<AIController>().IsInCombat() == false)
+                    {
+                        enemy.GetComponent<AIController>().BeenAttacked(source);
+                    }
                 }
             }
         }

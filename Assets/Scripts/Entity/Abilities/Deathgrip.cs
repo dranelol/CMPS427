@@ -25,7 +25,12 @@ public class Deathgrip : Ability
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
                     DoPhysics(source, enemy);
-                    
+
+                    if (enemy.GetComponent<AIController>().IsInCombat() == false)
+                    {
+                        enemy.GetComponent<AIController>().BeenAttacked(source);
+                    }
+
                 }
 
             }

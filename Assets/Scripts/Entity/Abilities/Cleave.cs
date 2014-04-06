@@ -25,6 +25,10 @@ public class Cleave : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
+                    if (enemy.GetComponent<AIController>().IsInCombat() == false)
+                    {
+                        enemy.GetComponent<AIController>().BeenAttacked(source);
+                    }
                 }
             }
         }

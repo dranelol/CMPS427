@@ -164,6 +164,16 @@ public class AIController : StateMachine
         }
     }
 
+
+    /// <summary>
+    /// Tells the enemy's group to attack the attacker
+    /// </summary>
+    /// <param name="attacker">The entity attacking.</param>
+    public void BeenAttacked(GameObject attacker)
+    {
+        Group.Threat(attacker, 1);
+    }
+
     /// <summary>
     /// Return the current target.
     /// </summary>
@@ -182,7 +192,10 @@ public class AIController : StateMachine
         return (AIStates)CurrentState == AIStates.reset;
     }
 
-   
+    public bool IsInCombat()
+    {
+        return (AIStates)CurrentState == AIStates.pursuit;
+    }
 
 
     #endregion
