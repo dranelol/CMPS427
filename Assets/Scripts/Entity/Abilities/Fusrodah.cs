@@ -199,19 +199,17 @@ public class Fusrodah : Ability
 
         yield return new WaitForSeconds(time);
 
-        ParticleSystem[] particleSystems = particlePrefab.GetComponentsInChildren<ParticleSystem>();
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
 
-        Debug.Log("fus");
-
-        foreach (Transform child in particles.transform)
+        foreach (ParticleSystem item in particleSystems)
         {
-            if (child.GetComponent<ParticleSystem>() != null)
-            {
-                child.GetComponent<ParticleSystem>().enableEmission = false;
-            }
+            Debug.Log("asd");
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
+
         }
 
-        yield return new WaitForSeconds(time * 2);
         GameObject.Destroy(particles);
 
         yield return null;
