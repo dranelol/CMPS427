@@ -11,6 +11,7 @@ public class AIPursuit : StateMachine
         inactive,
         seek,
         attack,
+        flee
     }
 
     
@@ -25,8 +26,15 @@ public class AIPursuit : StateMachine
 
     private List<Ability> _abilityList = new List<Ability>(); // List of usuable abilities. This will be sorted by cooldown time then damagemod (for now)
 
-    
 
+    public float fleeWanderInterval; //Time between movement while fleeing.
+    public float fleeWanderDistance; //Distance the enemy will travel each wander while fleeing.
+    public float fleeDistance; //Max distance to travel from the position the enemy starts fleeing from.
+    public float fleeTime; //Time the enemy will flee before returning to attack
+    private Vector3 fleeStartLocation; //The position the enemy starts to flee from.
+    private float nextFleeWander; //Future time the enemy will wander while fleeing. 
+    private float fleeEnd; //Future time the enemy will stop fleeing.
+    private bool hasFled;
     
     void Awake()
     {
@@ -36,6 +44,14 @@ public class AIPursuit : StateMachine
         inactiveTransitions.Add(PursuitStates.seek);
         AddTransitionsFrom(PursuitStates.inactive, inactiveTransitions);
 
+        HashSet<Enum> fleeTransitions = new HashSet<Enum>();
+        fleeTransitions.Add(PursuitStates.seek);
+        fleeTransitions.Add(PursuitStates.inactive);
+        AddTransitionsFrom(PursuitStates.flee, fleeTransitions);
+
+        HashSet<Enum> attackTransitions = new HashSet<Enum>();
+        fleeTransitions.Add(PursuitStates.flee);
+        AddTransitionsFrom(PursuitStates.attack, attackTransitions);
         
         AddAllTransitionsFrom(PursuitStates.seek);
         AddAllTransitionsTo(PursuitStates.seek);
@@ -50,7 +66,7 @@ public class AIPursuit : StateMachine
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
 
-
+        hasFled = false;
         
     }
 
@@ -78,6 +94,46 @@ public class AIPursuit : StateMachine
         Transition(PursuitStates.inactive);
     }
 
+
+
+    #endregion
+
+
+    #region private functions
+
+    /// <summary>
+    /// Initiates the wander behaviour
+    /// </summary>
+    /// <param name="currentPosition">Current location of the enemy</param>
+    /// <param name="centerPosition">Position the path needs to be around</param>
+    /// <param name="distance">How far to travel each wander.</param>
+    /// <param name="distanceFromCenter">Max distance to travel from the center</param>
+    private void Wander(Vector3 currentPosition, Vector3 centerPosition, float distance, float distanceFromCenter)
+    {
+        Vector2 randomDirection = UnityEngine.Random.insideUnitCircle.normalized * distance; // Pick a random point on the edge of the circle
+
+        Vector3 targetPosition = new Vector3(randomDirection.x, 0, randomDirection.y);
+
+
+
+        targetPosition += currentPosition;
+        targetPosition.y = currentPosition.y;
+
+        if (Vector3.Distance(centerPosition, targetPosition) > distanceFromCenter)
+        {
+
+
+            Vector3 newDirection = (centerPosition - currentPosition).normalized * distance;
+
+            targetPosition = new Vector3(newDirection.x, 0, newDirection.y);
+            targetPosition += currentPosition;
+            targetPosition.y = currentPosition.y;
+        }
+
+
+        MoveFSM.SetPath(targetPosition);
+    }
+
     #endregion
 
     #region state based functions
@@ -96,6 +152,13 @@ public class AIPursuit : StateMachine
 
     void seek_Update()
     {
+
+        if ((entity.currentHP < (entity.maxHP * 0.2f)) && hasFled == false)
+        {
+
+            Transition(PursuitStates.flee);
+        }
+        
         if (entity.abilityManager.activeCoolDowns[0] > Time.time)
         {
             float timeLeft = entity.abilityManager.activeCoolDowns[0] - Time.time;
@@ -146,6 +209,12 @@ public class AIPursuit : StateMachine
     void attack_Update()
     {
 
+        if((entity.currentHP < (entity.maxHP*0.2f)) && hasFled == false)
+        {
+            
+            Transition(PursuitStates.flee);
+        }
+        
         if (currentTarget != null && entity.abilityManager.activeCoolDowns[0] <= Time.time)
         {
             combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
@@ -193,7 +262,49 @@ public class AIPursuit : StateMachine
 
     #endregion
 
-   
+    #region flee functions
+
+    IEnumerator flee_EnterState()
+    {
+        fleeStartLocation = transform.position;
+        fleeEnd = Time.time + fleeTime;
+        hasFled = true;
+        yield break;
+    }
+    
+    void flee_Update()
+    {
+
+        
+
+        if (fleeEnd >= Time.time)
+        {
+
+            Debug.Log("Time till flee end: " + (fleeEnd - Time.time).ToString());
+            if (Time.time >= nextFleeWander)
+            {
+
+                Wander(transform.position, fleeStartLocation, fleeWanderDistance, fleeDistance);
+
+                nextFleeWander = Time.time + fleeWanderInterval;
+            }
+            
+        }
+        else if(entity.currentHP <= 0)
+        {
+            StopPursuit();
+        }
+        else
+        {
+            Transition(PursuitStates.seek);
+        }
+
+
+
+    }
+
+
+    #endregion
 
     #endregion
 }

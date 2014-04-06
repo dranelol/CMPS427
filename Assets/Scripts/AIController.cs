@@ -181,6 +181,10 @@ public class AIController : StateMachine
     {
         return (AIStates)CurrentState == AIStates.reset;
     }
+
+   
+
+
     #endregion
 
     #region private functions
@@ -238,6 +242,39 @@ public class AIController : StateMachine
         }
     }
 
+    /// <summary>
+    /// Initiates the wander behaviour
+    /// </summary>
+    /// <param name="currentPosition">Current location of the enemy</param>
+    /// <param name="centerPosition">Position the path needs to be around</param>
+    /// <param name="distance">How far to travel each wander.</param>
+    /// <param name="distanceFromCenter">Max distance to travel from the center</param>
+    private void Wander(Vector3 currentPosition, Vector3 centerPosition, float distance, float distanceFromCenter)
+    {
+        Vector2 randomDirection = UnityEngine.Random.insideUnitCircle.normalized * distance; // Pick a random point on the edge of the circle
+
+        Vector3 targetPosition = new Vector3(randomDirection.x, 0, randomDirection.y);
+
+
+
+        targetPosition += currentPosition;
+        targetPosition.y = currentPosition.y;
+
+        if (Vector3.Distance(centerPosition, targetPosition) > distanceFromCenter)
+        {
+
+
+            Vector3 newDirection = (centerPosition - currentPosition).normalized * distance;
+
+            targetPosition = new Vector3(newDirection.x, 0, newDirection.y);
+            targetPosition += currentPosition;
+            targetPosition.y = currentPosition.y;
+        }
+
+
+        MoveFSM.SetPath(targetPosition);
+    }
+
     private void Reset()
     {
         if (IsValidTransition((AIStates)CurrentState, AIStates.reset) == true)
@@ -260,36 +297,12 @@ public class AIController : StateMachine
 
     void idle_Update()
     {
+        
+
         if (Time.time >= nextWander)
         {
-            Vector2 randomDirection = UnityEngine.Random.insideUnitCircle.normalized * wanderDistance; // Pick a random point on the edge of the circle
 
-            Vector3 targetPosition = new Vector3(randomDirection.x, 0, randomDirection.y);
-
-
-
-            targetPosition += transform.position;
-            targetPosition.y = transform.position.y;
-
-            
-
-            
-
-            if (Vector3.Distance(nodePosition, targetPosition) > wanderDistanceFromNode)
-            {
-                
-                
-                Vector3 newDirection = (nodePosition-transform.position).normalized * wanderDistance;
-
-                targetPosition = new Vector3(newDirection.x, 0, newDirection.y);
-                targetPosition += transform.position;
-                targetPosition.y = transform.position.y;
-            }
-
-
-            MoveFSM.SetPath(targetPosition);
-
-            
+            Wander(transform.position, nodePosition, wanderDistance, wanderDistanceFromNode);            
 
             nextWander = Time.time + wanderInterval;
         }
@@ -421,6 +434,9 @@ public class AIController : StateMachine
     }*/
 
     #endregion 
+
+
+    
 
     #endregion
 }
