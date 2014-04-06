@@ -10,6 +10,7 @@ public class Fireball : Ability
 
     }
 
+
     public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
         int segments = 8;
@@ -24,10 +25,12 @@ public class Fireball : Ability
 
             projectile.rigidbody.velocity = Rotations.RotateAboutY(forward, (360 / segments) * i) * 20.0f;
         }
+
     }
 
     public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
     {
+
         /*
         Vector3 forward = Vector3.zero;
 
@@ -47,6 +50,7 @@ public class Fireball : Ability
             forward = source.transform.forward;
         }
          */
+
 
         if (isPlayer == true)
         {

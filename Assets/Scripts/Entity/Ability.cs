@@ -83,6 +83,7 @@ public abstract class Ability
 
     protected GameManager gameManager;
 
+
     protected string id;
     public string ID
     {
@@ -129,6 +130,7 @@ public abstract class Ability
 
     }
 
+
     /// <summary>
     /// Spawns a projectile at the position of source, owned by owner, rotated by rotation, tied to abilityID
     /// </summary>
@@ -138,6 +140,7 @@ public abstract class Ability
     /// <param name="abilityID">The game abilityID of the ability tied to this projectile's onhit</param>
     /// <param name="isPlayer">Whether or not the owner is a player</param>
     public virtual void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
+
     {
 
     }

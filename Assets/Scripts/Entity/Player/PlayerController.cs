@@ -168,6 +168,7 @@ public class PlayerController : MonoBehaviour {
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                     entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
+
                 }
 
                 else if (entity.abilityManager.abilities[2].AttackType == AttackType.PROJECTILE)
@@ -393,16 +394,84 @@ public class PlayerController : MonoBehaviour {
             Debug.Log("max damage after equip change to high sword: " + entity.currentAtt.MaxDamage);
 
         }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            // chestpiece
+            if (entity.HasEquipped(equipSlots.slots.Chest))
+            {
+                Debug.Log("bro has a chestpiece already! its called: " + entity.GetEquip(equipSlots.slots.Chest).equipmentName);
+            }
+
+            bool result = entity.removeEquipment(equipSlots.slots.Chest);
+
+            equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Chest);
+            entity.addEquipment(equipSlots.slots.Chest, tempEquip);
+
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            // chestpiece
+            if (entity.HasEquipped(equipSlots.slots.Legs))
+            {
+                Debug.Log("bro has a pants already! its called: " + entity.GetEquip(equipSlots.slots.Legs).equipmentName);
+            }
+
+            bool result = entity.removeEquipment(equipSlots.slots.Legs);
+
+            equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Legs);
+            entity.addEquipment(equipSlots.slots.Legs, tempEquip);
+
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            // chestpiece
+            if (entity.HasEquipped(equipSlots.slots.Feet))
+            {
+                Debug.Log("bro has a feets already! its called: " + entity.GetEquip(equipSlots.slots.Feet).equipmentName);
+            }
+
+
+            bool result = entity.removeEquipment(equipSlots.slots.Feet);
+
+            equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Feet);
+            entity.addEquipment(equipSlots.slots.Feet, tempEquip);
+
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            // chestpiece
+            if (entity.HasEquipped(equipSlots.slots.Head))
+            {
+                Debug.Log("bro has a hat already! its called: " + entity.GetEquip(equipSlots.slots.Head).equipmentName);
+            }
+
+            bool result = entity.removeEquipment(equipSlots.slots.Head);
+
+            equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Head);
+            entity.addEquipment(equipSlots.slots.Head, tempEquip);
+
+        }
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            // chestpiece
+            if (entity.HasEquipped(equipSlots.slots.Off))
+            {
+                Debug.Log("bro has a offhand already! its called: " + entity.GetEquip(equipSlots.slots.Off).equipmentName);
+            }
+
+            bool result = entity.removeEquipment(equipSlots.slots.Off);
+
+            equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Off);
+            entity.addEquipment(equipSlots.slots.Off, tempEquip);
+
+        }
+
+
+
 
         #endregion
 
-
-
-
-
         #endregion
-
-
 
     }
 
