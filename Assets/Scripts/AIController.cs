@@ -174,6 +174,11 @@ public class AIController : StateMachine
         Group.Threat(attacker, 1);
     }
 
+    public Vector3 homeNodePosition
+    {
+        get { return Group.HomePosition; }
+    }
+
     /// <summary>
     /// Return the current target.
     /// </summary>
@@ -197,6 +202,7 @@ public class AIController : StateMachine
         return (AIStates)CurrentState == AIStates.pursuit;
     }
 
+    
 
     #endregion
 
