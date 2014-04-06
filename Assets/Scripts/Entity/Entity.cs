@@ -13,16 +13,16 @@ public class Entity : MonoBehaviour
     public AbilityManager abilityManager;
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
 
+    public Dictionary<string, int> abilityIndexDict = new Dictionary<string, int>();
 
     public void Awake()
     {
-
         abilityManager = gameObject.GetComponent<AbilityManager>();
 
         currentAtt = new Attributes();
-        //Debug.Log(currentAtt.ToString());                                                                             /*I'm a white guy typing code. LOLZ! I wish I was a female cause I want to look pretty!*/
+        //Debug.Log(currentAtt.ToString()); 
         equipAtt = new Attributes();
-        buffAtt = new Attributes();
+        buffAtt = new Attributes();                                                                                     
 
         currentAtt.Power = 10;
         currentAtt.Defense = 10;
@@ -49,6 +49,10 @@ public class Entity : MonoBehaviour
     public bool addEquipment(equipSlots.slots slot , equipment item)
     {
         if (this.equippedEquip.ContainsKey(slot))
+            return false;
+        else if (item.twohand == true && this.equippedEquip.ContainsKey(equipSlots.slots.Off))
+            return false;
+        else if (slot == equipSlots.slots.Off && equippedEquip[equipSlots.slots.Main].twohand == true)
             return false;
         else
         {
@@ -83,7 +87,7 @@ public class Entity : MonoBehaviour
     /// Can be used for both taking damage and gaining health.
     /// </summary>
     /// <param name="value">Delta value to modify current health.</param>
-    public void ModifyHealth(float delta) { currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); }
+    public void ModifyHealth(float delta) { currentHP = Mathf.Clamp(currentHP + delta, 0, maxHP); }
 
     /// <summary>
     /// Kind of obvious.

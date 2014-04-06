@@ -35,10 +35,20 @@ public class Attributes
     {
         statList = new Dictionary<Stats, float>();
 		// Default values for clamps, to prevent errors.
-		attackSpeedMin = moveSpeedMin = 0.5f;
-		attackSpeedMax = moveSpeedMax = 2.0f;
+		attackSpeedMin = moveSpeedMin = 0.0f;
+		attackSpeedMax = moveSpeedMax = 2.5f;
         foreach (Stats stat in Enum.GetValues(typeof(Stats)))
             statList.Add(stat, 0);
+    }
+
+    /// <summary>
+    /// A function to extract an individual value from an Attributes object. Readonly.
+    /// </summary>
+    /// <param name="key">The attribute to extract.</param>
+    /// <returns>The value of the attribute.</returns>
+    public float GetValue(Stats key)
+    {
+        return statList[key];
     }
 
     #region Health
@@ -230,7 +240,6 @@ public class Attributes
 
     #endregion
 
-
     #region Min Damage
     public float MinDamage
     {
@@ -240,7 +249,6 @@ public class Attributes
 
     #endregion
 
-
     #region Max Damage
     public float MaxDamage
     {
@@ -249,8 +257,6 @@ public class Attributes
     }
 
     #endregion
-
-
 
     #region Arithmetic Operations
     /// <summary>
