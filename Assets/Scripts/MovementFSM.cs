@@ -94,7 +94,7 @@ public class MovementFSM : StateMachine
 
     void moving_Update()
     {
-        if (!_navMeshAgent.hasPath)
+        if (!_navMeshAgent.hasPath && !_navMeshAgent.pathPending)
         {
             Stop();
         }

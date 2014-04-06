@@ -9,12 +9,13 @@ public class GameManager : MonoBehaviour
     public GameObject DeathgripParticles;
     public GameObject HadoukenParticles;
     public GameObject ArrowParticles;
-    public GameObject FireballParticles;
+    public GameObject FireballProjectile;
     public GameObject FiremineParticles;
     public GameObject GETOVERHEREParticles;
     public GameObject MineParticles;
-
     public GameObject ShockMineProjectile;
+    public GameObject FireballExplosion;
+
 
     public equipmentFactory EquipmentFactory;
 
@@ -37,7 +38,7 @@ public class GameManager : MonoBehaviour
         Abilities["cleave"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 5.0f, 45.0f, 0.0f, 5.0f, "cleave", "Cleave", CleaveParticles);
         Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 5.0f, 45.0f, 1.0f, 10.0f, "fusrodah", "Fus Roh Dah", FusRoDahParticles);
         Abilities["arrow"] = new Arrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 5.0f, "arrow", "Arrow", ArrowParticles);
-        Abilities["fireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.1f, 10.0f, "fireball", "Fireball", FireballParticles);
+        Abilities["fireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.1f, 10.0f, "fireball", "Fireball", FireballExplosion);
         Abilities["firemine"] = new firemine(AttackType.PROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 4.0f, 1.0f, "firemine", "Fire Mine", FiremineParticles);
         Abilities["GETOVERHERE"] = new GETOVERHERE(AttackType.PROJECTILE, DamageType.SHADOW, 1.0f, 0.0f, 3.0f, 0.1f, "GETOVERHERE", "Shadow Pull", GETOVERHEREParticles);
         Abilities["normalmine"] = new normalmine(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 360.0f, 4.0f, 1.0f, "normalmine", "Mine", MineParticles);

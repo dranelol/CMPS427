@@ -162,8 +162,15 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.Q))
         {
+
+            
+            
             if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[2] <= Time.time)
             {
+
+                Debug.Log("Attack Speed: " + entity.currentAtt.AttackSpeed.ToString());
+                
+
                 if (entity.abilityManager.abilities[2].AttackType == AttackType.MELEE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
@@ -186,6 +193,7 @@ public class PlayerController : MonoBehaviour {
                     Vector3 vectorToMouse = rayCastTarget.point - transform.position;
                     Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
+
                     entity.abilityManager.abilities[2].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[2].ID, true);
                     
                 }
@@ -200,6 +208,8 @@ public class PlayerController : MonoBehaviour {
 
                 
                 entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
+                
+                
             }
         }
 

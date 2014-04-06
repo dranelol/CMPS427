@@ -158,7 +158,6 @@ public class ProjectileBehaviour : MonoBehaviour
 
             ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
 
->>>>>>> upstream/master
             DetachParticleSystem();
             Destroy(gameObject);
         }
@@ -186,8 +185,6 @@ public class ProjectileBehaviour : MonoBehaviour
 
 
         }
-
-        
 
         //particles.GetComponent<ParticleAnimator>().autodestruct = true;
     }

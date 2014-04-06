@@ -176,12 +176,14 @@ public class HUD_GUI : MonoBehaviour {
         #region ability 1
         if (player.abilityManager.activeCoolDowns[2] > Time.time)
         {
+
+            
             timeLeft = player.abilityManager.activeCoolDowns[2] - Time.time;
         }
         else
         {
             timeLeft = 0;
-        }
+        }        
 
         GUI.Label(CDBox1, player.abilityManager.abilities[2].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
         #endregion
@@ -189,6 +191,7 @@ public class HUD_GUI : MonoBehaviour {
         #region ability 2
         if (player.abilityManager.activeCoolDowns[3] > Time.time)
         {
+            
             timeLeft = player.abilityManager.activeCoolDowns[3] - Time.time;
         }
         else
@@ -222,10 +225,12 @@ public class HUD_GUI : MonoBehaviour {
             timeLeft = 0;
         }
 
+
         GUI.Label(CDBox4, player.abilityManager.abilities[5].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
         #endregion
 
         #endregion
 
     }
+
 }

@@ -104,6 +104,8 @@ public class CombatFSM : StateMachine
     {
         if (timeLocked == true)
         {
+            
+            
             lockedTime -= Time.deltaTime;
 
             if (lockedTime <= 0)

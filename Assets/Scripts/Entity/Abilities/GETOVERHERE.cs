@@ -38,6 +38,10 @@ public class GETOVERHERE : Ability
                 Entity defender = target.GetComponent<Entity>();
                 DoDamage(source, target, attacker, defender, isPlayer);
                 DoPhysics(source, target);
+                if (target.GetComponent<AIController>().IsInCombat() == false)
+                {
+                    target.GetComponent<AIController>().BeenAttacked(source);
+                }
 
             }
         }
