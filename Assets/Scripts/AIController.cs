@@ -297,6 +297,7 @@ public class AIController : StateMachine
 
     void idle_Update()
     {
+
         
 
         if (Time.time >= nextWander)

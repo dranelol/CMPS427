@@ -135,12 +135,18 @@ public class AIPursuit : StateMachine
 
     private void Flee()
     {
-        Vector2 randomDirection = UnityEngine.Random.insideUnitCircle.normalized * fleeDistance; // Pick a random point on the edge of the circle
+        Vector3 newdirection = ((transform.position - currentTarget.transform.position).normalized * fleeDistance);
 
-        Vector3 targetPosition = new Vector3(randomDirection.x, 0, randomDirection.y);
+
+
+        Vector3 targetPosition = Rotations.RotateAboutY(newdirection, UnityEngine.Random.Range(-90f, 90f));
+
+        
 
         targetPosition += transform.position;
         targetPosition.y = transform.position.y;
+
+        
 
         MoveFSM.SetPath(targetPosition);
     }
@@ -169,47 +175,50 @@ public class AIPursuit : StateMachine
 
             Transition(PursuitStates.flee);
         }
-        
-        if (entity.abilityManager.activeCoolDowns[0] > Time.time)
-        {
-            float timeLeft = entity.abilityManager.activeCoolDowns[0] - Time.time;
-            //Debug.Log("Enemy Ability 1 Cooldown Left: " + timeLeft.ToString());
-        }
-        
-        if (currentTarget != null)
-        {
-            if (combatFSM.IsIdle()) // && _abilityList[nextAbilityIndex].OnCooldown == false) MATT DO THIS
-            {
-                Vector3 directionToTarget = currentTarget.transform.position - transform.position;
-
-                // If the enemy is within range of its next attack, transition to attack.
-                if (directionToTarget.magnitude < _abilityList[0].Range)
-                {
-                    RaycastHit hit;
-
-                    // Cast a ray from the enemy to the player, ignoring other enemy colliders.
-                    bool raycastSuccess = Physics.Raycast(transform.position, directionToTarget, out hit, _abilityList[0].Range, ~(1 << LayerMask.NameToLayer("Enemy")));
-
-                    // if we succeeded our raycast, and we hit the player first: we're in attack range and LoS
-                    if (raycastSuccess == true && hit.transform.tag == "Player")
-                    {
-                        MoveFSM.Stop();
-                        Transition(PursuitStates.attack);
-                    }
-                }
-
-                // Otherwise, get closer
-                else
-                {
-                    MoveFSM.SetPath(currentTarget.transform.position);
-                }
-            }
-        }
-
-        // Go idle if target does not exist
         else
         {
-            Transition(PursuitStates.inactive);
+
+            if (entity.abilityManager.activeCoolDowns[0] > Time.time)
+            {
+                float timeLeft = entity.abilityManager.activeCoolDowns[0] - Time.time;
+                //Debug.Log("Enemy Ability 1 Cooldown Left: " + timeLeft.ToString());
+            }
+
+            if (currentTarget != null)
+            {
+                if (combatFSM.IsIdle()) // && _abilityList[nextAbilityIndex].OnCooldown == false) MATT DO THIS
+                {
+                    Vector3 directionToTarget = currentTarget.transform.position - transform.position;
+
+                    // If the enemy is within range of its next attack, transition to attack.
+                    if (directionToTarget.magnitude < _abilityList[0].Range)
+                    {
+                        RaycastHit hit;
+
+                        // Cast a ray from the enemy to the player, ignoring other enemy colliders.
+                        bool raycastSuccess = Physics.Raycast(transform.position, directionToTarget, out hit, _abilityList[0].Range, ~(1 << LayerMask.NameToLayer("Enemy")));
+
+                        // if we succeeded our raycast, and we hit the player first: we're in attack range and LoS
+                        if (raycastSuccess == true && hit.transform.tag == "Player")
+                        {
+                            MoveFSM.Stop();
+                            Transition(PursuitStates.attack);
+                        }
+                    }
+
+                    // Otherwise, get closer
+                    else
+                    {
+                        MoveFSM.SetPath(currentTarget.transform.position);
+                    }
+                }
+            }
+
+            // Go idle if target does not exist
+            else
+            {
+                Transition(PursuitStates.inactive);
+            }
         }
     }
 
@@ -220,54 +229,57 @@ public class AIPursuit : StateMachine
     void attack_Update()
     {
 
-        if((entity.currentHP < (entity.maxHP*0.2f)) && hasFled == false)
+        if ((entity.currentHP < (entity.maxHP * 0.2f)) && hasFled == false)
         {
-            
+
             Transition(PursuitStates.flee);
-        }
-        
-        if (currentTarget != null && entity.abilityManager.activeCoolDowns[0] <= Time.time)
-        {
-            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-            Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
-
-            if (entity.abilityManager.abilities[0].AttackType == AttackType.MELEE)
-            {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
-                entity.abilityManager.abilities[0].AttackHandler(gameObject, entity, false);
-            }
-
-            else if (entity.abilityManager.abilities[0].AttackType == AttackType.PROJECTILE)
-            {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                // if this is a projectile, attackhandler is only called when the projectile scores a hit.
-                // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
-
-                //entity.abilityManager.abilities[0].SpawnProjectile(gameObject, 2, false);
-
-            }
-            else
-            {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                entity.abilityManager.abilities[0].AttackHandler(gameObject, entity, false);
-
-
-            }
-
-            entity.abilityManager.activeCoolDowns[0] = Time.time + entity.abilityManager.abilities[0].Cooldown;
-            /*
-            _abilityList[0].AttackHandler(gameObject, false);
-            _abilityList.OrderBy(Ability => Ability.Cooldown).ThenBy(Ability => Ability.DamageMod); Use this later */
-            Transition(PursuitStates.seek);
-        }
-
-        else if (entity.abilityManager.activeCoolDowns[0] > Time.time)
-        {
-            Transition(PursuitStates.seek);
         }
         else
         {
-            Transition(PursuitStates.inactive);
+
+            if (currentTarget != null && entity.abilityManager.activeCoolDowns[0] <= Time.time)
+            {
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
+
+                if (entity.abilityManager.abilities[0].AttackType == AttackType.MELEE)
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                    entity.abilityManager.abilities[0].AttackHandler(gameObject, entity, false);
+                }
+
+                else if (entity.abilityManager.abilities[0].AttackType == AttackType.PROJECTILE)
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                    // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                    // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+                    //entity.abilityManager.abilities[0].SpawnProjectile(gameObject, 2, false);
+
+                }
+                else
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                    entity.abilityManager.abilities[0].AttackHandler(gameObject, entity, false);
+
+
+                }
+
+                entity.abilityManager.activeCoolDowns[0] = Time.time + entity.abilityManager.abilities[0].Cooldown;
+                /*
+                _abilityList[0].AttackHandler(gameObject, false);
+                _abilityList.OrderBy(Ability => Ability.Cooldown).ThenBy(Ability => Ability.DamageMod); Use this later */
+                Transition(PursuitStates.seek);
+            }
+
+            else if (entity.abilityManager.activeCoolDowns[0] > Time.time)
+            {
+                Transition(PursuitStates.seek);
+            }
+            else
+            {
+                Transition(PursuitStates.inactive);
+            }
         }
     }
 
