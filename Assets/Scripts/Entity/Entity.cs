@@ -13,6 +13,8 @@ public class Entity : MonoBehaviour
     public AbilityManager abilityManager;
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
 
+    public Dictionary<string, int> abilityIndexDict = new Dictionary<string, int>();
+
 
     public void Awake()
     {
@@ -20,9 +22,9 @@ public class Entity : MonoBehaviour
         abilityManager = gameObject.GetComponent<AbilityManager>();
 
         currentAtt = new Attributes();
-        //Debug.Log(currentAtt.ToString());                                                                             /*I'm a white guy typing code. LOLZ! I wish I was a female cause I want to look pretty!*/
+        //Debug.Log(currentAtt.ToString());                                                         
         equipAtt = new Attributes();
-        buffAtt = new Attributes();
+        buffAtt = new Attributes();                                                                                     /*  Wut.  */
 
         currentAtt.Power = 10;
         currentAtt.Defense = 10;
@@ -49,6 +51,10 @@ public class Entity : MonoBehaviour
     public bool addEquipment(equipSlots.slots slot , equipment item)
     {
         if (this.equippedEquip.ContainsKey(slot))
+            return false;
+        else if (item.twohand == true && this.equippedEquip.ContainsKey(equipSlots.slots.Off))
+            return false;
+        else if (slot == equipSlots.slots.Off && equippedEquip[equipSlots.slots.Main].twohand == true)
             return false;
         else
         {

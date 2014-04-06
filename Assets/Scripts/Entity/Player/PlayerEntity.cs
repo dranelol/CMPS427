@@ -18,10 +18,15 @@ public class PlayerEntity : Entity
     {
         base.Start();
 
-        abilityManager.AddAbility(GameManager.Abilities["fireball"], 2);
+        abilityManager.AddAbility(GameManager.Abilities["GETOVERHERE"], 2);
         abilityManager.AddAbility(GameManager.Abilities["fusrodah"], 3);
         abilityManager.AddAbility(GameManager.Abilities["hadouken"], 4);
         abilityManager.AddAbility(GameManager.Abilities["deathgrip"], 5);
+
+        abilityIndexDict["GETOVERHERE"] = 2;
+        abilityIndexDict["fusrodah"] = 3;
+        abilityIndexDict["hadouken"] = 4;
+        abilityIndexDict["deathgrip"] = 5;
 	}
 	
 	// Update is called once per frame
