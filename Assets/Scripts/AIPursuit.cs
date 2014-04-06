@@ -280,7 +280,7 @@ public class AIPursuit : StateMachine
         if (fleeEnd >= Time.time)
         {
 
-            Debug.Log("Time till flee end: " + (fleeEnd - Time.time).ToString());
+            
             if (Time.time >= nextFleeWander)
             {
 
