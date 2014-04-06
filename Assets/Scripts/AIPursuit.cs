@@ -27,12 +27,10 @@ public class AIPursuit : StateMachine
     private List<Ability> _abilityList = new List<Ability>(); // List of usuable abilities. This will be sorted by cooldown time then damagemod (for now)
 
 
-    public float fleeWanderInterval; //Time between movement while fleeing.
-    public float fleeWanderDistance; //Distance the enemy will travel each wander while fleeing.
+    
     public float fleeDistance; //Max distance to travel from the position the enemy starts fleeing from.
     public float fleeTime; //Time the enemy will flee before returning to attack
-    private Vector3 fleeStartLocation; //The position the enemy starts to flee from.
-    private float nextFleeWander; //Future time the enemy will wander while fleeing. 
+    private Vector3 fleeStartLocation; //The position the enemy starts to flee from. 
     private float fleeEnd; //Future time the enemy will stop fleeing.
     private bool hasFled;
     
@@ -50,7 +48,7 @@ public class AIPursuit : StateMachine
         AddTransitionsFrom(PursuitStates.flee, fleeTransitions);
 
         HashSet<Enum> attackTransitions = new HashSet<Enum>();
-        fleeTransitions.Add(PursuitStates.flee);
+        attackTransitions.Add(PursuitStates.flee);
         AddTransitionsFrom(PursuitStates.attack, attackTransitions);
         
         AddAllTransitionsFrom(PursuitStates.seek);
@@ -102,13 +100,13 @@ public class AIPursuit : StateMachine
     #region private functions
 
     /// <summary>
-    /// Initiates the wander behaviour
+    /// Initiates the fear behaviour
     /// </summary>
     /// <param name="currentPosition">Current location of the enemy</param>
     /// <param name="centerPosition">Position the path needs to be around</param>
     /// <param name="distance">How far to travel each wander.</param>
     /// <param name="distanceFromCenter">Max distance to travel from the center</param>
-    private void Wander(Vector3 currentPosition, Vector3 centerPosition, float distance, float distanceFromCenter)
+    private void Fear(Vector3 currentPosition, Vector3 centerPosition, float distance, float distanceFromCenter)
     {
         Vector2 randomDirection = UnityEngine.Random.insideUnitCircle.normalized * distance; // Pick a random point on the edge of the circle
 
@@ -130,6 +128,19 @@ public class AIPursuit : StateMachine
             targetPosition.y = currentPosition.y;
         }
 
+
+        MoveFSM.SetPath(targetPosition);
+    }
+
+
+    private void Flee()
+    {
+        Vector2 randomDirection = UnityEngine.Random.insideUnitCircle.normalized * fleeDistance; // Pick a random point on the edge of the circle
+
+        Vector3 targetPosition = new Vector3(randomDirection.x, 0, randomDirection.y);
+
+        targetPosition += transform.position;
+        targetPosition.y = transform.position.y;
 
         MoveFSM.SetPath(targetPosition);
     }
@@ -269,6 +280,7 @@ public class AIPursuit : StateMachine
         fleeStartLocation = transform.position;
         fleeEnd = Time.time + fleeTime;
         hasFled = true;
+        Flee();
         yield break;
     }
     
@@ -277,26 +289,16 @@ public class AIPursuit : StateMachine
 
         
 
-        if (fleeEnd >= Time.time)
+        if (fleeEnd < Time.time)
         {
 
+            Transition(PursuitStates.seek);
             
-            if (Time.time >= nextFleeWander)
-            {
-
-                Wander(transform.position, fleeStartLocation, fleeWanderDistance, fleeDistance);
-
-                nextFleeWander = Time.time + fleeWanderInterval;
-            }
             
         }
         else if(entity.currentHP <= 0)
         {
             StopPursuit();
-        }
-        else
-        {
-            Transition(PursuitStates.seek);
         }
 
 
