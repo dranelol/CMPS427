@@ -83,8 +83,7 @@ public abstract class Ability
 
     protected GameManager gameManager;
 
-<<<<<<< HEAD
-=======
+
     protected string id;
     public string ID
     {
@@ -94,7 +93,6 @@ public abstract class Ability
         }
     }
 
->>>>>>> upstream/master
 
     /// <summary>
     /// Base modifier from which damage is calculated
