@@ -50,7 +50,10 @@ public class Arrow : Ability
             {
                 Entity defender = target.GetComponent<Entity>();
                 DoDamage(source, target, attacker, defender, isPlayer);
-
+                if (target.GetComponent<AIController>().IsInCombat() == false)
+                {
+                    target.GetComponent<AIController>().BeenAttacked(source);
+                }
             }
         }
 

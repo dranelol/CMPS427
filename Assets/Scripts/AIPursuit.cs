@@ -184,9 +184,11 @@ public class AIPursuit : StateMachine
                 //Debug.Log("Enemy Ability 1 Cooldown Left: " + timeLeft.ToString());
             }
 
+
             if (currentTarget != null)
             {
                 if (combatFSM.IsIdle()) // && _abilityList[nextAbilityIndex].OnCooldown == false) MATT DO THIS
+
                 {
                     Vector3 directionToTarget = currentTarget.transform.position - transform.position;
 
@@ -195,8 +197,10 @@ public class AIPursuit : StateMachine
                     {
                         RaycastHit hit;
 
+
                         // Cast a ray from the enemy to the player, ignoring other enemy colliders.
                         bool raycastSuccess = Physics.Raycast(transform.position, directionToTarget, out hit, _abilityList[0].Range, ~(1 << LayerMask.NameToLayer("Enemy")));
+
 
                         // if we succeeded our raycast, and we hit the player first: we're in attack range and LoS
                         if (raycastSuccess == true && hit.transform.tag == "Player")
@@ -299,14 +303,9 @@ public class AIPursuit : StateMachine
     void flee_Update()
     {
 
-        
-
         if (fleeEnd < Time.time)
         {
-
             Transition(PursuitStates.seek);
-            
-            
         }
         else if(entity.currentHP <= 0)
         {
