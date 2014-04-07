@@ -17,6 +17,7 @@ public class equipment{
     public int maxlvl;
     public bool twohand;
     public bool ranged;
+    public string onhit;
 
     private Dictionary<string, equipSlots.slots> slotList = new Dictionary<string, equipSlots.slots>(); 
 
@@ -39,6 +40,7 @@ public class equipment{
         slotList.Add("Off", equipSlots.slots.Off);
         twohand = false;
         ranged = false;
+        onhit = "";
     }
 
     public equipment(string name, equipSlots.equipmentType type, equipSlots.slots slot, int equipmentTier, int minlevel, int maxlevel, float health, float resource, float power, float defense, float mindmg, float maxdmg, float movespeed, float attackspeed, string flavortxt)
@@ -71,10 +73,13 @@ public class equipment{
 
         twohand = false;
         ranged = false;
+        onhit = "";
 
     }
 
-    public equipment(string name, equipSlots.equipmentType type, equipSlots.slots slot, int equipmentTier, int minlevel, int maxlevel, float health, float resource, float power, float defense, float mindmg, float maxdmg, float movespeed, float attackspeed, string flavortxt, bool istwohand, bool isranged)
+    public equipment(string name, equipSlots.equipmentType type, equipSlots.slots slot, int equipmentTier, int minlevel, int maxlevel, 
+                        float health, float resource, float power, float defense, float mindmg, float maxdmg, float movespeed, float attackspeed,
+                            string flavortxt, bool istwohand, bool isranged)
     {
 
         equipmentAttributes = new Attributes();
@@ -104,6 +109,47 @@ public class equipment{
 
         twohand = istwohand;
         ranged = isranged;
+
+        onhit = "";
+
+    }
+
+
+    public equipment(string name, equipSlots.equipmentType type, equipSlots.slots slot, int equipmentTier, int minlevel, int maxlevel, 
+                        float health, float resource, float power, float defense, float mindmg, float maxdmg, float movespeed, float attackspeed, 
+                            string flavortxt, bool istwohand, bool isranged, string onhitability)
+    {
+
+        equipmentAttributes = new Attributes();
+        equipmentName = name;
+        equipmentType = type;
+        flavorText = flavortxt;
+        validSlot = slot;
+        tier = equipmentTier;
+        minlvl = minlevel;
+        maxlvl = maxlevel;
+        equipmentAttributes.Health = health;
+        equipmentAttributes.Resource = resource;
+        equipmentAttributes.Power = power;
+        equipmentAttributes.Defense = defense;
+        equipmentAttributes.MinDamage = mindmg;
+        equipmentAttributes.MaxDamage = maxdmg;
+        equipmentAttributes.AttackSpeed = attackspeed;
+        equipmentAttributes.MovementSpeed = movespeed;
+
+
+        slotList.Add("Head", equipSlots.slots.Head);
+        slotList.Add("Legs", equipSlots.slots.Legs);
+        slotList.Add("Feet", equipSlots.slots.Feet);
+        slotList.Add("Chest", equipSlots.slots.Chest);
+        slotList.Add("Main", equipSlots.slots.Main);
+        slotList.Add("Off", equipSlots.slots.Off);
+
+        twohand = istwohand;
+        ranged = isranged;
+
+        onhit = onhitability;
+        
 
     }
 

@@ -348,7 +348,15 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
 
+            if (entity.HasEquipped(equipSlots.slots.Main))
+            {
+                Debug.Log("bro has a sword already! its called: " + entity.GetEquip(equipSlots.slots.Main).equipmentName);
+            }
 
+            bool result = entity.removeEquipment(equipSlots.slots.Main);
+
+            equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.getUnique("ONHITTEST");
+            entity.addEquipment(equipSlots.slots.Main, tempEquip);
 
             
         }
