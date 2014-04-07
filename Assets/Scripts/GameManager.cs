@@ -52,9 +52,9 @@ public class GameManager : MonoBehaviour
         Abilities["normalmine"] = new normalmine(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 360.0f, 4.0f, 1.0f, "normalmine", "Mine", MineParticles);
         Abilities["blink"] = new Blink(AttackType.GROUNDTARGET, DamageType.NONE, 5.0f, 0.0f, 2.0f, 0.0f, "blink", "Blink", BlinkParticles);
 
-        Abilities["shadowbolt"] = new Shadowbolt(AttackType.PROJECTILE, DamageType.SHADOW, 10.0f, 0.0f, 0.1f, 10.0f, "shadowbolt", "shadowbolt", FireballExplosion);
-        Abilities["poisonbolt"] = new Poisonbolt(AttackType.PROJECTILE, DamageType.POISON, 10.0f, 0.0f, 0.1f, 10.0f, "poisonbolt", "poisonbolt", FireballExplosion);
-        Abilities["bloodbolt"] = new Bloodbolt(AttackType.PROJECTILE, DamageType.PHYSICAL, 10.0f, 0.0f, 0.1f, 10.0f, "bloodbolt", "bloodbolt", FireballExplosion);
+        Abilities["shadowbolt"] = new Shadowbolt(AttackType.HONINGPROJECTILE, DamageType.SHADOW, 10.0f, 0.0f, 0.1f, 10.0f, "shadowbolt", "shadowbolt", FireballExplosion);
+        Abilities["poisonbolt"] = new Poisonbolt(AttackType.HONINGPROJECTILE, DamageType.POISON, 10.0f, 0.0f, 0.1f, 10.0f, "poisonbolt", "poisonbolt", FireballExplosion);
+        Abilities["bloodbolt"] = new Bloodbolt(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL, 10.0f, 0.0f, 0.1f, 10.0f, "bloodbolt", "bloodbolt", FireballExplosion);
         
 
         Abilities["ShockMine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 10.0f, "ShockMine", "Shock Mine", ShockMineProjectile);

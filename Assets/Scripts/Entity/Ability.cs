@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public enum AttackType
 {
     PROJECTILE,
+    HONINGPROJECTILE,
     GROUNDTARGET, // needs a point on the ground; either a selected target's position, or a cursor position
     SINGLETARGET, // needs a selected target
     PBAOE,      // Point Blank Area of Effect

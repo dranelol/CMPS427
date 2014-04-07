@@ -194,9 +194,27 @@ public class PlayerController : MonoBehaviour {
                     Vector3 vectorToMouse = rayCastTarget.point - transform.position;
                     Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
+                    entity.abilityManager.abilities[2].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[2].ID, true);
+                }
 
-                    entity.abilityManager.abilities[2].SpawnProjectile(gameObject, rayCastTarget.point, gameObject,  forward, entity.abilityManager.abilities[2].ID, true);
-                    
+                else if (entity.abilityManager.abilities[2].AttackType == AttackType.HONINGPROJECTILE)
+                {
+                    //combatFSM.Attack(0.0f);
+
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                    // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                    // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit rayCastTarget;
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                    Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
+
+
+                    entity.abilityManager.abilities[2].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[2].ID, true);
                 }
 
                 else
@@ -233,9 +251,13 @@ public class PlayerController : MonoBehaviour {
 
                 else if (entity.abilityManager.abilities[3].AttackType == AttackType.PROJECTILE)
                 {
+                    //combatFSM.Attack(0.0f);
+
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
                     // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                     // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
 
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit rayCastTarget;
@@ -243,8 +265,27 @@ public class PlayerController : MonoBehaviour {
                     Vector3 vectorToMouse = rayCastTarget.point - transform.position;
                     Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
-                    entity.abilityManager.abilities[3].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[3].ID, true);
+                    entity.abilityManager.abilities[3].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[3].ID, true);
+                }
 
+                else if (entity.abilityManager.abilities[3].AttackType == AttackType.HONINGPROJECTILE)
+                {
+                    //combatFSM.Attack(0.0f);
+
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                    // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                    // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit rayCastTarget;
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                    Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
+
+
+                    entity.abilityManager.abilities[3].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[3].ID, true);
                 }
 
                 else
@@ -275,9 +316,13 @@ public class PlayerController : MonoBehaviour {
 
                 else if (entity.abilityManager.abilities[4].AttackType == AttackType.PROJECTILE)
                 {
+                    //combatFSM.Attack(0.0f);
+
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
                     // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                     // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
 
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit rayCastTarget;
@@ -285,8 +330,27 @@ public class PlayerController : MonoBehaviour {
                     Vector3 vectorToMouse = rayCastTarget.point - transform.position;
                     Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
-                    entity.abilityManager.abilities[4].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[4].ID, true);
+                    entity.abilityManager.abilities[4].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[4].ID, true);
+                }
 
+                else if (entity.abilityManager.abilities[4].AttackType == AttackType.HONINGPROJECTILE)
+                {
+                    //combatFSM.Attack(0.0f);
+
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                    // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                    // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit rayCastTarget;
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                    Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
+
+
+                    entity.abilityManager.abilities[4].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[4].ID, true);
                 }
 
                 else
@@ -317,9 +381,13 @@ public class PlayerController : MonoBehaviour {
 
                 else if (entity.abilityManager.abilities[5].AttackType == AttackType.PROJECTILE)
                 {
+                    //combatFSM.Attack(0.0f);
+
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
                     // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                     // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
 
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit rayCastTarget;
@@ -327,9 +395,30 @@ public class PlayerController : MonoBehaviour {
                     Vector3 vectorToMouse = rayCastTarget.point - transform.position;
                     Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
-                    entity.abilityManager.abilities[5].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[5].ID, true);
-
+                    entity.abilityManager.abilities[5].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[5].ID, true);
                 }
+
+                else if (entity.abilityManager.abilities[5].AttackType == AttackType.HONINGPROJECTILE)
+                {
+                    //combatFSM.Attack(0.0f);
+
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                    // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                    // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit rayCastTarget;
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                    Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
+
+
+                    entity.abilityManager.abilities[5].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[5].ID, true);
+                }
+
+                
 
                 else
                 {
