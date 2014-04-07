@@ -8,8 +8,10 @@ public abstract class Aura
 {
     #region Constants
 
-    public const string DEFAULT_AURA_TEXTURE_FILE_PATH = "Assets/Resources/Aura Icons/";
-    public const string DEFAULT_ICON_TEXTURE_FILE_NAME = "default_aura_texture.png";
+    public const string DEFAULT_AURA_TEXTURE_FILE_PATH = "Aura Icons/";
+    public const string DEFAULT_AURA_PARTICLE_EFFECT_FILE_PATH = "Aura Particles/";
+    public const string DEFAULT_ICON_TEXTURE_FILE_NAME = "default_aura_texture";
+    public const string DeFAULT_AURA_PARTICLE_EFFECT_FILE_NAME = "default_aura_particle_effect";
 
     public const string DEFAULT_DESCRIPTION = "description...";
     public const string DEFAULT_FLAVOR_TEXT = "";
@@ -42,6 +44,12 @@ public abstract class Aura
     public string FlavorText
     {
         get { return _flavorText; }
+    }
+
+    private GameObject _particleEffect; // The particle effect displayed when the aura is applied
+    public GameObject ParticleEffect
+    {
+        get { return _particleEffect; }
     }
 
     private Texture2D _icon; // The 2D texture for the aura.
@@ -119,7 +127,7 @@ public abstract class Aura
     }
 
     private List<Module> _allModules;
-    private List<TickAttribute> _tickAttributes;
+    private List<Tick> _tickModules;
 
     #endregion
 
@@ -147,7 +155,7 @@ public abstract class Aura
     /// stack up to the stack limit defined below (internal stacking).</param>
     /// <param name="stackLimit">The maximum number of stacks for this aura. Clamped between 1 and 99. This will only affect non-static
     /// auras. Static auras always have a stack limit of 1.</param>
-    protected Aura(string name, string description, string flavorText, string textureFileName, AuraType type, int duration, int stackLimit, int initialStackCount, params Module[] auraMods)
+    protected Aura(string name, string description, string flavorText, string textureFileName, string particleEffectFileName, AuraType type, int duration, int stackLimit, int initialStackCount, params Module[] auraMods)
     {
         if (String.IsNullOrEmpty(name))
         {
@@ -170,18 +178,20 @@ public abstract class Aura
             _flavorText = flavorText;
         }
 
-        if (textureFileName != null)
-        {
-            try
-            {
-                _icon = (Texture2D)Resources.Load(DEFAULT_AURA_TEXTURE_FILE_PATH + textureFileName, typeof(Texture2D));
-            }
+        _icon = (Texture2D)Resources.Load(DEFAULT_AURA_TEXTURE_FILE_PATH + textureFileName, typeof(Texture2D));
 
-            catch
-            {
-                _icon = (Texture2D)Resources.Load(DEFAULT_AURA_TEXTURE_FILE_PATH + DEFAULT_ICON_TEXTURE_FILE_NAME, typeof(Texture2D));
-                Debug.LogWarning("Could not load texture asset '" + textureFileName + "' for the " + _name + " aura. Using default texture.");
-            }
+        if (_icon == null)
+        {
+            _icon = (Texture2D)Resources.Load(DEFAULT_AURA_TEXTURE_FILE_PATH + DEFAULT_ICON_TEXTURE_FILE_NAME, typeof(Texture2D));
+            Debug.LogWarning("Could not load texture asset '" + textureFileName + "' for the " + _name + " aura. Using default texture.");
+        }
+
+        _particleEffect = (GameObject)Resources.Load(DEFAULT_AURA_PARTICLE_EFFECT_FILE_PATH + particleEffectFileName, typeof(GameObject));
+
+        if (_particleEffect == null)
+        {
+            _particleEffect = (GameObject)Resources.Load(DEFAULT_AURA_PARTICLE_EFFECT_FILE_PATH + DeFAULT_AURA_PARTICLE_EFFECT_FILE_NAME, typeof(GameObject));
+            Debug.LogWarning("Could not load particle effect '" + particleEffectFileName + "' for the " + _name + " aura. Using default particle effect.");
         }
 
         _type = type;
@@ -203,16 +213,16 @@ public abstract class Aura
         }
 
         _allModules = new List<Module>();
-        _tickAttributes = new List<TickAttribute>();
+        _tickModules = new List<Tick>();
 
         
-        foreach (Aura.Module module in auraMods)
+        foreach (Module module in auraMods)
         {
             _allModules.Add(module);
 
             if (module.GetType().BaseType == typeof(TickAttribute))
             {
-                _tickAttributes.Add((TickAttribute)module);
+                _tickModules.Add((TickAttribute)module);
             }
         }
 
@@ -242,6 +252,7 @@ public abstract class Aura
         _description = protoType.Description;
         _flavorText = protoType.FlavorText;
         _icon = protoType.Icon;
+        _particleEffect = protoType.ParticleEffect;
         _type = protoType.Type;
         _duration = protoType.Duration;
 
@@ -249,7 +260,7 @@ public abstract class Aura
         _stackLimit = protoType.StackLimit;
 
         _allModules = new List<Module>(protoType._allModules);
-        _tickAttributes = new List<TickAttribute>(protoType._tickAttributes);
+        _tickModules = new List<Tick>(protoType._tickModules);
 
         _timeRemaining = 0;
         _stackCount = 0;
@@ -376,7 +387,7 @@ public abstract class Aura
     {
         foreach (Module module in _allModules)
         {
-            module.OnStart(Target, _stackCount);
+            module.OnStart(Target, Caster, _stackCount);
         }
     }
 
@@ -390,7 +401,7 @@ public abstract class Aura
 
     private void OnTick()
     {
-        foreach (TickAttribute tickModule in _tickAttributes)
+        foreach (Tick tickModule in _tickModules)
         {
             tickModule.OnTick();
         }
@@ -434,15 +445,13 @@ public abstract class Aura
         {
             if ((ModType)ModificationType == ModType.Percentage)
             {
-
-                Debug.LogWarning((EntityAffected.maxHP * Magnitude * Sign * Count).ToString() + " health");
-                EntityAffected.ModifyHealth(EntityAffected.maxHP * Magnitude * Sign * Count);
+                EntityAffected.ModifyHealth(EntityAffected.currentAtt.Health * Magnitude * Sign * Count);
             }
 
             else
             {
                 Debug.Log("Static health change for now. Do we need to create a healing formula for this to use?");
-                EntityAffected.ModifyHealth(Magnitude * Sign * Count); // THIS NEEDS TO BE UPDATED
+                EntityAffected.ModifyHealth(EntityAffected.currentAtt.Health * Magnitude * Sign * Count); // THIS NEEDS TO BE UPDATED
             }
         }
 
@@ -492,13 +501,13 @@ public abstract class Aura
         {
             if ((ModType)ModificationType == ModType.Percentage)
             {
-                EntityAffected.ModifyHealth(EntityAffected.maxHP * Magnitude * Sign * Count);
+                EntityAffected.ModifyHealth(EntityAffected.currentAtt.Health * Magnitude * Sign * Count);
             }
 
             else
             {
                 Debug.Log("Static health change for now, use damage formula in the future.");
-                EntityAffected.ModifyHealth(Magnitude * Sign * Count); // THIS NEEDS TO GO THROUGH THE DAMAGE FORMULA
+                EntityAffected.ModifyHealth(DamageCalc.DamageCalculation(SourceEntity, EntityAffected, Count * Magnitude) * Sign);
             }
         }
 
@@ -521,7 +530,7 @@ public abstract class Aura
 
         public override void OnTick()
         {
-            Debug.Log("Entity class needs implementation for adding/substracting resources.");
+            EntityAffected.ModifyResource(EntityAffected.currentAtt.Power * Magnitude * Sign * Count);
         }
 
         #endregion
@@ -543,7 +552,7 @@ public abstract class Aura
 
         public override void OnTick()
         {
-            Debug.Log("Entity class needs implementation for adding/substracting resources.");
+            EntityAffected.ModifyResource(EntityAffected.currentAtt.Power * Magnitude * Sign * Count);
         }
 
         #endregion
@@ -595,6 +604,12 @@ public abstract class Aura
             get { return _entityAffected; }
         }
 
+        private Entity _sourceEntity;
+        public Entity SourceEntity
+        {
+            get { return _sourceEntity; }
+        }
+
         private int _count;
         public int Count
         {
@@ -614,10 +629,11 @@ public abstract class Aura
 
         #region Virtual Methods
 
-        public virtual void OnStart(Entity entity, int count) 
+        public virtual void OnStart(Entity target, Entity source, int count) 
         {
             _count = Mathf.Max(count, 0);
-            _entityAffected = entity; 
+            _entityAffected = target;
+            _sourceEntity = source;
         }
 
         public virtual void OnUpdate(int count) 
@@ -637,7 +653,35 @@ public abstract class Aura
 
     #region Tier 1 Modules
 
-    protected abstract class AttributeModification : Aura.Module
+    protected abstract class Tick : Module
+    {
+        #region Constructors
+
+        protected Tick() : base() { }
+
+        #endregion
+
+        #region Methods
+
+        public virtual void OnTick() { }
+
+        #endregion
+    }
+
+    protected abstract class Static : Module
+    {
+        #region Constructors
+
+        protected Static() : base() { }
+
+        #endregion
+    }
+
+    #endregion
+
+    #region Tier 2 Modules
+
+    protected abstract class TickAttribute : Tick
     {
         #region Properties
 
@@ -669,7 +713,7 @@ public abstract class Aura
 
         #region Constructors
 
-        protected AttributeModification(Attributes.Stats attribute, ModType modType, float magnitude, short sign) : base()
+        protected TickAttribute(Attributes.Stats attribute, ModType modType, float magnitude, short sign) : base()
         {
             _attribute = attribute;
             _modType = modType;
@@ -691,77 +735,134 @@ public abstract class Aura
         #endregion
     }
 
-    #endregion
-
-    #region Tier 2 Modules
-
-    protected abstract class TickAttribute : AttributeModification
-    {
-        #region Constructors
-
-        protected TickAttribute(Attributes.Stats attribute, ModType modType, float magnitude, short sign) : base(attribute, modType, magnitude, sign) { }
-
-        #endregion
-
-        #region Virtual Methods
-
-        public abstract void OnTick();
-
-        #endregion
-    }
-
-    protected abstract class StaticAttribute : AttributeModification
+    protected abstract class StaticAttribute : Static
     {
         #region Properties
 
+        private Attributes.Stats _attribute;
+        public Attributes.Stats Attribute
+        {
+            get { return _attribute; }
+        }
+
+        private ModType _modType;
+        public ModType ModificationType
+        {
+            get { return _modType; }
+        }
+
+        private float _magnitude;
+        public float Magnitude
+        {
+            get { return _magnitude; }
+        }
+
+        private short _sign;
+        public short Sign
+        {
+            get { return _sign; }
+        }
+
         private float _attributeSnapshot;
+        public float AttributeSnapshot
+        {
+            get { return _attributeSnapshot; }
+        }
+
         private float _attributeChange;
+        public float AttributeChange
+        {
+            get { return _attributeChange; }
+        }
 
         #endregion
 
         #region Constructors
 
-        protected StaticAttribute(Attributes.Stats attribute, ModType modType, float magnitude, short sign) : base(attribute, modType, magnitude, sign) 
+        protected StaticAttribute(Attributes.Stats attribute, ModType modType, float magnitude, short sign) : base() 
         {
             _attributeSnapshot = 0;
             _attributeChange = 0;
+
+            _attribute = attribute;
+            _modType = modType;
+
+            if (magnitude > 0)
+            {
+                _magnitude = magnitude;
+            }
+
+            else
+            {
+                _magnitude = 0;
+                throw new ArgumentOutOfRangeException("You may only create an AttributeModification obect with a positive magnitude.");
+            }
+
+            _sign = sign;
         }
 
         #endregion
 
         #region Abstract Methods
 
-        public override void OnStart(Entity entity, int count)
+        public override void OnStart(Entity target, Entity source, int count)
         {
-            base.OnStart(entity, count);
+            base.OnStart(target, source, count);
             _attributeSnapshot = EntityAffected.currentAtt.GetValue(Attribute);
+
+            CalculateAttributeChange(EntityAffected, count);
         }
 
         public override void OnUpdate(int count)
         {
             base.OnUpdate(count);
 
-            if (Count > 0)
-            {
-                float newAttributeChange = _attributeSnapshot * Magnitude * Count * Sign; // Calculate new change in attribute
-                float appliedAttribute = newAttributeChange - _attributeChange; // Get the difference from the old change
-
-                Attributes newAttribute = new Attributes();
-                // do something to newAttribute
-                //EntityAffected.currentAtt.Add(newAttribute); // Apply it
-
-                _attributeChange = newAttributeChange; // Set the old change to the new change
-            }
+            CalculateAttributeChange(EntityAffected, count);
         }
 
         public override void OnEnd()
         {
             base.OnEnd();
 
+            CalculateAttributeChange(EntityAffected, 0);
+        }
+
+        private void CalculateAttributeChange(Entity target, int count)
+        {
+            float newAttributeChange = _attributeSnapshot * Magnitude * Count * Sign; // Calculate new change in attribute
+            float appliedAttribute = newAttributeChange - _attributeChange; // Get the difference from the old change
+
             Attributes newAttribute = new Attributes();
-            // do something to newAttribute (_attributeChange *= -1)
-            //EntityAffected.currentAtt.Add(newAttribute); // Apply it
-            _attributeChange = 0;
+
+            switch ((Attributes.Stats)_attribute)
+            {
+                case Attributes.Stats.ATTACK_SPEED:
+                    newAttribute.AttackSpeed = appliedAttribute;
+                    break;
+                case Attributes.Stats.DEFENSE:
+                    newAttribute.Defense = appliedAttribute;
+                    break;
+                case Attributes.Stats.HEALTH:
+                    newAttribute.Health = appliedAttribute;
+                    break;
+                case Attributes.Stats.MAX_DAMAGE:
+                    newAttribute.MaxDamage = appliedAttribute;
+                    break;
+                case Attributes.Stats.MIN_DAMAGE:
+                    newAttribute.MinDamage = appliedAttribute;
+                    break;
+                case Attributes.Stats.MOVEMENT_SPEED:
+                    newAttribute.MovementSpeed = appliedAttribute;
+                    break;
+                case Attributes.Stats.POWER:
+                    newAttribute.Power = appliedAttribute;
+                    break;
+                case Attributes.Stats.RESOURCE:
+                    newAttribute.Resource = appliedAttribute;
+                    break;
+            }
+
+            target.AddBuff(newAttribute);
         }
 
         #endregion

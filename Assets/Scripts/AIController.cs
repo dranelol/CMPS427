@@ -340,7 +340,7 @@ public class AIController : StateMachine
 
     void pursuit_Update()
     {
-        if (EntityObject.currentHP <=0.0f) // Check health for death || if (health <= 0)
+        if (EntityObject.CurrentHP <=0.0f) // Check health for death || if (health <= 0)
         {
             Transition(AIStates.dead);
         }

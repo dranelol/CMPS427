@@ -167,9 +167,9 @@ public class Cleave : Ability
         Debug.Log("damage: " + damageAmt);
         
 
-        defender.currentHP -= damageAmt;
+        defender.ModifyHealth(-damageAmt);
 
-        float ratio = (defender.currentHP / defender.maxHP);
+        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
 
         if (isPlayer == true)
         {
