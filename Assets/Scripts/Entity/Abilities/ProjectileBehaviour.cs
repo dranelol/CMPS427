@@ -41,6 +41,21 @@ public class ProjectileBehaviour : MonoBehaviour
     /// </summary>
     public bool CollidesWithProjectiles = false;
 
+    /// <summary>
+    /// If this projectile needs a target, this is it
+    /// </summary>
+    public Vector3 target = Vector3.zero;
+
+    /// <summary>
+    /// Is this a homing projectile?
+    /// </summary>
+    public bool homing = false;
+
+    /// <summary>
+    /// Speed of the projectile
+    /// </summary>
+    public float speed;
+
     void Awake()
     {
         ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
@@ -66,7 +81,19 @@ public class ProjectileBehaviour : MonoBehaviour
 
         //Debug.Log(timeToActivate);
 
-        velocity = rigidbody.velocity;
+        //velocity = rigidbody.velocity;
+
+        if (homing == true)
+        {
+            Vector3 direction = target - transform.position;
+
+            Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.1f, 0f);
+
+            transform.rotation = Quaternion.LookRotation(newDirection);
+        }
+
+
+        transform.position = transform.position + transform.forward * Time.deltaTime * speed;
 
         if (timeToActivate <= 0.0f)
         {
