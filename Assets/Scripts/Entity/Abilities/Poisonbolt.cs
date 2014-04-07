@@ -2,58 +2,42 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Fireball : Ability
+public class Poisonbolt : Ability
 {
-    public Fireball(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
+    public Poisonbolt(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
         : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
     {
 
     }
 
 
-    public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
+    public override void SpawnProjectile(GameObject source, Vector3 target, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
+
+        GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().PoisonboltProjectile, source.transform.position + forward, Quaternion.LookRotation(forward));
+
+        projectile.GetComponent<ProjectileBehaviour>().owner = owner;
+        projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
+        projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
+        projectile.GetComponent<ProjectileBehaviour>().target = target;
+        projectile.GetComponent<ProjectileBehaviour>().homing = true;
+        projectile.GetComponent<ProjectileBehaviour>().speed = 20f;
         
-        int segments = 1;
+
+        Vector3 randPos = source.transform.position + forward + Random.onUnitSphere*2;
+
+        randPos.Set(randPos.x, randPos.y + 2, randPos.z);
+
+        Vector3 direction = (randPos - source.transform.position).normalized;
+
+        projectile.transform.rotation = Quaternion.LookRotation(direction);
+
+        //projectile.rigidbody.velocity = direction * 20.0f;
         
-        for(int i = 0; i < segments; i++)
-        {
-            
-            GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().FireballProjectile, source.transform.position + Rotations.RotateAboutY(forward, (360 / segments) * i) * 2, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
-
-            projectile.GetComponent<ProjectileBehaviour>().owner = owner;
-            projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
-            projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
-
-            projectile.rigidbody.velocity = Rotations.RotateAboutY(forward, (360 / segments) * i) * 20.0f;
-        }
-
     }
 
     public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
     {
-
-        /*
-        Vector3 forward = Vector3.zero;
-
-        // if its a player, attack based on mouse
-        if (isPlayer == true)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit rayCastTarget;
-            Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
-            Vector3 vectorToMouse = rayCastTarget.point - source.transform.position;
-            forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
-        }
-
-        // if its an enemy, attack based on forward vector
-        else
-        {
-            forward = source.transform.forward;
-        }
-         */
-
-
         if (isPlayer == true)
         {
             if (target.GetComponent<AIController>().IsResetting() == false
@@ -122,5 +106,5 @@ public class Fireball : Ability
 
         yield return null;
     }
-    
+
 }

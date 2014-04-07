@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
     public GameObject HadoukenParticles;
     public GameObject ArrowParticles;
     public GameObject FireballProjectile;
+    public GameObject ShadowboltProjectile;
+    public GameObject PoisonboltProjectile;
+    public GameObject BloodboltProjectile;
     public GameObject FiremineParticles;
     public GameObject GETOVERHEREParticles;
     public GameObject MineParticles;
@@ -24,7 +27,7 @@ public class GameManager : MonoBehaviour
     public static Dictionary<int, Aura> Auras;
     public static Dictionary<string, int> AuraStringToIntMap;
 
-    public static float GLOBAL_COOLDOWN = 0.1f;
+    public static float GLOBAL_COOLDOWN = 0.0f;
 
     public GameObject thing;
 	// Use this for initialization
@@ -48,6 +51,10 @@ public class GameManager : MonoBehaviour
         Abilities["GETOVERHERE"] = new GETOVERHERE(AttackType.PROJECTILE, DamageType.SHADOW, 1.0f, 0.0f, 3.0f, 0.1f, "GETOVERHERE", "Shadow Pull", GETOVERHEREParticles);
         Abilities["normalmine"] = new normalmine(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 360.0f, 4.0f, 1.0f, "normalmine", "Mine", MineParticles);
         Abilities["blink"] = new Blink(AttackType.GROUNDTARGET, DamageType.NONE, 5.0f, 0.0f, 2.0f, 0.0f, "blink", "Blink", BlinkParticles);
+
+        Abilities["shadowbolt"] = new Shadowbolt(AttackType.PROJECTILE, DamageType.SHADOW, 10.0f, 0.0f, 0.1f, 10.0f, "shadowbolt", "shadowbolt", FireballExplosion);
+        Abilities["poisonbolt"] = new Poisonbolt(AttackType.PROJECTILE, DamageType.POISON, 10.0f, 0.0f, 0.1f, 10.0f, "poisonbolt", "poisonbolt", FireballExplosion);
+        Abilities["bloodbolt"] = new Bloodbolt(AttackType.PROJECTILE, DamageType.PHYSICAL, 10.0f, 0.0f, 0.1f, 10.0f, "bloodbolt", "bloodbolt", FireballExplosion);
         
 
         Abilities["ShockMine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 10.0f, "ShockMine", "Shock Mine", ShockMineProjectile);

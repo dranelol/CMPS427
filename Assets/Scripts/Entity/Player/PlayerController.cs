@@ -195,7 +195,7 @@ public class PlayerController : MonoBehaviour {
                     Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
 
-                    entity.abilityManager.abilities[2].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[2].ID, true);
+                    entity.abilityManager.abilities[2].SpawnProjectile(gameObject, rayCastTarget.point, gameObject,  forward, entity.abilityManager.abilities[2].ID, true);
                     
                 }
 
@@ -243,7 +243,7 @@ public class PlayerController : MonoBehaviour {
                     Vector3 vectorToMouse = rayCastTarget.point - transform.position;
                     Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
-                    entity.abilityManager.abilities[3].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[3].ID, true);
+                    entity.abilityManager.abilities[3].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[3].ID, true);
 
                 }
 
@@ -285,7 +285,7 @@ public class PlayerController : MonoBehaviour {
                     Vector3 vectorToMouse = rayCastTarget.point - transform.position;
                     Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
-                    entity.abilityManager.abilities[4].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[4].ID, true);
+                    entity.abilityManager.abilities[4].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[4].ID, true);
 
                 }
 
@@ -327,7 +327,7 @@ public class PlayerController : MonoBehaviour {
                     Vector3 vectorToMouse = rayCastTarget.point - transform.position;
                     Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
-                    entity.abilityManager.abilities[5].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[4].ID, true);
+                    entity.abilityManager.abilities[5].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[5].ID, true);
 
                 }
 

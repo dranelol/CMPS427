@@ -27,6 +27,7 @@ public enum DamageType
     EARTH,
     AIR,
     SHADOW,
+    POISON,
     NONE
 };
 
@@ -142,6 +143,20 @@ public abstract class Ability
     /// <param name="isPlayer">Whether or not the owner is a player</param>
     public virtual void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
 
+    {
+
+    }
+
+    /// <summary>
+    /// Spawns a projectile with a known target
+    /// </summary>
+    /// <param name="source">Source of the projectile</param>
+    /// <param name="target">Target of the projectile</param>
+    /// <param name="owner">Owner of the projectile</param>
+    /// <param name="forward">Direction forward of the projectile</param>
+    /// <param name="abilityID">The game abilityID of the ability tied to this projectile's onhit</param>
+    /// <param name="isPlayer">Whether or not the owner is a player</param>
+    public virtual void SpawnProjectile(GameObject source, Vector3 target, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
 
     }
