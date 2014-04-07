@@ -46,23 +46,21 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\ShurikenMagic\Scripts\SM_animSpeedRandomizer.js" />
-     <Compile Include="Assets\ShurikenMagic\Scripts\SM_destroyThisTimed.js" />
-     <Compile Include="Assets\ShurikenMagic\Scripts\SM_effectCaster.js" />
-     <Compile Include="Assets\ShurikenMagic\Scripts\SM_prefabGenerator.js" />
-     <Compile Include="Assets\ShurikenMagic\Scripts\SM_randomScale.js" />
-     <Compile Include="Assets\ShurikenMagic\Scripts\SM_rotateThis.js" />
-     <Compile Include="Assets\ShurikenMagic\Scripts\SM_trailFade.js" />
+     <Compile Include="Assets\Imported Assets\ShurikenMagic\Scripts\SM_animSpeedRandomizer.js" />
+     <Compile Include="Assets\Imported Assets\ShurikenMagic\Scripts\SM_destroyThisTimed.js" />
+     <Compile Include="Assets\Imported Assets\ShurikenMagic\Scripts\SM_effectCaster.js" />
+     <Compile Include="Assets\Imported Assets\ShurikenMagic\Scripts\SM_prefabGenerator.js" />
+     <Compile Include="Assets\Imported Assets\ShurikenMagic\Scripts\SM_randomScale.js" />
+     <Compile Include="Assets\Imported Assets\ShurikenMagic\Scripts\SM_rotateThis.js" />
+     <Compile Include="Assets\Imported Assets\ShurikenMagic\Scripts\SM_trailFade.js" />
      <None Include="Assets\Standard Assets\Projectors\Guidelines.txt" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Multiply.shader" />
-     <None Include="Assets\Scripts\equipmentList.xml" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />
      <None Include="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Light.shader" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-LightedOutline.shader" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Lighted.shader" />
      <None Include="Assets\Shaders\AdditiveProjector.shader" />
-     <None Include="Assets\Scripts\affixList.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">

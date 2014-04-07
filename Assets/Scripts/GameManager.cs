@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     public static Dictionary<int, Aura> Auras;
     public static Dictionary<string, int> AuraStringToIntMap;
 
-    public static float GLOBAL_COOLDOWN = 0.05f;
+    public static float GLOBAL_COOLDOWN = 0.1f;
 
     public GameObject thing;
 	// Use this for initialization
