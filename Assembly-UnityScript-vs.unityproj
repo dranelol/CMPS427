@@ -53,6 +53,7 @@
      <Compile Include="Assets\Imported Assets\ShurikenMagic\Scripts\SM_randomScale.js" />
      <Compile Include="Assets\Imported Assets\ShurikenMagic\Scripts\SM_rotateThis.js" />
      <Compile Include="Assets\Imported Assets\ShurikenMagic\Scripts\SM_trailFade.js" />
+     <Compile Include="Assets\fire\rain\script\rainscript.js" />
      <None Include="Assets\Standard Assets\Projectors\Guidelines.txt" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Multiply.shader" />
