@@ -170,7 +170,7 @@ public class AIPursuit : StateMachine
     void seek_Update()
     {
 
-        if ((entity.currentHP < (entity.maxHP * 0.2f)) && hasFled == false)
+        if ((entity.CurrentHP < (entity.currentAtt.Health * 0.2f)) && hasFled == false)
         {
 
             Transition(PursuitStates.flee);
@@ -233,7 +233,7 @@ public class AIPursuit : StateMachine
     void attack_Update()
     {
 
-        if ((entity.currentHP < (entity.maxHP * 0.2f)) && hasFled == false)
+        if ((entity.CurrentHP < (entity.currentAtt.Health * 0.2f)) && hasFled == false)
         {
 
             Transition(PursuitStates.flee);
@@ -311,7 +311,7 @@ public class AIPursuit : StateMachine
             
             
         }
-        else if(entity.currentHP <= 0)
+        else if(entity.CurrentHP <= 0)
         {
             StopPursuit();
         }
