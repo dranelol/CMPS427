@@ -8,11 +8,11 @@ using System.Collections.Generic;
 public enum AttackType
 {
     PROJECTILE,
-    AOE,
+    GROUNDTARGET, // needs a point on the ground; either a selected target's position, or a cursor position
+    SINGLETARGET, // needs a selected target
     PBAOE,      // Point Blank Area of Effect
     MELEE,
-    STATUS,      // Maybe an attack type that just inflicts conditions?
-    GROUND     // ground aoe effects: death and decay, effloresence, etc
+    STATUS     // Maybe an attack type that just inflicts conditions?
 };
 
 /// <summary>
@@ -26,7 +26,8 @@ public enum DamageType
     WATER,
     EARTH,
     AIR,
-    SHADOW
+    SHADOW,
+    NONE
 };
 
 
@@ -84,6 +85,16 @@ public abstract class Ability
     protected GameManager gameManager;
 
 
+    protected string id;
+    public string ID
+    {
+        get
+        {
+            return id;
+        }
+    }
+
+
     /// <summary>
     /// Base modifier from which damage is calculated
     /// </summary>
@@ -106,6 +117,7 @@ public abstract class Ability
         this.readable = readable;
         this.damageMod = damageMod;
         this.particleSystem = particles;
+        this.id = id;
     }
 
     public virtual void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
@@ -119,7 +131,17 @@ public abstract class Ability
 
     }
 
-    public virtual void SpawnProjectile(GameObject source, int abilityIndex, bool isPlayer)
+
+    /// <summary>
+    /// Spawns a projectile at the position of source, owned by owner, rotated by rotation, tied to abilityID
+    /// </summary>
+    /// <param name="source">Source of the projectile</param>
+    /// <param name="owner">Owner of the projectile</param>
+    /// <param name="forward">Direction forward of the projectile</param>
+    /// <param name="abilityID">The game abilityID of the ability tied to this projectile's onhit</param>
+    /// <param name="isPlayer">Whether or not the owner is a player</param>
+    public virtual void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
+
     {
 
     }

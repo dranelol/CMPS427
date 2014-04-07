@@ -25,6 +25,10 @@ public class Fusrodah : Ability
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
                     DoPhysics(source, enemy);
+                    if (enemy.GetComponent<AIController>().IsInCombat() == false)
+                    {
+                        enemy.GetComponent<AIController>().BeenAttacked(source);
+                    }
                 }
             }
         }
@@ -38,6 +42,7 @@ public class Fusrodah : Ability
                 DoPhysics(source, enemy);
             }
         }
+
 
         GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.2f, isPlayer));
     
@@ -147,9 +152,9 @@ public class Fusrodah : Ability
         float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
         Debug.Log("damage: " + damageAmt);
 
-        defender.currentHP -= damageAmt;
+        defender.ModifyHealth(-damageAmt);
 
-        float ratio = (defender.currentHP / defender.maxHP);
+        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
 
         if (isPlayer == true)
         {
@@ -169,7 +174,6 @@ public class Fusrodah : Ability
 
     public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
     {
-        
         GameObject particles;
 
         // if the player is casting the ability, we need to activate it based on the position of the cursor, not the transform's forward
@@ -180,6 +184,8 @@ public class Fusrodah : Ability
             Physics.Raycast(ray, out targetRay, Mathf.Infinity);
             Vector3 vectorToMouse = targetRay.point - source.transform.position;
             Vector3 cursorForward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
+
+
             Quaternion rotation = Quaternion.LookRotation(cursorForward);
             particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, rotation);
         }
@@ -193,19 +199,17 @@ public class Fusrodah : Ability
 
         yield return new WaitForSeconds(time);
 
-        ParticleSystem[] particleSystems = particlePrefab.GetComponentsInChildren<ParticleSystem>();
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
 
-        Debug.Log("fus");
-
-        foreach (Transform child in particles.transform)
+        foreach (ParticleSystem item in particleSystems)
         {
-            if (child.GetComponent<ParticleSystem>() != null)
-            {
-                child.GetComponent<ParticleSystem>().enableEmission = false;
-            }
+            Debug.Log("asd");
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
+
         }
 
-        yield return new WaitForSeconds(time * 2);
         GameObject.Destroy(particles);
 
         yield return null;

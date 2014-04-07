@@ -25,6 +25,10 @@ public class Hadouken : Ability
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
                     DoPhysics(source, enemy);
+                    if (enemy.GetComponent<AIController>().IsInCombat() == false)
+                    {
+                        enemy.GetComponent<AIController>().BeenAttacked(source);
+                    }
                 }
             }
         }
@@ -147,9 +151,9 @@ public class Hadouken : Ability
         float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
         Debug.Log("damage: " + damageAmt);
 
-        defender.currentHP -= damageAmt;
+        defender.ModifyHealth(-damageAmt);
 
-        float ratio = (defender.currentHP / defender.maxHP);
+        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
 
         if (isPlayer == true)
         {

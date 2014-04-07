@@ -10,18 +10,16 @@ public class Arrow : Ability
        
     }
 
-    public override void SpawnProjectile(GameObject source, int abilityIndex, bool isPlayer)
+
+    public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit target;
-        Physics.Raycast(ray, out target, Mathf.Infinity);
-        Vector3 vectorToMouse = target.point - source.transform.position;
-        Vector3 forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
 
         GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position, Quaternion.Euler(forward));
 
-        projectile.GetComponent<ProjectileBehaviour>().owner = source;
+        projectile.GetComponent<ProjectileBehaviour>().owner = owner;
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
+        projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
+
 
         // apply velocity
 
@@ -37,7 +35,10 @@ public class Arrow : Ability
             {
                 Entity defender = target.GetComponent<Entity>();
                 DoDamage(source, target, attacker, defender, isPlayer);
-
+                if (target.GetComponent<AIController>().IsInCombat() == false)
+                {
+                    target.GetComponent<AIController>().BeenAttacked(source);
+                }
             }
         }
 
@@ -58,9 +59,9 @@ public class Arrow : Ability
             Debug.Log("damage: " + damageAmt);
         }
 
-        defender.currentHP -= damageAmt;
+        defender.ModifyHealth(-damageAmt);
 
-        float ratio = (defender.currentHP / defender.maxHP);
+        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
 
         if (isPlayer == true)
         {
