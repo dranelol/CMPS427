@@ -101,6 +101,17 @@ public class EntityAuraManager : MonoBehaviour
                     _auraDictionary.Remove(name);
                     GameObject auraParticleEffect = _particleDictionary[name];
                     _particleDictionary.Remove(name);
+
+                    ParticleSystem[] particleSystems = auraParticleEffect.GetComponentsInChildren<ParticleSystem>();
+
+                    foreach (ParticleSystem item in particleSystems)
+                    {
+                        item.transform.parent = null;
+                        item.emissionRate = 0;
+                        item.enableEmission = false;
+
+                    }
+
                     Destroy(auraParticleEffect);
                 }
 
