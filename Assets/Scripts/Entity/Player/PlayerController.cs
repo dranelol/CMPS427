@@ -125,7 +125,7 @@ public class PlayerController : MonoBehaviour {
 			if (Physics.Raycast(ray, out target, Mathf.Infinity, 1 << terrainMask))
 			{
                // Debug.Log(target.collider.gameObject.layer);
-                Debug.Log(target.collider.name);
+                //Debug.Log(target.collider.name);
 
                 
 
@@ -133,7 +133,7 @@ public class PlayerController : MonoBehaviour {
                 if (target.collider.gameObject.tag == "Enemy")
                 {
                     // Set the target position to the enemy's position.
-                    Debug.Log("this should also never happen");
+                    //Debug.Log("this should also never happen");
                     targetPosition = target.collider.gameObject.transform.position;
                 }
 
@@ -145,8 +145,8 @@ public class PlayerController : MonoBehaviour {
 
                     if (NavMesh.SamplePosition(target.point, out hit, 20, 1 << LayerMask.NameToLayer("Default")))
                     {
-                        Debug.Log("it should always reach here");
-                        Debug.Log("target: " + target);
+                        //Debug.Log("it should always reach here");
+                        //Debug.Log("target: " + target);
                         moveFSM.SetPath(hit.position);
                     }
 
@@ -186,6 +186,7 @@ public class PlayerController : MonoBehaviour {
 
                     // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                     // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
 
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit rayCastTarget;

@@ -3,9 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Entity : MonoBehaviour
-{ 
-    public float currentHP; // Currently unused.
-    public float maxHP; // max HP
+{
+    protected float currentHP; 
+    public float CurrentHP
+    {
+        get { return currentHP; }
+    }
+
+    protected float currentResource;
+    public float CurrentResource
+    {
+        get { return currentResource; }
+    }
+
     public Attributes currentAtt; // The entity's current total attributes
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
@@ -22,14 +32,15 @@ public class Entity : MonoBehaviour
         currentAtt = new Attributes();
         //Debug.Log(currentAtt.ToString()); 
         equipAtt = new Attributes();
-        buffAtt = new Attributes();                                                                                     
+        buffAtt = new Attributes();
 
+        currentAtt.Health = currentHP = 50;
+        currentAtt.Resource = currentResource = 100;
         currentAtt.Power = 10;
         currentAtt.Defense = 10;
         currentAtt.AttackSpeed = 1.0f;
-
-        maxHP = currentHP = 50;
     }
+
     /// <summary>
     /// Creates the entity with a given set of base attributes,
     /// </summary>
@@ -39,6 +50,26 @@ public class Entity : MonoBehaviour
     }
 
     /// <summary>
+    /// Modifies the current health of the entity, clamped by the maximum health.
+    /// Can be used for both taking damage and gaining health.
+    /// </summary>
+    /// <param name="value">Delta value to modify current health.</param>
+    public void ModifyHealth(float delta) { currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); }
+
+    public void ModifyResource(float delta)
+    {
+        currentResource = Mathf.Clamp(currentResource + delta, 0, currentAtt.Power);
+    }
+
+    /// <summary>
+    /// Kind of obvious.
+    /// </summary>
+    /// <returns>True if the dude is dead.</returns>
+    public bool IsDead() { return currentHP <= 0; }
+
+    #region Equipment
+
+    /// <summary>
     /// Add the attribute changes of an item to the entity. The item must correlate to one of the equipment slots,
     /// Head, Chest, Legs, Feet, Main, Off. Attribute changes are taken as an attributes object. Returns
     /// false if the slot is already filled.
@@ -46,7 +77,7 @@ public class Entity : MonoBehaviour
     /// <param name="slot">The equipment slot being filled.</param>
     /// <param name="itemAtt">The attributes of the item being equipped.</param>
     /// <returns></returns>
-    public bool addEquipment(equipSlots.slots slot , equipment item)
+    public bool addEquipment(equipSlots.slots slot, equipment item)
     {
         if (this.equippedEquip.ContainsKey(slot))
             return false;
@@ -95,31 +126,6 @@ public class Entity : MonoBehaviour
     }
 
     /// <summary>
-    /// Modifies the current health of the entity, clamped by the maximum health.
-    /// Can be used for both taking damage and gaining health.
-    /// </summary>
-    /// <param name="value">Delta value to modify current health.</param>
-    public void ModifyHealth(float delta) { currentHP = Mathf.Clamp(currentHP + delta, 0, maxHP); }
-
-    /// <summary>
-    /// Kind of obvious.
-    /// </summary>
-    /// <returns>True if the dude is dead.</returns>
-    public bool IsDead() { return currentHP <= 0; }
-
-    #region Buffs
-    /// <summary>
-    /// Adds a buff to the entity. The buff is given by an attributes object that is added to the entity's current
-    /// stats. The duration of the buff is given in seconds.
-    /// </summary>
-    /// <param name="statChange">The attributes to be added by this buff</param>
-    /// <param name="duration">The duration of this buff in seconds</param>
-    public void addBuff(Attributes statChange, float duration)
-    {
-        StartCoroutine(newbuff(statChange, duration));
-    }
-
-    /// <summary>
     /// Does the current entity have an item equipped in this slot
     /// </summary>
     /// <param name="slot">The slot to check</param>
@@ -147,14 +153,14 @@ public class Entity : MonoBehaviour
         }
     }
 
+    #endregion
 
-    private IEnumerator newbuff(Attributes s, float d)
+    #region Buffs
+
+    public void AddBuff(Attributes buffedAttributes)
     {
-        currentAtt.Add(s);
-        buffAtt.Add(s);
-        yield return new WaitForSeconds(d);
-        currentAtt.Subtract(s);
-        buffAtt.Subtract(s);
+
     }
+
     #endregion
 }

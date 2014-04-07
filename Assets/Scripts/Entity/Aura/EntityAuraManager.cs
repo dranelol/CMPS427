@@ -8,6 +8,7 @@ public class EntityAuraManager : MonoBehaviour
     #region Members
 
     private Dictionary<string, Dictionary<Entity, Aura>> _auraDictionary;
+    private Dictionary<string, GameObject> _particleDictionary;
     private List<Aura> _buffs;
     private List<Aura> _debuffs;
     private Entity _entity;
@@ -17,6 +18,7 @@ public class EntityAuraManager : MonoBehaviour
     void Awake()
     {
         _auraDictionary = new Dictionary<string, Dictionary<Entity, Aura>>();
+        _particleDictionary = new Dictionary<string, GameObject>();
         _buffs = new List<Aura>();
         _debuffs = new List<Aura>();
         _entity = GetComponent<Entity>();
@@ -69,6 +71,10 @@ public class EntityAuraManager : MonoBehaviour
                 TrackAura(newAura);
                 StartCoroutine(newAura.Activate());
 
+                GameObject newAuraParticle = Instantiate(newAura.ParticleEffect, _entity.transform.position, Quaternion.identity) as GameObject;
+                _particleDictionary.Add(name, newAuraParticle);
+                newAuraParticle.transform.parent = _entity.transform;
+
                 return true;
             }
         }
@@ -93,6 +99,20 @@ public class EntityAuraManager : MonoBehaviour
                 if (_auraDictionary[name].Count == 0)
                 {
                     _auraDictionary.Remove(name);
+                    GameObject auraParticleEffect = _particleDictionary[name];
+                    _particleDictionary.Remove(name);
+
+                    ParticleSystem[] particleSystems = auraParticleEffect.GetComponentsInChildren<ParticleSystem>();
+
+                    foreach (ParticleSystem item in particleSystems)
+                    {
+                        item.transform.parent = null;
+                        item.emissionRate = 0;
+                        item.enableEmission = false;
+
+                    }
+
+                    Destroy(auraParticleEffect);
                 }
 
                 UnTrackAura(aura);

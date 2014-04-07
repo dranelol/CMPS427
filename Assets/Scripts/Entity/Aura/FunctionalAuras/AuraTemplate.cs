@@ -14,13 +14,13 @@ sealed public class AuraTemplate : Aura
 
     private const string TEMPLATE_AURA_DESCRIPTION = "description"; // Description of the status effect (should be non-empty)
     private const string TEMPLATE_AURA_FLAVOR_TEXT = "..."; // Flavor text for the status effect (optional)
-    private const string TEMPLATE_AURA_ICON_TEXTURE_NAME = "default_aura_texture.png"; // The name of the texture for this aura to be displayed on the GUI.
+    private const string TEMPLATE_AURA_ICON_TEXTURE_NAME = "default_aura_texture"; // The name of the texture for this aura to be displayed on the GUI.
+    private const string TEMPLATE_AURA_PARTICLE_EFFECT_NAME = "default_aura_particle_effect"; // The name of the particle effect to be used by this aura.
     private const AuraType TEMPLATE_AURA_AURATYPE = AuraType.Buff; // The type of aura, buff or debuff.
     private const int TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS = 50; // The number of times this effect can stack. Must be between 1 and 99 (inclusive)
     private const int TEMPLATE_AURA_INITIAL_NUMBER_OF_STACKS = 1; // The number of stacks this aura starts with.
     private const int TEMPLATE_AURA_DURATION = 10; // The number of seconds this aura will remain on a target. The duration is an INTEGER because 
                                                    // status effects should have a finite number of seconds for the duration for simplicity.
-
     #endregion
 
     #region Constructors
@@ -32,18 +32,22 @@ sealed public class AuraTemplate : Aura
     /// given name is unique.
     /// </summary>
     /// <param name="id">The unique integer ID.</param>
+    #region Complete
     public AuraTemplate(string name)
-        : base(name, TEMPLATE_AURA_DESCRIPTION, TEMPLATE_AURA_FLAVOR_TEXT, TEMPLATE_AURA_ICON_TEXTURE_NAME,
+        : base(name, TEMPLATE_AURA_DESCRIPTION, TEMPLATE_AURA_FLAVOR_TEXT, TEMPLATE_AURA_ICON_TEXTURE_NAME, TEMPLATE_AURA_PARTICLE_EFFECT_NAME,
         TEMPLATE_AURA_AURATYPE, TEMPLATE_AURA_DURATION, TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS, TEMPLATE_AURA_INITIAL_NUMBER_OF_STACKS
+    #endregion
 
         /* ----------------------------------------MODIFY THE REST HERE------------------------------------------------- *
-         * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-        , new DoT(0.01f), new Stun())
+         * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+         * You can define your own modules or use the predefined modules to describe how the aura affects the entity. 
+         * After you define your module, pass it as a paramater below before the ')' ie. ', new CustomModule())'         */
+        )
     { }
 
     #endregion
 
-    #region Events
+    #region Custom Modules
 
     #endregion
 
@@ -62,25 +66,6 @@ sealed public class AuraTemplate : Aura
     }
 
     #endregion
-
-    protected class Stun : Module
-    {
-        public Stun() : base() { }
-
-        public override void OnStart(Entity entity, int count)
-        {
-            base.OnStart(entity, count);
-
-            EntityAffected.GetComponent<MovementFSM>().LockMovement(60000);
-        }
-
-        public override void OnEnd()
-        {
-            base.OnEnd();
-
-            EntityAffected.GetComponent<MovementFSM>().UnlockMovement();
-        }
-    }
 
     #region Private Constructor
 

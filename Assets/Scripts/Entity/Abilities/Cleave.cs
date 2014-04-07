@@ -25,6 +25,8 @@ public class Cleave : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
+
+
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
                         enemy.GetComponent<AIController>().BeenAttacked(source);
@@ -172,9 +174,9 @@ public class Cleave : Ability
         Debug.Log("damage: " + damageAmt);
         
 
-        defender.currentHP -= damageAmt;
+        defender.ModifyHealth(-damageAmt);
 
-        float ratio = (defender.currentHP / defender.maxHP);
+        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
 
         if (isPlayer == true)
         {
@@ -183,4 +185,5 @@ public class Cleave : Ability
         }
     }
 
+    
 }
