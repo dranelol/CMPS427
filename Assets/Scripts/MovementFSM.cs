@@ -7,8 +7,20 @@ using UnityEngine;
 
 public class MovementFSM : StateMachine 
 {
+    public const float DEFAULT_MOVEMENT_SPEED = 5;
+
     private NavMeshAgent _navMeshAgent;
-    private float _lockTimer;
+
+    public float _movementSpeed;
+    public float MovementSpeed
+    {
+        get { return _movementSpeed; }
+        set
+        {
+            _movementSpeed = Mathf.Clamp(value * DEFAULT_MOVEMENT_SPEED, 0, 15f);
+            _navMeshAgent.speed = _movementSpeed;
+        }
+    }
 
     public enum MoveStates
     {
@@ -19,10 +31,6 @@ public class MovementFSM : StateMachine
 
     void Awake()
     {
-        _navMeshAgent = GetComponent<NavMeshAgent>();
-        _navMeshAgent.stoppingDistance = _navMeshAgent.radius;
-        _lockTimer = 0;
-
         SetupMachine(MoveStates.idle);
 
         HashSet<Enum> moveLockedTransitions = new HashSet<Enum>();
@@ -36,6 +44,13 @@ public class MovementFSM : StateMachine
         StartMachine(MoveStates.idle);
     }
 
+    void Start()
+    {
+        _navMeshAgent = GetComponent<NavMeshAgent>();
+        _navMeshAgent.stoppingDistance = _navMeshAgent.radius;
+        MovementSpeed = GetComponent<Entity>().currentAtt.MovementSpeed;
+    }
+
     #region public functions
 
     public void SetPath(Vector3 targetPosition)
@@ -43,7 +58,13 @@ public class MovementFSM : StateMachine
         if ((MoveStates)CurrentState != MoveStates.moveLocked)
         {
             Transition(MoveStates.moving);
-            _navMeshAgent.SetDestination(targetPosition); 
+
+            NavMeshHit navMeshHit;
+
+            if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
+            {
+                _navMeshAgent.SetDestination(navMeshHit.position); 
+            }      
         }
     }
 
@@ -56,16 +77,11 @@ public class MovementFSM : StateMachine
         }
     }
 
-    public void LockMovement(float duration)
+    public void LockMovement()
     {
-        if (duration > 0)
+        if ((MoveStates)CurrentState != MoveStates.moveLocked)
         {
-            _lockTimer = Mathf.Max(_lockTimer, duration);
-
-            if ((MoveStates)CurrentState != MoveStates.moveLocked)
-            {
-                Transition(MoveStates.moveLocked);
-            }
+            Transition(MoveStates.moveLocked);
         }
     }
 
@@ -81,8 +97,18 @@ public class MovementFSM : StateMachine
     {
         if (force.magnitude > 0)
         {
-            LockMovement(duration);
+            LockMovement();
+            Invoke("UnlockMovement", duration);
             rigidbody.AddForce(force, forceMode);
+        }
+    }
+
+    public void Warp(Vector3 targetLocation)
+    {
+        if ((MoveStates)CurrentState != MoveStates.moveLocked)
+        {
+            Transition(MoveStates.idle);
+            _navMeshAgent.Warp(targetLocation);
         }
     }
 
@@ -111,21 +137,10 @@ public class MovementFSM : StateMachine
         yield return null;
     }
 
-    private void moveLocked_Update()
-    {
-        _lockTimer -= Time.deltaTime;
-
-        if (_lockTimer <= 0)
-        {
-            Transition(MoveStates.idle);
-        }
-    }
-
     private IEnumerator moveLocked_ExitState()
     {
         _navMeshAgent.enabled = true;
         _navMeshAgent.ResetPath();
-        _lockTimer = 0;
         yield return null;
     }
 
