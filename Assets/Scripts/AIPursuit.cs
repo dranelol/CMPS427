@@ -303,13 +303,9 @@ public class AIPursuit : StateMachine
     void flee_Update()
     {
 
-        
-
         if (fleeEnd < Time.time)
         {
             Transition(PursuitStates.seek);
-            
-            
         }
         else if(entity.CurrentHP <= 0)
         {
