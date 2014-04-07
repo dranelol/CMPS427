@@ -9,8 +9,9 @@ public class OrbSpawn : MonoBehaviour
     public float maxHeight;
     public float angularSpeed;
     public float oscillationSpeed;
-    public string rotationAxis;
+    public bool yOrbit;
     public float orbitScale;
+    public GameObject orbitObject;
 
 	void Awake () 
     {
@@ -18,25 +19,21 @@ public class OrbSpawn : MonoBehaviour
         {
             Vector3 newOrbPos = Vector3.zero;
 
-            if (rotationAxis == "x" || rotationAxis == "X")
+            if (yOrbit == true)
             {
-                newOrbPos = Rotations.RotateAboutX(transform.parent.transform.forward * orbitScale, (360 / orbAmount) * i) * 2;
-                newOrbPos.x = minHeight;
+                newOrbPos = new Vector3(orbitObject.transform.position.x + orbitScale * Mathf.Sin((360 / orbAmount) * i * Mathf.Deg2Rad),
+                                        orbitObject.transform.position.y,
+                                        orbitObject.transform.position.z + orbitScale * Mathf.Cos((360 / orbAmount) * i * Mathf.Deg2Rad));
             }
+            
 
-            else if (rotationAxis == "y" || rotationAxis == "Y")
+            else 
             {
-                newOrbPos = Rotations.RotateAboutY(transform.parent.transform.forward * orbitScale, (360 / orbAmount) * i) * 2;
-                newOrbPos.y = minHeight;
-            }
+                newOrbPos = new Vector3(orbitObject.transform.position.x + orbitScale * Mathf.Sin((360 / orbAmount) * i * Mathf.Deg2Rad),
+                                        orbitObject.transform.position.y + orbitScale * Mathf.Cos((360 / orbAmount) * i * Mathf.Deg2Rad),
+                                        orbitObject.transform.position.z);
 
-            else
-            {
-                newOrbPos = Rotations.RotateAboutZ(transform.parent.transform.forward * orbitScale, (360 / orbAmount) * i) * 2;
-                //newOrbPos.z = minHeight;
-
-                Debug.Log((transform.parent.transform.forward * orbitScale).ToString());
-                Debug.Log(newOrbPos);
+                
             }
 
             //newOrbPos = Rotations.RotateAboutY(transform.parent.transform.forward, (360 / orbAmount) * i) * 2;
@@ -47,8 +44,28 @@ public class OrbSpawn : MonoBehaviour
             newOrb.GetComponent<OrbRotate>().maxHeight = maxHeight;
             newOrb.GetComponent<OrbRotate>().angularSpeed = angularSpeed;
             newOrb.GetComponent<OrbRotate>().oscillationSpeed = oscillationSpeed;
-            newOrb.GetComponent<OrbRotate>().rotationAxis = rotationAxis;
+            newOrb.GetComponent<OrbRotate>().yOrbit = yOrbit;
             newOrb.GetComponent<OrbRotate>().orbitScale = orbitScale;
+
+            if (orbitObject == null)
+            {
+                Debug.Log("asd");
+                if (transform.parent == null)
+                {
+                    newOrb.GetComponent<OrbRotate>().orbitObject = gameObject;
+                }
+
+                else
+                {
+                    newOrb.GetComponent<OrbRotate>().orbitObject = transform.parent.gameObject;
+                }
+            }
+
+            else
+            {
+                newOrb.GetComponent<OrbRotate>().orbitObject = orbitObject;
+            }
+            
             newOrb.transform.parent = transform;
             
         }

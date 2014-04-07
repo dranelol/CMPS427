@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 6a4d6652da36387429423b9adef7f88b
 ModelImporter:
-  serializedVersion: 16
+  serializedVersion: 15
   fileIDToRecycleName:
     100000: helixUp
     100002: //RootNode
@@ -90,5 +90,4 @@ ModelImporter:
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 1
-  additionalBone: 0
   userData: 
