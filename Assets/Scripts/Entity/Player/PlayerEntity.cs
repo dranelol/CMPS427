@@ -9,7 +9,7 @@ public class PlayerEntity : Entity
     public void Awake()
     {
         base.Awake();
-        maxHP = 3000;
+        currentAtt.Health = 3000;
         currentHP = 3000;
     }
 
@@ -20,12 +20,12 @@ public class PlayerEntity : Entity
 
 
         abilityManager.AddAbility(GameManager.Abilities["fireball"], 2);
-        abilityManager.AddAbility(GameManager.Abilities["fusrodah"], 3);
+        abilityManager.AddAbility(GameManager.Abilities["blink"], 3);
         abilityManager.AddAbility(GameManager.Abilities["hadouken"], 4);
         abilityManager.AddAbility(GameManager.Abilities["deathgrip"], 5);
 
         abilityIndexDict["fireball"] = 2;
-        abilityIndexDict["fusrodah"] = 3;
+        abilityIndexDict["blink"] = 3;
         abilityIndexDict["hadouken"] = 4;
         abilityIndexDict["deathgrip"] = 5;
 	}

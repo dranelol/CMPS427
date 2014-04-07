@@ -8,11 +8,11 @@ using System.Collections.Generic;
 public enum AttackType
 {
     PROJECTILE,
-    AOE,
+    GROUNDTARGET, // needs a point on the ground; either a selected target's position, or a cursor position
+    SINGLETARGET, // needs a selected target
     PBAOE,      // Point Blank Area of Effect
     MELEE,
-    STATUS,      // Maybe an attack type that just inflicts conditions?
-    GROUND     // ground aoe effects: death and decay, effloresence, etc
+    STATUS     // Maybe an attack type that just inflicts conditions?
 };
 
 /// <summary>
@@ -26,7 +26,8 @@ public enum DamageType
     WATER,
     EARTH,
     AIR,
-    SHADOW
+    SHADOW,
+    NONE
 };
 
 
