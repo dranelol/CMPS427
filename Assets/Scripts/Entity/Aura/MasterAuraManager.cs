@@ -13,6 +13,7 @@ public class MasterAuraManager : MonoBehaviour
 
         Auras["test"] = new AuraTemplate("test");
         Auras["heal"] = new Heal("heal");
+        Auras["Corruption"] = new Corruption("Corruption");
 
 	}
 
