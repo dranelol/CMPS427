@@ -99,7 +99,7 @@ public class HUD_GUI : MonoBehaviour {
 
 
 		//health = GUI.VerticalSlider(new Rect(10f,10f,20f,50f),health,1f,0f);
-        health = (player.currentHP / player.maxHP);
+        health = (player.CurrentHP / player.currentAtt.Health);
 
 		if(health <0)health = 0f;
 		if(health >1)health = 1f;

@@ -9,7 +9,7 @@ public class PlayerEntity : Entity
     public void Awake()
     {
         base.Awake();
-        maxHP = 3000;
+        currentAtt.Health = 3000;
         currentHP = 3000;
     }
 
