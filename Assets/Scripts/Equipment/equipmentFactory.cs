@@ -534,51 +534,52 @@ public class equipmentFactory {
         tempequip = new equipment("Shankin' Stick",            equipSlots.equipmentType.Dagger,      equipSlots.slots.Main,   3,  1,  4,   0f,   0f,  0f,  0f, 20f, 50f,    0.5f,     2f, "Dis end da pointy one!");
         uniqueslist.Add(tempequip);
         tempequip = new equipment("Mirror Shard",              equipSlots.equipmentType.Dagger,      equipSlots.slots.Main,   3,  5,  9,  50f,   0f,  0f,  0f, 30f, 60f,    0.5f,   2.0f, "There isn't really a good way to hold this thing.");
-        basesList.Add(tempequip);
+        uniqueslist.Add(tempequip);
         tempequip = new equipment("McStabby",                  equipSlots.equipmentType.Dagger,      equipSlots.slots.Main,   3, 10, 15,   0f,  10f,  0f, 10f, 40f, 70f,      0f,   2.0f, "Cut the onions, extra cheese.");
-        basesList.Add(tempequip);
+        uniqueslist.Add(tempequip);
         tempequip = new equipment("Vivisector",                equipSlots.equipmentType.Dagger,      equipSlots.slots.Main,   3, 15, 20,   0f, 100f,  0f,  0f, 50f, 80f,      0f,   2.0f, "This valorous visitation of a bygone vexation stands vivified, and has vowed to vanquish these venal and virulent vermin, van guarding vice and vouchsafing the violently vicious and voracious violation of volition.");
-        basesList.Add(tempequip);
+        uniqueslist.Add(tempequip);
 
         tempequip = new equipment("Swoop's Revenge",           equipSlots.equipmentType.Sword,       equipSlots.slots.Main,   3,  1,  4,  50f,   0f,  0f,  0f, 20f, 90f,      0f,   1.5f, "Who names their kid 'Swoop'?");
         uniqueslist.Add(tempequip);
         tempequip = new equipment("The Bing Toolbar",          equipSlots.equipmentType.Sword,       equipSlots.slots.Main,   3,  5,  9,  20f, 100f,  0f,  0f, 30f,100f,      0f,   1.5f, "As painful as it is frustrating");
-        basesList.Add(tempequip);
+        uniqueslist.Add(tempequip);
         tempequip = new equipment("Moonflair Spellblade",      equipSlots.equipmentType.Sword,       equipSlots.slots.Main,   3, 10, 15,   0f, 100f,  0f, 10f, 40f,110f,      0f,   1.5f, "What is this, 2009?");
-        basesList.Add(tempequip);
+        uniqueslist.Add(tempequip);
         tempequip = new equipment("Darkin Blade",              equipSlots.equipmentType.Sword,       equipSlots.slots.Main,   3, 15, 20,   0f,   0f,  0f,  0f, 50f,120f,      0f,   1.5f, "Don't cut yourself, 'cause this is SO EDGY");
-        basesList.Add(tempequip);
+        uniqueslist.Add(tempequip);
         
         tempequip = new equipment("The Wrecking Stick",          equipSlots.equipmentType.Club,      equipSlots.slots.Main,   3,  1,  4,   0f,   0f, 20f,  0f, 20f, 70f,      0f,   1.7f, "This stick reckon's you're in the wrong town...");
         uniqueslist.Add(tempequip);
         tempequip = new equipment("Mace of Spades",            equipSlots.equipmentType.Club,        equipSlots.slots.Main,   3,  5,  9,  40f,  40f,  0f,  0f, 30f, 80f,      0f,   1.7f, "You win some, lose some, all the same to me.");
-        basesList.Add(tempequip);
+        uniqueslist.Add(tempequip);
         tempequip = new equipment("The Louisville Pulverizer", equipSlots.equipmentType.Club,        equipSlots.slots.Main,   3, 10, 15,   0f,   0f, 15f,  0f, 40f, 90f,    0.3f,   1.7f, "It's one, two, three strikes you're dead");
-        basesList.Add(tempequip);
+        uniqueslist.Add(tempequip);
         tempequip = new equipment("The Tenderizer",            equipSlots.equipmentType.Club,        equipSlots.slots.Main,   3, 15, 20,  50f,   0f, 10f,  0f, 50f,115f,      0f,   1.7f, "It'll tenderize them so good, they'll fall apart right in front of you. Taste not Guaranteed.");
-        basesList.Add(tempequip);
+        uniqueslist.Add(tempequip);
 
         
         tempequip = new equipment("Boneprow",                  equipSlots.equipmentType.Axe,         equipSlots.slots.Main,   3,  1,  4,  50f,   0f,  0f, 20f, 20f,110f,      0f,   1.0f, "Not actually part of a ship. Or made of bones.");
         uniqueslist.Add(tempequip);
         tempequip = new equipment("Noun's Axe of Verbing",     equipSlots.equipmentType.Axe,         equipSlots.slots.Main,   3,  5,  9,  30f,  30f, 10f, 10f, 31f,121f,   0.01f,  1.01f, "For those who want to cut the nerd crap");
-        basesList.Add(tempequip);
+        uniqueslist.Add(tempequip);
         tempequip = new equipment("The Jacked Axe",            equipSlots.equipmentType.Axe,         equipSlots.slots.Main,   3, 10, 15,   0f,   0f, 50f,  0f,  0f,140f,      0f,   1.0f, "Do you even lift, brah?");
-        basesList.Add(tempequip);
+        uniqueslist.Add(tempequip);
         tempequip = new equipment("The Chillaxe",              equipSlots.equipmentType.Axe,         equipSlots.slots.Main,   3, 15, 20, 100f,   0f, 10f,  0f, 50f,145f,      0f,   1.0f, "You need to chill, bro");
-        basesList.Add(tempequip);
+        uniqueslist.Add(tempequip);
 
         
         tempequip = new equipment("Phil",                      equipSlots.equipmentType.Spear,         equipSlots.slots.Main,   3,  1,  4,  50f,  50f,  0f,  0f, 20f, 80f,      0f,   1.5f, "Literally fedora.");
         uniqueslist.Add(tempequip);
         tempequip = new equipment("Gáe Bolga",                 equipSlots.equipmentType.Spear,         equipSlots.slots.Main,   3,  5,  9,   0f,   0f,  0f,  0f, 35f, 95f,    0.3f,   1.5f, "A terrible barbed spear, said to be impossible to pull from its victim.");
-        basesList.Add(tempequip);
+        uniqueslist.Add(tempequip);
         tempequip = new equipment("Gungnir",                   equipSlots.equipmentType.Spear,         equipSlots.slots.Main,   3, 10, 15,   0f,   0f, 15f, 15f, 40f,100f,      0f,   1.5f, "Thought lost in the stomach of a giant wolf");
-        basesList.Add(tempequip);
+        uniqueslist.Add(tempequip);
         tempequip = new equipment("Hades' Pitchfork",          equipSlots.equipmentType.Spear,         equipSlots.slots.Main,   3, 15, 20,   0f,1000f,  0f,  0f, 50f,110f,      0f,   1.5f, "The fire makes it great for a weapon, but pretty useless as a pitchfork.");
-        basesList.Add(tempequip);
+        uniqueslist.Add(tempequip);
 
-
+        tempequip = new equipment("ONHITTEST", equipSlots.equipmentType.Sword, equipSlots.slots.Main, 3, 1, 20, 0, 0, 0, 0, 5, 5, 0, 1, "testing onhits", false, false, "onhitnormal");
+        uniqueslist.Add(tempequip);
 
         #endregion
 
@@ -1613,6 +1614,9 @@ public class equipmentFactory {
         randEquipment.minlvl = tempEquipment.minlvl;
         randEquipment.flavorText = tempEquipment.flavorText;
         randEquipment.tier = tempEquipment.tier;
+        randEquipment.ranged = tempEquipment.ranged;
+        randEquipment.twohand = tempEquipment.twohand;
+        randEquipment.onhit = tempEquipment.onhit;
 
 
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
@@ -1661,6 +1665,9 @@ public class equipmentFactory {
         randEquipment.minlvl = tempEquipment.minlvl;
         randEquipment.flavorText = tempEquipment.flavorText;
         randEquipment.tier = tempEquipment.tier;
+        randEquipment.ranged = tempEquipment.ranged;
+        randEquipment.twohand = tempEquipment.twohand;
+        randEquipment.onhit = tempEquipment.onhit;
 
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
 
@@ -1716,6 +1723,9 @@ public class equipmentFactory {
         randEquipment.minlvl = tempEquipment.minlvl;
         randEquipment.flavorText = tempEquipment.flavorText;
         randEquipment.tier = tempEquipment.tier;
+        randEquipment.ranged = tempEquipment.ranged;
+        randEquipment.twohand = tempEquipment.twohand;
+        randEquipment.onhit = tempEquipment.onhit;
 
 
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
@@ -1763,6 +1773,12 @@ public class equipmentFactory {
         randEquipment.minlvl = tempEquipment.minlvl;
         randEquipment.flavorText = tempEquipment.flavorText;
         randEquipment.tier = tempEquipment.tier;
+        randEquipment.ranged = tempEquipment.ranged;
+        randEquipment.twohand = tempEquipment.twohand;
+        randEquipment.onhit = tempEquipment.onhit;
+        randEquipment.ranged = tempEquipment.ranged;
+        randEquipment.twohand = tempEquipment.twohand;
+        randEquipment.onhit = tempEquipment.onhit;
 
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
 
@@ -1822,6 +1838,9 @@ public class equipmentFactory {
         randEquipment.minlvl = tempEquipment.minlvl;
         randEquipment.flavorText = tempEquipment.flavorText;
         randEquipment.tier = tempEquipment.tier;
+        randEquipment.ranged = tempEquipment.ranged;
+        randEquipment.twohand = tempEquipment.twohand;
+        randEquipment.onhit = tempEquipment.onhit;
 
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
 
@@ -1890,6 +1909,9 @@ public class equipmentFactory {
         randEquipment.minlvl = tempEquipment.minlvl;
         randEquipment.flavorText = tempEquipment.flavorText;
         randEquipment.tier = tempEquipment.tier;
+        randEquipment.ranged = tempEquipment.ranged;
+        randEquipment.twohand = tempEquipment.twohand;
+        randEquipment.onhit = tempEquipment.onhit;
 
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
 

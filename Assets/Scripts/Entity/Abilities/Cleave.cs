@@ -31,6 +31,10 @@ public class Cleave : Ability
                     {
                         enemy.GetComponent<AIController>().BeenAttacked(source);
                     }
+                    if(attacker.abilityManager.abilities[6] != null)
+                    {
+                        attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
+                    }
                 }
             }
         }
@@ -43,7 +47,10 @@ public class Cleave : Ability
                 // todo: check if player is dead
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
-
+                if (attacker.abilityManager.abilities[6] != null)
+                {
+                    attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
+                }
                 
             }
         }

@@ -90,6 +90,13 @@ public class Entity : MonoBehaviour
             this.equippedEquip.Add(slot, item);
             currentAtt.Add(item.equipmentAttributes);
             this.equipAtt.Add(item.equipmentAttributes);
+            if (slot == equipSlots.slots.Main && item.onhit != "")
+            {
+                abilityManager.RemoveAbility(6);
+                abilityManager.AddAbility(GameManager.Abilities[item.onhit], 6);
+                abilityIndexDict[item.onhit] = 6;
+            }
+
             return true;
         }
     }
@@ -107,6 +114,11 @@ public class Entity : MonoBehaviour
             equippedEquip.Remove(slot);
             currentAtt.Subtract(removed.equipmentAttributes);
             equipAtt.Subtract(removed.equipmentAttributes);
+            if (slot == equipSlots.slots.Main)
+            {
+                abilityManager.RemoveAbility(6);
+         
+            }
             return true;
         }
         else

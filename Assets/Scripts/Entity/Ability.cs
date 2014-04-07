@@ -126,6 +126,13 @@ public abstract class Ability
 
     }
 
+    //onhit
+    public virtual void AttackHandler(GameObject attacker, GameObject defender, bool isPlayer)
+    {
+        
+    }
+
+
     // Projectiles
     public virtual void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
     {

@@ -28,6 +28,7 @@ public class PlayerEntity : Entity
         abilityIndexDict["poisonbolt"] = 3;
         abilityIndexDict["bloodbolt"] = 4;
         abilityIndexDict["blink"] = 5;
+
 	}
 	
 	// Update is called once per frame
