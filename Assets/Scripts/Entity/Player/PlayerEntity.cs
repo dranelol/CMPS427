@@ -63,8 +63,8 @@ public class PlayerEntity : Entity
             abilityIndexDict["poisonbolt"] = 3;
             abilityIndexDict["ShockMine"] = 4;
             abilityIndexDict["bladewaltz"] = 5;
-
         }
+
 
 	}
 	
