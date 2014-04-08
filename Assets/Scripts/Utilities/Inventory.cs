@@ -16,6 +16,8 @@ public class Inventory {
     {
         items = new List<equipment>();
         factory = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
+
+        LoadItems();
     }
 
     public void AddItem(equipment item)
@@ -29,13 +31,33 @@ public class Inventory {
         items.Remove(item);
     }
 
-    private void SaveItem(equipment item)
+    /// <summary>
+    /// Saves current items.
+    /// </summary>
+    public void SaveItems()
     {
-        
+        int count = 0;
+        foreach (equipment item in items)
+        {
+            factory.saveequipment(count + "inventory", item);
+            count++;
+        }
     }
 
-    private void UnSaveItem(equipment item)
+    /// <summary>
+    /// Loads items from PlayerPrefs, stopping when it encounters a null item.
+    /// </summary>
+    public void LoadItems()
     {
+        for (int i = 0; i < MAX; i++)
+        {
+            equipment item = factory.loadequipment(i + "inventory");
+            if (item == null)
+            {
+                break;
+            }
 
+            items.Add(item);
+        }
     }
 }

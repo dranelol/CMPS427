@@ -29,6 +29,8 @@ public class Entity : MonoBehaviour
     public Inventory Inventory { get { return inventory; } }
     public Dictionary<string, int> abilityIndexDict = new Dictionary<string, int>();
 
+    public void Start() { }
+
     public void Awake()
     {
         LoadInventory();
@@ -46,6 +48,8 @@ public class Entity : MonoBehaviour
         currentAtt.AttackSpeed = 1.0f;
         currentAtt.MovementSpeed = 1.0f;
     }
+
+    public void OnApplicationQuit() { }
 
     /// <summary>
     /// Modifies the current health of the entity, clamped by the maximum health.

@@ -51,6 +51,9 @@ public class PlayerEntity : Entity
                     }
                 }
             }
+
+            // Load saved items, if any.
+            Inventory.LoadItems();
         }
         else
         {
@@ -92,6 +95,11 @@ public class PlayerEntity : Entity
 
         //Debug.Log(abilities.Count);
 	}
+
+    public void OnApplicationQuit()
+    {
+        Inventory.SaveItems();
+    }
 
     public Attributes GetAttributes()
     {
