@@ -26,12 +26,12 @@ public class PlayerEntity : Entity
 
         if (gamemanager.loadsavetest == true)
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 2; i < 6; i++)
             {
                 if(PlayerPrefs.HasKey("ability"+i) == true)
                 {
-                    abilityManager.AddAbility(GameManager.Abilities[PlayerPrefs.GetString("ability"+i)], i+2);
-                    abilityIndexDict[PlayerPrefs.GetString("ability"+i)] = i+2;
+                    abilityManager.AddAbility(GameManager.Abilities[PlayerPrefs.GetString("ability"+i)], i);
+                    abilityIndexDict[PlayerPrefs.GetString("ability"+i)] = i;
                 }
             }
             for( int i=0;i<6;i++)

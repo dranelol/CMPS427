@@ -42,7 +42,7 @@ public class AbilityManager : MonoBehaviour
         if (abilities.Count <= 7)
         {
             abilities[index] = ab;
-            PlayerPrefs.SetString("ability" + (index - 2).ToString(), ab.ID);
+            PlayerPrefs.SetString("ability" + (index).ToString(), ab.ID);
 
         }
         else
@@ -56,7 +56,7 @@ public class AbilityManager : MonoBehaviour
         if (abilities[index] != null)
         {
             Debug.Log("removing "+ abilities[index].Name);
-            PlayerPrefs.DeleteKey("ability" + (index - 2).ToString());
+            PlayerPrefs.DeleteKey("ability" + (index).ToString());
             abilities[index] = null;
         }
 

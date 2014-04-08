@@ -378,11 +378,11 @@ public class PlayerController : MonoBehaviour {
                 }
             }
 
-            for( int i=0;i<4;i++)
+            for( int i=2;i<6;i++)
             {
-                if (entity.abilityManager.abilities[i+2] != null)
+                if (entity.abilityManager.abilities[i] != null)
                 {
-                    PlayerPrefs.SetString("ability" + i, entity.abilityManager.abilities[i + 2].ID);
+                    PlayerPrefs.SetString("ability" + i, entity.abilityManager.abilities[i].ID);
                 }
             }
         }
