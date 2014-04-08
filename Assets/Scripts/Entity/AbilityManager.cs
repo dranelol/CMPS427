@@ -56,6 +56,7 @@ public class AbilityManager : MonoBehaviour
         if (abilities[index] != null)
         {
             Debug.Log("removing "+ abilities[index].Name);
+            PlayerPrefs.DeleteKey("ability" + (index - 2).ToString());
             abilities[index] = null;
         }
 
