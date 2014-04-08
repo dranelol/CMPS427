@@ -56,7 +56,6 @@ public class CharacterUI : UIState {
             GUILayout.Box("", GUILayout.Width(50), GUILayout.Height(50));
             GUILayout.Space(WIDTH - 115);
             GUILayout.Box("", GUILayout.Width(50), GUILayout.Height(50));
-            //GUI.DrawTexture
 
             GUILayout.EndHorizontal();
 
