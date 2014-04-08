@@ -306,7 +306,6 @@ public abstract class Aura
 
                     if (_timeRemaining <= 0) // If the aura has expired,
                     {
-                        OnEnd(); // Call OnEnd event
                         _target.GetComponent<EntityAuraManager>().Remove(_name, _caster);
                         yield return null;
                     }
@@ -810,20 +809,20 @@ public abstract class Aura
             base.OnStart(target, source, count);
             _attributeSnapshot = EntityAffected.currentAtt.GetValue(Attribute);
 
-            CalculateAttributeChange(EntityAffected, count);
+            CalculateAttributeChange(EntityAffected, Count);
         }
 
         public override void OnUpdate(int count)
         {
             base.OnUpdate(count);
 
-            CalculateAttributeChange(EntityAffected, count);
+            CalculateAttributeChange(EntityAffected, Count);
         }
 
         public override void OnEnd()
         {
             base.OnEnd();
-
+            Debug.LogWarning("end");
             CalculateAttributeChange(EntityAffected, 0);
         }
 
@@ -831,8 +830,10 @@ public abstract class Aura
         {
             float newAttributeChange = _attributeSnapshot * Magnitude * Count * Sign; // Calculate new change in attribute
             float appliedAttribute = newAttributeChange - _attributeChange; // Get the difference from the old change
-
+            Debug.LogWarning(appliedAttribute);
             Attributes newAttribute = new Attributes();
+            newAttribute.SetAttackSpeedClamps(-5, 5);
+            newAttribute.SetMovementSpeedClamps(-5, 5);
 
             switch ((Attributes.Stats)_attribute)
             {
@@ -862,7 +863,8 @@ public abstract class Aura
                     break;
             }
 
-            target.AddBuff(newAttribute);
+            target.ApplyBuff(newAttribute);
+            _attributeChange += appliedAttribute;
         }
 
         #endregion

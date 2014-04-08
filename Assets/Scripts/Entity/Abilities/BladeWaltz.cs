@@ -2,22 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Cleave : Ability
+public class BladeWaltz : Ability
 {
-    public Cleave(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
+    public BladeWaltz(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
         : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
     {
-       
+
     }
 
     public override void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
     {
         List<GameObject> attacked = OnAttack(source, isPlayer);
 
-
         if (isPlayer == true)
         {
-            // this is player -> enemy
+            Debug.Log(attacked.Count);
             foreach (GameObject enemy in attacked)
             {
                 if (enemy.GetComponent<AIController>().IsResetting() == false
@@ -25,13 +24,12 @@ public class Cleave : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
-
-
+                    DoBlink(enemy, attacker.gameObject);
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
                         enemy.GetComponent<AIController>().BeenAttacked(source);
                     }
-                    if(attacker.abilityManager.abilities[6] != null)
+                    if (attacker.abilityManager.abilities[6] != null)
                     {
                         attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
                     }
@@ -41,17 +39,15 @@ public class Cleave : Ability
 
         else
         {
-            // this is enemy -> player
             foreach (GameObject enemy in attacked)
             {
-                // todo: check if player is dead
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
+                DoBlink(enemy, attacker.gameObject);
                 if (attacker.abilityManager.abilities[6] != null)
                 {
                     attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
                 }
-                
             }
         }
     }
@@ -72,7 +68,6 @@ public class Cleave : Ability
             forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
         }
 
-
         int enemyMask = LayerMask.NameToLayer("Enemy");
         int playerMask = LayerMask.NameToLayer("Player");
 
@@ -80,22 +75,20 @@ public class Cleave : Ability
 
         if (isPlayer == true)
         {
-
             colliders = Physics.OverlapSphere(source.transform.position, range, 1 << enemyMask);
-
         }
 
         else
         {
             colliders = Physics.OverlapSphere(source.transform.position, range, 1 << playerMask);
-
         }
+
 
         foreach (Collider collider in colliders)
         {
             //Debug.Log(collider.ToString());
 
-            // create a vector from the possible enemy to the attacker
+            // create a vector from the possible enemy to the source.transform
 
             Vector3 enemyVector = collider.transform.position - source.transform.position;
             Vector3 enemyVector2 = source.transform.position - collider.transform.position;
@@ -112,12 +105,11 @@ public class Cleave : Ability
                 RaycastHit hit = new RaycastHit();
 
 
+
                 if (isPlayer == true)
                 {
                     // try to cast a ray from the enemy to the player
-
                     bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
-
 
                     if (!rayCastHit)
                     {
@@ -128,10 +120,8 @@ public class Cleave : Ability
                     {
                         if (hit.collider.gameObject.tag == "Player")
                         {
-
                             Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
                             Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
-
                             enemiesToAttack.Add(collider.gameObject);
                         }
                     }
@@ -140,7 +130,6 @@ public class Cleave : Ability
                 else
                 {
                     // try to cast a ray from the player to the enemy
-
                     bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
 
                     if (!rayCastHit)
@@ -154,25 +143,25 @@ public class Cleave : Ability
                         {
                             //Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
                             //Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
-
                             enemiesToAttack.Add(collider.gameObject);
                         }
                     }
                 }
             }
         }
+        List<GameObject> enemytoAttack = new List<GameObject>();
+        if (enemiesToAttack.Count > 0)
+        {
+            enemytoAttack.Add(enemiesToAttack[Random.Range(0, enemiesToAttack.Count)]);
+        }
+        return enemytoAttack;
 
-        return enemiesToAttack;
     }
 
-
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
-
     {
         float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
-
         Debug.Log("damage: " + damageAmt);
-        
 
         defender.ModifyHealth(-damageAmt);
 
@@ -180,10 +169,22 @@ public class Cleave : Ability
 
         if (isPlayer == true)
         {
-
             target.renderer.material.color = new Color(1.0f, ratio, ratio);
         }
     }
 
-    
+
+    private void DoBlink(GameObject target, GameObject owner)
+    {
+
+        float portradius = 1.0f;
+        Vector3 portpos = (target.transform.position - owner.transform.position);
+
+        Vector3 offset = Vector3.Normalize(portpos) * portradius;
+
+        portpos = portpos + offset + owner.transform.position;
+
+        owner.GetComponent<NavMeshAgent>().Warp(portpos);
+
+    }
 }
