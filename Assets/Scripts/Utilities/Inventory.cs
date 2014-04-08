@@ -8,12 +8,14 @@ using System.Collections.Generic;
 public class Inventory {
     private const int MAX = 50;
 
+    private equipmentFactory factory;
     private List<equipment> items;
     public List<equipment> Items { get { return items; } }
     
     public Inventory()
     {
         items = new List<equipment>();
+        factory = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
     }
 
     public void AddItem(equipment item)
@@ -25,5 +27,15 @@ public class Inventory {
     public void RemoveItem(equipment item)
     {
         items.Remove(item);
+    }
+
+    private void SaveItem(equipment item)
+    {
+        
+    }
+
+    private void UnSaveItem(equipment item)
+    {
+
     }
 }

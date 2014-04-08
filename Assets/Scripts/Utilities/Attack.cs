@@ -2,90 +2,28 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Attack
+public class Attack : MonoBehaviour
 {
-    public static List<GameObject> OnAttack(Transform attacker, float attackAngle, float attackRange)
+    /// <summary>
+
+
+    /// Completely removes the velocity from a rigidbody
+    /// Note: This is used in most of the force-based attacks
+    /// </summary>
+    /// <param name="target">Target rigid body from which you are removing velocity</param>
+    /// <param name="time">Time, in seconds, after which veloctiy is removed. Default=0</param>
+    /// <returns></returns>
+    public static IEnumerator RemovePhysics(Rigidbody target, float time=0.0f)
     {
-        List<GameObject> enemiesToAttack = new List<GameObject>();
+        yield return new WaitForSeconds(time);
 
-        Vector3 forward = attacker.forward.normalized;
 
-        int enemyMask = LayerMask.NameToLayer("Enemy");
-        int playerMask = LayerMask.NameToLayer("Player");
-
-        Collider[] colliders = Physics.OverlapSphere(attacker.position, attackRange, 1 << enemyMask);
-
-        foreach (Collider collider in colliders)
+        if (target != null)
         {
-            //Debug.Log(collider.ToString());
-            Vector3 enemyVector = collider.transform.position - attacker.position;
-            Vector3 enemyVector2 = attacker.position - collider.transform.position;
-            //Debug.Log(enemyVector);
-            //Debug.Log(Vector3.Angle(forward, enemyVector));
-            
-            if (Vector3.Angle(forward, enemyVector) < attackAngle)
-            {
-                //Debug.Log(collider.ToString());
-                //Debug.Log(Vector3.Angle(forward, enemyVector));
-                //Debug.Log(Vector3.Angle(forward, enemyVector).ToString());
-                // draw ray between enemy and player
-                // raycast with a layermask for enemies
-                //Debug.Log("enemy in angle: " + Vector3.Angle(forward, enemyVector).ToString());
-                RaycastHit hit = new RaycastHit();
-                Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
-                bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2),out hit, attackRange, 1 << playerMask);
-
-                if (!rayCastHit)
-                {
-                    Debug.Log("derp");
-                }
-                else{
-                    if (hit.collider.gameObject.tag == "Player")
-                    {
-                        //Debug.Log("dat hit!");
-                        enemiesToAttack.Add(collider.gameObject);
-                    }
-                }
-        
-                 
-                // if the first thing the raycast hits is the player, player do damage to enemy
-
-                //Debug.Log(hit.ToString());
-                //Debug.Log(hit.collider.tag);
-                //Debug.Log(hit.collider.gameObject.tag);
-                /*
-                if (hit.collider.gameObject.tag == "Player")
-                {
-                    Debug.Log("fucked him up!");
-                }
-                */
-            }
+            target.isKinematic = true;
         }
 
 
-
-
-
-
-        return enemiesToAttack;
+        yield break;
     }
-
-    public static void DoDamage(GameObject attacker, GameObject defender)
-    {
-        Entity attackerEntity = attacker.GetComponent<Entity>();
-        Entity defenderEntity = defender.GetComponent<Entity>();
-
-        // for now, always just take 10hp off
-
-        defenderEntity.currentHP -= 10f;
-
-        float ratio = (defenderEntity.currentHP / defenderEntity.maxHP);
-
-        defender.renderer.material.color = new Color(1.0f, ratio, ratio);
-
-
-    }
-
-
 }

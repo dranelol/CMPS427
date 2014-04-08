@@ -11,21 +11,18 @@ public class PlayerEntity : Entity
     public void Awake()
     {
         base.Awake();
-        maxHP = 3000;
+        currentAtt.Health = 3000;
         currentHP = 3000;
 
+        abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
+        abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
+        abilityManager.AddAbility(GameManager.Abilities["bloodbolt"], 4);
+        abilityManager.AddAbility(GameManager.Abilities["fireball"], 5);
 
-    }
-
-
-	public void Start () 
-    {
-        base.Start();
-
-        abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
-        abilityManager.AddAbility(GameManager.Abilities["fusrodah"], 3);
-        abilityManager.AddAbility(GameManager.Abilities["hadouken"], 4);
-        abilityManager.AddAbility(GameManager.Abilities["deathgrip"], 5);
+        abilityIndexDict["shadowbolt"] = 2;
+        abilityIndexDict["poisonbolt"] = 3;
+        abilityIndexDict["bloodbolt"] = 4;
+        abilityIndexDict["fireball"] = 5;
 	}
 	
 	// Update is called once per frame
@@ -40,7 +37,7 @@ public class PlayerEntity : Entity
         //Debug.Log(ray.direction);
 
 
-        Debug.DrawRay(ray.origin, ray.direction, Color.yellow);
+        //Debug.DrawRay(ray.origin, ray.direction, Color.yellow);
         //abilities[4].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
         //abilities[5].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
 
