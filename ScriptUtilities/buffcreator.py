@@ -30,11 +30,11 @@ with open(newBuff.inputFile) as f:
 			iCount+=1
 
 
-		if inputList[4] is not in modules:
+		if inputList[4] not in modules:
 			raise BuffException("The module given for " +inputList[0]+ " does not exist!")
-		elif " " is in inputList[0]:
+		elif " " in inputList[0]:
 			raise BuffException("The class name given for " +inputList[0]+ " must not contain spaces.")
-		elif inputList[3] is not in buffTypes:
+		elif inputList[3] not in buffTypes:
 			raise BuffException("The buff type given for "+inputList[0]+" is not valid. Must be Buff or Debuff")
 
 
@@ -53,22 +53,22 @@ with open(newBuff.inputFile) as f:
 		elif inputList[4] == "DamageAttribute":
 			actualBuff = inputList[4]+"(Attributes.Stats."+inputList[5]+","+inputList[6]+"f)"
 		
-
-
-
-
+		
+		
+		
+		
 		buffType = "AuraType."+inputList[3]
-
-
-		modText = tempText.replace("BUFF_CLASS_NAME", inputList[0], 5).replace("BUFF_NAME", inputList[1], 5).replace("THE_ACTUAL_BUFF", actualBuff, 5).replace("BUFF_TYPE", buffType, 5).replace("BUFF_FLAVOR_TEXT", inputList[2], 5)
-
+		
+		
+		modText = tempText.replace("BUFF_CLASS_NAME", inputList[0], 5).replace("BUFF_NAME", inputList[1], 5).replace("THE_ACTUAL_BUFF", actualBuff, 5).replace("BUFF_TYPE", buffType, 5).replace("BUFF_FLAVOR_TEXT", inputList[2], 5).replace("ICON_TEXTURE_FILE_NAME", inputList[7], 5).replace("PARTICLE_EFFECT_NAME", inputList[8], 5).replace("BUFF_MAX_STACKS", inputList[9], 5).replace("BUFF_MIN_STACKS", inputList[10], 5).replace("BUFF_DURATION", inputList[11], 5)
+		
 		newBuffFile = open(inputList[0]+".cs", "w")
-
+		
 		newBuffFile.write(modText)
-
+		
 		
 		newBuffFile.close()
-
+		
 
 
 
