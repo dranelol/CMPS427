@@ -249,11 +249,51 @@ public class HUD_GUI : MonoBehaviour {
 		GUI.backgroundColor = Color.green;
         //GUI.color = Color.white;
         infoBoxStyle.normal.textColor = Color.white;
+
+        string qname, wname, ename, rname;
+        if (player.abilityManager.abilities[2] != null)
+        {
+            qname = player.abilityManager.abilities[2].Name;
+        }
+        else
+        {
+            qname = "none";
+        }
+        if (player.abilityManager.abilities[3] != null)
+        {
+            wname = player.abilityManager.abilities[3].Name;
+        }
+        else
+        {
+            wname = "none";
+        }
+        if (player.abilityManager.abilities[4] != null)
+        {
+            ename = player.abilityManager.abilities[4].Name;
+        }
+        else
+        {
+            ename = "none";
+        }
+        if (player.abilityManager.abilities[5] != null)
+        {
+            rname = player.abilityManager.abilities[5].Name;
+        }
+        else
+        {
+            rname = "none";
+        }
+        string attackList = "Q = " + qname + " \n"
+                          + "W = " + wname + " \n"
+                          + "E = " + ename + " \n"
+                          + "R = " + rname + " \n";
+
+        /*
         string attackList = "Q = " + player.abilityManager.abilities[2].Name + " \n"
                           + "W = " + player.abilityManager.abilities[3].Name + " \n"
                           + "E = " + player.abilityManager.abilities[4].Name + " \n"
                           + "R = " + player.abilityManager.abilities[5].Name + " \n";
-
+        */
         string version = "Week9v1";
 
         GUI.Label(InfoBox1, attackList, infoBoxStyle);
@@ -265,59 +305,71 @@ public class HUD_GUI : MonoBehaviour {
         float timeLeft = 0;
 
         #region ability 1
-        if (player.abilityManager.activeCoolDowns[2] > Time.time)
+        if (player.abilityManager.abilities[2] != null)
         {
+            if (player.abilityManager.activeCoolDowns[2] > Time.time)
+            {
 
-            
-            timeLeft = player.abilityManager.activeCoolDowns[2] - Time.time;
+
+                timeLeft = player.abilityManager.activeCoolDowns[2] - Time.time;
+            }
+            else
+            {
+                timeLeft = 0;
+            }
+
+            GUI.Label(CDBox1, player.abilityManager.abilities[2].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
         }
-        else
-        {
-            timeLeft = 0;
-        }        
-
-        GUI.Label(CDBox1, player.abilityManager.abilities[2].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
         #endregion
         
         #region ability 2
-        if (player.abilityManager.activeCoolDowns[3] > Time.time)
+        if (player.abilityManager.abilities[3] != null)
         {
-            
-            timeLeft = player.abilityManager.activeCoolDowns[3] - Time.time;
-        }
-        else
-        {
-            timeLeft = 0;
-        }
+            if (player.abilityManager.activeCoolDowns[3] > Time.time)
+            {
 
-        GUI.Label(CDBox2, player.abilityManager.abilities[3].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+                timeLeft = player.abilityManager.activeCoolDowns[3] - Time.time;
+            }
+            else
+            {
+                timeLeft = 0;
+            }
+
+            GUI.Label(CDBox2, player.abilityManager.abilities[3].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+        }
         #endregion
 
         #region ability 3
-        if (player.abilityManager.activeCoolDowns[4] > Time.time)
+        if (player.abilityManager.abilities[4] != null)
         {
-            timeLeft = player.abilityManager.activeCoolDowns[4] - Time.time;
-        }
-        else
-        {
-            timeLeft = 0;
-        }
+            if (player.abilityManager.activeCoolDowns[4] > Time.time)
+            {
+                timeLeft = player.abilityManager.activeCoolDowns[4] - Time.time;
+            }
+            else
+            {
+                timeLeft = 0;
+            }
 
-        GUI.Label(CDBox3, player.abilityManager.abilities[4].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+            GUI.Label(CDBox3, player.abilityManager.abilities[4].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+        }
         #endregion
 
         #region ability 4
-        if (player.abilityManager.activeCoolDowns[5] > Time.time)
+        if (player.abilityManager.abilities[5] != null)
         {
-            timeLeft = player.abilityManager.activeCoolDowns[5] - Time.time;
-        }
-        else
-        {
-            timeLeft = 0;
-        }
+            if (player.abilityManager.activeCoolDowns[5] > Time.time)
+            {
+                timeLeft = player.abilityManager.activeCoolDowns[5] - Time.time;
+            }
+            else
+            {
+                timeLeft = 0;
+            }
 
 
-        GUI.Label(CDBox4, player.abilityManager.abilities[5].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+            GUI.Label(CDBox4, player.abilityManager.abilities[5].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+        }
         #endregion
 
         #endregion
