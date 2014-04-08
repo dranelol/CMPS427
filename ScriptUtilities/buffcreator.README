@@ -1,0 +1,9 @@
+Order for fields in the input file for the buffcreator script (all separated by a |):
+
+1 - Class Name
+2 - Buff Name
+3 - Flavor Text
+4 - "Buff" or "Debuff" 
+5 - One of the Functional Modules defined in Aura.cs
+6 - The ModType, DamageType, or attribute needed by the buff
+7 - Magnitude 

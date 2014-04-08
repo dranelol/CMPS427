@@ -13,7 +13,7 @@ sealed public class BUFF_CLASS_NAME : Aura
      * when referencing status effect information. Use those instead. */
 
     private const string TEMPLATE_AURA_DESCRIPTION = "BUFF_NAME"; // Description of the status effect (should be non-empty)
-    private const string TEMPLATE_AURA_FLAVOR_TEXT = "..."; // Flavor text for the status effect (optional)
+    private const string TEMPLATE_AURA_FLAVOR_TEXT = "BUFF_FLAVOR_TEXT"; // Flavor text for the status effect (optional)
     private const string TEMPLATE_AURA_ICON_TEXTURE_NAME = "default_aura_texture.png"; // The name of the texture for this aura to be displayed on the GUI.
     private const string TEMPLATE_AURA_PARTICLE_EFFECT_NAME = "default_aura_particle_effect"; // The name of the particle effect to be used by this aura.
     private const AuraType TEMPLATE_AURA_AURATYPE = BUFF_TYPE; // The type of aura, buff or debuff.
