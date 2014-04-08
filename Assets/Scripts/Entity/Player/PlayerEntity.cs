@@ -22,12 +22,12 @@ public class PlayerEntity : Entity
         abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
         abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
         abilityManager.AddAbility(GameManager.Abilities["bloodbolt"], 4);
-        abilityManager.AddAbility(GameManager.Abilities["fireball"], 5);
+        abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], 5);
 
         abilityIndexDict["shadowbolt"] = 2;
         abilityIndexDict["poisonbolt"] = 3;
         abilityIndexDict["bloodbolt"] = 4;
-        abilityIndexDict["fireball"] = 5;
+        abilityIndexDict["chaosbolt"] = 5;
 	}
 	
 	// Update is called once per frame

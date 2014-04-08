@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public GameObject ShadowboltProjectile;
     public GameObject PoisonboltProjectile;
     public GameObject BloodboltProjectile;
+    public GameObject ChaosboltProjectile;
     public GameObject FiremineParticles;
     public GameObject GETOVERHEREParticles;
     public GameObject MineParticles;
@@ -55,6 +56,7 @@ public class GameManager : MonoBehaviour
         Abilities["shadowbolt"] = new Shadowbolt(AttackType.HONINGPROJECTILE, DamageType.SHADOW, 10.0f, 0.0f, 0.1f, 10.0f, "shadowbolt", "shadowbolt", FireballExplosion);
         Abilities["poisonbolt"] = new Poisonbolt(AttackType.HONINGPROJECTILE, DamageType.POISON, 10.0f, 0.0f, 0.1f, 10.0f, "poisonbolt", "poisonbolt", FireballExplosion);
         Abilities["bloodbolt"] = new Bloodbolt(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL, 10.0f, 0.0f, 0.1f, 10.0f, "bloodbolt", "bloodbolt", FireballExplosion);
+        Abilities["chaosbolt"] = new Chaosbolt(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.1f, 10.0f, "chaosbolt", "chaosbolt", FireballExplosion);
         
 
         Abilities["ShockMine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 10.0f, "ShockMine", "Shock Mine", ShockMineProjectile);
