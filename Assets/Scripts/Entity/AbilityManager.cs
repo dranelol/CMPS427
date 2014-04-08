@@ -42,6 +42,7 @@ public class AbilityManager : MonoBehaviour
         if (abilities.Count <= 7)
         {
             abilities[index] = ab;
+            PlayerPrefs.SetString("ability" + (index - 2).ToString(), ab.ID);
 
         }
         else
