@@ -19,15 +19,15 @@ public class PlayerEntity : Entity
         base.Start();
 
 
-        abilityManager.AddAbility(GameManager.Abilities["fireball"], 2);
-        abilityManager.AddAbility(GameManager.Abilities["fusrodah"], 3);
-        abilityManager.AddAbility(GameManager.Abilities["hadouken"], 4);
-        abilityManager.AddAbility(GameManager.Abilities["deathgrip"], 5);
+        abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
+        abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
+        abilityManager.AddAbility(GameManager.Abilities["bloodbolt"], 4);
+        abilityManager.AddAbility(GameManager.Abilities["fireball"], 5);
 
-        abilityIndexDict["fireball"] = 2;
-        abilityIndexDict["fusrodah"] = 3;
-        abilityIndexDict["hadouken"] = 4;
-        abilityIndexDict["deathgrip"] = 5;
+        abilityIndexDict["shadowbolt"] = 2;
+        abilityIndexDict["poisonbolt"] = 3;
+        abilityIndexDict["bloodbolt"] = 4;
+        abilityIndexDict["fireball"] = 5;
 	}
 	
 	// Update is called once per frame

@@ -15,6 +15,7 @@ public class Fireball : Ability
     {
         
         int segments = 1;
+        
         for(int i = 0; i < segments; i++)
         {
             

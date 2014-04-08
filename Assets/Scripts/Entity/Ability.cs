@@ -8,11 +8,12 @@ using System.Collections.Generic;
 public enum AttackType
 {
     PROJECTILE,
-    AOE,
+    HONINGPROJECTILE,
+    GROUNDTARGET, // needs a point on the ground; either a selected target's position, or a cursor position
+    SINGLETARGET, // needs a selected target
     PBAOE,      // Point Blank Area of Effect
     MELEE,
-    STATUS,      // Maybe an attack type that just inflicts conditions?
-    GROUND     // ground aoe effects: death and decay, effloresence, etc
+    STATUS     // Maybe an attack type that just inflicts conditions?
 };
 
 /// <summary>
@@ -26,7 +27,9 @@ public enum DamageType
     WATER,
     EARTH,
     AIR,
-    SHADOW
+    SHADOW,
+    POISON,
+    NONE
 };
 
 
@@ -141,6 +144,20 @@ public abstract class Ability
     /// <param name="isPlayer">Whether or not the owner is a player</param>
     public virtual void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
 
+    {
+
+    }
+
+    /// <summary>
+    /// Spawns a projectile with a known target
+    /// </summary>
+    /// <param name="source">Source of the projectile</param>
+    /// <param name="target">Target of the projectile</param>
+    /// <param name="owner">Owner of the projectile</param>
+    /// <param name="forward">Direction forward of the projectile</param>
+    /// <param name="abilityID">The game abilityID of the ability tied to this projectile's onhit</param>
+    /// <param name="isPlayer">Whether or not the owner is a player</param>
+    public virtual void SpawnProjectile(GameObject source, Vector3 target, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
 
     }
