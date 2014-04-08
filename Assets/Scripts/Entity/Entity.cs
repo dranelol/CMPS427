@@ -16,6 +16,7 @@ public class Entity : MonoBehaviour
         get { return currentResource; }
     }
 
+
     public Attributes currentAtt; // The entity's current total attributes
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
@@ -39,6 +40,7 @@ public class Entity : MonoBehaviour
         currentAtt.Power = 10;
         currentAtt.Defense = 10;
         currentAtt.AttackSpeed = 1.0f;
+        currentAtt.MovementSpeed = 1.0f;
     }
 
     /// <summary>
@@ -145,9 +147,12 @@ public class Entity : MonoBehaviour
 
     #region Buffs
 
-    public void AddBuff(Attributes buffedAttributes)
+    public void ApplyBuff(Attributes buffedAttributes)
     {
+        buffAtt.Add(buffedAttributes);
+        currentAtt.Add(buffedAttributes);
 
+        GetComponent<MovementFSM>().MovementSpeed = currentAtt.MovementSpeed;
     }
 
     #endregion

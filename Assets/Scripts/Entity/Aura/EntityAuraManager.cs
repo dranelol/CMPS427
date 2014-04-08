@@ -30,6 +30,7 @@ public class EntityAuraManager : MonoBehaviour
 
     public bool Add(string name, Entity caster, int count = 0)
     {
+        Debug.LogWarning("asda");
         if (MasterAuraManager.Contains(name)) // Check if the name exists in the master list
         {
             if (_auraDictionary.ContainsKey(name)) // Check if an aura of this name already exists.
