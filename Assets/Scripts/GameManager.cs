@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
     public static float GLOBAL_COOLDOWN = 0.1f;
 
 
+    public bool loadsavetest = false;
 
     public GameObject thing;
 	// Use this for initialization
@@ -76,6 +77,8 @@ public class GameManager : MonoBehaviour
         Abilities["onhitnormal"] = new OnHitNormal(AttackType.MELEE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, "onhitnormal", "On Hit Normal", OnHitNormalParticles);
 
         #endregion
+
+        
     }
 
     public void RemovePhysics(Rigidbody toRemove, float time = 0.0f)

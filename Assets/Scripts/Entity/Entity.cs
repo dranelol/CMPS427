@@ -21,6 +21,7 @@ public class Entity : MonoBehaviour
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
 
     public AbilityManager abilityManager;
+
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
 
     public Dictionary<string, int> abilityIndexDict = new Dictionary<string, int>();
@@ -88,6 +89,8 @@ public class Entity : MonoBehaviour
         else
         {
             this.equippedEquip.Add(slot, item);
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.saveequipment(((int)slot).ToString(), item);
+
             currentAtt.Add(item.equipmentAttributes);
             this.equipAtt.Add(item.equipmentAttributes);
             if (slot == equipSlots.slots.Main && item.onhit != "")
@@ -111,6 +114,8 @@ public class Entity : MonoBehaviour
         if (equippedEquip.ContainsKey(slot))
         {
             equipment removed = equippedEquip[slot];
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.unsaveEquipment(((int)slot).ToString());
+           
             equippedEquip.Remove(slot);
             currentAtt.Subtract(removed.equipmentAttributes);
             equipAtt.Subtract(removed.equipmentAttributes);

@@ -153,6 +153,7 @@ public class equipment{
 
     }
 
+
     public void setslot(string setto)
     {
         validSlot = slotList[setto];

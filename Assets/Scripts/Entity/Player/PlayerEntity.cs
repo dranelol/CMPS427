@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class PlayerEntity : Entity 
 {
     public float power, defense, attackSpeed, movementSpeed, minDamage, maxDamage;
+
+
+    GameManager gamemanager;
 
 	// Use this for initialization
     public void Awake()
@@ -11,6 +15,8 @@ public class PlayerEntity : Entity
         base.Awake();
         currentAtt.Health = 3000;
         currentHP = 3000;
+
+        gamemanager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
 
 
@@ -18,16 +24,47 @@ public class PlayerEntity : Entity
     {
         base.Start();
 
+        if (gamemanager.loadsavetest == true)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if(PlayerPrefs.HasKey("ability"+i) == true)
+                {
+                    abilityManager.AddAbility(GameManager.Abilities[PlayerPrefs.GetString("ability"+i)], i+2);
+                    abilityIndexDict[PlayerPrefs.GetString("ability"+i)] = i+2;
+                }
+            }
+            for( int i=0;i<6;i++)
+            {
+                
+                if(PlayerPrefs.HasKey(i+"name") == true)
+                {
+                    equipment tempequip = gamemanager.EquipmentFactory.loadequipment(i+"");
+                    if (addEquipment(tempequip.validSlot, tempequip))
+                    {
+                        Debug.Log("EQUIPPING " + tempequip.equipmentName + " FROM LOAD");
+                    }
+                    else
+                    {
+                        Debug.Log("CAN'T EQUIP THE "+tempequip.equipmentName+" FOR SOME REASON");
+                    }
+                }
+            }
 
-        abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
-        abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
-        abilityManager.AddAbility(GameManager.Abilities["bloodbolt"], 4);
-        abilityManager.AddAbility(GameManager.Abilities["blink"], 5);
+        }
+        else
+        {
+            abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
+            abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
+            abilityManager.AddAbility(GameManager.Abilities["ShockMine"], 4);
+            abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
 
-        abilityIndexDict["shadowbolt"] = 2;
-        abilityIndexDict["poisonbolt"] = 3;
-        abilityIndexDict["bloodbolt"] = 4;
-        abilityIndexDict["blink"] = 5;
+            abilityIndexDict["shadowbolt"] = 2;
+            abilityIndexDict["poisonbolt"] = 3;
+            abilityIndexDict["ShockMine"] = 4;
+            abilityIndexDict["bladewaltz"] = 5;
+
+        }
 
 	}
 	

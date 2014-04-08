@@ -7,12 +7,12 @@ public class equipSlots
 
     public enum slots
     {
+        Main,
+        Off,
         Head,
         Chest,
         Legs,
-        Feet,
-        Main,
-        Off
+        Feet
     }
     public enum equipmentType
     {

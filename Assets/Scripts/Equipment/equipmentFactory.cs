@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
-using System.Xml;
-using System.Net;
 
 /// <summary>
 /// equipment factory! use this to generate equipment!
@@ -1576,11 +1574,111 @@ public class equipmentFactory {
     public equipment buildEquipment() {
 
         equipment tempEquipment = new equipment();
-
-        
-
         return tempEquipment;
 
+    }
+
+
+
+    /// <summary>
+    /// Method for loading an equipment from playerprefs
+    /// </summary>
+    /// <param name="i">the ID of the equipment in storage</param>
+    /// <returns></returns>
+    public equipment loadequipment(string i)
+    {
+
+        equipment tempequip = new equipment(PlayerPrefs.GetString(i + "name"),
+                                            (equipSlots.equipmentType)Enum.Parse(typeof(equipSlots.equipmentType), PlayerPrefs.GetString(i + "type"), true),
+                                            (equipSlots.slots)Enum.Parse(typeof(equipSlots.slots), PlayerPrefs.GetString(i + "slot"), true),
+                                            PlayerPrefs.GetInt(i + "tier"),
+                                            PlayerPrefs.GetInt(i + "minlvl"),
+                                            PlayerPrefs.GetInt(i + "maxlvl"),
+                                            PlayerPrefs.GetFloat(i + "health"),
+                                            PlayerPrefs.GetFloat(i + "resource"),
+                                            PlayerPrefs.GetFloat(i + "power"),
+                                            PlayerPrefs.GetFloat(i + "defense"),
+                                            PlayerPrefs.GetFloat(i + "mindmg"),
+                                            PlayerPrefs.GetFloat(i + "maxdmg"),
+                                            PlayerPrefs.GetFloat(i + "movespeed"),
+                                            PlayerPrefs.GetFloat(i + "attackspeed"),
+                                            PlayerPrefs.GetString(i + "flavortext"),
+                                            Convert.ToBoolean(PlayerPrefs.GetInt(i + "istwohand")),
+                                            Convert.ToBoolean(PlayerPrefs.GetInt(i + "isranged")),
+                                            PlayerPrefs.GetString(i + "onhitability"));
+
+        return tempequip;
+    }
+
+    /// <summary>
+    /// Method for saving an equipment to playerprefs
+    /// </summary>
+    /// <param name="i">the ID of the equipment in storage</param>
+    /// <param name="item"> the equipment to store</param>
+    /// <returns></returns>
+    public void saveequipment(string i, equipment item)
+    {
+
+        PlayerPrefs.SetString(i + "name", item.equipmentName);
+        PlayerPrefs.SetString(i + "type", item.equipmentType.ToString());
+        PlayerPrefs.SetString(i + "slot", item.validSlot.ToString());
+        PlayerPrefs.SetInt(i + "tier", item.tier);
+        PlayerPrefs.SetInt(i + "minlvl", item.minlvl);
+        PlayerPrefs.SetInt(i + "maxlvl", item.maxlvl);
+        PlayerPrefs.SetFloat(i + "health", item.equipmentAttributes.Health);
+        PlayerPrefs.SetFloat(i + "resource", item.equipmentAttributes.Resource);
+        PlayerPrefs.SetFloat(i + "power", item.equipmentAttributes.Power);
+        PlayerPrefs.SetFloat(i + "defense", item.equipmentAttributes.Defense);
+        PlayerPrefs.SetFloat(i + "mindmg", item.equipmentAttributes.MinDamage);
+        PlayerPrefs.SetFloat(i + "maxdmg", item.equipmentAttributes.MaxDamage);
+        PlayerPrefs.SetFloat(i + "movespeed", item.equipmentAttributes.MovementSpeed);
+        PlayerPrefs.SetFloat(i + "attackspeed", item.equipmentAttributes.AttackSpeed);
+        PlayerPrefs.SetString(i + "flavortext", item.flavorText);
+        if (item.twohand == true)
+        {
+            PlayerPrefs.SetInt(i + "istwohand", 1);
+        }
+        else
+        {
+            PlayerPrefs.SetInt(i + "istwohand", 0);
+        }
+        if (item.ranged == true)
+        {
+            PlayerPrefs.SetInt(i + "isranged", 1);
+        }
+        else
+        {
+            PlayerPrefs.SetInt(i + "isranged", 0);
+        }
+        PlayerPrefs.SetString(i + "onhitability", item.onhit);
+
+    }
+
+
+    /// <summary>
+    /// method for removing an equipment from the save
+    /// </summary>
+    /// <param name="i">the id of the equipment in storage</param>
+    public void unsaveEquipment(string i)
+    {
+        PlayerPrefs.DeleteKey(i + "name");
+        PlayerPrefs.DeleteKey(i + "type");
+        PlayerPrefs.DeleteKey(i + "slot");
+        PlayerPrefs.DeleteKey(i + "tier");
+        PlayerPrefs.DeleteKey(i + "minlvl");
+        PlayerPrefs.DeleteKey(i + "maxlvl");
+        PlayerPrefs.DeleteKey(i + "health");
+        PlayerPrefs.DeleteKey(i + "resource");
+        PlayerPrefs.DeleteKey(i + "power");
+        PlayerPrefs.DeleteKey(i + "defense");
+        PlayerPrefs.DeleteKey(i + "mindmg");
+        PlayerPrefs.DeleteKey(i + "maxdmg");
+        PlayerPrefs.DeleteKey(i + "movespeed");
+        PlayerPrefs.DeleteKey(i + "attackspeed");
+        PlayerPrefs.DeleteKey(i + "flavortext");
+        PlayerPrefs.DeleteKey(i + "istwohand");
+        PlayerPrefs.DeleteKey(i + "isranged");
+        PlayerPrefs.DeleteKey(i + "onhitability");
 
     }
 
