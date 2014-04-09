@@ -65,7 +65,6 @@ public class PlayerEntity : Entity
             abilityIndexDict["bladewaltz"] = 5;
         }
 
-<<<<<<< HEAD
         abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
         abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
         abilityManager.AddAbility(GameManager.Abilities["bloodbolt"], 4);
@@ -75,9 +74,6 @@ public class PlayerEntity : Entity
         abilityIndexDict["poisonbolt"] = 3;
         abilityIndexDict["bloodbolt"] = 4;
         abilityIndexDict["chaosbolt"] = 5;
-=======
-
->>>>>>> a5580f528579d30e27fab60fade91a69412e55e4
 	}
 	
 	// Update is called once per frame
