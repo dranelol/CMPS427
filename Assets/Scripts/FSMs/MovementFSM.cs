@@ -11,15 +11,15 @@ public class MovementFSM : StateMachine
 
     private NavMeshAgent _navMeshAgent;
 
-    public float _movementSpeed;
+    private float _movementSpeed;
     public float MovementSpeed
     {
         get { return _movementSpeed; }
-        set
-        {
-            _movementSpeed = Mathf.Clamp(value * DEFAULT_MOVEMENT_SPEED, 0, 15f);
-            _navMeshAgent.speed = _movementSpeed;
-        }
+    }
+
+    public void UpdateMovementSpeed(float value)
+    {
+        _navMeshAgent.speed = _movementSpeed = DEFAULT_MOVEMENT_SPEED * value;
     }
 
     public enum MoveStates
@@ -48,7 +48,7 @@ public class MovementFSM : StateMachine
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _navMeshAgent.stoppingDistance = _navMeshAgent.radius;
-        MovementSpeed = GetComponent<Entity>().currentAtt.MovementSpeed;
+        UpdateMovementSpeed(GetComponent<Entity>().currentAtt.MovementSpeed);
     }
 
     #region public functions

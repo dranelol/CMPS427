@@ -16,10 +16,15 @@ public class Entity : MonoBehaviour
         get { return currentResource; }
     }
 
-
     public Attributes currentAtt; // The entity's current total attributes
-    public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
+    public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
+    public Attributes baseAtt; // Base attributes without any status effects or gear
+
+    public float minMovementSpeed = 0;
+    public float maxMovementSpeed = 3;
+    public float minAttackSpeed = 0.1f;
+    public float maxAttackSpeed = 3f;
 
     public AbilityManager abilityManager;
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
@@ -34,6 +39,7 @@ public class Entity : MonoBehaviour
         //Debug.Log(currentAtt.ToString()); 
         equipAtt = new Attributes();
         buffAtt = new Attributes();
+        baseAtt = new Attributes();
 
         currentAtt.Health = currentHP = 50;
         currentAtt.Resource = currentResource = 100;
@@ -51,12 +57,22 @@ public class Entity : MonoBehaviour
         
     }
 
+    private void UpdateCurrentAttributes()
+    {
+        currentAtt = new Attributes();
+        currentAtt.Add(baseAtt);
+        currentAtt.Add(equipAtt);
+        currentAtt.Add(buffAtt);
+    }
     /// <summary>
     /// Modifies the current health of the entity, clamped by the maximum health.
     /// Can be used for both taking damage and gaining health.
     /// </summary>
     /// <param name="value">Delta value to modify current health.</param>
-    public void ModifyHealth(float delta) { currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); }
+    public void ModifyHealth(float delta) 
+    { 
+        currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); 
+    }
 
     public void ModifyResource(float delta)
     {
@@ -90,8 +106,8 @@ public class Entity : MonoBehaviour
         else
         {
             this.equippedEquip.Add(slot, item);
-            currentAtt.Add(item.equipmentAttributes);
             this.equipAtt.Add(item.equipmentAttributes);
+            UpdateCurrentAttributes();
             return true;
         }
     }
@@ -107,8 +123,8 @@ public class Entity : MonoBehaviour
         {
             equipment removed = equippedEquip[slot];
             equippedEquip.Remove(slot);
-            currentAtt.Subtract(removed.equipmentAttributes);
             equipAtt.Subtract(removed.equipmentAttributes);
+            UpdateCurrentAttributes();
             return true;
         }
         else
@@ -150,9 +166,9 @@ public class Entity : MonoBehaviour
     public void ApplyBuff(Attributes buffedAttributes)
     {
         buffAtt.Add(buffedAttributes);
-        currentAtt.Add(buffedAttributes);
+        UpdateCurrentAttributes();
 
-        GetComponent<MovementFSM>().MovementSpeed = currentAtt.MovementSpeed;
+        GetComponent<MovementFSM>().UpdateMovementSpeed(currentAtt.MovementSpeed);
     }
 
     #endregion
