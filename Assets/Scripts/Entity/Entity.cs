@@ -86,8 +86,10 @@ public class Entity : MonoBehaviour
             return false;
         else if (item.twohand == true && this.equippedEquip.ContainsKey(equipSlots.slots.Off))
             return false;
-        else if (slot == equipSlots.slots.Off && equippedEquip[equipSlots.slots.Main].twohand == true)
-            return false;
+        else  if (slot == equipSlots.slots.Off && equippedEquip[equipSlots.slots.Main].twohand == true)
+                return false;
+            
+        
         else
         {
             this.equippedEquip.Add(slot, item);

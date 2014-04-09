@@ -163,39 +163,39 @@ public class equipmentFactory {
             #region daggers
         
                                  //NAME             TYPE                              SLOT              tier level  h   r   p  d  mndg  mxdg ms  as   flavortext
-        tempequip = new equipment("Rusty Dagger", equipSlots.equipmentType.Dagger, equipSlots.slots.Main, 0, 1, 4, 0f, 0f, 0f, 0f, 10f, 40f, 0f, 2.0f, "");
+        tempequip = new equipment("Rusty Dagger", equipSlots.equipmentType.Dagger, equipSlots.slots.Main, 0, 1, 4, 0f, 0f, 0f, 0f, 10f, 40f, 0f, 2.0f, "", false, false, "", "dagger1");
         basesList.Add(tempequip);
-        tempequip = new equipment("Iron Dagger",  equipSlots.equipmentType.Dagger, equipSlots.slots.Main, 0, 5, 9, 0f, 0f, 0f, 0f, 20f, 50f, 0f, 2.0f, "");
+        tempequip = new equipment("Iron Dagger",  equipSlots.equipmentType.Dagger, equipSlots.slots.Main, 0, 5, 9, 0f, 0f, 0f, 0f, 20f, 50f, 0f, 2.0f, "", false, false, "", "dagger2");
         basesList.Add(tempequip);
-        tempequip = new equipment("Steel Dagger", equipSlots.equipmentType.Dagger, equipSlots.slots.Main, 0, 10, 14, 0f, 0f, 0f, 0f, 30f, 60f, 0f, 2.0f, "");
+        tempequip = new equipment("Steel Dagger", equipSlots.equipmentType.Dagger, equipSlots.slots.Main, 0, 10, 14, 0f, 0f, 0f, 0f, 30f, 60f, 0f, 2.0f, "", false, false, "", "dagger3");
         basesList.Add(tempequip);
-        tempequip = new equipment("Ritual Dagger", equipSlots.equipmentType.Dagger, equipSlots.slots.Main, 0, 15, 20, 0f, 0f, 0f, 0f, 40f, 70f, 0f, 2.0f, "");
+        tempequip = new equipment("Ritual Dagger", equipSlots.equipmentType.Dagger, equipSlots.slots.Main, 0, 15, 20, 0f, 0f, 0f, 0f, 40f, 70f, 0f, 2.0f, "", false, false, "", "dagger4");
         basesList.Add(tempequip);
             #endregion
 
             #region swords
 
                                  //NAME               TYPE                              SLOT            tier level  h   r   p  d  mndg  mxdg ms  as   flavortext
-        tempequip = new equipment("Rusty Sword",   equipSlots.equipmentType.Sword, equipSlots.slots.Main, 0, 1, 4, 0f, 0f, 0f, 0f, 10f, 80f, 0f, 1.5f, "");
+        tempequip = new equipment("Rusty Sword",   equipSlots.equipmentType.Sword, equipSlots.slots.Main, 0, 1, 4, 0f, 0f, 0f, 0f, 10f, 80f, 0f, 1.5f, "", false, false, "", "sword1");
         basesList.Add(tempequip);
-        tempequip = new equipment("Iron Sword",    equipSlots.equipmentType.Sword, equipSlots.slots.Main, 0, 5, 9, 0f, 0f, 0f, 0f, 20f, 90f, 0f, 1.5f, "");
+        tempequip = new equipment("Iron Sword",    equipSlots.equipmentType.Sword, equipSlots.slots.Main, 0, 5, 9, 0f, 0f, 0f, 0f, 20f, 90f, 0f, 1.5f, "", false, false, "", "sword2");
         basesList.Add(tempequip);
-        tempequip = new equipment("Steel Sword",   equipSlots.equipmentType.Sword, equipSlots.slots.Main, 0, 10, 14, 0f, 0f, 0f, 0f, 30f, 100f, 0f, 1.5f, "");
+        tempequip = new equipment("Steel Sword",   equipSlots.equipmentType.Sword, equipSlots.slots.Main, 0, 10, 14, 0f, 0f, 0f, 0f, 30f, 100f, 0f, 1.5f, "", false, false, "", "sword3");
         basesList.Add(tempequip);
-        tempequip = new equipment("Diamond Sword", equipSlots.equipmentType.Sword, equipSlots.slots.Main, 0, 15, 20, 0f, 0f, 0f, 0f, 40f, 110f, 0f, 1.5f, "");
+        tempequip = new equipment("Diamond Sword", equipSlots.equipmentType.Sword, equipSlots.slots.Main, 0, 15, 20, 0f, 0f, 0f, 0f, 40f, 110f, 0f, 1.5f, "", false, false, "", "sword4");
         basesList.Add(tempequip);
 
             #endregion
 
             #region clubs
                               //NAME               TYPE                              SLOT             tier level  h   r   p  d  mndg  mxdg ms  as   flavortext        
-        tempequip = new equipment("Wooden Club",  equipSlots.equipmentType.Club, equipSlots.slots.Main, 0, 1, 4, 0f, 0f, 0f, 0f, 10f, 60f, 0f, 1.7f, "");
+        tempequip = new equipment("Wooden Club",  equipSlots.equipmentType.Club, equipSlots.slots.Main, 0, 1, 4, 0f, 0f, 0f, 0f, 10f, 60f, 0f, 1.7f, "", false, false, "", "club1");
         basesList.Add(tempequip);
-        tempequip = new equipment("Cudgel",       equipSlots.equipmentType.Club, equipSlots.slots.Main, 0, 5, 9, 0f, 0f, 0f, 0f, 20f, 70f, 0f, 1.7f, "");
+        tempequip = new equipment("Cudgel",       equipSlots.equipmentType.Club, equipSlots.slots.Main, 0, 5, 9, 0f, 0f, 0f, 0f, 20f, 70f, 0f, 1.7f, "", false, false, "", "club2");
         basesList.Add(tempequip);
-        tempequip = new equipment("Steel Mace",   equipSlots.equipmentType.Club, equipSlots.slots.Main, 0, 10, 14, 0f, 0f, 0f, 0f, 30f, 80f, 0f, 1.7f, "");
+        tempequip = new equipment("Steel Mace",   equipSlots.equipmentType.Club, equipSlots.slots.Main, 0, 10, 14, 0f, 0f, 0f, 0f, 30f, 80f, 0f, 1.7f, "", false, false, "", "club3");
         basesList.Add(tempequip);
-        tempequip = new equipment("Morning Star", equipSlots.equipmentType.Club, equipSlots.slots.Main, 0, 15, 20, 0f, 0f, 0f, 0f, 40f, 90f, 0f, 1.7f, "");
+        tempequip = new equipment("Morning Star", equipSlots.equipmentType.Club, equipSlots.slots.Main, 0, 15, 20, 0f, 0f, 0f, 0f, 40f, 90f, 0f, 1.7f, "", false, false, "", "club4");
         basesList.Add(tempequip);
 
 
@@ -203,26 +203,26 @@ public class equipmentFactory {
 
             #region axes
                            //NAME                  TYPE                              SLOT           tier level  h   r   p  d  mndg  mxdg ms  as   flavortext        
-        tempequip = new equipment("Rusty Axe",   equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 1, 4, 0f, 0f, 0f, 0f, 10f, 100f, 0f, 1f, "");
+        tempequip = new equipment("Rusty Axe",   equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 1, 4, 0f, 0f, 0f, 0f, 10f, 100f, 0f, 1f, "", false, false, "", "axe1");
         basesList.Add(tempequip);
-        tempequip = new equipment("Iron Axe",    equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 5, 9, 0f, 0f, 0f, 0f, 20f, 110f, 0f, 1f, "");
+        tempequip = new equipment("Iron Axe",    equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 5, 9, 0f, 0f, 0f, 0f, 20f, 110f, 0f, 1f, "", false, false, "", "axe2");
         basesList.Add(tempequip);
-        tempequip = new equipment("Steel Axe",   equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 10, 14, 0f, 0f, 0f, 0f, 30f, 120f, 0f, 1f, "");
+        tempequip = new equipment("Steel Axe",   equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 10, 14, 0f, 0f, 0f, 0f, 30f, 120f, 0f, 1f, "", false, false, "", "axe3");
         basesList.Add(tempequip);
-        tempequip = new equipment("Bearded Axe", equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 15, 20, 0f, 0f, 0f, 0f, 40f, 130f, 0f, 1f, "");
+        tempequip = new equipment("Bearded Axe", equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 15, 20, 0f, 0f, 0f, 0f, 40f, 130f, 0f, 1f, "", false, false, "", "axe4");
         basesList.Add(tempequip);
 
         #endregion
 
             #region spears
                                 //NAME                  TYPE                            SLOT           tier level  h   r   p  d  mndg  mxdg ms  as   flavortext  
-        tempequip = new equipment("Wooden Spear", equipSlots.equipmentType.Spear, equipSlots.slots.Main, 0, 1, 4, 0f, 0f, 0f, 0f, 10f, 70f, 0f, 1.5f, "");
+        tempequip = new equipment("Wooden Spear", equipSlots.equipmentType.Spear, equipSlots.slots.Main, 0, 1, 4, 0f, 0f, 0f, 0f, 10f, 70f, 0f, 1.5f, "", false, false, "", "spear1");
         basesList.Add(tempequip);
-        tempequip = new equipment("Iron Spear",   equipSlots.equipmentType.Spear, equipSlots.slots.Main, 0, 5, 9, 0f, 0f, 0f, 0f, 20f, 80f, 0f, 1.5f, "");
+        tempequip = new equipment("Iron Spear",   equipSlots.equipmentType.Spear, equipSlots.slots.Main, 0, 5, 9, 0f, 0f, 0f, 0f, 20f, 80f, 0f, 1.5f, "", false, false, "", "spear2");
         basesList.Add(tempequip);
-        tempequip = new equipment("Trident",     equipSlots.equipmentType.Spear, equipSlots.slots.Main, 0, 10, 14, 0f, 0f, 0f, 0f, 30f, 90f, 0f, 1.5f, "");
+        tempequip = new equipment("Trident",     equipSlots.equipmentType.Spear, equipSlots.slots.Main, 0, 10, 14, 0f, 0f, 0f, 0f, 30f, 90f, 0f, 1.5f, "", false, false, "", "spear3");
         basesList.Add(tempequip);
-        tempequip = new equipment("Halberd",     equipSlots.equipmentType.Spear, equipSlots.slots.Main, 0, 15, 20, 0f, 0f, 0f, 0f, 40f, 100f, 0f, 1.5f, "");
+        tempequip = new equipment("Halberd",     equipSlots.equipmentType.Spear, equipSlots.slots.Main, 0, 15, 20, 0f, 0f, 0f, 0f, 40f, 100f, 0f, 1.5f, "", false, false, "", "spear4");
         basesList.Add(tempequip);
 
         #endregion
@@ -230,9 +230,9 @@ public class equipmentFactory {
         #region twohand
 
                                      //NAME                               TYPE                           SLOT               tier  level     h     r    p    d  mndg mxdg      ms      as   flavortext 
-        tempequip = new equipment("BIGASS SWORD",              equipSlots.equipmentType.Sword,       equipSlots.slots.Main,   1,  1, 20,   0f,   0f,  0f,  0f,  10f,150f,      0f,     1f, "",true,false);
+        tempequip = new equipment("BIGASS SWORD",              equipSlots.equipmentType.Sword,       equipSlots.slots.Main,   1,  1, 20,   0f,   0f,  0f,  0f,  10f,150f,      0f,     1f, "",true,false, "", "2hsword1");
         basesList.Add(tempequip);
-        tempequip = new equipment("BIGASS THROWING SWORD",     equipSlots.equipmentType.Sword,       equipSlots.slots.Main,   1,  1, 20,   0f,   0f,  0f,  0f,  10f,150f,      0f,     1f, "",true,true);
+        tempequip = new equipment("BIGASS THROWING SWORD",     equipSlots.equipmentType.Sword,       equipSlots.slots.Main,   1,  1, 20,   0f,   0f,  0f,  0f,  10f,150f,      0f,     1f, "",true,true, "", "2hsword1");
         basesList.Add(tempequip);         
 
         #endregion
@@ -243,11 +243,11 @@ public class equipmentFactory {
 
         #region head
         //NAME                              TYPE                            SLOT             tier  level      h     r    p    d  mndg mxdg     ms     as   flavortext 
-        tempequip = new equipment("Cloth Cap",                 equipSlots.equipmentType.ClothHelm,   equipSlots.slots.Head, 0,  1,  4,    0f,  25f,  0f,  0f,  0f,  0f,     0f,    0f, "");
+        tempequip = new equipment("Floppy Cap",                 equipSlots.equipmentType.ClothHelm,   equipSlots.slots.Head, 0,  1,  4,    0f,  25f,  0f,  0f,  0f,  0f,     0f,    0f, "");
         basesList.Add(tempequip);
-        tempequip = new equipment("Scholar's Hat",             equipSlots.equipmentType.ClothHelm,   equipSlots.slots.Head, 0,  5,  9,    0f,  60f,  0f,  0f,  0f,  0f,     0f,    0f, "");
+        tempequip = new equipment("Linen Hat",             equipSlots.equipmentType.ClothHelm,   equipSlots.slots.Head, 0,  5,  9,    0f,  60f,  0f,  0f,  0f,  0f,     0f,    0f, "");
         basesList.Add(tempequip);
-        tempequip = new equipment("Magician's Hat",            equipSlots.equipmentType.ClothHelm,   equipSlots.slots.Head, 0, 10, 14,    0f, 100f,  0f,  0f,  0f,  0f,     0f,    0f, "");
+        tempequip = new equipment("Silk Hat",            equipSlots.equipmentType.ClothHelm,   equipSlots.slots.Head, 0, 10, 14,    0f, 100f,  0f,  0f,  0f,  0f,     0f,    0f, "");
         basesList.Add(tempequip);
         tempequip = new equipment("Yarmulke",                  equipSlots.equipmentType.ClothHelm,   equipSlots.slots.Head, 0, 15, 20,    0f, 200f,  0f,  0f,  0f,  0f,     0f,    0f, "");
         basesList.Add(tempequip);
@@ -302,11 +302,11 @@ public class equipmentFactory {
                                       //NAME                            TYPE                              SLOT              tier  level     h     r    p    d  mndg  mxdg    ms     as   flavortext 
         tempequip = new equipment("Clothes",                   equipSlots.equipmentType.ClothArmor,   equipSlots.slots.Chest, 0,  1,  4,   0f,  25f,  0f,  0f,  0f,  0f,     0f,    0f, "");
         basesList.Add(tempequip);
-        tempequip = new equipment("Scholar's Robe",            equipSlots.equipmentType.ClothArmor,   equipSlots.slots.Chest, 0,  5,  9,   0f,  60f,  0f,  0f,  0f,  0f,     0f,    0f, "");
+        tempequip = new equipment("Linen Robe",            equipSlots.equipmentType.ClothArmor,   equipSlots.slots.Chest, 0,  5,  9,   0f,  60f,  0f,  0f,  0f,  0f,     0f,    0f, "");
         basesList.Add(tempequip);
-        tempequip = new equipment("Magician's Robe",           equipSlots.equipmentType.ClothArmor,   equipSlots.slots.Chest, 0, 10, 14,   0f, 100f,  0f,  0f,  0f,  0f,     0f,    0f, "");
+        tempequip = new equipment("Silk Robe",           equipSlots.equipmentType.ClothArmor,   equipSlots.slots.Chest, 0, 10, 14,   0f, 100f,  0f,  0f,  0f,  0f,     0f,    0f, "");
         basesList.Add(tempequip);
-        tempequip = new equipment("Sage's Robe",               equipSlots.equipmentType.ClothArmor,   equipSlots.slots.Chest, 0, 15, 20,   0f, 200f,  0f,  0f,  0f,  0f,     0f,    0f, "");
+        tempequip = new equipment("Moonweave Robe",               equipSlots.equipmentType.ClothArmor,   equipSlots.slots.Chest, 0, 15, 20,   0f, 200f,  0f,  0f,  0f,  0f,     0f,    0f, "");
         basesList.Add(tempequip);
 
                                  //NAME                                    TYPE                            SLOT            tier   level     h    r     p    d  mndg mxdg     ms      as   flavortext 
@@ -358,13 +358,13 @@ public class equipmentFactory {
 
         
                                  //NAME                           TYPE                                    SLOT              tier  level     h     r    p    d  mndg  mxdg    ms     as   flavortext 
-        tempequip = new equipment("Cloth Pants",               equipSlots.equipmentType.ClothPants,   equipSlots.slots.Legs,  0,  1,  4,   0f,  25f,  0f,  0f,  0f,  0f,     0f,    0f, "");
+        tempequip = new equipment("Ragged Pants",               equipSlots.equipmentType.ClothPants,   equipSlots.slots.Legs,  0,  1,  4,   0f,  25f,  0f,  0f,  0f,  0f,     0f,    0f, "");
         basesList.Add(tempequip);
-        tempequip = new equipment("Scholar's Pants",           equipSlots.equipmentType.ClothPants,   equipSlots.slots.Legs, 0,  5,  9,   0f,  60f,  0f,  0f,  0f,  0f,     0f,    0f, "");
+        tempequip = new equipment("Linen Pants",           equipSlots.equipmentType.ClothPants,   equipSlots.slots.Legs, 0,  5,  9,   0f,  60f,  0f,  0f,  0f,  0f,     0f,    0f, "");
         basesList.Add(tempequip);
-        tempequip = new equipment("Magician's Pants",          equipSlots.equipmentType.ClothPants,   equipSlots.slots.Legs, 0, 10, 14,   0f, 100f,  0f,  0f,  0f,  0f,     0f,    0f, "");
+        tempequip = new equipment("Silk Pants",          equipSlots.equipmentType.ClothPants,   equipSlots.slots.Legs, 0, 10, 14,   0f, 100f,  0f,  0f,  0f,  0f,     0f,    0f, "");
         basesList.Add(tempequip);
-        tempequip = new equipment("Sage's Pants",              equipSlots.equipmentType.ClothPants,   equipSlots.slots.Legs, 0, 15, 20,   0f, 200f,  0f,  0f,  0f,  0f,     0f,    0f, "");
+        tempequip = new equipment("Moonweave Pants",              equipSlots.equipmentType.ClothPants,   equipSlots.slots.Legs, 0, 15, 20,   0f, 200f,  0f,  0f,  0f,  0f,     0f,    0f, "");
         basesList.Add(tempequip);
 
                                  //NAME                                    TYPE                            SLOT             tier  level     h     r    p    d  mndg mxdg     ms      as   flavortext 
@@ -419,11 +419,11 @@ public class equipmentFactory {
                                  //NAME                           TYPE                                    SLOT              tier  level     h     r    p    d  mndg  mxdg     ms     as   flavortext 
         tempequip = new equipment("Footwraps",                 equipSlots.equipmentType.ClothShoes,    equipSlots.slots.Feet, 0,  1,  4,   0f,  25f,  0f,  0f,  0f,  0f,      0f,    0f, "");
         basesList.Add(tempequip);
-        tempequip = new equipment("Scholar's Slippers",        equipSlots.equipmentType.ClothShoes,    equipSlots.slots.Feet, 0,  5,  9,   0f,  60f,  0f,  0f,  0f,  0f,      0f,    0f, "");
+        tempequip = new equipment("Linen Slippers",        equipSlots.equipmentType.ClothShoes,    equipSlots.slots.Feet, 0,  5,  9,   0f,  60f,  0f,  0f,  0f,  0f,      0f,    0f, "");
         basesList.Add(tempequip);
-        tempequip = new equipment("Magician's Slippers",       equipSlots.equipmentType.ClothShoes,    equipSlots.slots.Feet, 0, 10, 14,   0f, 100f,  0f,  0f,  0f,  0f,      0f,    0f, "");
+        tempequip = new equipment("Silk Slippers",       equipSlots.equipmentType.ClothShoes,    equipSlots.slots.Feet, 0, 10, 14,   0f, 100f,  0f,  0f,  0f,  0f,      0f,    0f, "");
         basesList.Add(tempequip);
-        tempequip = new equipment("Sage's Slippers",           equipSlots.equipmentType.ClothShoes,    equipSlots.slots.Feet, 0, 15, 20,   0f, 200f,  0f,  0f,  0f,  0f,      0f,    0f, "");
+        tempequip = new equipment("Moonweave Slippers",           equipSlots.equipmentType.ClothShoes,    equipSlots.slots.Feet, 0, 15, 20,   0f, 200f,  0f,  0f,  0f,  0f,      0f,    0f, "");
         basesList.Add(tempequip);
 
                                  //NAME                                    TYPE                            SLOT             tier  level     h     r    p    d  mndg mxdg      ms      as   flavortext 
@@ -449,13 +449,13 @@ public class equipmentFactory {
 
         
                                      //NAME                               TYPE                              SLOT            tier  level     h     r    p    d  mndg mxdg      ms      as   flavortext 
-        tempequip = new equipment("Rusty Cuisses",             equipSlots.equipmentType.ScaleShoes,    equipSlots.slots.Feet, 0,  1,  4,  20f,   0f,  0f,  5f,  0f,  0f,      0f,     0f, "");
+        tempequip = new equipment("Rusty Sabatons",             equipSlots.equipmentType.ScaleShoes,    equipSlots.slots.Feet, 0,  1,  4,  20f,   0f,  0f,  5f,  0f,  0f,      0f,     0f, "");
         basesList.Add(tempequip);
-        tempequip = new equipment("Iron Cuisses",              equipSlots.equipmentType.ScaleShoes,    equipSlots.slots.Feet, 0,  5,  9,  40f,   0f,  0f, 10f,  0f,  0f,      0f,     0f, "");
+        tempequip = new equipment("Iron Sabatons",              equipSlots.equipmentType.ScaleShoes,    equipSlots.slots.Feet, 0,  5,  9,  40f,   0f,  0f, 10f,  0f,  0f,      0f,     0f, "");
         basesList.Add(tempequip);
-        tempequip = new equipment("Steel Cuisses",             equipSlots.equipmentType.ScaleShoes,    equipSlots.slots.Feet, 0, 10, 14,  85f,   0f,  0f, 15f,  0f,  0f,      0f,     0f, "");
+        tempequip = new equipment("Steel Sabatons",             equipSlots.equipmentType.ScaleShoes,    equipSlots.slots.Feet, 0, 10, 14,  85f,   0f,  0f, 15f,  0f,  0f,      0f,     0f, "");
         basesList.Add(tempequip);
-        tempequip = new equipment("Wyrmscale Cuisses",         equipSlots.equipmentType.ScaleShoes,    equipSlots.slots.Feet, 0, 15, 20, 140f,   0f,  0f, 20f,  0f,  0f,      0f,     0f, "");
+        tempequip = new equipment("Wyrmscale Sabatons",         equipSlots.equipmentType.ScaleShoes,    equipSlots.slots.Feet, 0, 15, 20, 140f,   0f,  0f, 20f,  0f,  0f,      0f,     0f, "");
         basesList.Add(tempequip);
 
                                      //NAME                              TYPE                              SLOT             tier  level     h     r    p    d  mndg mxdg      ms      as   flavortext 
@@ -1587,7 +1587,7 @@ public class equipmentFactory {
     /// <returns></returns>
     public equipment loadequipment(string i)
     {
-
+        
         equipment tempequip = new equipment(PlayerPrefs.GetString(i + "name"),
                                             (equipSlots.equipmentType)Enum.Parse(typeof(equipSlots.equipmentType), PlayerPrefs.GetString(i + "type"), true),
                                             (equipSlots.slots)Enum.Parse(typeof(equipSlots.slots), PlayerPrefs.GetString(i + "slot"), true),
@@ -1605,8 +1605,10 @@ public class equipmentFactory {
                                             PlayerPrefs.GetString(i + "flavortext"),
                                             Convert.ToBoolean(PlayerPrefs.GetInt(i + "istwohand")),
                                             Convert.ToBoolean(PlayerPrefs.GetInt(i + "isranged")),
-                                            PlayerPrefs.GetString(i + "onhitability"));
-
+                                            PlayerPrefs.GetString(i + "onhitability"),
+                                            PlayerPrefs.GetString(i+ "modelname"));
+                   
+     
         return tempequip;
     }
 
@@ -1651,6 +1653,7 @@ public class equipmentFactory {
             PlayerPrefs.SetInt(i + "isranged", 0);
         }
         PlayerPrefs.SetString(i + "onhitability", item.onhit);
+        PlayerPrefs.SetString(i + "modelname", item.modelname);
 
     }
 
@@ -1679,6 +1682,7 @@ public class equipmentFactory {
         PlayerPrefs.DeleteKey(i + "istwohand");
         PlayerPrefs.DeleteKey(i + "isranged");
         PlayerPrefs.DeleteKey(i + "onhitability");
+        PlayerPrefs.DeleteKey(i + "modelname");
 
     }
 
@@ -1715,6 +1719,7 @@ public class equipmentFactory {
         randEquipment.ranged = tempEquipment.ranged;
         randEquipment.twohand = tempEquipment.twohand;
         randEquipment.onhit = tempEquipment.onhit;
+        randEquipment.modelname = tempEquipment.modelname;
 
 
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
@@ -1766,6 +1771,7 @@ public class equipmentFactory {
         randEquipment.ranged = tempEquipment.ranged;
         randEquipment.twohand = tempEquipment.twohand;
         randEquipment.onhit = tempEquipment.onhit;
+        randEquipment.modelname = tempEquipment.modelname;
 
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
 
@@ -1824,6 +1830,7 @@ public class equipmentFactory {
         randEquipment.ranged = tempEquipment.ranged;
         randEquipment.twohand = tempEquipment.twohand;
         randEquipment.onhit = tempEquipment.onhit;
+        randEquipment.modelname = tempEquipment.modelname;
 
 
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
@@ -1877,6 +1884,7 @@ public class equipmentFactory {
         randEquipment.ranged = tempEquipment.ranged;
         randEquipment.twohand = tempEquipment.twohand;
         randEquipment.onhit = tempEquipment.onhit;
+        randEquipment.modelname = tempEquipment.modelname;
 
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
 
@@ -1939,6 +1947,7 @@ public class equipmentFactory {
         randEquipment.ranged = tempEquipment.ranged;
         randEquipment.twohand = tempEquipment.twohand;
         randEquipment.onhit = tempEquipment.onhit;
+        randEquipment.modelname = tempEquipment.modelname;
 
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
 
@@ -2010,6 +2019,7 @@ public class equipmentFactory {
         randEquipment.ranged = tempEquipment.ranged;
         randEquipment.twohand = tempEquipment.twohand;
         randEquipment.onhit = tempEquipment.onhit;
+        randEquipment.modelname = tempEquipment.modelname;
 
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
 

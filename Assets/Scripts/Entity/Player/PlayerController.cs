@@ -621,7 +621,7 @@ public class PlayerController : MonoBehaviour {
             }
             else
             {
-                Debug.Log("CAN'T EQUIP THE shoe FOR SOME REASON");
+
             }
 
         }
