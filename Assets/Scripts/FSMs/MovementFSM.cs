@@ -42,13 +42,15 @@ public class MovementFSM : StateMachine
         AddTransitionsFrom(MoveStates.moveLocked, moveLockedTransitions);
 
         StartMachine(MoveStates.idle);
+
+        _movementSpeed = DEFAULT_MOVEMENT_SPEED;
+
+        _navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     void Start()
     {
-        _navMeshAgent = GetComponent<NavMeshAgent>();
         _navMeshAgent.stoppingDistance = _navMeshAgent.radius;
-        UpdateMovementSpeed(GetComponent<Entity>().currentAtt.MovementSpeed);
     }
 
     #region public functions

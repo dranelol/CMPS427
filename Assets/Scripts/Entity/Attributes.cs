@@ -10,8 +10,6 @@ using System.Collections.Generic;
 /// </summary>
 public class Attributes 
 {
-    // Since different objects can have different limits, these need to be set on a per object basis.
-    private float moveSpeedMin, moveSpeedMax;
     public enum Stats
     {
         HEALTH,
@@ -253,7 +251,7 @@ public class Attributes
         }
         set 
         {
-			float newValue = Mathf.Clamp (value, moveSpeedMin, moveSpeedMax);
+            float newValue = value;
             try
             {
                 statList[Stats.MOVEMENT_SPEED] = newValue;
