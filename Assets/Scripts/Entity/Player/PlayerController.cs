@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour {
         // If the move/attack key was pressed...
         if (Input.GetAxis("Move/Attack") != 0) 
         {
-            Debug.Log("controller has path: " + agent.hasPath);
+
 
             int terrainMask = LayerMask.NameToLayer("Terrain");
 
