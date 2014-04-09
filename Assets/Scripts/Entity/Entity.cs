@@ -27,6 +27,7 @@ public class Entity : MonoBehaviour
     public float maxAttackSpeed = 3f;
 
     public AbilityManager abilityManager;
+
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
 
     public Dictionary<string, int> abilityIndexDict = new Dictionary<string, int>();
@@ -111,6 +112,15 @@ public class Entity : MonoBehaviour
             this.equippedEquip.Add(slot, item);
             this.equipAtt.Add(item.equipmentAttributes);
             UpdateCurrentAttributes();
+
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.saveequipment(((int)slot).ToString(), item);
+
+            if (slot == equipSlots.slots.Main && item.onhit != "")
+            {
+                abilityManager.RemoveAbility(6);
+                abilityManager.AddAbility(GameManager.Abilities[item.onhit], 6);
+                abilityIndexDict[item.onhit] = 6;
+            }
             return true;
         }
     }
@@ -125,9 +135,17 @@ public class Entity : MonoBehaviour
         if (equippedEquip.ContainsKey(slot))
         {
             equipment removed = equippedEquip[slot];
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.unsaveEquipment(((int)slot).ToString());
+           
             equippedEquip.Remove(slot);
             equipAtt.Subtract(removed.equipmentAttributes);
             UpdateCurrentAttributes();
+
+            if (slot == equipSlots.slots.Main)
+            {
+                abilityManager.RemoveAbility(6);
+         
+            }
             return true;
         }
         else
