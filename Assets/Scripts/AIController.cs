@@ -83,8 +83,8 @@ public class AIController : StateMachine
         PursuitFSM = GetComponent<AIPursuit>();
         localHomePosition = transform.position;
 
-        wanderDistance = 3.0f;
-        wanderInterval = 3.0f;
+        wanderDistance = 5.0f;
+        wanderInterval = 10.0f;
         wanderDistanceFromNode = 7.0f;
 
         nodePosition = new Vector3(transform.parent.position.x, transform.position.y, transform.parent.position.z);
@@ -310,9 +310,6 @@ public class AIController : StateMachine
 
     void idle_Update()
     {
-
-        
-
         if (Time.time >= nextWander)
         {
 

@@ -832,36 +832,8 @@ public abstract class Aura
             float appliedAttribute = newAttributeChange - _attributeChange; // Get the difference from the old change
             Debug.LogWarning(appliedAttribute);
             Attributes newAttribute = new Attributes();
-            newAttribute.SetAttackSpeedClamps(-5, 5);
-            newAttribute.SetMovementSpeedClamps(-5, 5);
 
-            switch ((Attributes.Stats)_attribute)
-            {
-                case Attributes.Stats.ATTACK_SPEED:
-                    newAttribute.AttackSpeed = appliedAttribute;
-                    break;
-                case Attributes.Stats.DEFENSE:
-                    newAttribute.Defense = appliedAttribute;
-                    break;
-                case Attributes.Stats.HEALTH:
-                    newAttribute.Health = appliedAttribute;
-                    break;
-                case Attributes.Stats.MAX_DAMAGE:
-                    newAttribute.MaxDamage = appliedAttribute;
-                    break;
-                case Attributes.Stats.MIN_DAMAGE:
-                    newAttribute.MinDamage = appliedAttribute;
-                    break;
-                case Attributes.Stats.MOVEMENT_SPEED:
-                    newAttribute.MovementSpeed = appliedAttribute;
-                    break;
-                case Attributes.Stats.POWER:
-                    newAttribute.Power = appliedAttribute;
-                    break;
-                case Attributes.Stats.RESOURCE:
-                    newAttribute.Resource = appliedAttribute;
-                    break;
-            }
+            newAttribute.ModifyValue(Attribute, appliedAttribute);
 
             target.ApplyBuff(newAttribute);
             _attributeChange += appliedAttribute;

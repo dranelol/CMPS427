@@ -114,7 +114,7 @@ public class EnemySpawner : MonoBehaviour
             newEnemy.rigidbody.Sleep();
             newEnemy.name = "Enemy(" + newEnemy.GetInstanceID() + ")";
             newEnemy.transform.parent = transform;
-            newEnemy.transform.GetChild(0).gameObject.AddComponent<AggroRadius>();
+            newEnemy.transform.Find("EnemyAggroCollider").gameObject.AddComponent<AggroRadius>();
             newEnemy.AddComponent<AIController>();
 
             Entity enemyEntity = newEnemy.GetComponent<Entity>();
