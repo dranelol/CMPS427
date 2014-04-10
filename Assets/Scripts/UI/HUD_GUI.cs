@@ -283,6 +283,8 @@ public class HUD_GUI : MonoBehaviour {
         {
             rname = "none";
         }
+        
+
         string attackList = "Q = " + qname + " \n"
                           + "W = " + wname + " \n"
                           + "E = " + ename + " \n"
@@ -294,7 +296,7 @@ public class HUD_GUI : MonoBehaviour {
                           + "E = " + player.abilityManager.abilities[4].Name + " \n"
                           + "R = " + player.abilityManager.abilities[5].Name + " \n";
         */
-        string version = "Week9v1";
+        string version = "Week10v2";
 
         GUI.Label(InfoBox1, attackList, infoBoxStyle);
         GUI.Label(InfoBox2, version, infoBoxStyle);
