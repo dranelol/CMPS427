@@ -10,9 +10,6 @@ using System.Collections.Generic;
 /// </summary>
 public class Attributes 
 {
-    // Since different objects can have different limits, these need to be set on a per object basis.
-    private float attackSpeedMin, attackSpeedMax;
-    private float moveSpeedMin, moveSpeedMax;
     public enum Stats
     {
         HEALTH,
@@ -35,8 +32,6 @@ public class Attributes
     {
         statList = new Dictionary<Stats, float>();
 		// Default values for clamps, to prevent errors.
-		attackSpeedMin = moveSpeedMin = 0.0f;
-		attackSpeedMax = moveSpeedMax = 2.5f;
         foreach (Stats stat in Enum.GetValues(typeof(Stats)))
             statList.Add(stat, 0);
     }
@@ -49,6 +44,37 @@ public class Attributes
     public float GetValue(Stats key)
     {
         return statList[key];
+    }
+
+    public void ModifyValue(Stats key, float value)
+    {
+        switch ((Attributes.Stats)key)
+        {
+            case Attributes.Stats.ATTACK_SPEED:
+                AttackSpeed = value;
+                break;
+            case Attributes.Stats.DEFENSE:
+                Defense = value;
+                break;
+            case Attributes.Stats.HEALTH:
+                Health = value;
+                break;
+            case Attributes.Stats.MAX_DAMAGE:
+                MaxDamage = value;
+                break;
+            case Attributes.Stats.MIN_DAMAGE:
+                MinDamage = value;
+                break;
+            case Attributes.Stats.MOVEMENT_SPEED:
+                MovementSpeed = value;
+                break;
+            case Attributes.Stats.POWER:
+                Power = value;
+                break;
+            case Attributes.Stats.RESOURCE:
+                Resource = value;
+                break;
+        }
     }
 
     #region Health
@@ -193,7 +219,7 @@ public class Attributes
         }
         set 
         {
-			float newValue = Mathf.Clamp (value, attackSpeedMin, attackSpeedMax);
+            float newValue = value;
             try
             {
 				statList[Stats.ATTACK_SPEED] = newValue;
@@ -225,7 +251,7 @@ public class Attributes
         }
         set 
         {
-			float newValue = Mathf.Clamp (value, moveSpeedMin, moveSpeedMax);
+            float newValue = value;
             try
             {
                 statList[Stats.MOVEMENT_SPEED] = newValue;
@@ -290,20 +316,7 @@ public class Attributes
         MinDamage -= other.MinDamage;
         MaxDamage -= other.MaxDamage;
     }
-    #endregion
 
-    #region Setters for Min/Max caps.
-    public void SetAttackSpeedClamps(float min, float max)
-    {
-        attackSpeedMin = min;
-        attackSpeedMax = max;
-    }
-
-    public void SetMovementSpeedClamps(float min, float max)
-    {
-        moveSpeedMin = min;
-        moveSpeedMax = max;
-    }
     #endregion
 
     /// <summary>

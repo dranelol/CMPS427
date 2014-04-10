@@ -10,16 +10,17 @@ public class MovementFSM : StateMachine
     public const float DEFAULT_MOVEMENT_SPEED = 5;
 
     private NavMeshAgent _navMeshAgent;
+    private AnimationController _animController;
 
-    public float _movementSpeed;
+    private float _movementSpeed;
     public float MovementSpeed
     {
         get { return _movementSpeed; }
-        set
-        {
-            _movementSpeed = Mathf.Clamp(value * DEFAULT_MOVEMENT_SPEED, 0, 15f);
-            _navMeshAgent.speed = _movementSpeed;
-        }
+    }
+
+    public void UpdateMovementSpeed(float value)
+    {
+        _navMeshAgent.speed = _movementSpeed = DEFAULT_MOVEMENT_SPEED * value;
     }
 
     public enum MoveStates
@@ -31,6 +32,9 @@ public class MovementFSM : StateMachine
 
     void Awake()
     {
+        _navMeshAgent = GetComponent<NavMeshAgent>();
+        _animController = GetComponent<AnimationController>();
+
         SetupMachine(MoveStates.idle);
 
         HashSet<Enum> moveLockedTransitions = new HashSet<Enum>();
@@ -42,13 +46,13 @@ public class MovementFSM : StateMachine
         AddTransitionsFrom(MoveStates.moveLocked, moveLockedTransitions);
 
         StartMachine(MoveStates.idle);
+
+        _movementSpeed = DEFAULT_MOVEMENT_SPEED;
     }
 
     void Start()
     {
-        _navMeshAgent = GetComponent<NavMeshAgent>();
         _navMeshAgent.stoppingDistance = _navMeshAgent.radius;
-        MovementSpeed = GetComponent<Entity>().currentAtt.MovementSpeed;
     }
 
     #region public functions
@@ -116,7 +120,23 @@ public class MovementFSM : StateMachine
 
     #region state behaviour
 
+    #region idle functions
+
+    private IEnumerator idle_EnterState()
+    {
+        _animController.StopMovingAnim();
+        yield return null;
+    }
+
+    #endregion
+
     #region moving functions
+
+    private IEnumerator moving_EnterState()
+    {
+        _animController.StartMovingAnim();
+        yield return null;
+    }
 
     void moving_Update()
     {
