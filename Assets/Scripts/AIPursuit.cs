@@ -193,7 +193,7 @@ public class AIPursuit : StateMachine
                     Vector3 directionToTarget = currentTarget.transform.position - transform.position;
 
                     // If the enemy is within range of its next attack, transition to attack.
-                    if (directionToTarget.magnitude < _abilityList[0].Range)
+                    if (directionToTarget.magnitude < _abilityList[0].Range - NavAgent.radius)
                     {
                         RaycastHit hit;
 
@@ -250,6 +250,7 @@ public class AIPursuit : StateMachine
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                     entity.abilityManager.abilities[0].AttackHandler(gameObject, entity, false);
+                    GetComponent<AnimationController>().AttackAnim(1);
                 }
 
                 else if (entity.abilityManager.abilities[0].AttackType == AttackType.PROJECTILE)
@@ -282,7 +283,7 @@ public class AIPursuit : StateMachine
             }
             else
             {
-                Transition(PursuitStates.inactive);
+                //Transition(PursuitStates.inactive); NO
             }
         }
     }

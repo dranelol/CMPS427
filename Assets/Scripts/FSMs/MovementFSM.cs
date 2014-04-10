@@ -10,6 +10,7 @@ public class MovementFSM : StateMachine
     public const float DEFAULT_MOVEMENT_SPEED = 5;
 
     private NavMeshAgent _navMeshAgent;
+    private AnimationController _animController;
 
     private float _movementSpeed;
     public float MovementSpeed
@@ -31,6 +32,9 @@ public class MovementFSM : StateMachine
 
     void Awake()
     {
+        _navMeshAgent = GetComponent<NavMeshAgent>();
+        _animController = GetComponent<AnimationController>();
+
         SetupMachine(MoveStates.idle);
 
         HashSet<Enum> moveLockedTransitions = new HashSet<Enum>();
@@ -44,8 +48,6 @@ public class MovementFSM : StateMachine
         StartMachine(MoveStates.idle);
 
         _movementSpeed = DEFAULT_MOVEMENT_SPEED;
-
-        _navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     void Start()
@@ -118,7 +120,23 @@ public class MovementFSM : StateMachine
 
     #region state behaviour
 
+    #region idle functions
+
+    private IEnumerator idle_EnterState()
+    {
+        _animController.StopMovingAnim();
+        yield return null;
+    }
+
+    #endregion
+
     #region moving functions
+
+    private IEnumerator moving_EnterState()
+    {
+        _animController.StartMovingAnim();
+        yield return null;
+    }
 
     void moving_Update()
     {
