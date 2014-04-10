@@ -24,6 +24,7 @@ public class OrbRotate : MonoBehaviour
             transform.RotateAround(orbitObject.transform.position, Vector3.up, angularSpeed * Time.deltaTime);
             Vector3 newPosition = transform.position;
 
+
             //newPosition.x = MathHelper.Sinerp(minHeight, maxHeight, Time.time);
             if (oscillationSpeed > 0.0f)
             {

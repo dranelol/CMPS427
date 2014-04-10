@@ -21,7 +21,7 @@ public class Chaosbolt : Ability
         projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
         projectile.GetComponent<ProjectileBehaviour>().target = target;
         projectile.GetComponent<ProjectileBehaviour>().homing = true;
-        projectile.GetComponent<ProjectileBehaviour>().speed = 20f;
+        projectile.GetComponent<ProjectileBehaviour>().speed = 15f;
 
 
         Vector3 randPos = source.transform.position + forward + Random.onUnitSphere * 2;
@@ -93,6 +93,8 @@ public class Chaosbolt : Ability
         yield return new WaitForSeconds(time);
 
         ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+        
+        
 
         foreach (ParticleSystem item in particleSystems)
         {

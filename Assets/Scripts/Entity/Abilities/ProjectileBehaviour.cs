@@ -87,7 +87,7 @@ public class ProjectileBehaviour : MonoBehaviour
         {
             Vector3 direction = target - transform.position;
 
-            Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.1f, 0f);
+            Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.2f, 0f);
 
             transform.rotation = Quaternion.LookRotation(newDirection);
         }
@@ -117,22 +117,23 @@ public class ProjectileBehaviour : MonoBehaviour
         {
             if (CollidesWithProjectiles)
             {
+                Debug.Log("asd");
                 if (other.gameObject.tag == "Projectile")
                 {
                     if (other.gameObject.GetComponent<ProjectileBehaviour>().owner.tag == "Player")
                     {
-                    Debug.Log("attacked an enemy!");
+                        Debug.Log("attacked an enemy!");
 
 
-                    Entity ownerEntity = owner.GetComponent<Entity>();
+                        Entity ownerEntity = owner.GetComponent<Entity>();
 
-                    int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
+                        int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
 
-                    ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
+                        ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
 
-                    hascollided = true;
-                    DetachParticleSystem();
-                    Destroy(gameObject);
+                        hascollided = true;
+                        DetachParticleSystem();
+                        Destroy(gameObject);
                     }
 
                 }
@@ -173,6 +174,19 @@ public class ProjectileBehaviour : MonoBehaviour
                     DetachParticleSystem();
                     Destroy(gameObject);
                 }
+
+                if (other.gameObject.tag == "Terrain")
+                {
+                    Debug.Log("hit terrain");
+                }
+
+                if (homing == true && other.gameObject.tag == "Terrain")
+                {
+                    Debug.Log("hit terrain");
+                    hascollided = true;
+                    DetachParticleSystem();
+                    Destroy(gameObject);
+                }
             }
             /*
         else if (other.gameObject.tag == "Enemy" && owner.gameObject.tag == "Enemy")
@@ -202,6 +216,20 @@ public class ProjectileBehaviour : MonoBehaviour
 
     public void DetachParticleSystem()
     {
+        /*
+        foreach (Transform child in transform)
+        {
+            Debug.Log("asd");
+            if (child.gameObject.tag == "OrbRotate")
+            {
+                Debug.Log("unparenting orbs");
+                child.parent = null;
+            }
+
+
+        }
+        */
+
         ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
 
         foreach (ParticleSystem item in particles)
@@ -212,6 +240,8 @@ public class ProjectileBehaviour : MonoBehaviour
 
 
         }
+
+        
 
         //particles.GetComponent<ParticleAnimator>().autodestruct = true;
     }
