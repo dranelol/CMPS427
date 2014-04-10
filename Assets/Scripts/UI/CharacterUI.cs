@@ -13,7 +13,6 @@ public class CharacterUI : UIState {
     private Vector2 scrollViewVector;
     private Camera characterCamera;
     private GUITexture titsMcGee;
-
     public CharacterUI(int id, UIController controller)
         : base(id, controller) 
     {
@@ -103,7 +102,11 @@ public class CharacterUI : UIState {
         yOffset = 0;
         foreach (equipment item in Controller.Player.Inventory.Items)
         {
-            if (GUI.Button(new Rect(0, yOffset, WIDTH - 30, 50), item.equipmentName, Controller.style)) { }
+            if (GUI.Button(new Rect(0, yOffset, WIDTH - 30, 50), item.equipmentName, Controller.style)) 
+            {
+                Controller.Player.addEquipment(item);
+                Debug.Log("Equiped a new " + item.validSlot + " item.");
+            }
             yOffset += 60;
         }
 

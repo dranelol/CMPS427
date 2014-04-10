@@ -105,23 +105,23 @@ public class Entity : MonoBehaviour
     /// <param name="slot">The equipment slot being filled.</param>
     /// <param name="itemAtt">The attributes of the item being equipped.</param>
     /// <returns></returns>
-    public bool addEquipment(equipSlots.slots slot, equipment item)
+    public bool addEquipment(equipment item)
     {
-        if (this.equippedEquip.ContainsKey(slot))
+        if (this.equippedEquip.ContainsKey(item.validSlot))
             return false;
         else if (item.twohand == true && this.equippedEquip.ContainsKey(equipSlots.slots.Off))
             return false;
-        else if (slot == equipSlots.slots.Off && equippedEquip[equipSlots.slots.Main].twohand == true)
+        else if (item.validSlot == equipSlots.slots.Off && equippedEquip[equipSlots.slots.Main].twohand == true)
             return false;
         else
         {
-            this.equippedEquip.Add(slot, item);
+            this.equippedEquip.Add(item.validSlot, item);
             this.equipAtt.Add(item.equipmentAttributes);
             UpdateCurrentAttributes();
 
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.saveequipment(((int)slot).ToString(), item);
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.saveequipment(((int)item.validSlot).ToString(), item);
 
-            if (slot == equipSlots.slots.Main && item.onhit != "")
+            if (item.validSlot == equipSlots.slots.Main && item.onhit != "")
             {
                 abilityManager.RemoveAbility(6);
                 abilityManager.AddAbility(GameManager.Abilities[item.onhit], 6);

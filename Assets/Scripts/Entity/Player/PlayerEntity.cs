@@ -41,7 +41,7 @@ public class PlayerEntity : Entity
                 if(PlayerPrefs.HasKey(i+"name") == true)
                 {
                     equipment tempequip = gamemanager.EquipmentFactory.loadequipment(i+"");
-                    if (addEquipment(tempequip.validSlot, tempequip))
+                    if (addEquipment(tempequip))
                     {
                         Debug.Log("EQUIPPING " + tempequip.equipmentName + " FROM LOAD");
                     }
