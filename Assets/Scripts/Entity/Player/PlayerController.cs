@@ -31,30 +31,26 @@ public class PlayerController : MonoBehaviour {
 		targetPosition = Vector3.zero;
         agent = GetComponent<NavMeshAgent>();
 		agent.acceleration = 100f;
-        agent.updateRotation = false;
+        //agent.updateRotation = false;
 
         agent.avoidancePriority = 1;
 
         entity = GetComponent<PlayerEntity>();
         moveFSM = GetComponent<MovementFSM>();
         combatFSM = GetComponent<CombatFSM>();
-
-        
-
-
     }
 	
 	// Update is called once per frame
 	void FixedUpdate()
 	{
-		if (agent.hasPath)
+		/*if (agent.hasPath)
 		{
 			Vector3 newVector = (transform.position + agent.velocity.normalized);
 			Vector3 target = newVector - transform.position;
 			Vector3 tempRotation = transform.rotation.eulerAngles ;
 			tempRotation.y = Mathf.LerpAngle(transform.rotation.eulerAngles.y,  Quaternion.LookRotation(target).eulerAngles.y,Time.deltaTime * RotationSpeed);
 			transform.rotation = Quaternion.Euler(tempRotation);
-		}
+		}*/
 	}
 	void Update () 
     {
@@ -113,8 +109,6 @@ public class PlayerController : MonoBehaviour {
         // If the move/attack key was pressed...
         if (Input.GetAxis("Move/Attack") != 0) 
         {
-            Debug.Log("controller has path: " + agent.hasPath);
-
             int terrainMask = LayerMask.NameToLayer("Terrain");
 
             int enemyMask = LayerMask.NameToLayer("Enemy");

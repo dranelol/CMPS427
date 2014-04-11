@@ -12,10 +12,40 @@ public class MovementFSM : StateMachine
     private NavMeshAgent _navMeshAgent;
     private AnimationController _animController;
 
+    public Vector3 Destination
+    {
+        get { return _navMeshAgent.destination; }
+    }
+
     private float _movementSpeed;
     public float MovementSpeed
     {
         get { return _movementSpeed; }
+    }
+
+    public float Radius
+    {
+        get { return _navMeshAgent.radius; }
+    }
+
+    public float RemainingDistance
+    {
+        get { return _navMeshAgent.remainingDistance; }
+    }
+
+    public Vector3 SteeringTarget
+    {
+        get { return _navMeshAgent.steeringTarget; }
+    }
+
+    public float StoppingDistance
+    {
+        get { return _navMeshAgent.stoppingDistance; }
+    }
+
+    public Vector3 Velocity
+    {
+        get { return _navMeshAgent.velocity; }
     }
 
     public void UpdateMovementSpeed(float value)
@@ -48,6 +78,7 @@ public class MovementFSM : StateMachine
         StartMachine(MoveStates.idle);
 
         _movementSpeed = DEFAULT_MOVEMENT_SPEED;
+        _navMeshAgent.updateRotation = false;
     }
 
     void Start()
@@ -61,13 +92,12 @@ public class MovementFSM : StateMachine
     {
         if ((MoveStates)CurrentState != MoveStates.moveLocked)
         {
-            Transition(MoveStates.moving);
-
             NavMeshHit navMeshHit;
 
             if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
             {
-                _navMeshAgent.SetDestination(navMeshHit.position); 
+                _navMeshAgent.SetDestination(navMeshHit.position);
+                Transition(MoveStates.moving);
             }      
         }
     }
@@ -140,9 +170,21 @@ public class MovementFSM : StateMachine
 
     void moving_Update()
     {
-        if (!_navMeshAgent.hasPath && !_navMeshAgent.pathPending)
+        if (!_navMeshAgent.hasPath && !_navMeshAgent.pathPending) // || _navMeshAgent.hasPath && _navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete)
         {
             Stop();
+        }
+
+        else if (_navMeshAgent.hasPath)
+        {
+            /*
+            Vector3 tempRotation = transform.rotation.eulerAngles;
+            tempRotation.y = Mathf.LerpAngle(transform.rotation.eulerAngles.y, Quaternion.LookRotation(SteeringTarget).eulerAngles.y, Time.time );
+            transform.rotation = Quaternion.Euler(tempRotation);*/
+
+            Vector3 direction = SteeringTarget - transform.position;
+
+            transform.forward = Vector3.Slerp(transform.forward, new Vector3(direction.x, 0, direction.z).normalized, Time.deltaTime * 10f);
         }
     }
 
