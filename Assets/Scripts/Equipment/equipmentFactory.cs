@@ -203,13 +203,13 @@ public class equipmentFactory {
 
             #region axes
                            //NAME                  TYPE                              SLOT           tier level  h   r   p  d  mndg  mxdg ms  as   flavortext        
-        tempequip = new equipment("Rusty Axe",   equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 1, 4, 0f, 0f, 0f, 0f, 10f, 100f, 0f, 1f, "", false, false, "", "axe1");
+        tempequip = new equipment("Rusty Axe",   equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 3, 6, 0f, 0f, 0f, 0f, 10f, 100f, 0f, 1f, "", false, false, "", "axe1");
         basesList.Add(tempequip);
-        tempequip = new equipment("Iron Axe",    equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 5, 9, 0f, 0f, 0f, 0f, 20f, 110f, 0f, 1f, "", false, false, "", "axe2");
+        tempequip = new equipment("Iron Axe",    equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 7, 11, 0f, 0f, 0f, 0f, 20f, 110f, 0f, 1f, "", false, false, "", "axe2");
         basesList.Add(tempequip);
-        tempequip = new equipment("Steel Axe",   equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 10, 14, 0f, 0f, 0f, 0f, 30f, 120f, 0f, 1f, "", false, false, "", "axe3");
+        tempequip = new equipment("Steel Axe",   equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 12, 17, 0f, 0f, 0f, 0f, 30f, 120f, 0f, 1f, "", false, false, "", "axe3");
         basesList.Add(tempequip);
-        tempequip = new equipment("Bearded Axe", equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 15, 20, 0f, 0f, 0f, 0f, 40f, 130f, 0f, 1f, "", false, false, "", "axe4");
+        tempequip = new equipment("Bearded Axe", equipSlots.equipmentType.Axe, equipSlots.slots.Main, 0, 18, 20, 0f, 0f, 0f, 0f, 40f, 130f, 0f, 1f, "", false, false, "", "axe4");
         basesList.Add(tempequip);
 
         #endregion
@@ -230,9 +230,9 @@ public class equipmentFactory {
         #region twohand
 
                                      //NAME                               TYPE                           SLOT               tier  level     h     r    p    d  mndg mxdg      ms      as   flavortext 
-        tempequip = new equipment("BIGASS SWORD",              equipSlots.equipmentType.Sword,       equipSlots.slots.Main,   1,  1, 20,   0f,   0f,  0f,  0f,  10f,150f,      0f,     1f, "",true,false, "", "2hsword1");
+        tempequip = new equipment("BIGASS SWORD",              equipSlots.equipmentType.Sword,       equipSlots.slots.Main,   1, 20, 20,   0f,   0f,  0f,  0f,  10f,150f,      0f,     1f, "",true,false, "", "2hsword1");
         basesList.Add(tempequip);
-        tempequip = new equipment("BIGASS THROWING SWORD",     equipSlots.equipmentType.Sword,       equipSlots.slots.Main,   1,  1, 20,   0f,   0f,  0f,  0f,  10f,150f,      0f,     1f, "",true,true, "", "2hsword1");
+        tempequip = new equipment("BIGASS THROWING SWORD",     equipSlots.equipmentType.Sword,       equipSlots.slots.Main,   1, 20, 20,   0f,   0f,  0f,  0f,  10f,150f,      0f,     1f, "",true,true, "", "2hsword1");
         basesList.Add(tempequip);         
 
         #endregion
@@ -557,13 +557,13 @@ public class equipmentFactory {
         uniqueslist.Add(tempequip);
 
         
-        tempequip = new equipment("Boneprow",                  equipSlots.equipmentType.Axe,         equipSlots.slots.Main,   3,  1,  4,  50f,   0f,  0f, 20f, 20f,110f,      0f,   1.0f, "Not actually part of a ship. Or made of bones.");
+        tempequip = new equipment("Boneprow",                  equipSlots.equipmentType.Axe,         equipSlots.slots.Main,   3,  3,  6,  50f,   0f,  0f, 20f, 20f,110f,      0f,   1.0f, "Not actually part of a ship. Or made of bones.");
         uniqueslist.Add(tempequip);
-        tempequip = new equipment("Noun's Axe of Verbing",     equipSlots.equipmentType.Axe,         equipSlots.slots.Main,   3,  5,  9,  30f,  30f, 10f, 10f, 31f,121f,   0.01f,  1.01f, "For those who want to cut the nerd crap");
+        tempequip = new equipment("Noun's Axe of Verbing",     equipSlots.equipmentType.Axe,         equipSlots.slots.Main,   3,  7, 11,  30f,  30f, 10f, 10f, 31f,121f,   0.01f,  1.01f, "For those who want to cut the nerd crap");
         uniqueslist.Add(tempequip);
-        tempequip = new equipment("The Jacked Axe",            equipSlots.equipmentType.Axe,         equipSlots.slots.Main,   3, 10, 15,   0f,   0f, 50f,  0f,  0f,140f,      0f,   1.0f, "Do you even lift, brah?");
+        tempequip = new equipment("The Jacked Axe",            equipSlots.equipmentType.Axe,         equipSlots.slots.Main,   3, 12, 17,   0f,   0f, 50f,  0f,  0f,140f,      0f,   1.0f, "Do you even lift, brah?");
         uniqueslist.Add(tempequip);
-        tempequip = new equipment("The Chillaxe",              equipSlots.equipmentType.Axe,         equipSlots.slots.Main,   3, 15, 20, 100f,   0f, 10f,  0f, 50f,145f,      0f,   1.0f, "You need to chill, bro");
+        tempequip = new equipment("The Chillaxe",              equipSlots.equipmentType.Axe,         equipSlots.slots.Main,   3, 18, 20, 100f,   0f, 10f,  0f, 50f,145f,      0f,   1.0f, "You need to chill, bro");
         uniqueslist.Add(tempequip);
 
         
@@ -1973,13 +1973,13 @@ public class equipmentFactory {
         
         
         //NO! BAD USER! LEVEL CAP IS A THING!
-        if (level < 20)
+        if (level > 20)
         {
             level = 20;
         }
 
         //grab a random equipment out of the list appropriate for the tier
-        if (tier <= 3)
+        if (tier >= 3)
         {
             
             ArrayList templist = new ArrayList();
@@ -2001,10 +2001,11 @@ public class equipmentFactory {
             {
                 if (e.validSlot == slot && e.minlvl <= level && e.maxlvl >= level)
                 {
+
                     templist.Add(e);
                 }
             }
-            tempEquipment = (equipment)templist[UnityEngine.Random.Range(0, templist.Count)];
+            tempEquipment = (equipment)templist[UnityEngine.Random.Range(0, templist.Count-1)];
 
         }
         

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 public class AbilityManager : MonoBehaviour 
 {
     public List<Ability> abilities;
+    public List<Ability> tempabilities;
+
     public List<float> activeCoolDowns;
 
    
@@ -16,10 +18,16 @@ public class AbilityManager : MonoBehaviour
         abilities = new List<Ability>(7);
         activeCoolDowns = new List<float>(7);
 
+        tempabilities = new List<Ability>(7);
+
         for (int i = 0; i < abilities.Capacity; i++)
         {
             abilities.Add(null);
             activeCoolDowns.Add(0.0f);
+        }
+        for (int i = 0; i < tempabilities.Capacity; i++)
+        {
+            tempabilities.Add(null);
         }
      
     }
@@ -58,6 +66,33 @@ public class AbilityManager : MonoBehaviour
             Debug.Log("removing "+ abilities[index].Name);
             PlayerPrefs.DeleteKey("ability" + (index).ToString());
             abilities[index] = null;
+        }
+
+    }
+
+
+    public void AddTempAbility(Ability ab, int index)
+    {
+        Debug.Log(ab.Name);
+        if (tempabilities.Count <= 7)
+        {
+            tempabilities[index] = ab;
+            PlayerPrefs.SetString("ability" + (index).ToString(), ab.ID);
+
+        }
+        else
+        {
+            throw new Exception("Tried to add too many abilities.");
+        }
+    }
+
+    public void RemoveTempAbility(int index)
+    {
+        if (tempabilities[index] != null)
+        {
+            Debug.Log("removing " + tempabilities[index].Name);
+            PlayerPrefs.DeleteKey("ability" + (index).ToString());
+            tempabilities[index] = null;
         }
 
     }

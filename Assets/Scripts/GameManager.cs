@@ -26,16 +26,18 @@ public class GameManager : MonoBehaviour
 
     public GameObject OnHitNormalParticles;
     public GameObject BlinkParticles;
+    public GameObject AOEfreezeParticles;
 
 
 
     public equipmentFactory EquipmentFactory;
+    public EnemyAttributeFactory EnemyStatFactory;
 
     public static Dictionary<string, Ability> Abilities;
     public static Dictionary<int, Aura> Auras;
     public static Dictionary<string, int> AuraStringToIntMap;
 
-    public static float GLOBAL_COOLDOWN = 0.1f;
+    public static float GLOBAL_COOLDOWN = 0.5f;
 
 
     public bool loadsavetest = false;
@@ -45,6 +47,7 @@ public class GameManager : MonoBehaviour
     public void Awake()
     {
         EquipmentFactory = new equipmentFactory();
+        
 
         #region ability initialization
         Abilities = new Dictionary<string, Ability>();
@@ -54,7 +57,7 @@ public class GameManager : MonoBehaviour
 
         Abilities["hadouken"] = new Hadouken(AttackType.PBAOE, DamageType.AIR, 5.0f, 360.0f, 3.0f, 10.0f, "hadouken", "Hadouken", HadoukenParticles);
         Abilities["deathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 5.0f, 360.0f, 3.0f, 15.0f, "deathgrip", "AoE Deathgrip", DeathgripParticles);
-        Abilities["cleave"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 5.0f, 45.0f, 0.0f, 5.0f, "cleave", "Cleave", CleaveParticles);
+        Abilities["cleave"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 0.0f, 5.0f, "cleave", "Cleave", CleaveParticles);
         Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 5.0f, 45.0f, 1.0f, 10.0f, "fusrodah", "Fus Roh Dah", FusRoDahParticles);
 
         Abilities["bladewaltz"] = new BladeWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 5.0f, "bladewaltz", "Blade Waltz", BladeWaltzParticles);
@@ -74,12 +77,14 @@ public class GameManager : MonoBehaviour
         Abilities["chaosbolt"] = new Chaosbolt(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.1f, 10.0f, "chaosbolt", "chaosbolt", FireballExplosion);
         
         Abilities["ShockMine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 10.0f, "ShockMine", "Shock Mine", ShockMineProjectile);
-
+        Abilities["aoefreeze"] = new AOEfreeze(AttackType.PBAOE, DamageType.WATER, 5, 360f, 2f, 1f, "aoefreeze", "Flashfreeze", AOEfreezeParticles);
 
         Abilities["onhitnormal"] = new OnHitNormal(AttackType.MELEE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, "onhitnormal", "On Hit Normal", OnHitNormalParticles);
 
         #endregion
 
+
+        EnemyStatFactory = new EnemyAttributeFactory();
         
     }
 

@@ -13,8 +13,7 @@ public class PlayerEntity : Entity
     public void Awake()
     {
         base.Awake();
-        currentAtt.Health = 3000;
-        currentHP = 3000;
+        
 
         gamemanager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }

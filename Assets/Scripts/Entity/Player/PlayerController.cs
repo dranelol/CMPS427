@@ -451,27 +451,21 @@ public class PlayerController : MonoBehaviour {
         {
             entity.abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
             entity.abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
+            entity.abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 4);
+            entity.abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 5);
 
             entity.abilityIndexDict["shadowbolt"] = 2;
             entity.abilityIndexDict["poisonbolt"] = 3;
+            entity.abilityIndexDict["bladewaltz"] = 4;
+            entity.abilityIndexDict["aoefreeze"] = 5;
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i<6; i++)
             {
-                if (entity.HasEquipped((equipSlots.slots)i))
-                {
-                    gameManager.EquipmentFactory.saveequipment(i.ToString(), entity.GetEquip((equipSlots.slots)i));
-                }
-            }
-
-            for( int i=2;i<6;i++)
-            {
-                if (entity.abilityManager.abilities[i] != null)
-                {
-                    PlayerPrefs.SetString("ability" + i, entity.abilityManager.abilities[i].ID);
-                }
+                entity.removeEquipment((equipSlots.slots)i);
+                entity.addEquipment((equipSlots.slots)i, gameManager.EquipmentFactory.randomEquipment(0,1,(equipSlots.slots)i));
             }
         }
 
@@ -500,6 +494,20 @@ public class PlayerController : MonoBehaviour {
             else blah = blah + "HAS NO SHOE \n";
 
             Debug.Log(blah);
+            blah = entity.currentAtt.Health.ToString() + " Health\n";
+            blah = blah + entity.currentAtt.Resource.ToString() + " Resource\n";
+            blah = blah + entity.currentAtt.Power.ToString() + " Power\n";
+            blah = blah + entity.currentAtt.Defense.ToString() + " Defense\n";
+            blah = blah + entity.currentAtt.MinDamage.ToString() + " MinDamage\n";
+            blah = blah + entity.currentAtt.MaxDamage.ToString() + " Maxdamage\n";
+            Debug.Log(blah);
+            Debug.Log(entity.CurrentHP.ToString());
+
+
+        }
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            entity.ModifyHealth(entity.currentAtt.Health-entity.CurrentHP);
         }
 
         #region ABILITY TESTS
