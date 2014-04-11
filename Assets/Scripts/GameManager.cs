@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     public static Dictionary<int, Aura> Auras;
     public static Dictionary<string, int> AuraStringToIntMap;
 
-    public static float GLOBAL_COOLDOWN = 0.1f;
+    public static float GLOBAL_COOLDOWN = 0.5f;
 
 
     public bool loadsavetest = false;

@@ -259,7 +259,7 @@ public class AIPursuit : StateMachine
                     // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                     // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
 
-                    //entity.abilityManager.abilities[0].SpawnProjectile(gameObject, 2, false);
+                    entity.abilityManager.abilities[0].SpawnProjectile(gameObject, gameObject, (currentTarget.transform.position - transform.position).normalized, entity.abilityManager.abilities[0].ID, false);
 
                 }
                 else
