@@ -169,15 +169,21 @@ public class AIPursuit : StateMachine
 
     void seek_Update()
     {
+        if ((MovementFSM.MoveStates)MoveFSM.CurrentState == MovementFSM.MoveStates.idle)
+        {
+            Vector3 direction = currentTarget.transform.position - transform.position;
+
+            transform.forward = Vector3.Slerp(transform.forward, new Vector3(direction.x, 0, direction.z).normalized, Time.deltaTime * 10f);
+        }
 
         if ((entity.CurrentHP < (entity.currentAtt.Health * 0.2f)) && hasFled == false)
         {
 
             Transition(PursuitStates.flee);
         }
+
         else
         {
-
             if (entity.abilityManager.activeCoolDowns[0] > Time.time)
             {
                 float timeLeft = entity.abilityManager.activeCoolDowns[0] - Time.time;
@@ -187,8 +193,7 @@ public class AIPursuit : StateMachine
 
             if (currentTarget != null)
             {
-                if (combatFSM.IsIdle()) // && _abilityList[nextAbilityIndex].OnCooldown == false) MATT DO THIS
-
+                if (combatFSM.IsIdle())
                 {
                     Vector3 directionToTarget = currentTarget.transform.position - transform.position;
 
@@ -205,7 +210,7 @@ public class AIPursuit : StateMachine
                         // if we succeeded our raycast, and we hit the player first: we're in attack range and LoS
                         if (raycastSuccess == true && hit.transform.tag == "Player")
                         {
-                            MoveFSM.Stop();
+                            //MoveFSM.Stop();
                             Transition(PursuitStates.attack);
                         }
                     }
@@ -215,6 +220,11 @@ public class AIPursuit : StateMachine
                     {
                         MoveFSM.SetPath(currentTarget.transform.position);
                     }
+                }
+
+                else if (Vector3.Distance(transform.position, currentTarget.transform.position) <= _abilityList[0].Range + MoveFSM.Radius + currentTarget.GetComponent<NavMeshAgent>().radius + MoveFSM.StoppingDistance)
+                {
+                    MoveFSM.Stop();
                 }
             }
 
@@ -232,15 +242,14 @@ public class AIPursuit : StateMachine
 
     void attack_Update()
     {
-
         if ((entity.CurrentHP < (entity.currentAtt.Health * 0.2f)) && hasFled == false)
         {
 
             Transition(PursuitStates.flee);
         }
+
         else
         {
-
             if (currentTarget != null && entity.abilityManager.activeCoolDowns[0] <= Time.time)
             {
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
@@ -262,12 +271,11 @@ public class AIPursuit : StateMachine
                     //entity.abilityManager.abilities[0].SpawnProjectile(gameObject, 2, false);
 
                 }
+
                 else
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                     entity.abilityManager.abilities[0].AttackHandler(gameObject, entity, false);
-
-
                 }
 
                 entity.abilityManager.activeCoolDowns[0] = Time.time + entity.abilityManager.abilities[0].Cooldown;
@@ -281,6 +289,7 @@ public class AIPursuit : StateMachine
             {
                 Transition(PursuitStates.seek);
             }
+
             else
             {
                 //Transition(PursuitStates.inactive); NO
