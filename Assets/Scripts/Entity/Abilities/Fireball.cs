@@ -14,7 +14,7 @@ public class Fireball : Ability
     public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
         
-        int segments = 1;
+        int segments = 8;
         
         for(int i = 0; i < segments; i++)
         {

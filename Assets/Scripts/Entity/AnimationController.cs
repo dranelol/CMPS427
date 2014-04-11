@@ -31,13 +31,11 @@ public class AnimationController : MonoBehaviour
 
     public void StopMovingAnim()
     {
-        Debug.Log("stop");
         animation.CrossFade(_idle.name, 0.2f);
     }
 
     public void StartMovingAnim()
     {
-        Debug.Log("start");
         animation.CrossFade(_run.name, 0.2f);
     }
 

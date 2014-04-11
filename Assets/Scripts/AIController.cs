@@ -84,7 +84,7 @@ public class AIController : StateMachine
         localHomePosition = transform.position;
 
         wanderDistance = 5.0f;
-        wanderInterval = 10.0f;
+        wanderInterval = 5.0f;
         wanderDistanceFromNode = 7.0f;
 
         nodePosition = new Vector3(transform.parent.position.x, transform.position.y, transform.parent.position.z);
@@ -197,7 +197,6 @@ public class AIController : StateMachine
         return (AIStates)CurrentState == AIStates.pursuit;
     }
 
-
     #endregion
 
     #region private functions
@@ -268,22 +267,15 @@ public class AIController : StateMachine
 
         Vector3 targetPosition = new Vector3(randomDirection.x, 0, randomDirection.y);
 
-
-
         targetPosition += currentPosition;
-        targetPosition.y = currentPosition.y;
 
         if (Vector3.Distance(centerPosition, targetPosition) > distanceFromCenter)
         {
-
-
             Vector3 newDirection = (centerPosition - currentPosition).normalized * distance;
 
             targetPosition = new Vector3(newDirection.x, 0, newDirection.y);
             targetPosition += currentPosition;
-            targetPosition.y = currentPosition.y;
         }
-
 
         MoveFSM.SetPath(targetPosition);
     }
@@ -312,10 +304,13 @@ public class AIController : StateMachine
     {
         if (Time.time >= nextWander)
         {
-
             Wander(transform.position, nodePosition, wanderDistance, wanderDistanceFromNode);            
-
             nextWander = Time.time + wanderInterval;
+        }
+
+        else if (Vector3.Distance(transform.position, GetComponent<NavMeshAgent>().destination) < GetComponent<NavMeshAgent>().stoppingDistance)
+        {
+            MoveFSM.Stop();
         }
     }
 
@@ -395,16 +390,16 @@ public class AIController : StateMachine
 
     IEnumerator dead_EnterState()
     {
-        Destroy(this.gameObject);
+        // Destroy(this.gameObject);
 
-        /*PursuitFSM.StopPursuit();
+        PursuitFSM.StopPursuit();
         MoveFSM.LockMovement();
-
         GetComponent<CapsuleCollider>().enabled = false;
-        NavAgent.enabled = false;
-        transform.GetChild(0).gameObject.SetActive(false);
-        Destroy(rigidbody, 2f);
-        */
+        GetComponent<NavMeshAgent>().enabled = false;
+        Aggro.gameObject.SetActive(false);
+        Destroy(rigidbody);
+
+        GetComponent<AnimationController>().DeathAnim();
         yield return null;
     }
 
