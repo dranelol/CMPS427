@@ -16,6 +16,7 @@ parser.add_argument('inputFile', action="store", help="File containing a | separ
 
 newBuff = parser.parse_args()
 
+aurasDict = ""
 
 template = open("template_file", "r")
 tempText = template.read()
@@ -62,7 +63,7 @@ with open(newBuff.inputFile) as f:
 			actualBuff = inputList[4]+"(Attributes.Stats."+inputList[5]+","+inputList[6]+"f)"
 		
 		
-		
+		aurasDict += "Auras[\""+inputList[0]+"\"] = new "+inputList[0]+"(\""+inputList[0]+"\");\n"
 		
 		
 		buffType = "AuraType."+inputList[3]
@@ -78,7 +79,11 @@ with open(newBuff.inputFile) as f:
 		newBuffFile.close()
 		
 
+auraDictFile = open("newAuraDictionaryEntries", "w");
 
+auraDictFile.write(aurasDict)
+
+auraDictFile.close()
 
 '''
 Old Single Buff Creation Code
