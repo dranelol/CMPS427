@@ -30,14 +30,22 @@ with open(newBuff.inputFile) as f:
 			iCount+=1
 
 
-		if inputList[4] not in modules:
+		if len(inputList) != 12:
+			raise BuffException("Not enough fields for "+inputList[0])
+		elif inputList[4] not in modules:
 			raise BuffException("The module given for " +inputList[0]+ " does not exist!")
 		elif " " in inputList[0]:
 			raise BuffException("The class name given for " +inputList[0]+ " must not contain spaces.")
 		elif inputList[3] not in buffTypes:
 			raise BuffException("The buff type given for "+inputList[0]+" is not valid. Must be Buff or Debuff")
-
-
+		elif inputList[4] == "HoT" and inputList[5] not in modtypeStats:
+			raise BuffException("The ModType given for "+inputList[0]+" is not valid!")
+		elif inputList[4] == "DoT" and inputList[5] not in damageTypeStats:
+			raise BuffException("The DamageType given for "+inputList[0]+" is not valid!")
+		elif (inputList[4] == "Exhaust" or inputList[4] == "Invigorate") and inputList[5] != "":
+			raise BuffException("An attribute was given in field six for "+inputList[0]+" where it was not needed. Please leave this field blank.")
+		elif (inputList[4] == "FortifyAttribute" or inputList[4] == "DamageAttribute") and inputList[5] not in attStats:
+			raise BuffException("The attribute given for "+inputList[0]+" is not valid!")
 		
 
 		if inputList[4] == "HoT":

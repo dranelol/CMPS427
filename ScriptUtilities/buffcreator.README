@@ -16,3 +16,5 @@ Order for fields in the input file for the buffcreator script (all separated by 
 *Valid values are based on values present on 4-8-14. If any have been added, they can be added to the appropriate list at the top of buffcreator.py. If a problem persists, contact Augie for information.
 
 For some modules, only a magnitude needs to be passed to the constructor. However, for this script to function, there must be 12 fields present for each entry in the input file. For unneeded fields, leave them blank.
+
+If an exception is thrown, the script will stop creating the buff files at the line where the error is located. To continue from where you left off, just delete the lines before the error in your input file.
