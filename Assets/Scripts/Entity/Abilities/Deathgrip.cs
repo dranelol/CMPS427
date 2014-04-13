@@ -158,7 +158,7 @@ public class Deathgrip : Ability
 
         if (isPlayer == true)
         {
-            target.renderer.material.color = new Color(1.0f, ratio, ratio);
+            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
         }
     }
 

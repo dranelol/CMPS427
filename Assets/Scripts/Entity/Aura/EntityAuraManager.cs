@@ -30,6 +30,7 @@ public class EntityAuraManager : MonoBehaviour
 
     public bool Add(string name, Entity caster, int count = 0)
     {
+        Debug.LogWarning("asda");
         if (MasterAuraManager.Contains(name)) // Check if the name exists in the master list
         {
             if (_auraDictionary.ContainsKey(name)) // Check if an aura of this name already exists.
@@ -101,6 +102,17 @@ public class EntityAuraManager : MonoBehaviour
                     _auraDictionary.Remove(name);
                     GameObject auraParticleEffect = _particleDictionary[name];
                     _particleDictionary.Remove(name);
+
+                    ParticleSystem[] particleSystems = auraParticleEffect.GetComponentsInChildren<ParticleSystem>();
+
+                    foreach (ParticleSystem item in particleSystems)
+                    {
+                        item.transform.parent = null;
+                        item.emissionRate = 0;
+                        item.enableEmission = false;
+
+                    }
+
                     Destroy(auraParticleEffect);
                 }
 

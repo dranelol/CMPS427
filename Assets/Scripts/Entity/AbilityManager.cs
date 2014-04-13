@@ -13,8 +13,10 @@ public class AbilityManager : MonoBehaviour
 	// Use this for initialization
     public void Awake()
     {
-        abilities = new List<Ability>(6);
-        activeCoolDowns = new List<float>(6);
+        abilities = new List<Ability>(7);
+         
+
+        activeCoolDowns = new List<float>(7);
 
         for (int i = 0; i < abilities.Capacity; i++)
         {
@@ -38,14 +40,28 @@ public class AbilityManager : MonoBehaviour
 
     public void AddAbility(Ability ab, int index)
     {
-        if (abilities.Count <= 6)
+        Debug.Log(ab.Name);
+        if (abilities.Count <= 7)
         {
             abilities[index] = ab;
+            PlayerPrefs.SetString("ability" + (index).ToString(), ab.ID);
+
         }
         else
         {
             throw new Exception("Tried to add too many abilities.");
         }
+    }
+
+    public void RemoveAbility(int index)
+    {
+        if (abilities[index] != null)
+        {
+            Debug.Log("removing "+ abilities[index].Name);
+            PlayerPrefs.DeleteKey("ability" + (index).ToString());
+            abilities[index] = null;
+        }
+
     }
 
 

@@ -1,16 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class PlayerEntity : Entity 
 {
     public float power, defense, attackSpeed, movementSpeed, minDamage, maxDamage;
 
+
+    GameManager gamemanager;
+
 	// Use this for initialization
     public void Awake()
     {
         base.Awake();
-        currentAtt.Health = 3000;
+        baseAtt.Health = 3000;
         currentHP = 3000;
+
+        gamemanager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
 
 
@@ -18,16 +24,47 @@ public class PlayerEntity : Entity
     {
         base.Start();
 
+        if (gamemanager.loadsavetest == true)
+        {
+            for (int i = 2; i < 6; i++)
+            {
+                if(PlayerPrefs.HasKey("ability"+i) == true)
+                {
+                    abilityManager.AddAbility(GameManager.Abilities[PlayerPrefs.GetString("ability"+i)], i);
+                    abilityIndexDict[PlayerPrefs.GetString("ability"+i)] = i;
+                }
+            }
+            for( int i=0;i<6;i++)
+            {
+                
+                if(PlayerPrefs.HasKey(i+"name") == true)
+                {
+                    equipment tempequip = gamemanager.EquipmentFactory.loadequipment(i+"");
+                    if (addEquipment(tempequip.validSlot, tempequip))
+                    {
+                        Debug.Log("EQUIPPING " + tempequip.equipmentName + " FROM LOAD");
+                    }
+                    else
+                    {
+                        Debug.Log("CAN'T EQUIP THE "+tempequip.equipmentName+" FOR SOME REASON");
+                    }
+                }
+            }
 
-        abilityManager.AddAbility(GameManager.Abilities["fireball"], 2);
-        abilityManager.AddAbility(GameManager.Abilities["blink"], 3);
-        abilityManager.AddAbility(GameManager.Abilities["hadouken"], 4);
-        abilityManager.AddAbility(GameManager.Abilities["deathgrip"], 5);
+        }
 
-        abilityIndexDict["fireball"] = 2;
-        abilityIndexDict["blink"] = 3;
-        abilityIndexDict["hadouken"] = 4;
-        abilityIndexDict["deathgrip"] = 5;
+        else
+        {
+            abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
+            abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
+            abilityManager.AddAbility(GameManager.Abilities["ShockMine"], 4);
+            abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], 5);
+
+            abilityIndexDict["shadowbolt"] = 2;
+            abilityIndexDict["poisonbolt"] = 3;
+            abilityIndexDict["ShockMine"] = 4;
+            abilityIndexDict["chaosbolt"] = 5;
+        }
 	}
 	
 	// Update is called once per frame

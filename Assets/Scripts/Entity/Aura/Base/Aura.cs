@@ -306,7 +306,6 @@ public abstract class Aura
 
                     if (_timeRemaining <= 0) // If the aura has expired,
                     {
-                        OnEnd(); // Call OnEnd event
                         _target.GetComponent<EntityAuraManager>().Remove(_name, _caster);
                         yield return null;
                     }
@@ -810,20 +809,20 @@ public abstract class Aura
             base.OnStart(target, source, count);
             _attributeSnapshot = EntityAffected.currentAtt.GetValue(Attribute);
 
-            CalculateAttributeChange(EntityAffected, count);
+            CalculateAttributeChange(EntityAffected, Count);
         }
 
         public override void OnUpdate(int count)
         {
             base.OnUpdate(count);
 
-            CalculateAttributeChange(EntityAffected, count);
+            CalculateAttributeChange(EntityAffected, Count);
         }
 
         public override void OnEnd()
         {
             base.OnEnd();
-
+            Debug.LogWarning("end");
             CalculateAttributeChange(EntityAffected, 0);
         }
 
@@ -831,38 +830,13 @@ public abstract class Aura
         {
             float newAttributeChange = _attributeSnapshot * Magnitude * Count * Sign; // Calculate new change in attribute
             float appliedAttribute = newAttributeChange - _attributeChange; // Get the difference from the old change
-
+            Debug.LogWarning(appliedAttribute);
             Attributes newAttribute = new Attributes();
 
-            switch ((Attributes.Stats)_attribute)
-            {
-                case Attributes.Stats.ATTACK_SPEED:
-                    newAttribute.AttackSpeed = appliedAttribute;
-                    break;
-                case Attributes.Stats.DEFENSE:
-                    newAttribute.Defense = appliedAttribute;
-                    break;
-                case Attributes.Stats.HEALTH:
-                    newAttribute.Health = appliedAttribute;
-                    break;
-                case Attributes.Stats.MAX_DAMAGE:
-                    newAttribute.MaxDamage = appliedAttribute;
-                    break;
-                case Attributes.Stats.MIN_DAMAGE:
-                    newAttribute.MinDamage = appliedAttribute;
-                    break;
-                case Attributes.Stats.MOVEMENT_SPEED:
-                    newAttribute.MovementSpeed = appliedAttribute;
-                    break;
-                case Attributes.Stats.POWER:
-                    newAttribute.Power = appliedAttribute;
-                    break;
-                case Attributes.Stats.RESOURCE:
-                    newAttribute.Resource = appliedAttribute;
-                    break;
-            }
+            newAttribute.ModifyValue(Attribute, appliedAttribute);
 
-            target.AddBuff(newAttribute);
+            target.ApplyBuff(newAttribute);
+            _attributeChange += appliedAttribute;
         }
 
         #endregion

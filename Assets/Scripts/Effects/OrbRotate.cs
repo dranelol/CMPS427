@@ -7,6 +7,9 @@ public class OrbRotate : MonoBehaviour
     public float maxHeight;
     public float angularSpeed;
     public float oscillationSpeed;
+    public bool yOrbit;
+    public float orbitScale;
+    public GameObject orbitObject;
 
     void Awake()
     {
@@ -16,13 +19,27 @@ public class OrbRotate : MonoBehaviour
 	void Update () 
     {
         //newPosition.y = Mathf.Lerp(minHeight, maxHeight, Time.time);
+        if (yOrbit == true)
+        {
+            transform.RotateAround(orbitObject.transform.position, Vector3.up, angularSpeed * Time.deltaTime);
+            Vector3 newPosition = transform.position;
 
-        transform.RotateAround(transform.parent.transform.position, Vector3.up, angularSpeed * Time.deltaTime);
-        Vector3 newPosition = transform.position;
 
-        //newPosition.y = MathHelper.Sinerp(minHeight, maxHeight, Time.time);
-        newPosition.y = Mathf.Sin(Time.time * oscillationSpeed) * maxHeight + maxHeight;
+            //newPosition.x = MathHelper.Sinerp(minHeight, maxHeight, Time.time);
+            if (oscillationSpeed > 0.0f)
+            {
+                newPosition.y = Mathf.Sin(Time.time * oscillationSpeed) * maxHeight + maxHeight;
+            }
 
-        transform.position = newPosition;
+            transform.position = newPosition;
+        }
+
+        else
+        {
+            transform.RotateAround(orbitObject.transform.position, orbitObject.transform.forward, angularSpeed * Time.deltaTime);
+        }
+
+        
+
 	}
 }

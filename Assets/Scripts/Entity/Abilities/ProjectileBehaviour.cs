@@ -41,6 +41,21 @@ public class ProjectileBehaviour : MonoBehaviour
     /// </summary>
     public bool CollidesWithProjectiles = false;
 
+    /// <summary>
+    /// If this projectile needs a target, this is it
+    /// </summary>
+    public Vector3 target = Vector3.zero;
+
+    /// <summary>
+    /// Is this a homing projectile?
+    /// </summary>
+    public bool homing = false;
+
+    /// <summary>
+    /// Speed of the projectile
+    /// </summary>
+    public float speed;
+
     void Awake()
     {
         ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
@@ -66,7 +81,19 @@ public class ProjectileBehaviour : MonoBehaviour
 
         //Debug.Log(timeToActivate);
 
-        velocity = rigidbody.velocity;
+        //velocity = rigidbody.velocity;
+
+        if (homing == true)
+        {
+            Vector3 direction = target - transform.position;
+
+            Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.2f, 0f);
+
+            transform.rotation = Quaternion.LookRotation(newDirection);
+        }
+
+
+        transform.position = transform.position + transform.forward * Time.deltaTime * speed;
 
         if (timeToActivate <= 0.0f)
         {
@@ -90,26 +117,28 @@ public class ProjectileBehaviour : MonoBehaviour
         {
             if (CollidesWithProjectiles)
             {
+                Debug.Log("asd");
                 if (other.gameObject.tag == "Projectile")
                 {
                     if (other.gameObject.GetComponent<ProjectileBehaviour>().owner.tag == "Player")
                     {
-                    Debug.Log("attacked an enemy!");
+                        Debug.Log("attacked an enemy!");
 
 
-                    Entity ownerEntity = owner.GetComponent<Entity>();
+                        Entity ownerEntity = owner.GetComponent<Entity>();
 
-                    int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
+                        int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
 
-                    ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
+                        ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
 
-                    hascollided = true;
-                    DetachParticleSystem();
-                    Destroy(gameObject);
+                        hascollided = true;
+                        DetachParticleSystem();
+                        Destroy(gameObject);
                     }
 
                 }
             }
+
             else
             {
 
@@ -146,6 +175,19 @@ public class ProjectileBehaviour : MonoBehaviour
                     DetachParticleSystem();
                     Destroy(gameObject);
                 }
+
+                if (other.gameObject.tag == "Terrain")
+                {
+                    Debug.Log("hit terrain");
+                }
+
+                if (homing == true && other.gameObject.tag == "Terrain")
+                {
+                    Debug.Log("hit terrain");
+                    hascollided = true;
+                    DetachParticleSystem();
+                    Destroy(gameObject);
+                }
             }
             /*
         else if (other.gameObject.tag == "Enemy" && owner.gameObject.tag == "Enemy")
@@ -175,6 +217,20 @@ public class ProjectileBehaviour : MonoBehaviour
 
     public void DetachParticleSystem()
     {
+        /*
+        foreach (Transform child in transform)
+        {
+            Debug.Log("asd");
+            if (child.gameObject.tag == "OrbRotate")
+            {
+                Debug.Log("unparenting orbs");
+                child.parent = null;
+            }
+
+
+        }
+        */
+
         ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
 
         foreach (ParticleSystem item in particles)
@@ -185,6 +241,8 @@ public class ProjectileBehaviour : MonoBehaviour
 
 
         }
+
+        
 
         //particles.GetComponent<ParticleAnimator>().autodestruct = true;
     }
