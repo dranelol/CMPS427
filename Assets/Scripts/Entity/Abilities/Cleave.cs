@@ -93,7 +93,7 @@ public class Cleave : Ability
 
         foreach (Collider collider in colliders)
         {
-            Debug.Log(collider.ToString());
+            
 
             // create a vector from the possible enemy to the attacker
             Vector3 normalizedAttackPosition = new Vector3(source.transform.position.x, 1, source.transform.position.z);
@@ -188,7 +188,7 @@ public class Cleave : Ability
         if (isPlayer == true)
         {
 
-            target.renderer.material.color = new Color(1.0f, ratio, ratio);
+            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
         }
     }
 

@@ -243,7 +243,7 @@ public class PlayerController : MonoBehaviour {
 
         
 
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKey(KeyCode.W))
         {
             if (entity.abilityManager.abilities[3] != null)
             {
@@ -318,7 +318,7 @@ public class PlayerController : MonoBehaviour {
 
         #region ability 3
         
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKey(KeyCode.E))
         {
             if (entity.abilityManager.abilities[4] != null)
             {
@@ -392,7 +392,7 @@ public class PlayerController : MonoBehaviour {
 
         #region ability 4
         
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKey(KeyCode.R))
         {
             if (entity.abilityManager.abilities[5] != null)
             {
