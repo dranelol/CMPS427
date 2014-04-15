@@ -29,11 +29,14 @@ public class Entity : MonoBehaviour
     public AbilityManager abilityManager;
 
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
+    private Inventory inventory;
 
+    public Inventory Inventory { get { return inventory; } }
     public Dictionary<string, int> abilityIndexDict = new Dictionary<string, int>();
 
     public void Awake()
     {
+        LoadInventory();
         abilityManager = gameObject.GetComponent<AbilityManager>();
 
         equipAtt = new Attributes();
@@ -47,6 +50,9 @@ public class Entity : MonoBehaviour
         baseAtt.AttackSpeed = 1.0f;
         baseAtt.MovementSpeed = 1.0f;
     }
+
+
+    public void OnApplicationQuit() { }
 
     /// <summary>
     /// Creates the entity with a given set of base attributes,
@@ -99,23 +105,23 @@ public class Entity : MonoBehaviour
     /// <param name="slot">The equipment slot being filled.</param>
     /// <param name="itemAtt">The attributes of the item being equipped.</param>
     /// <returns></returns>
-    public bool addEquipment(equipSlots.slots slot, equipment item)
+    public bool addEquipment(equipment item)
     {
-        if (this.equippedEquip.ContainsKey(slot))
+        if (this.equippedEquip.ContainsKey(item.validSlot))
             return false;
         else if (item.twohand == true && this.equippedEquip.ContainsKey(equipSlots.slots.Off))
             return false;
-        else if (slot == equipSlots.slots.Off && equippedEquip[equipSlots.slots.Main].twohand == true)
+        else if (item.validSlot == equipSlots.slots.Off && equippedEquip[equipSlots.slots.Main].twohand == true)
             return false;
         else
         {
-            this.equippedEquip.Add(slot, item);
+            this.equippedEquip.Add(item.validSlot, item);
             this.equipAtt.Add(item.equipmentAttributes);
             UpdateCurrentAttributes();
 
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.saveequipment(((int)slot).ToString(), item);
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.saveequipment(((int)item.validSlot).ToString(), item);
 
-            if (slot == equipSlots.slots.Main && item.onhit != "")
+            if (item.validSlot == equipSlots.slots.Main && item.onhit != "")
             {
                 abilityManager.RemoveAbility(6);
                 abilityManager.AddAbility(GameManager.Abilities[item.onhit], 6);
@@ -150,6 +156,14 @@ public class Entity : MonoBehaviour
         }
         else
             return false;
+    }
+
+    /// <summary>
+    /// Currently just initializes the inventory object.
+    /// </summary>
+    private void LoadInventory()
+    {
+        inventory = new Inventory();
     }
 
     /// <summary>
