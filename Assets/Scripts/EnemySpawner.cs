@@ -122,10 +122,10 @@ public class EnemySpawner : MonoBehaviour
             # region giving enemies abilities
 
 
-            enemyEntity.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
+            enemyEntity.abilityManager.abilities[0] = GameManager.Abilities["shadowbolt"];
             enemyEntity.abilityManager.abilities[1] = GameManager.Abilities["hadouken"];
 
-            enemyEntity.abilityIndexDict["cleave"] = 0;
+            enemyEntity.abilityIndexDict["shadowbolt"] = 0;
             enemyEntity.abilityIndexDict["hadouken"] = 1;
 
 
