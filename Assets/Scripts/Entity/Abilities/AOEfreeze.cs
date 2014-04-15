@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class BladeWaltz : Ability
+public class AOEfreeze : Ability
 {
-    public BladeWaltz(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
+    public AOEfreeze(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
         : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
     {
 
@@ -24,14 +24,12 @@ public class BladeWaltz : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
-                    DoBlink(enemy, attacker.gameObject);
+                    //DoPhysics(source, enemy);
+                    DoBuff(enemy, attacker);
+                    
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
                         enemy.GetComponent<AIController>().BeenAttacked(source);
-                    }
-                    if (attacker.abilityManager.abilities[6] != null)
-                    {
-                        attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
                     }
                 }
             }
@@ -43,13 +41,12 @@ public class BladeWaltz : Ability
             {
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
-                DoBlink(enemy, attacker.gameObject);
-                if (attacker.abilityManager.abilities[6] != null)
-                {
-                    attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
-                }
+                //DoPhysics(source, enemy);
+                DoBuff(enemy, attacker);
+
             }
         }
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.5f, isPlayer));
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -160,12 +157,19 @@ public class BladeWaltz : Ability
                 }
             }
         }
-        List<GameObject> enemytoAttack = new List<GameObject>();
-        if (enemiesToAttack.Count > 0)
-        {
-            enemytoAttack.Add(enemiesToAttack[Random.Range(0, enemiesToAttack.Count)]);
-        }
-        return enemytoAttack;
+
+        return enemiesToAttack;
+    }
+
+    /// <summary>
+    /// Adds the buff to the enemy. Pretty straightforward
+    /// 
+    /// </summary>
+    /// <param name="target">the gameobject of the target</param>
+    /// <param name="source">the entity that is applying the buff/debuff</param>
+    public void DoBuff(GameObject target, Entity source)
+    {
+        target.GetComponent<EntityAuraManager>().Add("root", source);
 
     }
 
@@ -184,18 +188,37 @@ public class BladeWaltz : Ability
         }
     }
 
-
-    private void DoBlink(GameObject target, GameObject owner)
+    public override void DoPhysics(GameObject source, GameObject target)
     {
+        
+    }
 
-        float portradius = 1.0f;
-        Vector3 portpos = (target.transform.position - owner.transform.position);
+    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
+    {
+        GameObject particles;
 
-        Vector3 offset = Vector3.Normalize(portpos) * portradius;
 
-        portpos = portpos + offset + owner.transform.position;
 
-        owner.GetComponent<NavMeshAgent>().Warp(portpos);
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, Quaternion.Euler(90,90,0));
+        
 
+        //particles.transform.parent = attacker.transform;
+
+        yield return new WaitForSeconds(time);
+
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem item in particleSystems)
+        {
+            Debug.Log("asd");
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
+
+        }
+
+        GameObject.Destroy(particles);
+
+        yield return null;
     }
 }

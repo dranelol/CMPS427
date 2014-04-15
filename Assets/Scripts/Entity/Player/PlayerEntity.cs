@@ -13,9 +13,6 @@ public class PlayerEntity : Entity
     public void Awake()
     {
         base.Awake();
-        baseAtt.Health = 3000;
-        currentHP = 3000;
-
         gamemanager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
 
@@ -65,6 +62,7 @@ public class PlayerEntity : Entity
             abilityIndexDict["ShockMine"] = 4;
             abilityIndexDict["chaosbolt"] = 5;
         }
+
 	}
 	
 	// Update is called once per frame

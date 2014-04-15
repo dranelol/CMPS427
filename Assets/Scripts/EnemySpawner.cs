@@ -10,6 +10,8 @@ public class EnemySpawner : MonoBehaviour
 
     public int enemyCount;
     public float spawnRadius;
+    public int level;
+    public string enemytype;
 
     // Continuous generation
     public bool isStatic; // This determines if the spawner should generate 1 group or continuously spawn enemies over time.
@@ -39,6 +41,7 @@ public class EnemySpawner : MonoBehaviour
 
         trigger = GetComponent<SphereCollider>();
         trigger.radius = triggerRadius;
+        level = 1;
     }
 
     void Start()
@@ -119,15 +122,18 @@ public class EnemySpawner : MonoBehaviour
 
             Entity enemyEntity = newEnemy.GetComponent<Entity>();
 
-            # region giving enemies abilities
-
-
-            enemyEntity.abilityManager.abilities[0] = GameManager.Abilities["shadowbolt"];
+            # region giving enemies stats and abilities
+            /*
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.MakeEnemyAttributes(level, enemytype);
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.GiveEnemyAbilities(enemyEntity, enemytype);
+            */
+            
+            enemyEntity.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
             enemyEntity.abilityManager.abilities[1] = GameManager.Abilities["hadouken"];
 
-            enemyEntity.abilityIndexDict["shadowbolt"] = 0;
+            enemyEntity.abilityIndexDict["cleave"] = 0;
             enemyEntity.abilityIndexDict["hadouken"] = 1;
-
+            
 
             #endregion
 
