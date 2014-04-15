@@ -259,7 +259,7 @@ public class AIPursuit : StateMachine
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                     entity.abilityManager.abilities[0].AttackHandler(gameObject, entity, false);
-                    GetComponent<AnimationController>().AttackAnim(1);
+                    GetComponent<AnimationController>().Attack(1);
                 }
 
                 else if (entity.abilityManager.abilities[0].AttackType == AttackType.PROJECTILE)

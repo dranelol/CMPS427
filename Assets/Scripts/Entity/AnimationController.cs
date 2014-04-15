@@ -29,22 +29,22 @@ public class AnimationController : MonoBehaviour
         animation[_attack3.name].AddMixingTransform(_upperBody, true);
     }
 
-    public void StopMovingAnim()
+    public void StopMoving()
     {
         animation.CrossFade(_idle.name, 0.2f);
     }
 
-    public void StartMovingAnim()
+    public void StartMoving()
     {
         animation.CrossFade(_run.name, 0.2f);
     }
 
-    public void DeathAnim()
+    public void Death()
     {
         animation.Play(_death.name, PlayMode.StopAll);
     }
 
-    public void AttackAnim(int number)
+    public void Attack(int number)
     {
         AnimationClip attackAnim;
 
