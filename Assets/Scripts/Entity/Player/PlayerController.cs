@@ -110,11 +110,6 @@ public class PlayerController : MonoBehaviour {
         // If the move/attack key was pressed...
         if (Input.GetAxis("Move/Attack") != 0) 
         {
-<<<<<<< HEAD
-
-
-=======
->>>>>>> upstream/master
             int terrainMask = LayerMask.NameToLayer("Terrain");
 
             int enemyMask = LayerMask.NameToLayer("Enemy");
