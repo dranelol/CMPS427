@@ -6,6 +6,7 @@ public class PlayerEntity : Entity
 {
     public float power, defense, attackSpeed, movementSpeed, minDamage, maxDamage;
 
+    public Mesh mesh { get { return GetComponent<MeshFilter>().mesh; } }
 
     GameManager gamemanager;
 
@@ -40,7 +41,7 @@ public class PlayerEntity : Entity
                 if(PlayerPrefs.HasKey(i+"name") == true)
                 {
                     equipment tempequip = gamemanager.EquipmentFactory.loadequipment(i+"");
-                    if (addEquipment(tempequip.validSlot, tempequip))
+                    if (addEquipment(tempequip))
                     {
                         Debug.Log("EQUIPPING " + tempequip.equipmentName + " FROM LOAD");
                     }
@@ -51,6 +52,8 @@ public class PlayerEntity : Entity
                 }
             }
 
+            // Load saved items, if any.
+            Inventory.LoadItems();
         }
 
         else
@@ -70,7 +73,6 @@ public class PlayerEntity : Entity
 	// Update is called once per frame
 	public void Update () 
     {
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit target;
         Physics.Raycast(ray, out target, Mathf.Infinity);
@@ -85,14 +87,23 @@ public class PlayerEntity : Entity
         //abilities[5].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
 
         // update these on-demand instead of every update
-
-        //power = currentAtt.Power;
-        //defense = currentAtt.Defense;
-        //attackSpeed = currentAtt.AttackSpeed;
-        //movementSpeed = currentAtt.MovementSpeed;
-        //minDamage = currentAtt.MinDamage;
-        //maxDamage = currentAtt.MaxDamage;
+        power = currentAtt.Power;
+        defense = currentAtt.Defense;
+        attackSpeed = currentAtt.AttackSpeed;
+        movementSpeed = currentAtt.MovementSpeed;
+        minDamage = currentAtt.MinDamage;
+        maxDamage = currentAtt.MaxDamage;
 
         //Debug.Log(abilities.Count);
 	}
+
+    public void OnApplicationQuit()
+    {
+        Inventory.SaveItems();
+    }
+
+    public Attributes GetAttributes()
+    {
+        return currentAtt;
+    }
 }
