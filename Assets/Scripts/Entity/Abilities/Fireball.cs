@@ -14,7 +14,7 @@ public class Fireball : Ability
     public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
         
-        int segments = 1;
+        int segments = 8;
         
         for(int i = 0; i < segments; i++)
         {
@@ -94,7 +94,7 @@ public class Fireball : Ability
 
         if (isPlayer == true)
         {
-            target.renderer.material.color = new Color(1.0f, ratio, ratio);
+            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
         }
     }
 

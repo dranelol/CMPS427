@@ -5,7 +5,7 @@ public class ParticleCleanup : MonoBehaviour
 {
 	void Update () 
     {
-        if (particleSystem.enableEmission == false)
+        if (particleSystem.emissionRate == 0)
         {
             Destroy(gameObject, particleSystem.duration);
         }

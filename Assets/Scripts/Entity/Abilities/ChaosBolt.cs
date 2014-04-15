@@ -14,7 +14,7 @@ public class Chaosbolt : Ability
     public override void SpawnProjectile(GameObject source, Vector3 target, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
 
-        GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().ChaosboltProjectile, source.transform.position + forward, Quaternion.LookRotation(forward));
+        GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().ChaosboltProjectile, source.transform.position /*+ forward*/, Quaternion.LookRotation(forward));
 
         projectile.GetComponent<ProjectileBehaviour>().owner = owner;
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
@@ -24,7 +24,7 @@ public class Chaosbolt : Ability
         projectile.GetComponent<ProjectileBehaviour>().speed = 15f;
 
 
-        Vector3 randPos = source.transform.position + forward + Random.onUnitSphere * 2;
+        Vector3 randPos = source.transform.position /* + forward*/ + Random.onUnitSphere * 1.25f;
 
         randPos.Set(randPos.x, randPos.y + 2, randPos.z);
 
@@ -78,7 +78,7 @@ public class Chaosbolt : Ability
 
         if (isPlayer == true)
         {
-            target.renderer.material.color = new Color(1.0f, ratio, ratio);
+            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
         }
     }
 
@@ -86,6 +86,7 @@ public class Chaosbolt : Ability
 
     public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target)
     {
+        Debug.Log("explode");
         GameObject particles;
 
         particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position, source.transform.rotation);
@@ -100,7 +101,7 @@ public class Chaosbolt : Ability
         {
             item.transform.parent = null;
             item.emissionRate = 0;
-            item.enableEmission = false;
+            //item.enableEmission = false;
 
         }
 
