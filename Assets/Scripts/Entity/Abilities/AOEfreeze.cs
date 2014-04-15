@@ -161,9 +161,14 @@ public class AOEfreeze : Ability
         return enemiesToAttack;
     }
 
+    /// <summary>
+    /// Adds the buff to the enemy. Pretty straightforward
+    /// 
+    /// </summary>
+    /// <param name="target">the gameobject of the target</param>
+    /// <param name="source">the entity that is applying the buff/debuff</param>
     public void DoBuff(GameObject target, Entity source)
     {
-        Debug.Log(target.name);
         target.GetComponent<EntityAuraManager>().Add("root", source);
 
     }
