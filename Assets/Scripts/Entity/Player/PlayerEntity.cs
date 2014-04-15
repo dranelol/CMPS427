@@ -99,7 +99,7 @@ public class PlayerEntity : Entity
 
     public void OnApplicationQuit()
     {
-        Inventory.SaveItems();
+       // Inventory.SaveItems();
     }
 
     public Attributes GetAttributes()
