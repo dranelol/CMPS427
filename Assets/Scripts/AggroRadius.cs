@@ -15,7 +15,8 @@ public class AggroRadius : MonoBehaviour
 
     void Start()
     {
-        trigger.radius = aggroRadius;
+        trigger.radius = transform.parent.GetComponent<NavMeshAgent>().radius * 10;
+        
     }
 
     void OnTriggerEnter(Collider other)

@@ -16,6 +16,8 @@ public class AbilityManager : MonoBehaviour
     public void Awake()
     {
         abilities = new List<Ability>(7);
+         
+
         activeCoolDowns = new List<float>(7);
 
         tempabilities = new List<Ability>(7);

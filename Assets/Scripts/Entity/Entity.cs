@@ -16,10 +16,15 @@ public class Entity : MonoBehaviour
         get { return currentResource; }
     }
 
-
     public Attributes currentAtt; // The entity's current total attributes
-    public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
+    public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
+    public Attributes baseAtt; // Base attributes without any status effects or gear
+
+    public float minMovementSpeed = 0;
+    public float maxMovementSpeed = 3;
+    public float minAttackSpeed = 0.1f;
+    public float maxAttackSpeed = 3f;
 
     public AbilityManager abilityManager;
 
@@ -31,17 +36,16 @@ public class Entity : MonoBehaviour
     {
         abilityManager = gameObject.GetComponent<AbilityManager>();
 
-        currentAtt = new Attributes();
-        //Debug.Log(currentAtt.ToString()); 
         equipAtt = new Attributes();
         buffAtt = new Attributes();
+        baseAtt = new Attributes();
 
-        currentAtt.Health = currentHP = 50;
-        currentAtt.Resource = currentResource = 100;
-        currentAtt.Power = 10;
-        currentAtt.Defense = 10;
-        currentAtt.AttackSpeed = 1.0f;
-        currentAtt.MovementSpeed = 1.0f;
+        baseAtt.Health = currentHP = 5000;
+        baseAtt.Resource = currentResource = 100;
+        baseAtt.Power = 10;
+        baseAtt.Defense = 10;
+        baseAtt.AttackSpeed = 1.0f;
+        baseAtt.MovementSpeed = 1.0f;
     }
 
     /// <summary>
@@ -49,15 +53,30 @@ public class Entity : MonoBehaviour
     /// </summary>
     public void Start()
     {
-        
+        UpdateCurrentAttributes();
     }
 
+    private void UpdateCurrentAttributes()
+    {
+        currentAtt = new Attributes();
+        currentAtt.Add(baseAtt);
+        currentAtt.Add(equipAtt);
+        currentAtt.Add(buffAtt);
+
+        currentAtt.MovementSpeed = Mathf.Clamp(currentAtt.MovementSpeed, minMovementSpeed, maxMovementSpeed);
+        currentAtt.AttackSpeed = Mathf.Clamp(currentAtt.AttackSpeed, minAttackSpeed, maxAttackSpeed);
+
+        GetComponent<MovementFSM>().UpdateMovementSpeed(currentAtt.MovementSpeed);
+    }
     /// <summary>
     /// Modifies the current health of the entity, clamped by the maximum health.
     /// Can be used for both taking damage and gaining health.
     /// </summary>
     /// <param name="value">Delta value to modify current health.</param>
-    public void ModifyHealth(float delta) { currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); }
+    public void ModifyHealth(float delta) 
+    { 
+        currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); 
+    }
 
     public void ModifyResource(float delta)
     {
@@ -95,17 +114,17 @@ public class Entity : MonoBehaviour
         else
         {
             this.equippedEquip.Add(slot, item);
+            this.equipAtt.Add(item.equipmentAttributes);
+            UpdateCurrentAttributes();
+
             GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.saveequipment(((int)slot).ToString(), item);
 
-            currentAtt.Add(item.equipmentAttributes);
-            this.equipAtt.Add(item.equipmentAttributes);
             if (slot == equipSlots.slots.Main && item.onhit != "")
             {
                 abilityManager.RemoveAbility(6);
                 abilityManager.AddAbility(GameManager.Abilities[item.onhit], 6);
                 abilityIndexDict[item.onhit] = 6;
             }
-
             return true;
         }
     }
@@ -123,8 +142,9 @@ public class Entity : MonoBehaviour
             GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.unsaveEquipment(((int)slot).ToString());
            
             equippedEquip.Remove(slot);
-            currentAtt.Subtract(removed.equipmentAttributes);
             equipAtt.Subtract(removed.equipmentAttributes);
+            UpdateCurrentAttributes();
+
             if (slot == equipSlots.slots.Main)
             {
                 abilityManager.RemoveAbility(6);
@@ -171,9 +191,7 @@ public class Entity : MonoBehaviour
     public void ApplyBuff(Attributes buffedAttributes)
     {
         buffAtt.Add(buffedAttributes);
-        currentAtt.Add(buffedAttributes);
-
-        GetComponent<MovementFSM>().MovementSpeed = currentAtt.MovementSpeed;
+        UpdateCurrentAttributes();
     }
 
     #endregion

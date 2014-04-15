@@ -10,16 +10,47 @@ public class MovementFSM : StateMachine
     public const float DEFAULT_MOVEMENT_SPEED = 5;
 
     private NavMeshAgent _navMeshAgent;
+    private AnimationController _animController;
 
-    public float _movementSpeed;
+    public Vector3 Destination
+    {
+        get { return _navMeshAgent.destination; }
+    }
+
+    private float _movementSpeed;
     public float MovementSpeed
     {
         get { return _movementSpeed; }
-        set
-        {
-            _movementSpeed = Mathf.Clamp(value * DEFAULT_MOVEMENT_SPEED, 0, 15f);
-            _navMeshAgent.speed = _movementSpeed;
-        }
+    }
+
+    public float Radius
+    {
+        get { return _navMeshAgent.radius; }
+    }
+
+    public float RemainingDistance
+    {
+        get { return _navMeshAgent.remainingDistance; }
+    }
+
+    public Vector3 SteeringTarget
+    {
+        get { return _navMeshAgent.steeringTarget; }
+    }
+
+    public float StoppingDistance
+    {
+        get { return _navMeshAgent.stoppingDistance; }
+    }
+
+    public Vector3 Velocity
+    {
+        get { return _navMeshAgent.velocity; }
+    }
+
+    public void UpdateMovementSpeed(float value)
+    {
+        _navMeshAgent.speed = _movementSpeed = DEFAULT_MOVEMENT_SPEED * value;
     }
 
     public enum MoveStates
@@ -31,6 +62,9 @@ public class MovementFSM : StateMachine
 
     void Awake()
     {
+        _navMeshAgent = GetComponent<NavMeshAgent>();
+        _animController = GetComponent<AnimationController>();
+
         SetupMachine(MoveStates.idle);
 
         HashSet<Enum> moveLockedTransitions = new HashSet<Enum>();
@@ -42,13 +76,14 @@ public class MovementFSM : StateMachine
         AddTransitionsFrom(MoveStates.moveLocked, moveLockedTransitions);
 
         StartMachine(MoveStates.idle);
+
+        _movementSpeed = DEFAULT_MOVEMENT_SPEED;
+        _navMeshAgent.updateRotation = false;
     }
 
     void Start()
     {
-        _navMeshAgent = GetComponent<NavMeshAgent>();
         _navMeshAgent.stoppingDistance = _navMeshAgent.radius;
-        MovementSpeed = GetComponent<Entity>().currentAtt.MovementSpeed;
     }
 
     #region public functions
@@ -57,13 +92,12 @@ public class MovementFSM : StateMachine
     {
         if ((MoveStates)CurrentState != MoveStates.moveLocked)
         {
-            Transition(MoveStates.moving);
-
             NavMeshHit navMeshHit;
 
             if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
             {
-                _navMeshAgent.SetDestination(navMeshHit.position); 
+                _navMeshAgent.SetDestination(navMeshHit.position);
+                Transition(MoveStates.moving);
             }      
         }
     }
@@ -116,13 +150,41 @@ public class MovementFSM : StateMachine
 
     #region state behaviour
 
+    #region idle functions
+
+    private IEnumerator idle_EnterState()
+    {
+        _animController.StopMovingAnim();
+        yield return null;
+    }
+
+    #endregion
+
     #region moving functions
+
+    private IEnumerator moving_EnterState()
+    {
+        _animController.StartMovingAnim();
+        yield return null;
+    }
 
     void moving_Update()
     {
-        if (!_navMeshAgent.hasPath && !_navMeshAgent.pathPending)
+        if (!_navMeshAgent.hasPath && !_navMeshAgent.pathPending) // || _navMeshAgent.hasPath && _navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete)
         {
             Stop();
+        }
+
+        else if (_navMeshAgent.hasPath)
+        {
+            /*
+            Vector3 tempRotation = transform.rotation.eulerAngles;
+            tempRotation.y = Mathf.LerpAngle(transform.rotation.eulerAngles.y, Quaternion.LookRotation(SteeringTarget).eulerAngles.y, Time.time );
+            transform.rotation = Quaternion.Euler(tempRotation);*/
+
+            Vector3 direction = SteeringTarget - transform.position;
+
+            transform.forward = Vector3.Slerp(transform.forward, new Vector3(direction.x, 0, direction.z).normalized, Time.deltaTime * 10f);
         }
     }
 
