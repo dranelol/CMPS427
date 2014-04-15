@@ -12,15 +12,20 @@ public class MovementFSM : StateMachine
     private NavMeshAgent _navMeshAgent;
     private AnimationController _animController;
 
+    private float _movementSpeed;
+    public float MovementSpeed
+    {
+        get { return _movementSpeed; }
+    }
+
     public Vector3 Destination
     {
         get { return _navMeshAgent.destination; }
     }
 
-    private float _movementSpeed;
-    public float MovementSpeed
+    public float Height
     {
-        get { return _movementSpeed; }
+        get { return _navMeshAgent.height; }
     }
 
     public float Radius
@@ -123,6 +128,8 @@ public class MovementFSM : StateMachine
     {
         if ((MoveStates)CurrentState == MoveStates.moveLocked)
         {
+            rigidbody.velocity = Vector3.zero;
+            rigidbody.angularVelocity = Vector3.zero;
             Transition(MoveStates.idle);
         }
     }
@@ -154,7 +161,7 @@ public class MovementFSM : StateMachine
 
     private IEnumerator idle_EnterState()
     {
-        _animController.StopMovingAnim();
+        _animController.StopMoving();
         yield return null;
     }
 
@@ -164,7 +171,7 @@ public class MovementFSM : StateMachine
 
     private IEnumerator moving_EnterState()
     {
-        _animController.StartMovingAnim();
+        _animController.StartMoving();
         yield return null;
     }
 
@@ -177,13 +184,7 @@ public class MovementFSM : StateMachine
 
         else if (_navMeshAgent.hasPath)
         {
-            /*
-            Vector3 tempRotation = transform.rotation.eulerAngles;
-            tempRotation.y = Mathf.LerpAngle(transform.rotation.eulerAngles.y, Quaternion.LookRotation(SteeringTarget).eulerAngles.y, Time.time );
-            transform.rotation = Quaternion.Euler(tempRotation);*/
-
             Vector3 direction = SteeringTarget - transform.position;
-
             transform.forward = Vector3.Slerp(transform.forward, new Vector3(direction.x, 0, direction.z).normalized, Time.deltaTime * 10f);
         }
     }
