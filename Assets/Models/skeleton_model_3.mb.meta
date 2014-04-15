@@ -1,0 +1,599 @@
+fileFormatVersion: 2
+guid: 5feb424d974efc04daf6a8c33ec91df5
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: Body_controller
+    100002: Chest
+    100004: chest
+    100006: Global_Controller
+    100008: ikHandle1
+    100010: ikHandle2
+    100012: ikHandle3
+    100014: ikHandle4
+    100016: ikHandle5
+    100018: ikHandle6
+    100020: ikHandle7
+    100022: ikHandle8
+    100024: index3
+    100026: index3 1
+    100028: index4
+    100030: index4 1
+    100032: index_1
+    100034: index_1 1
+    100036: index_2
+    100038: index_2 1
+    100040: Jaw
+    100042: joint14
+    100044: joint14 1
+    100046: joint15
+    100048: joint15 1
+    100050: joint16
+    100052: joint16 1
+    100054: joint21
+    100056: joint22
+    100058: joint27
+    100060: joint28
+    100062: joint29
+    100064: joint30
+    100066: joint8
+    100068: joint9
+    100070: L_Ankle
+    100072: L_AnkleController
+    100074: L_Arm_Forearm
+    100076: L_Arm_Forearm1
+    100078: L_Arm_PVC
+    100080: L_Arm_Socket
+    100082: L_Arm_Socket1
+    100084: L_ArmSocket
+    100086: L_backCollar
+    100088: L_BottomLeg
+    100090: L_CollarBone
+    100092: L_Elbow
+    100094: L_Femur
+    100096: L_foot
+    100098: L_FootController
+    100100: L_Hand
+    100102: L_Hand1
+    100104: L_hand_controller
+    100106: L_index3
+    100108: L_index4
+    100110: L_index_1
+    100112: L_inedx2
+    100114: L_Knee
+    100116: L_Leg
+    100118: L_middle1
+    100120: L_middle2
+    100122: L_middle3
+    100124: L_middle4
+    100126: L_NeckCollar
+    100128: L_palm
+    100130: L_pinky1
+    100132: L_pinky2
+    100134: L_pinky3
+    100136: L_pinky4
+    100138: L_PVC
+    100140: L_ring1
+    100142: L_ring2
+    100144: L_ring3
+    100146: L_ring4
+    100148: L_ShoulderBlade
+    100150: L_Socket
+    100152: L_thumb1
+    100154: L_thumb2
+    100156: L_thumb3
+    100158: L_thumb4
+    100160: L_ToeController
+    100162: L_Wrist
+    100164: mid_1
+    100166: mid_1 1
+    100168: mid_2
+    100170: mid_2 1
+    100172: mid_3
+    100174: mid_3 1
+    100176: mid_4
+    100178: mid_4 1
+    100180: neck_bottom
+    100182: neck_top
+    100184: nurbsCircle1
+    100186: nurbsCube1
+    100188: palm
+    100190: palm 1
+    100192: pCube1
+    100194: pCube13
+    100196: Pelvis
+    100198: pelvis
+    100200: pink4
+    100202: pink4 1
+    100204: pink_1
+    100206: pink_1 1
+    100208: pink_2
+    100210: pink_2 1
+    100212: pink_3
+    100214: pink_3 1
+    100216: polySurface1
+    100218: polySurface4
+    100220: polySurface5
+    100222: pSphere3
+    100224: pSphere4
+    100226: pSphere5
+    100228: pSphere6
+    100230: R_Ankle
+    100232: R_AnkleController
+    100234: R_Arm_PVC
+    100236: R_ArmSocket
+    100238: R_backCollar
+    100240: R_BottomLeg1
+    100242: R_CollarBone
+    100244: R_Elbow
+    100246: R_Femur1
+    100248: R_foot1
+    100250: R_FootController
+    100252: R_Hand_controller
+    100254: R_Handd
+    100256: R_Handd1
+    100258: R_index1
+    100260: R_index2
+    100262: R_index3
+    100264: R_index4
+    100266: R_Knee
+    100268: R_middle1
+    100270: R_middle2
+    100272: R_middle3
+    100274: R_middle4
+    100276: R_NeckCollar
+    100278: R_pinky1
+    100280: R_pinky2
+    100282: R_pinky3
+    100284: R_pinky4
+    100286: R_PVC
+    100288: R_Reg
+    100290: R_ring1
+    100292: R_ring2
+    100294: R_ring3
+    100296: R_ring4
+    100298: R_ShoulderBlade
+    100300: R_Socket
+    100302: R_thumb1
+    100304: R_thumb2
+    100306: R_thumb3
+    100308: R_thumb4
+    100310: R_ToeController
+    100312: R_Wrist
+    100314: ring_1
+    100316: ring_1 1
+    100318: ring_2
+    100320: ring_2 1
+    100322: ring_3
+    100324: ring_3 1
+    100326: ring_4
+    100328: ring_4 1
+    100330: //RootNode
+    100332: Skull
+    100334: softlight:group1
+    100336: softlight:spotLight2
+    100338: spine1
+    100340: spine2
+    100342: spine3
+    100344: spotLight10
+    100346: spotLight11
+    100348: spotLight2
+    100350: spotLight3
+    100352: spotLight4
+    100354: spotLight5
+    100356: spotLight6
+    100358: spotLight7
+    100360: spotLight8
+    100362: spotLight9
+    100364: thumb_1
+    100366: thumb_1 1
+    100368: thumb_2
+    100370: thumb_2 1
+    100372: thumb_3
+    100374: thumb_3 1
+    100376: thumb_4
+    100378: thumb_4 1
+    100380: transform1
+    100382: transform3
+    100384: transform43
+    100386: transform44
+    100388: transform45
+    100390: transform45 1
+    100392: transform47
+    100394: transform47 1
+    100396: transform49
+    100398: transform49 1
+    100400: transform5
+    100402: transform51
+    100404: transform51 1
+    100406: transform53
+    100408: transform53 1
+    100410: transform55
+    100412: transform55 1
+    100414: transform57
+    100416: transform57 1
+    100418: transform59
+    100420: transform59 1
+    100422: transform61
+    100424: transform61 1
+    100426: transform63
+    100428: transform63 1
+    100430: transform65
+    100432: transform65 1
+    100434: transform67
+    100436: transform67 1
+    100438: transform69
+    100440: transform69 1
+    100442: transform7
+    100444: transform71
+    100446: transform71 1
+    100448: transform73
+    100450: transform73 1
+    100452: transform75
+    100454: transform75 1
+    100456: transform77
+    100458: transform77 1
+    100460: transform79
+    100462: transform79 1
+    100464: transform81
+    100466: transform81 1
+    100468: transform83
+    100470: transform83 1
+    100472: transform85
+    100474: transform85 1
+    100476: transform9
+    400000: Body_controller
+    400002: Chest
+    400004: chest
+    400006: Global_Controller
+    400008: ikHandle1
+    400010: ikHandle2
+    400012: ikHandle3
+    400014: ikHandle4
+    400016: ikHandle5
+    400018: ikHandle6
+    400020: ikHandle7
+    400022: ikHandle8
+    400024: index3
+    400026: index3 1
+    400028: index4
+    400030: index4 1
+    400032: index_1
+    400034: index_1 1
+    400036: index_2
+    400038: index_2 1
+    400040: Jaw
+    400042: joint14
+    400044: joint14 1
+    400046: joint15
+    400048: joint15 1
+    400050: joint16
+    400052: joint16 1
+    400054: joint21
+    400056: joint22
+    400058: joint27
+    400060: joint28
+    400062: joint29
+    400064: joint30
+    400066: joint8
+    400068: joint9
+    400070: L_Ankle
+    400072: L_AnkleController
+    400074: L_Arm_Forearm
+    400076: L_Arm_Forearm1
+    400078: L_Arm_PVC
+    400080: L_Arm_Socket
+    400082: L_Arm_Socket1
+    400084: L_ArmSocket
+    400086: L_backCollar
+    400088: L_BottomLeg
+    400090: L_CollarBone
+    400092: L_Elbow
+    400094: L_Femur
+    400096: L_foot
+    400098: L_FootController
+    400100: L_Hand
+    400102: L_Hand1
+    400104: L_hand_controller
+    400106: L_index3
+    400108: L_index4
+    400110: L_index_1
+    400112: L_inedx2
+    400114: L_Knee
+    400116: L_Leg
+    400118: L_middle1
+    400120: L_middle2
+    400122: L_middle3
+    400124: L_middle4
+    400126: L_NeckCollar
+    400128: L_palm
+    400130: L_pinky1
+    400132: L_pinky2
+    400134: L_pinky3
+    400136: L_pinky4
+    400138: L_PVC
+    400140: L_ring1
+    400142: L_ring2
+    400144: L_ring3
+    400146: L_ring4
+    400148: L_ShoulderBlade
+    400150: L_Socket
+    400152: L_thumb1
+    400154: L_thumb2
+    400156: L_thumb3
+    400158: L_thumb4
+    400160: L_ToeController
+    400162: L_Wrist
+    400164: mid_1
+    400166: mid_1 1
+    400168: mid_2
+    400170: mid_2 1
+    400172: mid_3
+    400174: mid_3 1
+    400176: mid_4
+    400178: mid_4 1
+    400180: neck_bottom
+    400182: neck_top
+    400184: nurbsCircle1
+    400186: nurbsCube1
+    400188: palm
+    400190: palm 1
+    400192: pCube1
+    400194: pCube13
+    400196: Pelvis
+    400198: pelvis
+    400200: pink4
+    400202: pink4 1
+    400204: pink_1
+    400206: pink_1 1
+    400208: pink_2
+    400210: pink_2 1
+    400212: pink_3
+    400214: pink_3 1
+    400216: polySurface1
+    400218: polySurface4
+    400220: polySurface5
+    400222: pSphere3
+    400224: pSphere4
+    400226: pSphere5
+    400228: pSphere6
+    400230: R_Ankle
+    400232: R_AnkleController
+    400234: R_Arm_PVC
+    400236: R_ArmSocket
+    400238: R_backCollar
+    400240: R_BottomLeg1
+    400242: R_CollarBone
+    400244: R_Elbow
+    400246: R_Femur1
+    400248: R_foot1
+    400250: R_FootController
+    400252: R_Hand_controller
+    400254: R_Handd
+    400256: R_Handd1
+    400258: R_index1
+    400260: R_index2
+    400262: R_index3
+    400264: R_index4
+    400266: R_Knee
+    400268: R_middle1
+    400270: R_middle2
+    400272: R_middle3
+    400274: R_middle4
+    400276: R_NeckCollar
+    400278: R_pinky1
+    400280: R_pinky2
+    400282: R_pinky3
+    400284: R_pinky4
+    400286: R_PVC
+    400288: R_Reg
+    400290: R_ring1
+    400292: R_ring2
+    400294: R_ring3
+    400296: R_ring4
+    400298: R_ShoulderBlade
+    400300: R_Socket
+    400302: R_thumb1
+    400304: R_thumb2
+    400306: R_thumb3
+    400308: R_thumb4
+    400310: R_ToeController
+    400312: R_Wrist
+    400314: ring_1
+    400316: ring_1 1
+    400318: ring_2
+    400320: ring_2 1
+    400322: ring_3
+    400324: ring_3 1
+    400326: ring_4
+    400328: ring_4 1
+    400330: //RootNode
+    400332: Skull
+    400334: softlight:group1
+    400336: softlight:spotLight2
+    400338: spine1
+    400340: spine2
+    400342: spine3
+    400344: spotLight10
+    400346: spotLight11
+    400348: spotLight2
+    400350: spotLight3
+    400352: spotLight4
+    400354: spotLight5
+    400356: spotLight6
+    400358: spotLight7
+    400360: spotLight8
+    400362: spotLight9
+    400364: thumb_1
+    400366: thumb_1 1
+    400368: thumb_2
+    400370: thumb_2 1
+    400372: thumb_3
+    400374: thumb_3 1
+    400376: thumb_4
+    400378: thumb_4 1
+    400380: transform1
+    400382: transform3
+    400384: transform43
+    400386: transform44
+    400388: transform45
+    400390: transform45 1
+    400392: transform47
+    400394: transform47 1
+    400396: transform49
+    400398: transform49 1
+    400400: transform5
+    400402: transform51
+    400404: transform51 1
+    400406: transform53
+    400408: transform53 1
+    400410: transform55
+    400412: transform55 1
+    400414: transform57
+    400416: transform57 1
+    400418: transform59
+    400420: transform59 1
+    400422: transform61
+    400424: transform61 1
+    400426: transform63
+    400428: transform63 1
+    400430: transform65
+    400432: transform65 1
+    400434: transform67
+    400436: transform67 1
+    400438: transform69
+    400440: transform69 1
+    400442: transform7
+    400444: transform71
+    400446: transform71 1
+    400448: transform73
+    400450: transform73 1
+    400452: transform75
+    400454: transform75 1
+    400456: transform77
+    400458: transform77 1
+    400460: transform79
+    400462: transform79 1
+    400464: transform81
+    400466: transform81 1
+    400468: transform83
+    400470: transform83 1
+    400472: transform85
+    400474: transform85 1
+    400476: transform9
+    2300000: L_backCollar
+    2300002: L_CollarBone
+    2300004: L_NeckCollar
+    2300006: L_ShoulderBlade
+    2300008: L_Socket
+    2300010: R_backCollar
+    2300012: R_CollarBone
+    2300014: R_NeckCollar
+    2300016: R_ShoulderBlade
+    2300018: R_Socket
+    3300000: L_backCollar
+    3300002: L_CollarBone
+    3300004: L_NeckCollar
+    3300006: L_ShoulderBlade
+    3300008: L_Socket
+    3300010: R_backCollar
+    3300012: R_CollarBone
+    3300014: R_NeckCollar
+    3300016: R_ShoulderBlade
+    3300018: R_Socket
+    4300000: L_Arm_Socket
+    4300002: Jaw
+    4300004: Skull
+    4300006: L_Femur
+    4300008: Chest
+    4300010: Pelvis
+    4300012: L_BottomLeg
+    4300014: L_Arm_Forearm
+    4300016: L_Hand
+    4300018: L_foot
+    4300020: L_ShoulderBlade
+    4300022: R_ShoulderBlade
+    4300024: L_CollarBone
+    4300026: R_CollarBone
+    4300028: L_NeckCollar
+    4300030: R_NeckCollar
+    4300032: R_backCollar
+    4300034: L_backCollar
+    4300036: R_Socket
+    4300038: L_Socket
+    4300040: R_Femur1
+    4300042: R_BottomLeg1
+    4300044: R_foot1
+    4300046: L_Arm_Socket1
+    4300048: L_Arm_Forearm1
+    4300050: L_Hand1
+    9500000: //RootNode
+    13700000: Chest
+    13700002: Jaw
+    13700004: L_Arm_Forearm
+    13700006: L_Arm_Forearm1
+    13700008: L_Arm_Socket
+    13700010: L_Arm_Socket1
+    13700012: L_BottomLeg
+    13700014: L_Femur
+    13700016: L_foot
+    13700018: L_Hand
+    13700020: L_Hand1
+    13700022: Pelvis
+    13700024: R_BottomLeg1
+    13700026: R_Femur1
+    13700028: R_foot1
+    13700030: Skull
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

@@ -1,0 +1,159 @@
+﻿<types>
+  <type>
+    <name>Rusty Dagger</name>
+    <slot>Main</slot>
+    <minlvl>1</minlvl>
+    <maxlvl>5</maxlvl>
+    <attribute value="1">MinDamage</attribute>
+    <attribute value="4">MaxDamage</attribute>
+    <attribute value="2.5">AttackSpeed</attribute>
+  </type>
+  <type>
+  <name>Wooden Club</name>
+  <slot>Main</slot>
+  <minlvl>1</minlvl>
+  <maxlvl>5</maxlvl>
+  <attribute value="1">MinDamage</attribute>
+  <attribute value="6">MaxDamage</attribute>
+    <attribute value="2">AttackSpeed</attribute>
+  </type>
+  <type>
+    <name>Rusty Sword</name>
+    <slot>Main</slot>
+    <minlvl>2</minlvl>
+    <maxlvl>6</maxlvl>
+    <attribute value="1">MinDamage</attribute>
+    <attribute value="8">MaxDamage</attribute>
+    <attribute value="1.5">AttackSpeed</attribute>
+  </type>
+  <type>
+    <name>Rusty Axe</name>
+    <slot>Main</slot>
+    <minlvl>2</minlvl>
+    <maxlvl>6</maxlvl>
+    <attribute value="1">MinDamage</attribute>
+    <attribute value="10">MaxDamage</attribute>
+    <attribute value="1">AttackSpeed</attribute>
+  </type>
+  <type>
+    <name>Tattered Chainmail</name>
+    <slot>Chest</slot>
+    <minlvl>1</minlvl>
+    <maxlvl>5</maxlvl>
+    <attribute value="10">Health</attribute>
+    <attribute value="4">Defense</attribute>
+  </type>
+  <type>
+    <name>Iron Dagger</name>
+    <slot>Main</slot>
+    <minlvl>4</minlvl>
+    <maxlvl>9</maxlvl>
+    <attribute value="2">MinDamage</attribute>
+    <attribute value="5">MaxDamage</attribute>
+    <attribute value="2.5">AttackSpeed</attribute>
+  </type>
+  <type>
+    <name>Wooden Shield</name>
+    <slot>Off</slot>
+    <minlvl>1</minlvl>
+    <maxlvl>5</maxlvl>
+    <attribute value="6">Defense</attribute>
+    <attribute value="5">Health</attribute>
+  </type>
+  <type>
+    <name>Leather Boots</name>
+    <slot>Feet</slot>
+    <minlvl>1</minlvl>
+    <maxlvl>5</maxlvl>
+    <attribute value="2">MoveSpeed</attribute>
+    <attribute value="10">Health</attribute>
+  </type>
+  <type>
+    <name>Leather Pants</name>
+    <slot>Legs</slot>
+    <minlvl>1</minlvl>
+    <maxlvl>5</maxlvl>
+    <attribute value="1">MoveSpeed</attribute>
+    <attribute value="3">Defense</attribute>
+    <attribute value="10">Health</attribute>
+  </type>
+  <type>
+    <name>Cloth Cap</name>
+    <slot>Head</slot>
+    <minlvl>1</minlvl>
+    <maxlvl>5</maxlvl>
+    <attribute value="10">Resource</attribute>
+  </type>
+  <type>
+    <name>Scraps</name>
+    <slot>Chest</slot>
+    <minlvl>1</minlvl>
+    <maxlvl>20</maxlvl>
+    <attribute value="1">Health</attribute>
+  </type>
+  <type>
+    <name>Helix Helm</name>
+    <slot>Head</slot>
+    <minlvl>1</minlvl>
+    <maxlvl>20</maxlvl>
+    <flavor>PRIASE BE!</flavor>
+    <attribute value="100">Resource</attribute>
+    <tier>3</tier>
+  </type>
+  <type>
+    <name>DUX's Leek</name>
+    <slot>Main</slot>
+    <minlvl>1</minlvl>
+    <maxlvl>20</maxlvl>
+    <flavor>It can CUT the mightiest bush.</flavor>
+    <attribute value="1">MinDamage</attribute>
+    <attribute value="1">MaxDamage</attribute>
+    <attribute value=".5">AttackSpeed</attribute>
+    <tier>3</tier>
+  </type>
+  <type>
+    <name>Dome Shield</name>
+    <slot>Off</slot>
+    <minlvl>1</minlvl>
+    <maxlvl>20</maxlvl>
+    <flavor>It is come, the pure embodiment of evil.</flavor>
+    <attribute value="50">Health</attribute>
+    <attribute value="-1000">Resource</attribute>
+    <attribute value="20">Defense</attribute>
+    <tier>3</tier>
+  </type>
+  <type>
+    <name>LAZ0R SWORD</name>
+    <slot>Main</slot>
+    <minlvl>15</minlvl>
+    <maxlvl>20</maxlvl>
+    <flavor>PEW PEW SWOOSH SWOOSH</flavor>
+    <attribute value="8">MinDamage</attribute>
+    <attribute value="18">MaxDamage</attribute>
+    <attribute value="1">AttackSpeed</attribute>
+    <tier>3</tier>
+  </type>
+  <type>
+    <name>Knife of Exact Zero</name>
+    <slot>Main</slot>
+    <minlvl>12</minlvl>
+    <maxlvl>17</maxlvl>
+    <flavor>The sharpest blade...</flavor>
+    <attribute value="7">MinDamage</attribute>
+    <attribute value="9">MaxDamage</attribute>
+    <attribute value="3">AttackSpeed</attribute>
+    <tier>3</tier>
+  </type>
+  <type>
+    <name>The Kragle</name>
+    <slot>Main</slot>
+    <minlvl>12</minlvl>
+    <maxlvl>17</maxlvl>
+    <flavor>A solid mass, completely indestructable.</flavor>
+    <attribute value="10">MinDamage</attribute>
+    <attribute value="20">MaxDamage</attribute>
+    <attribute value=".5">AttackSpeed</attribute>
+    <tier>3</tier>
+  </type>
+
+</types>

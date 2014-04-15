@@ -5,6 +5,6 @@ public class buff : MonoBehaviour {
 
     public Attributes buffAttributes;
     public string buffName;
-    public float timeRemaining;
+    public float /*yo mama*/ timeRemaining;
 
 }
