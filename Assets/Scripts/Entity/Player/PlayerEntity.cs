@@ -56,28 +56,15 @@ public class PlayerEntity : Entity
         {
             abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
             abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
-            abilityManager.AddAbility(GameManager.Abilities["ShockMine"], 4);
+            abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], 4);
             abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
 
             abilityIndexDict["shadowbolt"] = 2;
             abilityIndexDict["poisonbolt"] = 3;
-            abilityIndexDict["ShockMine"] = 4;
+            abilityIndexDict["chaosbolt"] = 4;
             abilityIndexDict["bladewaltz"] = 5;
         }
 
-<<<<<<< HEAD
-        abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
-        abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
-        abilityManager.AddAbility(GameManager.Abilities["bloodbolt"], 4);
-        abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], 5);
-
-        abilityIndexDict["shadowbolt"] = 2;
-        abilityIndexDict["poisonbolt"] = 3;
-        abilityIndexDict["bloodbolt"] = 4;
-        abilityIndexDict["chaosbolt"] = 5;
-=======
-
->>>>>>> a5580f528579d30e27fab60fade91a69412e55e4
 	}
 	
 	// Update is called once per frame
