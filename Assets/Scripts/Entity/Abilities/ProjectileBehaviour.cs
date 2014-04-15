@@ -237,7 +237,7 @@ public class ProjectileBehaviour : MonoBehaviour
         {
             item.transform.parent = null;
             item.emissionRate = 0;
-            item.enableEmission = false; 
+            //item.enableEmission = false; 
 
 
         }

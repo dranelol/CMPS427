@@ -272,6 +272,18 @@ public class AIPursuit : StateMachine
 
                 }
 
+                else if (entity.abilityManager.abilities[0].AttackType == AttackType.HONINGPROJECTILE)
+                {
+                    //combatFSM.Attack(0.0f);
+
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                    // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                    // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+                    entity.abilityManager.abilities[0].SpawnProjectile(gameObject, currentTarget.transform.position, gameObject, (currentTarget.transform.position - transform.position).normalized, entity.abilityManager.abilities[0].ID, false);
+                }
+
                 else
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
