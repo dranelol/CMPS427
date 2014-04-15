@@ -13,7 +13,7 @@ public class PlayerEntity : Entity
     public void Awake()
     {
         base.Awake();
-        currentAtt.Health = 3000;
+        baseAtt.Health = 3000;
         currentHP = 3000;
 
         gamemanager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
@@ -52,6 +52,7 @@ public class PlayerEntity : Entity
             }
 
         }
+
         else
         {
             abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
@@ -64,7 +65,6 @@ public class PlayerEntity : Entity
             abilityIndexDict["chaosbolt"] = 4;
             abilityIndexDict["bladewaltz"] = 5;
         }
-
 	}
 	
 	// Update is called once per frame
