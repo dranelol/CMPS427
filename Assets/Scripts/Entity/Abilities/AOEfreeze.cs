@@ -26,6 +26,7 @@ public class AOEfreeze : Ability
                     DoDamage(source, enemy, attacker, defender, isPlayer);
                     //DoPhysics(source, enemy);
                     DoBuff(enemy, attacker);
+                    
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
                         enemy.GetComponent<AIController>().BeenAttacked(source);
@@ -45,6 +46,7 @@ public class AOEfreeze : Ability
 
             }
         }
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.5f, isPlayer));
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -78,15 +80,16 @@ public class AOEfreeze : Ability
             colliders = Physics.OverlapSphere(source.transform.position, range, 1 << playerMask);
         }
 
-
         foreach (Collider collider in colliders)
         {
-            //Debug.Log(collider.ToString());
 
-            // create a vector from the possible enemy to the source.transform
 
-            Vector3 enemyVector = collider.transform.position - source.transform.position;
-            Vector3 enemyVector2 = source.transform.position - collider.transform.position;
+            // create a vector from the possible enemy to the attacker
+            Vector3 normalizedAttackPosition = new Vector3(source.transform.position.x, 1, source.transform.position.z);
+            Vector3 normalizedDefenderPosition = new Vector3(collider.transform.position.x, 1, collider.transform.position.z);
+
+            Vector3 enemyVector = normalizedDefenderPosition - normalizedAttackPosition;
+            Vector3 enemyVector2 = normalizedAttackPosition - normalizedDefenderPosition;
 
             // this is an enemy attack, forward attack vector will be based on target position
             if (isPlayer == false)
@@ -99,12 +102,12 @@ public class AOEfreeze : Ability
             {
                 RaycastHit hit = new RaycastHit();
 
-
-
                 if (isPlayer == true)
                 {
                     // try to cast a ray from the enemy to the player
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
+
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range);
+
 
                     if (!rayCastHit)
                     {
@@ -115,8 +118,10 @@ public class AOEfreeze : Ability
                     {
                         if (hit.collider.gameObject.tag == "Player")
                         {
-                            Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                            Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+
+                            Debug.DrawRay(normalizedDefenderPosition, enemyVector, Color.green, 0.5f);
+                            Debug.DrawRay(normalizedDefenderPosition, enemyVector2, Color.red, 0.5f);
+
                             enemiesToAttack.Add(collider.gameObject);
                         }
                     }
@@ -125,20 +130,28 @@ public class AOEfreeze : Ability
                 else
                 {
                     // try to cast a ray from the player to the enemy
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
+
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range);
 
                     if (!rayCastHit)
                     {
-
+                        Debug.Log("fail");
                     }
                     // if the ray hits, the player is in line of sight of the enemy, this is a successful attack hit
                     else
                     {
                         if (hit.collider.gameObject.tag == "Enemy")
                         {
-                            //Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                            //Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+                            Debug.DrawRay(normalizedDefenderPosition, enemyVector, Color.green, 0.5f);
+                            Debug.DrawRay(normalizedDefenderPosition, enemyVector2, Color.red, 0.5f);
+
                             enemiesToAttack.Add(collider.gameObject);
+                        }
+
+                        else
+                        {
+                            Debug.Log("not something that we didn't hit");
+                            Debug.Log(hit.collider.name);
                         }
                     }
                 }
@@ -166,12 +179,41 @@ public class AOEfreeze : Ability
 
         if (isPlayer == true)
         {
-            target.renderer.material.color = new Color(1.0f, ratio, ratio);
+            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
         }
     }
 
     public override void DoPhysics(GameObject source, GameObject target)
     {
         
+    }
+
+    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
+    {
+        GameObject particles;
+
+
+
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, Quaternion.Euler(90,90,0));
+        
+
+        //particles.transform.parent = attacker.transform;
+
+        yield return new WaitForSeconds(time);
+
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem item in particleSystems)
+        {
+            Debug.Log("asd");
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
+
+        }
+
+        GameObject.Destroy(particles);
+
+        yield return null;
     }
 }
