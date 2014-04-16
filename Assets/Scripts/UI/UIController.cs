@@ -27,7 +27,7 @@ public class UIController : MonoBehaviour {
     private Vector2 nativeResolution;
     public Vector2 NativeResolution { get { return nativeResolution; } }
 
-    public Camera Camera { get { return GameObject.FindGameObjectWithTag("UICamera").GetComponent<Camera>(); } }
+    public Camera Camera { get { return GameObject.FindGameObjectWithTag("UI Camera").GetComponent<Camera>(); } }
 
     private UIStateMachine stateMachine;
 

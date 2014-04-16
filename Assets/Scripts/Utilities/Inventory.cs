@@ -9,12 +9,29 @@ public class Inventory {
     private const int MAX = 50;
 
     private equipmentFactory factory;
-    private List<equipment> items;
+    private List<equipment> items, equippedItems;
     public List<equipment> Items { get { return items; } }
+    public equipment Equip
+    {
+        set
+        {
+            items.Remove(value);
+            equippedItems.Add(value);
+        }
+    }
+    public equipment Unequip
+    {
+        set
+        {
+            equippedItems.Remove(value);
+            items.Add(value);
+        }
+    }
     
     public Inventory()
     {
         items = new List<equipment>();
+        equippedItems = new List<equipment>();
         factory = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
 
         //LoadItems();

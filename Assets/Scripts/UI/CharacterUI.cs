@@ -48,13 +48,21 @@ public class CharacterUI : UIState {
         GUILayout.BeginArea(new Rect(5, 20, WIDTH, 300));
         GUILayout.BeginVertical();
         GUILayout.Space(10);
-        for (int i = 0; i < EQUIPMENT_SLOTS / 2; i++)
+        for (int i = 0; i < EQUIPMENT_SLOTS; i += 2)
         {
             GUILayout.BeginHorizontal();
 
-            GUILayout.Box("", GUILayout.Width(50), GUILayout.Height(50));
+            if (GUILayout.Button("", GUILayout.Width(50), GUILayout.Height(50)))
+            {
+                Controller.Player.removeEquipment((equipSlots.slots)i);
+            }
+
             GUILayout.Space(WIDTH - 115);
-            GUILayout.Box("", GUILayout.Width(50), GUILayout.Height(50));
+
+            if (GUILayout.Button("", GUILayout.Width(50), GUILayout.Height(50)))
+            {
+                Controller.Player.removeEquipment((equipSlots.slots)i);
+            }
 
             GUILayout.EndHorizontal();
 
@@ -105,7 +113,6 @@ public class CharacterUI : UIState {
             if (GUI.Button(new Rect(0, yOffset, WIDTH - 30, 50), item.equipmentName, Controller.style)) 
             {
                 Controller.Player.addEquipment(item);
-                Debug.Log("Equiped a new " + item.validSlot + " item.");
             }
             yOffset += 60;
         }
