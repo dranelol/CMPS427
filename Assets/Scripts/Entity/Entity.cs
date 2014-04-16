@@ -43,7 +43,7 @@ public class Entity : MonoBehaviour
         buffAtt = new Attributes();
         baseAtt = new Attributes();
 
-        baseAtt.Health = currentHP = 5000;
+        baseAtt.Health = currentHP = 500;
         baseAtt.Resource = currentResource = 100;
         baseAtt.Power = 10;
         baseAtt.Defense = 10;
@@ -108,12 +108,22 @@ public class Entity : MonoBehaviour
     /// <returns></returns>
     public bool addEquipment(equipment item)
     {
+
         if (this.equippedEquip.ContainsKey(item.validSlot))
+        {
             return false;
+        }
+
         else if (item.twohand == true && this.equippedEquip.ContainsKey(equipSlots.slots.Off))
+        {
             return false;
-        else if (item.validSlot == equipSlots.slots.Off && equippedEquip[equipSlots.slots.Main].twohand == true)
+        }
+
+        else if (item.validSlot == equipSlots.slots.Off && equippedEquip.ContainsKey(equipSlots.slots.Main) && equippedEquip[equipSlots.slots.Main].twohand == true)
+        {
             return false;
+        }
+
         else
         {
             this.equippedEquip.Add(item.validSlot, item);

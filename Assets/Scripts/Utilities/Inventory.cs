@@ -34,7 +34,7 @@ public class Inventory {
         equippedItems = new List<equipment>();
         factory = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
 
-        LoadItems();
+        //LoadItems();
     }
 
     public void AddItem(equipment item)
