@@ -477,7 +477,7 @@ public class PlayerController : MonoBehaviour {
             for (int i = 0; i<6; i++)
             {
                 entity.removeEquipment((equipSlots.slots)i);
-                entity.addEquipment((equipSlots.slots)i, gameManager.EquipmentFactory.randomEquipment(0,1,(equipSlots.slots)i));
+                entity.addEquipment(gameManager.EquipmentFactory.randomEquipment(0,1,(equipSlots.slots)i));
             }
         }
 
