@@ -101,9 +101,10 @@ public class Entity : MonoBehaviour
     /// Add the attribute changes of an item to the entity. The item must correlate to one of the equipment slots,
     /// Head, Chest, Legs, Feet, Main, Off. Attribute changes are taken as an attributes object. Returns
     /// false if the slot is already filled.
+    /// 
+    /// Removes the equipped item from the list of inventory items and adds it to the list of equipped items.
     /// </summary>
     /// <param name="slot">The equipment slot being filled.</param>
-    /// <param name="itemAtt">The attributes of the item being equipped.</param>
     /// <returns></returns>
     public bool addEquipment(equipment item)
     {
@@ -137,6 +138,8 @@ public class Entity : MonoBehaviour
                 abilityManager.AddAbility(GameManager.Abilities[item.onhit], 6);
                 abilityIndexDict[item.onhit] = 6;
             }
+
+            Inventory.Equip = item;
             return true;
         }
     }
@@ -162,6 +165,8 @@ public class Entity : MonoBehaviour
                 abilityManager.RemoveAbility(6);
          
             }
+
+            Inventory.Unequip = removed;
             return true;
         }
         else
