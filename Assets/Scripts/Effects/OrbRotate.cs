@@ -74,19 +74,22 @@ public class OrbRotate : MonoBehaviour
         // orbiting about y-axis
         if (yOrbit == true)
         {
-            Vector3 newPosition = Vector3.zero;
+            Vector3 newPosition = transform.position;
 
             if (clockwiseRotate == true)
             {
                 //transform.RotateAround(orbitObject.transform.position, Vector3.up, angularSpeed * Time.deltaTime);
                 newPosition = new Vector3(orbitObject.transform.position.x + orbitScale * Mathf.Sin(angularSpeed * Mathf.Deg2Rad),
-                                          orbitObject.transform.position.y + orbitScale * Mathf.Cos(angularSpeed * Mathf.Deg2Rad),
-                                          orbitObject.transform.position.z);
+                                    orbitObject.transform.position.y,
+                                    orbitObject.transform.position.z + orbitScale * Mathf.Cos(angularSpeed * Mathf.Deg2Rad));
             }
 
             else
             {
                 //transform.RotateAround(orbitObject.transform.position, Vector3.up, angularSpeed * Time.deltaTime * (-1)); 
+                newPosition = new Vector3(orbitObject.transform.position.x - orbitScale * Mathf.Sin(angularSpeed * Mathf.Deg2Rad),
+                                    orbitObject.transform.position.y,
+                                    orbitObject.transform.position.z - orbitScale * Mathf.Cos(angularSpeed * Mathf.Deg2Rad));
             }
 
             
