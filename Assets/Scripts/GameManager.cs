@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
     public GameObject BlinkParticles;
     public GameObject AOEfreezeParticles;
 
+    public GameObject rotationEffect;
+
 
 
     public equipmentFactory EquipmentFactory;

@@ -48,7 +48,7 @@ public class AbilityManager : MonoBehaviour
 
     public void AddAbility(Ability ab, int index)
     {
-        Debug.Log(ab.Name);
+        //Debug.Log(ab.Name);
         if (abilities.Count <= 7)
         {
             abilities[index] = ab;

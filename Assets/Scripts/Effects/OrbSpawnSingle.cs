@@ -14,16 +14,17 @@ public class OrbSpawnSingle : MonoBehaviour
     public float initialAngleFromForward;
     public bool clockwiseRotate;
     public float rotations;
+    public bool movingOrbit;
 
-    void Awake()
+    void Start()
     {
         Vector3 newOrbPos = Vector3.zero;
 
         if (yOrbit == true)
         {
-            newOrbPos = new Vector3(orbitObject.transform.position.x + orbitScale * Mathf.Sin(initialAngleFromForward * Mathf.Deg2Rad),
+            newOrbPos = new Vector3(orbitObject.transform.position.x + orbitScale * Mathf.Cos(initialAngleFromForward * Mathf.Deg2Rad),
                                     orbitObject.transform.position.y,
-                                    orbitObject.transform.position.z + orbitScale * Mathf.Cos(initialAngleFromForward * Mathf.Deg2Rad));
+                                    orbitObject.transform.position.z + orbitScale * Mathf.Sin(initialAngleFromForward * Mathf.Deg2Rad));
         }
 
         else
@@ -33,6 +34,7 @@ public class OrbSpawnSingle : MonoBehaviour
                                     orbitObject.transform.position.z);
 
         }
+        Debug.Log("spawning orb at: " + newOrbPos.ToString());
 
         GameObject newOrb = (GameObject)GameObject.Instantiate(orb, newOrbPos, transform.rotation);
         newOrb.GetComponent<OrbRotate>().minHeight = minHeight;
@@ -43,26 +45,37 @@ public class OrbSpawnSingle : MonoBehaviour
         newOrb.GetComponent<OrbRotate>().orbitScale = orbitScale;
         newOrb.GetComponent<OrbRotate>().rotations = rotations;
         newOrb.GetComponent<OrbRotate>().clockwiseRotate = clockwiseRotate;
+        newOrb.GetComponent<OrbRotate>().movingOrbit = movingOrbit;
 
-
-        if (orbitObject == null)
+        if (movingOrbit == true)
         {
-            Debug.Log("asd");
-            if (transform.parent == null)
+            if (orbitObject == null)
             {
-                newOrb.GetComponent<OrbRotate>().orbitObject = gameObject;
+                Debug.Log("asd");
+                if (transform.parent == null)
+                {
+                    newOrb.GetComponent<OrbRotate>().orbitObject = gameObject;
+                }
+
+                else
+                {
+                    newOrb.GetComponent<OrbRotate>().orbitObject = transform.parent.gameObject;
+                }
             }
 
             else
             {
-                newOrb.GetComponent<OrbRotate>().orbitObject = transform.parent.gameObject;
+                newOrb.GetComponent<OrbRotate>().orbitObject = orbitObject;
             }
         }
 
         else
         {
-            newOrb.GetComponent<OrbRotate>().orbitObject = orbitObject;
+            newOrb.GetComponent<OrbRotate>().orbitPosition = transform.position;
         }
+
+
+        
 
         newOrb.transform.parent = transform;
     }

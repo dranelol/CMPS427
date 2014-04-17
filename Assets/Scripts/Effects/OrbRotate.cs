@@ -9,7 +9,7 @@ public class OrbRotate : MonoBehaviour
     public float oscillationSpeed;
 
     /// <summary>
-    /// Whether or not this is orbiting about y-axis
+    /// Whether or not this is orbiting about y-axis; if this is false, it is assumed we are rotating around an object, so orbitObject is set
     /// </summary>
     public bool yOrbit;
     
@@ -19,9 +19,14 @@ public class OrbRotate : MonoBehaviour
     public float orbitScale;
 
     /// <summary>
-    /// Origin of rotation
+    /// Origin of rotation if the orb is following an object
     /// </summary>
     public GameObject orbitObject;
+
+    /// <summary>
+    /// Origin of rotation
+    /// </summary>
+    public Vector3 orbitPosition;
 
     /// <summary>
     /// Whether or not this is orbiting clockwise
@@ -48,16 +53,32 @@ public class OrbRotate : MonoBehaviour
     /// </summary>
     private Vector3 previousPositionVector;
 
+    /// <summary>
+    /// Whether or not the orbitPosition needs to update based on an orbitObject
+    /// </summary>
+    public bool movingOrbit;
+
     void Start()
     {
-        previousPositionVector = currentPositionVector = (transform.position - orbitObject.transform.position);
+        if (movingOrbit == true)
+        {
+            orbitPosition = orbitObject.transform.position;
+        }
+
+        previousPositionVector = currentPositionVector = (transform.position - orbitPosition);
+        Debug.Log("orb starting position: " + transform.position.ToString());
     }
 
 	void Update () 
     {
+        if (movingOrbit == true)
+        {
+            orbitPosition = orbitObject.transform.position;
+        }
+
         // figuring out how much we've rotated so far
         previousPositionVector = currentPositionVector;
-        currentPositionVector = (transform.position - orbitObject.transform.position);
+        currentPositionVector = (transform.position - orbitPosition);
 
         float angleTravelled = Vector3.Angle(previousPositionVector, currentPositionVector);
 
@@ -67,6 +88,7 @@ public class OrbRotate : MonoBehaviour
         {
             // suicide and cleanup 
             //StartCoroutine(orbCleanup());
+            Debug.Log("destroying");
             Destroy(gameObject, GetComponent<TrailRenderer>().time);
             this.enabled = false;
         }
@@ -75,21 +97,32 @@ public class OrbRotate : MonoBehaviour
         if (yOrbit == true)
         {
             Vector3 newPosition = transform.position;
+            float angleToRotate = angularSpeed * Time.deltaTime;
 
             if (clockwiseRotate == true)
             {
+                
                 //transform.RotateAround(orbitObject.transform.position, Vector3.up, angularSpeed * Time.deltaTime);
-                newPosition = new Vector3(orbitObject.transform.position.x + orbitScale * Mathf.Sin(angularSpeed * Mathf.Deg2Rad),
+                /*
+                newPosition = new Vector3(orbitObject.transform.position.x + orbitScale * Mathf.Cos(angularSpeed * Mathf.Deg2Rad) * Time.deltaTime,
                                     orbitObject.transform.position.y,
-                                    orbitObject.transform.position.z + orbitScale * Mathf.Cos(angularSpeed * Mathf.Deg2Rad));
+                                    orbitObject.transform.position.z + orbitScale * Mathf.Sin(angularSpeed * Mathf.Deg2Rad) * Time.deltaTime);
+                */
+                newPosition = new Vector3((Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) - (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitObject.transform.position.x,
+                                           orbitObject.transform.position.y,
+                                           (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) + (Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitObject.transform.position.z);
+
+
             }
 
             else
             {
                 //transform.RotateAround(orbitObject.transform.position, Vector3.up, angularSpeed * Time.deltaTime * (-1)); 
-                newPosition = new Vector3(orbitObject.transform.position.x - orbitScale * Mathf.Sin(angularSpeed * Mathf.Deg2Rad),
-                                    orbitObject.transform.position.y,
-                                    orbitObject.transform.position.z - orbitScale * Mathf.Cos(angularSpeed * Mathf.Deg2Rad));
+                newPosition = new Vector3((Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) + (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitObject.transform.position.x,
+                                           orbitObject.transform.position.y,
+                                           (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) - (Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitObject.transform.position.z);
+
+
             }
 
             
@@ -109,12 +142,12 @@ public class OrbRotate : MonoBehaviour
         {   
             if (clockwiseRotate == true)
             {
-                transform.RotateAround(orbitObject.transform.position, orbitObject.transform.forward, angularSpeed * Time.deltaTime);
+                transform.RotateAround(orbitPosition, orbitObject.transform.forward, angularSpeed * Time.deltaTime);
             }
             
             else
             {
-                transform.RotateAround(orbitObject.transform.position, orbitObject.transform.forward, angularSpeed * Time.deltaTime * (-1));
+                transform.RotateAround(orbitPosition, orbitObject.transform.forward, angularSpeed * Time.deltaTime * (-1));
             }
         }
 	}
