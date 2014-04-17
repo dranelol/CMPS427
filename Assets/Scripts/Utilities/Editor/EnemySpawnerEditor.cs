@@ -24,6 +24,14 @@ public class EnemySpawnerEditor : Editor
             spawner.spawnRadius = Mathf.Clamp(EditorGUILayout.FloatField("Spawn Radius", spawner.spawnRadius), EnemySpawner.SPAWN_RADIUS_MIN, EnemySpawner.SPAWN_RADIUS_MAX);
             CheckDirty(spawner);
 
+            GUI.changed = false;
+            spawner.enemytype = EditorGUILayout.TextField("Enemy Type", spawner.enemytype);
+            CheckDirty(spawner);
+
+            GUI.changed = false;
+            spawner.level = EditorGUILayout.IntSlider("Enemy Level", spawner.level, 1, 20);
+            CheckDirty(spawner);
+
             EditorGUILayout.Space();
 
             GUI.changed = false;

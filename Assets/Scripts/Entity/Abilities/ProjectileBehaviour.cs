@@ -87,7 +87,7 @@ public class ProjectileBehaviour : MonoBehaviour
         {
             Vector3 direction = target - transform.position;
 
-            Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.2f, 0f);
+            Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.22f, 0f);
 
             transform.rotation = Quaternion.LookRotation(newDirection);
         }
