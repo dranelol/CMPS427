@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public interface Entity
+public class Entity : MonoBehaviour
 {
     protected float currentHP; 
     public float CurrentHP
