@@ -13,6 +13,13 @@ public class OrbSpawn : MonoBehaviour
     public float orbitScale;
     public GameObject orbitObject;
 
+    /// <summary>
+    /// Whether or not this will rotate till death
+    /// </summary>
+    public bool infiniteRotation;
+
+
+
 	void Awake () 
     {
         for (int i = 0; i < orbAmount; i++)

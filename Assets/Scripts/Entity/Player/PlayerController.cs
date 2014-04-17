@@ -590,7 +590,7 @@ public class PlayerController : MonoBehaviour {
         {
             GameObject rotationEffect = (GameObject)Instantiate(gameManager.rotationEffect, transform.position, Quaternion.identity);
 
-            rotationEffect.transform.parent = transform;
+            //rotationEffect.transform.parent = transform;
 
             OrbSpawnSingle orbSpawn = rotationEffect.GetComponent<OrbSpawnSingle>();
 

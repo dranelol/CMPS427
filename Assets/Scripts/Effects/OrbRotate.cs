@@ -58,6 +58,11 @@ public class OrbRotate : MonoBehaviour
     /// </summary>
     public bool movingOrbit;
 
+    /// <summary>
+    /// Whether or not this will rotate till death
+    /// </summary>
+    public bool infiniteRotation;
+
     void Start()
     {
         if (movingOrbit == true)
@@ -76,6 +81,7 @@ public class OrbRotate : MonoBehaviour
             orbitPosition = orbitObject.transform.position;
         }
 
+        Debug.Log(movingOrbit);
         // figuring out how much we've rotated so far
         previousPositionVector = currentPositionVector;
         currentPositionVector = (transform.position - orbitPosition);
@@ -108,9 +114,9 @@ public class OrbRotate : MonoBehaviour
                                     orbitObject.transform.position.y,
                                     orbitObject.transform.position.z + orbitScale * Mathf.Sin(angularSpeed * Mathf.Deg2Rad) * Time.deltaTime);
                 */
-                newPosition = new Vector3((Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) - (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitObject.transform.position.x,
-                                           orbitObject.transform.position.y,
-                                           (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) + (Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitObject.transform.position.z);
+                newPosition = new Vector3((Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) - (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitPosition.x,
+                                           orbitPosition.y,
+                                           (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) + (Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitPosition.z);
 
 
             }

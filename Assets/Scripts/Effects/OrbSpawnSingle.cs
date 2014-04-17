@@ -15,6 +15,10 @@ public class OrbSpawnSingle : MonoBehaviour
     public bool clockwiseRotate;
     public float rotations;
     public bool movingOrbit;
+    /// <summary>
+    /// Whether or not this will rotate till death
+    /// </summary>
+    public bool infiniteRotation;
 
     void Start()
     {
@@ -22,18 +26,19 @@ public class OrbSpawnSingle : MonoBehaviour
 
         if (yOrbit == true)
         {
-            newOrbPos = new Vector3(orbitObject.transform.position.x + orbitScale * Mathf.Cos(initialAngleFromForward * Mathf.Deg2Rad),
-                                    orbitObject.transform.position.y,
-                                    orbitObject.transform.position.z + orbitScale * Mathf.Sin(initialAngleFromForward * Mathf.Deg2Rad));
+            newOrbPos = new Vector3(transform.position.x + orbitScale * Mathf.Cos(initialAngleFromForward * Mathf.Deg2Rad),
+                                    transform.position.y,
+                                    transform.position.z + orbitScale * Mathf.Sin(initialAngleFromForward * Mathf.Deg2Rad));
         }
 
         else
         {
-            newOrbPos = new Vector3(orbitObject.transform.position.x + orbitScale * Mathf.Sin(initialAngleFromForward * Mathf.Deg2Rad),
-                                    orbitObject.transform.position.y + orbitScale * Mathf.Cos(initialAngleFromForward * Mathf.Deg2Rad),
-                                    orbitObject.transform.position.z);
+            newOrbPos = new Vector3(transform.position.x + orbitScale * Mathf.Sin(initialAngleFromForward * Mathf.Deg2Rad),
+                                    transform.position.y + orbitScale * Mathf.Cos(initialAngleFromForward * Mathf.Deg2Rad),
+                                    transform.position.z);
 
         }
+
         Debug.Log("spawning orb at: " + newOrbPos.ToString());
 
         GameObject newOrb = (GameObject)GameObject.Instantiate(orb, newOrbPos, transform.rotation);
