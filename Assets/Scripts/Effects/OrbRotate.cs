@@ -63,6 +63,8 @@ public class OrbRotate : MonoBehaviour
     /// </summary>
     public bool infiniteRotation;
 
+    private bool movingUp = true;
+
     void Start()
     {
         if (movingOrbit == true)
@@ -90,7 +92,7 @@ public class OrbRotate : MonoBehaviour
 
         currentRotations = currentRotations + (angleTravelled / 360.0f);
 
-        if (currentRotations >= rotations)
+        if (currentRotations >= rotations && infiniteRotation == false)
         {
             // suicide and cleanup 
             //StartCoroutine(orbCleanup());
@@ -109,11 +111,6 @@ public class OrbRotate : MonoBehaviour
             {
                 
                 //transform.RotateAround(orbitObject.transform.position, Vector3.up, angularSpeed * Time.deltaTime);
-                /*
-                newPosition = new Vector3(orbitObject.transform.position.x + orbitScale * Mathf.Cos(angularSpeed * Mathf.Deg2Rad) * Time.deltaTime,
-                                    orbitObject.transform.position.y,
-                                    orbitObject.transform.position.z + orbitScale * Mathf.Sin(angularSpeed * Mathf.Deg2Rad) * Time.deltaTime);
-                */
                 newPosition = new Vector3((Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) - (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitPosition.x,
                                            orbitPosition.y,
                                            (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) + (Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitPosition.z);
@@ -124,20 +121,42 @@ public class OrbRotate : MonoBehaviour
             else
             {
                 //transform.RotateAround(orbitObject.transform.position, Vector3.up, angularSpeed * Time.deltaTime * (-1)); 
-                newPosition = new Vector3((Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) + (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitObject.transform.position.x,
-                                           orbitObject.transform.position.y,
-                                           (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) - (Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitObject.transform.position.z);
+                newPosition = new Vector3((Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) + (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitPosition.x,
+                                           orbitPosition.y,
+                                           (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) - (Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitPosition.z);
 
 
             }
 
-            
+            // y-oscillation
 
-
-            //newPosition.x = MathHelper.Sinerp(minHeight, maxHeight, Time.time);
             if (oscillationSpeed > 0.0f)
             {
-                newPosition.y = Mathf.Sin(Time.time * oscillationSpeed) * maxHeight + maxHeight;
+                if (transform.position.y >= maxHeight)
+                {
+                    movingUp = false;
+                }
+
+                if (transform.position.y <= minHeight)
+                {
+                    movingUp = true;
+                }
+                //newPosition.y = Mathf.Sin(Time.time * oscillationSpeed) * maxHeight + maxHeight;
+                //newPosition.y = Mathf.Lerp(minHeight, maxHeight, Mathf.PingPong(Time.time, 1.0f));
+
+                //newPosition.y = transform.position.y + Mathf.Sin(Time.deltaTime);
+
+                if (movingUp == true)
+                {
+                    //newPosition.y += Mathf.Lerp(minHeight, maxHeight, Time.time);
+                    newPosition.y = transform.position.y + oscillationSpeed * Time.deltaTime;
+                }
+
+                else
+                {
+                    //newPosition.y += Mathf.Lerp(minHeight, maxHeight, Time.time);
+                    newPosition.y = transform.position.y - oscillationSpeed * Time.deltaTime;
+                }
             }
 
             transform.position = newPosition;

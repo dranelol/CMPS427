@@ -588,15 +588,17 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.P))
         {
+            
             GameObject rotationEffect = (GameObject)Instantiate(gameManager.rotationEffect, transform.position, Quaternion.identity);
 
             //rotationEffect.transform.parent = transform;
 
-            OrbSpawnSingle orbSpawn = rotationEffect.GetComponent<OrbSpawnSingle>();
+            OrbSpawn orbSpawn = rotationEffect.GetComponent<OrbSpawn>();
 
             orbSpawn.orbitObject = gameObject;
-
-            orbSpawn.angularSpeed = 1440.0f;
+            orbSpawn.rotations = 3f;
+            orbSpawn.angularSpeed = 360.0f;
+            orbSpawn.oscillationSpeed = 0.5f;
             
         }
 
