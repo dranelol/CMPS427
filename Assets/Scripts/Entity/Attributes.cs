@@ -36,6 +36,10 @@ public class Attributes
             statList.Add(stat, 0);
     }
 
+    #region All Stats (Readonly)
+
+    public Dictionary<Stats, float> StatList { get { return statList; } }
+
     /// <summary>
     /// A function to extract an individual value from an Attributes object. Readonly.
     /// </summary>
@@ -45,6 +49,10 @@ public class Attributes
     {
         return statList[key];
     }
+
+	#endregion
+
+    #region Stat Modifications
 
     public void ModifyValue(Stats key, float value)
     {
@@ -76,6 +84,8 @@ public class Attributes
                 break;
         }
     }
+
+    #endregion
 
     #region Health
     public float Health

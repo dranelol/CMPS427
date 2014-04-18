@@ -477,7 +477,7 @@ public class PlayerController : MonoBehaviour {
             for (int i = 0; i<6; i++)
             {
                 entity.removeEquipment((equipSlots.slots)i);
-                entity.addEquipment((equipSlots.slots)i, gameManager.EquipmentFactory.randomEquipment(0,1,(equipSlots.slots)i));
+                entity.addEquipment(gameManager.EquipmentFactory.randomEquipment(0, 1, (equipSlots.slots)i));
             }
         }
 
@@ -526,170 +526,81 @@ public class PlayerController : MonoBehaviour {
 
 
         #endregion
+
         #region equipment stuff
+
+        // Equipping light weapon.
         if (Input.GetKeyDown(KeyCode.A))
         {
-            // small sword
-
-            if (entity.HasEquipped(equipSlots.slots.Main))
-            {
-                Debug.Log("bro has a sword already! its called: " + entity.GetEquip(equipSlots.slots.Main).equipmentName);
-            }
-
-            Debug.Log("min damage before equip change to low sword: " + entity.currentAtt.MinDamage);
-            Debug.Log("max damage before equip change to low sword: " + entity.currentAtt.MaxDamage);
-
-            bool result = entity.removeEquipment(equipSlots.slots.Main);
-
             equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(0, equipSlots.slots.Main);
-            if (entity.addEquipment(equipSlots.slots.Main, tempEquip))
-            {
-                Debug.Log("min damage after equip change to low sword: " + entity.currentAtt.MinDamage);
-                Debug.Log("max damage after equip change to low sword: " + entity.currentAtt.MaxDamage);
-            }
-            else
-            {
-                Debug.Log("CAN'T EQUIP THE SWORD FOR SOME REASON");
-            }
 
+            entity.Inventory.AddItem(tempEquip);   
         }
 
+        // Equipping heavy weapon.
         if (Input.GetKeyDown(KeyCode.S))
         {
-            // better sword
-            if (entity.HasEquipped(equipSlots.slots.Main))
-            {
-                Debug.Log("bro has a sword already! its called: " + entity.GetEquip(equipSlots.slots.Main).equipmentName);
-            }
-
-
-            Debug.Log("min damage before equip change to high sword: " + entity.currentAtt.MinDamage);
-            Debug.Log("max damage before equip change to high sword: " + entity.currentAtt.MaxDamage);
-
-
-
-            bool result = entity.removeEquipment(equipSlots.slots.Main);
-
             equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Main);
-            if(entity.addEquipment(equipSlots.slots.Main, tempEquip))
-            {
-            Debug.Log("min damage after equip change to high sword: " + entity.currentAtt.MinDamage);
-            Debug.Log("max damage after equip change to high sword: " + entity.currentAtt.MaxDamage);
-            }
-            else
-            {
-                Debug.Log("CAN'T EQUIP THE SWORD FOR SOME REASON");
-            }
+
+            entity.Inventory.AddItem(tempEquip);
         }
+
+        // Equipping chestpiece.
         if (Input.GetKeyDown(KeyCode.D))
         {
-            // chestpiece
-            if (entity.HasEquipped(equipSlots.slots.Chest))
-            {
-                Debug.Log("bro has a chestpiece already! its called: " + entity.GetEquip(equipSlots.slots.Chest).equipmentName);
-            }
-
-            bool result = entity.removeEquipment(equipSlots.slots.Chest);
-
             equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Chest);
-            if (entity.addEquipment(equipSlots.slots.Chest, tempEquip))
-            {
 
-            }
-            else
-            {
-                Debug.Log("CAN'T EQUIP THE chest FOR SOME REASON");
-            }
-
+            entity.Inventory.AddItem(tempEquip);
         }
+
+        // Equipping pants.
         if (Input.GetKeyDown(KeyCode.F))
         {
-            // chestpiece
-            if (entity.HasEquipped(equipSlots.slots.Legs))
-            {
-                Debug.Log("bro has a pants already! its called: " + entity.GetEquip(equipSlots.slots.Legs).equipmentName);
-            }
-
-            bool result = entity.removeEquipment(equipSlots.slots.Legs);
-
             equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Legs);
-            if(entity.addEquipment(equipSlots.slots.Legs, tempEquip))
-            {
 
-            }
-            else
-            {
-                Debug.Log("CAN'T EQUIP THE pants FOR SOME REASON");
-            }
-
+            entity.Inventory.AddItem(tempEquip);
         }
+
+        // Equipping boots.
         if (Input.GetKeyDown(KeyCode.G))
         {
-            // chestpiece
-            if (entity.HasEquipped(equipSlots.slots.Feet))
-            {
-                Debug.Log("bro has a feets already! its called: " + entity.GetEquip(equipSlots.slots.Feet).equipmentName);
-            }
-
-
-            bool result = entity.removeEquipment(equipSlots.slots.Feet);
-
             equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Feet);
-            if (entity.addEquipment(equipSlots.slots.Feet, tempEquip))
-            {
 
-            }
-            else
-            {
-
-            }
-
+            entity.Inventory.AddItem(tempEquip);
         }
+
+        // Equipping helmet.
         if (Input.GetKeyDown(KeyCode.H))
         {
-            // chestpiece
-            if (entity.HasEquipped(equipSlots.slots.Head))
-            {
-                Debug.Log("bro has a hat already! its called: " + entity.GetEquip(equipSlots.slots.Head).equipmentName);
-            }
-
-            bool result = entity.removeEquipment(equipSlots.slots.Head);
-
             equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Head);
-            if(entity.addEquipment(equipSlots.slots.Head, tempEquip))
-            {
 
-            }
-            else
-            {
-                Debug.Log("CAN'T EQUIP THE hat FOR SOME REASON");
-            }
-
+            entity.Inventory.AddItem(tempEquip);
         }
+
+        // Equipping offhand.
         if (Input.GetKeyDown(KeyCode.J))
         {
-            // chestpiece
-            if (entity.HasEquipped(equipSlots.slots.Off))
-            {
-                Debug.Log("bro has a offhand already! its called: " + entity.GetEquip(equipSlots.slots.Off).equipmentName);
-            }
-
-            bool result = entity.removeEquipment(equipSlots.slots.Off);
-
             equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Off);
-            if (entity.addEquipment(equipSlots.slots.Off, tempEquip))
-            {
 
-            }
-            else
-            {
-                Debug.Log("CAN'T EQUIP THE SWORD FOR SOME REASON");
-            }
-
+            entity.Inventory.AddItem(tempEquip);
         }
 
 
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            
+            GameObject rotationEffect = (GameObject)Instantiate(gameManager.rotationEffect, transform.position, Quaternion.identity);
 
+            //rotationEffect.transform.parent = transform;
+
+            OrbSpawn orbSpawn = rotationEffect.GetComponent<OrbSpawn>();
+
+            orbSpawn.orbitObject = gameObject;
+            orbSpawn.rotations = 3f;
+            orbSpawn.angularSpeed = 360.0f;
+            orbSpawn.oscillationSpeed = 0.5f;
+            
+        }
 
         #endregion
 

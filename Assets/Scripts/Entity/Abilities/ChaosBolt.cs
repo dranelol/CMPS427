@@ -24,7 +24,7 @@ public class Chaosbolt : Ability
         projectile.GetComponent<ProjectileBehaviour>().speed = 15f;
 
 
-        Vector3 randPos = source.transform.position /* + forward*/ + Random.onUnitSphere * 1.25f;
+        Vector3 randPos = source.transform.position  + forward + Random.onUnitSphere * 1f;
 
         randPos.Set(randPos.x, randPos.y + 2, randPos.z);
 

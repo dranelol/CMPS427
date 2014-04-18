@@ -122,6 +122,7 @@ public class EnemySpawner : MonoBehaviour
 
             Entity enemyEntity = newEnemy.GetComponent<Entity>();
 
+
             # region giving enemies stats and abilities
             
             enemyEntity.baseAtt = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.MakeEnemyAttributes(level, enemytype);

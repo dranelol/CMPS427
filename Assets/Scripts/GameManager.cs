@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
     public GameObject IceBoltparticles;
     public GameObject IceBoltProjectile;
 
+    public GameObject rotationEffect;
+
 
 
     public equipmentFactory EquipmentFactory;

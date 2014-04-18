@@ -1587,7 +1587,8 @@ public class equipmentFactory {
     /// <returns></returns>
     public equipment loadequipment(string i)
     {
-        
+        //if (!PlayerPrefs.HasKey(i + "name")) return null;
+
         equipment tempequip = new equipment(PlayerPrefs.GetString(i + "name"),
                                             (equipSlots.equipmentType)Enum.Parse(typeof(equipSlots.equipmentType), PlayerPrefs.GetString(i + "type"), true),
                                             (equipSlots.slots)Enum.Parse(typeof(equipSlots.slots), PlayerPrefs.GetString(i + "slot"), true),
