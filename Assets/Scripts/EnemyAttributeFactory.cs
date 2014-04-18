@@ -3,55 +3,8 @@ using System.Collections;
 
 public class EnemyAttributeFactory {
 
-    void Awake()
+    public void Awake()
     {
-        #region critter init
-        critterbase = new Attributes();
-        critterbase.Health = 10f;
-        critterbase.Resource = 50f;
-        critterbase.Power = 0f;
-        critterbase.Defense = 0f;
-        critterbase.MinDamage = 1;
-        critterbase.MaxDamage = 3;
-        critterbase.AttackSpeed = 1;
-        critterbase.MovementSpeed = 1;
-        #endregion
-
-        #region small init
-        smallbase = new Attributes();
-        smallbase.Health = 30f;
-        smallbase.Resource = 70f;
-        smallbase.Power = 10f;
-        smallbase.Defense = 10f;
-        smallbase.MinDamage = 1;
-        smallbase.MaxDamage = 5;
-        smallbase.AttackSpeed = 1;
-        smallbase.MovementSpeed = 1;
-        #endregion
-
-        #region med init
-        medbase = new Attributes();
-        medbase.Health = 60f;
-        medbase.Resource = 120f;
-        medbase.Power = 10f;
-        medbase.Defense = 15f;
-        medbase.MinDamage = 1;
-        medbase.MaxDamage = 7;
-        medbase.AttackSpeed = 1;
-        medbase.MovementSpeed = 1;
-        #endregion
-
-        #region large init
-        largebase = new Attributes();
-        largebase.Health = 120f;
-        largebase.Resource = 140f;
-        largebase.Power = 15f;
-        largebase.Defense = 20f;
-        largebase.MinDamage = 1;
-        largebase.MaxDamage = 8;
-        largebase.AttackSpeed = 1;
-        largebase.MovementSpeed = 1;
-        #endregion
     }
 
     #region critter stats
@@ -99,6 +52,53 @@ public class EnemyAttributeFactory {
     public Attributes MakeEnemyAttributes(int level, string type)
     {
         Attributes tempatts = new Attributes();
+        #region critter init
+        critterbase = new Attributes();
+        critterbase.Health = 10f;
+        critterbase.Resource = 50f;
+        critterbase.Power = 0f;
+        critterbase.Defense = 0f;
+        critterbase.MinDamage = 1;
+        critterbase.MaxDamage = 3;
+        critterbase.AttackSpeed = 1;
+        critterbase.MovementSpeed = 1;
+        #endregion
+
+        #region small init
+        smallbase = new Attributes();
+        smallbase.Health = 30f;
+        smallbase.Resource = 70f;
+        smallbase.Power = 10f;
+        smallbase.Defense = 10f;
+        smallbase.MinDamage = 1;
+        smallbase.MaxDamage = 5;
+        smallbase.AttackSpeed = 1;
+        smallbase.MovementSpeed = 1;
+        #endregion
+
+        #region med init
+        medbase = new Attributes();
+        medbase.Health = 60f;
+        medbase.Resource = 120f;
+        medbase.Power = 10f;
+        medbase.Defense = 15f;
+        medbase.MinDamage = 1;
+        medbase.MaxDamage = 7;
+        medbase.AttackSpeed = 1;
+        medbase.MovementSpeed = 1;
+        #endregion
+
+        #region large init
+        largebase = new Attributes();
+        largebase.Health = 120f;
+        largebase.Resource = 140f;
+        largebase.Power = 15f;
+        largebase.Defense = 20f;
+        largebase.MinDamage = 1;
+        largebase.MaxDamage = 8;
+        largebase.AttackSpeed = 1;
+        largebase.MovementSpeed = 1;
+        #endregion
 
         if (type == "critter")
         {

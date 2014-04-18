@@ -123,10 +123,12 @@ public class EnemySpawner : MonoBehaviour
             Entity enemyEntity = newEnemy.GetComponent<Entity>();
 
             # region giving enemies stats and abilities
-            /*
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.MakeEnemyAttributes(level, enemytype);
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.GiveEnemyAbilities(enemyEntity, enemytype);
-            */
+            
+            enemyEntity.baseAtt = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.MakeEnemyAttributes(level, enemytype);
+
+            enemyEntity.UpdateCurrentAttributes();
+            //GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.GiveEnemyAbilities(enemyEntity, enemytype);
+            
             
             enemyEntity.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
             enemyEntity.abilityManager.abilities[1] = GameManager.Abilities["hadouken"];

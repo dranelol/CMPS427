@@ -9,25 +9,37 @@ public class GameManager : MonoBehaviour
     public GameObject DeathgripParticles;
     public GameObject HadoukenParticles;
 
-    public GameObject BladeWaltzParticles;
-
     public GameObject ArrowParticles;
     public GameObject FireballProjectile;
+    public GameObject FireballTurretFireballProjectile;
     public GameObject ShadowboltProjectile;
     public GameObject PoisonboltProjectile;
     public GameObject BloodboltProjectile;
     public GameObject ChaosboltProjectile;
     public GameObject FiremineParticles;
     public GameObject GETOVERHEREParticles;
+
     public GameObject MineParticles;
     public GameObject ShockMineProjectile;
+
     public GameObject FireballExplosion;
     public GameObject ChaosboltExplosion;
+
     public GameObject BlinkStrikeProjectile;
+    public GameObject BlinkParticles;
+    public GameObject BladeWaltzParticles;
 
     public GameObject OnHitNormalParticles;
-    public GameObject BlinkParticles;
+
     public GameObject AOEfreezeParticles;
+
+    public GameObject chaosbarrageparticles;
+    public GameObject fireballbarrageparticles;
+
+    public GameObject fireballturretparticles;
+    public GameObject frozenorbparticles;
+    public GameObject IceBoltparticles;
+    public GameObject IceBoltProjectile;
 
 
 
@@ -83,6 +95,15 @@ public class GameManager : MonoBehaviour
 
         Abilities["onhitnormal"] = new OnHitNormal(AttackType.MELEE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, "onhitnormal", "On Hit Normal", OnHitNormalParticles);
 
+
+        Abilities["chaosbarrage"] = new chaosbarrageability(AttackType.STATUS, DamageType.NONE, 0.0f, 0.0f, 0.0f, 0.0f, "chaosbarrage", "Chaos Barrage", chaosbarrageparticles);
+        Abilities["fireballbarrage"] = new fireballbarrageability(AttackType.STATUS, DamageType.NONE, 0.0f, 0.0f, 5.0f, 0.0f, "fireballbarrage", "Fireball Barrage", fireballbarrageparticles);
+
+        Abilities["fireballturret"] = new fireballturret(AttackType.PROJECTILE, DamageType.NONE,10.0f, 360.0f, 12.0f, 0.0f, "fireballturret", "Fireball Turret", fireballturretparticles);
+        Abilities["fireballturretfireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.0f, 5.0f, "fireballturretfireball", "Fireball Turret Fireball", FireballExplosion);
+        Abilities["frozenorb"] = new FrozenOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 8.0f, 0.0f, "frozenorb", "Frozen Orb", frozenorbparticles);
+        Abilities["icebolt"] = new IceBolt(AttackType.PROJECTILE, DamageType.WATER, 1f, 1f, 0.0f, 0f, "icebolt", "Ice Bolt", IceBoltparticles);
+
         #endregion
 
 
@@ -121,7 +142,7 @@ public class GameManager : MonoBehaviour
     }
     */
 
-    public void RunParticleSystem(IEnumerator coroutine)
+    public void RunCoroutine(IEnumerator coroutine)
     {
         StartCoroutine(coroutine);
     }

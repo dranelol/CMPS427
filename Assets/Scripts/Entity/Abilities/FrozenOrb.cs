@@ -2,21 +2,77 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Fusrodah : Ability
+public class FrozenOrb : Ability
 {
-    public Fusrodah(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
+    public FrozenOrb(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
         : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
     {
-       
+
     }
-                                            
-    public override void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
+
+
+    public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
-        List<GameObject> attacked = OnAttack(source, isPlayer);
+        GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position, source.transform.rotation);
+
+
+        projectile.GetComponent<ProjectileBehaviour>().owner = owner;
+        projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 4.0f;
+        projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
+        projectile.GetComponent<ProjectileBehaviour>().ExplodesOnTimeout = false;
+        projectile.GetComponent<ProjectileBehaviour>().hascollided = true;
+
+
+        projectile.rigidbody.velocity = forward.normalized * 5.0f;
+
+
+        int tempindex = 10;
+        while (owner.GetComponent<Entity>().abilityManager.abilities[tempindex] != null && owner.GetComponent<Entity>().abilityManager.abilities[tempindex].ID != "icebolt")
+        {
+            tempindex++;
+        }
+        if (owner.GetComponent<Entity>().abilityManager.abilities[tempindex] == null)
+        {
+            owner.GetComponent<Entity>().abilityManager.AddAbility(GameManager.Abilities["icebolt"], tempindex);
+            owner.GetComponent<Entity>().abilityIndexDict["icebolt"] = tempindex;
+
+        }
+        /*
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+        vectorToMouse = rayCastTarget.point - SourceEntity.transform.position;
+        forward = new Vector3(vectorToMouse.x, SourceEntity.transform.forward.y, vectorToMouse.z).normalized;
+        */
+
+
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(launch(projectile, owner, tempindex, isPlayer));
+
+    }
+
+
+    public IEnumerator launch(GameObject source, GameObject owner, int tempindex, bool isplayer)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+
+            Vector3 forward = new Vector3(Random.Range(-1.0f, 1.0f), owner.GetComponent<Entity>().transform.forward.y, Random.Range(-1.0f, 1.0f)).normalized;
+            owner.GetComponent<Entity>().abilityManager.abilities[tempindex].SpawnProjectile(source, owner, forward, owner.GetComponent<Entity>().abilityManager.abilities[tempindex].ID, isplayer);
+            //SpawnProjectile(SourceEntity.gameObject, rayCastTarget.point, SourceEntity.gameObject, forward, SourceEntity.abilityManager.abilities[tempindex].ID, true);
+            yield return new WaitForSeconds(0.25f);
+        }
+
+
+        yield return null;
+    }
+
+    public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
+    {
+        /*
+        List<GameObject> attacked = OnAttack(target, isPlayer);
 
         if (isPlayer == true)
         {
-
+            Debug.Log(attacked.Count);
             foreach (GameObject enemy in attacked)
             {
                 if (enemy.GetComponent<AIController>().IsResetting() == false
@@ -24,7 +80,7 @@ public class Fusrodah : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
-                    DoPhysics(source, enemy);
+                    DoPhysics(target, enemy);
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
                         enemy.GetComponent<AIController>().BeenAttacked(source);
@@ -39,17 +95,20 @@ public class Fusrodah : Ability
             {
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
-                DoPhysics(source, enemy);
+                DoPhysics(target, enemy);
+
             }
         }
+         * */
+    }
 
-
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer));
-    
+    public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
+    {
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
     {
+
         List<GameObject> enemiesToAttack = new List<GameObject>();
 
         Vector3 forward = new Vector3();
@@ -79,11 +138,12 @@ public class Fusrodah : Ability
             colliders = Physics.OverlapSphere(source.transform.position, range, 1 << playerMask);
         }
 
+
         foreach (Collider collider in colliders)
         {
             //Debug.Log(collider.ToString());
 
-            // create a vector from the possible enemy to the attacker
+            // create a vector from the possible enemy to the source.transform
 
             Vector3 enemyVector = collider.transform.position - source.transform.position;
             Vector3 enemyVector2 = source.transform.position - collider.transform.position;
@@ -98,7 +158,8 @@ public class Fusrodah : Ability
             if (Vector3.Angle(forward, enemyVector) < angle)
             {
                 RaycastHit hit = new RaycastHit();
-                
+
+
 
                 if (isPlayer == true)
                 {
@@ -112,12 +173,12 @@ public class Fusrodah : Ability
                     // if the ray hits, the enemy is in line of sight of the player, this is a successful attack hit
                     else
                     {
-                        if (hit.collider.gameObject.tag == "Player")
-                        {
-                            Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                            Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
-                            enemiesToAttack.Add(collider.gameObject);
-                        }
+                        //if (hit.collider.gameObject.tag == "Player")
+                        //{
+                        Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                        Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+                        enemiesToAttack.Add(collider.gameObject);
+                        //}
                     }
                 }
 
@@ -143,76 +204,12 @@ public class Fusrodah : Ability
                 }
             }
         }
-
+        enemiesToAttack.Add(source);
         return enemiesToAttack;
-    }
-
-    public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
-    {
-        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
-        Debug.Log("damage: " + damageAmt);
-
-        defender.ModifyHealth(-damageAmt);
-
-        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
-
-        if (isPlayer == true)
-        {
-            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
-        }
     }
 
     public override void DoPhysics(GameObject source, GameObject target)
     {
-        Vector3 relativeVector = (target.transform.position - source.transform.position).normalized;
-        float normalizedMagnitude = 6f - Vector3.Distance(target.transform.position, source.transform.position);
-        float force = (normalizedMagnitude / (Mathf.Pow(0.35f, 2)));
-        //defender.GetComponent<MovementFSM>().Stop(0.17f);
-
-        target.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force * 2, 0.2f, ForceMode.Impulse);
-    }
-
-    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
-    {
-        GameObject particles;
-
-        // if the player is casting the ability, we need to activate it based on the position of the cursor, not the transform's forward
-        if (isPlayer == true)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit targetRay;
-            Physics.Raycast(ray, out targetRay, Mathf.Infinity);
-            Vector3 vectorToMouse = targetRay.point - source.transform.position;
-            Vector3 cursorForward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
-
-
-            Quaternion rotation = Quaternion.LookRotation(cursorForward);
-            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, rotation);
-        }
-
-        else
-        {
-            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
-        }
-
-        //particles.transform.parent = attacker.transform;
-
-        yield return new WaitForSeconds(time);
-
-        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
-
-        foreach (ParticleSystem item in particleSystems)
-        {
-            Debug.Log("asd");
-            item.transform.parent = null;
-            item.emissionRate = 0;
-            item.enableEmission = false;
-
-        }
-
-        GameObject.Destroy(particles);
-
-        yield return null;
     }
 
 }

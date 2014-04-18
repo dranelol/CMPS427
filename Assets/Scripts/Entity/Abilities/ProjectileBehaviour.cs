@@ -34,12 +34,22 @@ public class ProjectileBehaviour : MonoBehaviour
     /// <summary>
     /// this sees if the projectile has collided with anything yet. Keeps it from colliding with two things
     /// </summary>
-    private bool hascollided = false;
+    public bool hascollided = false;
 
     /// <summary>
     /// flag for if the projectile collides with other projectiles instead of players/enemies
     /// </summary>
     public bool CollidesWithProjectiles = false;
+
+    /// <summary>
+    /// flag for if the projectile does it's attack when it times out
+    /// </summary>
+    public bool ExplodesOnTimeout = false;
+
+    /// <summary>
+    /// counter for... things. use it for whatever.
+    /// </summary>
+    public int count;
 
     /// <summary>
     /// If this projectile needs a target, this is it
@@ -98,9 +108,42 @@ public class ProjectileBehaviour : MonoBehaviour
         if (timeToActivate <= 0.0f)
         {
             // do attack things
-            Debug.Log("explode!");
-            
+         
             // call do animation
+
+            if (ExplodesOnTimeout == true)
+            {
+
+                if (owner.gameObject.tag == "Player")
+                {
+                    
+
+                    Entity ownerEntity = owner.GetComponent<Entity>();
+
+                    int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
+
+                    ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(gameObject, owner, ownerEntity, true);
+
+                    hascollided = true;
+                    DetachParticleSystem();
+                    Destroy(gameObject);
+
+
+                }
+
+                else if (owner.gameObject.tag == "Enemy")
+                {
+
+                    Entity ownerEntity = owner.GetComponent<Entity>();
+
+                    int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
+
+                    ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(gameObject, owner, ownerEntity, false);
+                    hascollided = true;
+                    DetachParticleSystem();
+                    Destroy(gameObject);
+                }
+            }
 
             // clean up and suicide
             DetachParticleSystem();

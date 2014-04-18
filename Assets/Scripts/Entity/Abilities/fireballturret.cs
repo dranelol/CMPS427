@@ -2,17 +2,85 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class BladeWaltz : Ability
+public class fireballturret : Ability
 {
-    public BladeWaltz(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
+    public fireballturret(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
         : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
     {
 
     }
 
-    public override void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
+
+    public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
-        List<GameObject> attacked = OnAttack(source, isPlayer);
+        GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position, source.transform.rotation);
+
+
+        projectile.GetComponent<ProjectileBehaviour>().owner = owner;
+        projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 10.0f;
+        projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
+        projectile.GetComponent<ProjectileBehaviour>().ExplodesOnTimeout = false;
+        projectile.GetComponent<ProjectileBehaviour>().hascollided = true;
+        
+
+        projectile.rigidbody.velocity = Vector3.zero;
+
+
+        int tempindex = 10;
+        while (owner.GetComponent<Entity>().abilityManager.abilities[tempindex] != null && owner.GetComponent<Entity>().abilityManager.abilities[tempindex].ID != "fireball")
+        {
+            tempindex++;
+        }
+        if (owner.GetComponent<Entity>().abilityManager.abilities[tempindex] == null)
+        {
+            owner.GetComponent<Entity>().abilityManager.AddAbility(GameManager.Abilities["fireball"], tempindex);
+            owner.GetComponent<Entity>().abilityIndexDict["fireball"] = tempindex;
+
+        }
+        /*
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+        vectorToMouse = rayCastTarget.point - SourceEntity.transform.position;
+        forward = new Vector3(vectorToMouse.x, SourceEntity.transform.forward.y, vectorToMouse.z).normalized;
+        */
+
+    
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(launch(projectile, owner, tempindex, isPlayer));
+    
+    }
+
+    
+    public IEnumerator launch(GameObject source, GameObject owner, int tempindex, bool isplayer)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            List<GameObject> target;
+            target = OnAttack(source, isplayer);
+
+
+            foreach (GameObject enemy in target)
+            {
+                Vector3 forward = (enemy.transform.position - source.transform.position).normalized;
+                owner.GetComponent<Entity>().abilityManager.abilities[tempindex].SpawnProjectile(source, owner, forward, owner.GetComponent<Entity>().abilityManager.abilities[tempindex].ID, isplayer);
+                  
+            }
+
+
+
+            //Vector3 forward = new Vector3(Random.Range(-1.0f, 1.0f), owner.GetComponent<Entity>().transform.forward.y, Random.Range(-1.0f, 1.0f)).normalized;
+            //owner.GetComponent<Entity>().abilityManager.abilities[tempindex].SpawnProjectile(source, owner, forward, owner.GetComponent<Entity>().abilityManager.abilities[tempindex].ID, isplayer);
+            //SpawnProjectile(SourceEntity.gameObject, rayCastTarget.point, SourceEntity.gameObject, forward, SourceEntity.abilityManager.abilities[tempindex].ID, true);
+            yield return new WaitForSeconds(1.0f);
+        }
+
+
+        yield return null;
+    }
+    
+    public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
+    {
+        /*
+        List<GameObject> attacked = OnAttack(target, isPlayer);
 
         if (isPlayer == true)
         {
@@ -24,14 +92,10 @@ public class BladeWaltz : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
-                    DoBlink(enemy, attacker.gameObject);
+                    DoPhysics(target, enemy);
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
                         enemy.GetComponent<AIController>().BeenAttacked(source);
-                    }
-                    if (attacker.abilityManager.abilities[6] != null)
-                    {
-                        attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
                     }
                 }
             }
@@ -43,13 +107,15 @@ public class BladeWaltz : Ability
             {
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
-                DoBlink(enemy, attacker.gameObject);
-                if (attacker.abilityManager.abilities[6] != null)
-                {
-                    attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
-                }
+                DoPhysics(target, enemy);
+
             }
         }
+         * */
+    }
+
+    public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
+    {
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -86,7 +152,6 @@ public class BladeWaltz : Ability
         foreach (Collider collider in colliders)
         {
 
-
             // create a vector from the possible enemy to the attacker
             Vector3 normalizedAttackPosition = new Vector3(source.transform.position.x, 1, source.transform.position.z);
             Vector3 normalizedDefenderPosition = new Vector3(collider.transform.position.x, 1, collider.transform.position.z);
@@ -103,6 +168,7 @@ public class BladeWaltz : Ability
             // if the angle between the forward vector of the attacker and the enemy vector is less than the angle of attack, the enemy is within the attack angle
             if (Vector3.Angle(forward, enemyVector) < angle)
             {
+
                 RaycastHit hit = new RaycastHit();
 
                 if (isPlayer == true)
@@ -119,7 +185,7 @@ public class BladeWaltz : Ability
                     // if the ray hits, the enemy is in line of sight of the player, this is a successful attack hit
                     else
                     {
-                        if (hit.collider.gameObject.tag == "Player")
+                        if (hit.collider.gameObject.tag == "Projectile")
                         {
 
                             Debug.DrawRay(normalizedDefenderPosition, enemyVector, Color.green, 0.5f);
@@ -143,7 +209,7 @@ public class BladeWaltz : Ability
                     // if the ray hits, the player is in line of sight of the enemy, this is a successful attack hit
                     else
                     {
-                        if (hit.collider.gameObject.tag == "Enemy")
+                        if (hit.collider.gameObject.tag == "Projectile")
                         {
                             Debug.DrawRay(normalizedDefenderPosition, enemyVector, Color.green, 0.5f);
                             Debug.DrawRay(normalizedDefenderPosition, enemyVector2, Color.red, 0.5f);
@@ -169,36 +235,8 @@ public class BladeWaltz : Ability
 
     }
 
-    public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
+    public override void DoPhysics(GameObject source, GameObject target)
     {
-        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
-        Debug.Log("damage: " + damageAmt);
-
-        defender.ModifyHealth(-damageAmt);
-
-        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
-
-        if (isPlayer == true)
-        {
-            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
-        }
     }
 
-
-    private void DoBlink(GameObject target, GameObject owner)
-    {
-
-        float portradius = 1.0f;
-        Vector3 portpos = (target.transform.position - owner.transform.position);
-
-        Vector3 offset = Vector3.Normalize(portpos) * portradius;
-
-        portpos = portpos + offset + owner.transform.position;
-
-        owner.GetComponent<NavMeshAgent>().Warp(portpos);
-        Vector3 tempforward = target.transform.position-portpos;
-        tempforward.y = 0;
-        owner.transform.forward = Vector3.Normalize(tempforward);
-
-    }
 }

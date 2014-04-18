@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-sealed public class chaosbarrage : Aura
+sealed public class fireballbarrage : Aura
 {
     #region Template Constants
 
@@ -19,7 +19,7 @@ sealed public class chaosbarrage : Aura
     private const AuraType TEMPLATE_AURA_AURATYPE = AuraType.Buff; // The type of aura, buff or debuff.
     private const int TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS = 1; // The number of times this effect can stack. Must be between 1 and 99 (inclusive)
     private const int TEMPLATE_AURA_INITIAL_NUMBER_OF_STACKS = 1; // The number of stacks this aura starts with.
-    private const int TEMPLATE_AURA_DURATION = 5; // The number of seconds this aura will remain on a target. The duration is an INTEGER because 
+    private const int TEMPLATE_AURA_DURATION = 3; // The number of seconds this aura will remain on a target. The duration is an INTEGER because 
     // status effects should have a finite number of seconds for the duration for simplicity.
     #endregion
 
@@ -33,7 +33,7 @@ sealed public class chaosbarrage : Aura
     /// </summary>
     /// <param name="id">The unique integer ID.</param>
     #region Complete
-    public chaosbarrage(string name)
+    public fireballbarrage(string name)
         : base(name, TEMPLATE_AURA_DESCRIPTION, TEMPLATE_AURA_FLAVOR_TEXT, TEMPLATE_AURA_ICON_TEXTURE_NAME, TEMPLATE_AURA_PARTICLE_EFFECT_NAME,
         TEMPLATE_AURA_AURATYPE, TEMPLATE_AURA_DURATION, TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS, TEMPLATE_AURA_INITIAL_NUMBER_OF_STACKS
         , new doability()
@@ -43,7 +43,7 @@ sealed public class chaosbarrage : Aura
          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
          * You can define your own modules or use the predefined modules to describe how the aura affects the entity. 
          * After you define your module, pass it as a paramater below before the ')' ie. ', new CustomModule())'         */
-        
+
         )
     { }
 
@@ -51,56 +51,63 @@ sealed public class chaosbarrage : Aura
 
     #region Custom Modules
 
-    protected class doability:Tick
+    protected class doability : Tick
     {
+
+        Ray ray;
+        RaycastHit rayCastTarget;
+        Vector3 vectorToMouse;
+        Vector3 forward;
+        int tempindex;
         public doability()
             : base()
         {
-            
+
         }
 
-
-        public override void OnTick()
+        public override void  OnStart(Entity target, Entity source, int count)
         {
-
-
-
-
-            Debug.Log("asdfsafds");
-            base.OnTick();
-            int tempindex = 10;
-            while (SourceEntity.abilityManager.abilities[tempindex] != null && SourceEntity.abilityManager.abilities[tempindex].ID != "chaosbolt")
+ 	        base.OnStart(target, source, count);
+            tempindex = 10;
+            while (SourceEntity.abilityManager.abilities[tempindex] != null && SourceEntity.abilityManager.abilities[tempindex].ID != "fireball")
             {
                 tempindex++;
             }
             if (SourceEntity.abilityManager.abilities[tempindex] == null)
             {
-                SourceEntity.abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], tempindex);
-                SourceEntity.abilityIndexDict["chaosbolt"] = tempindex;
+                SourceEntity.abilityManager.AddAbility(GameManager.Abilities["fireball"], tempindex);
+                SourceEntity.abilityIndexDict["fireball"] = tempindex;
 
             }
             Debug.Log(SourceEntity.abilityManager.abilities[tempindex].Name);
 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit rayCastTarget;
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
-            Vector3 vectorToMouse = rayCastTarget.point - SourceEntity.transform.position;
-            Vector3 forward = new Vector3(vectorToMouse.x, SourceEntity.transform.forward.y, vectorToMouse.z).normalized;
-
-
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(barrage(forward,tempindex,rayCastTarget));
+            vectorToMouse = rayCastTarget.point - SourceEntity.transform.position;
+            forward = new Vector3(vectorToMouse.x, SourceEntity.transform.forward.y, vectorToMouse.z).normalized;
         }
 
-        public IEnumerator barrage(Vector3 forward, int tempindex, RaycastHit rayCastTarget)
+        public override void OnTick()
+        {
+
+
+            base.OnTick();
+            
+            bool tag = (SourceEntity.tag == "player");
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(barrage(forward, tempindex, rayCastTarget, tag));
+        }
+
+        public IEnumerator barrage(Vector3 forward, int tempindex, RaycastHit rayCastTarget, bool isplayer)
         {
             for (int i = 0; i < 10; i++)
             {
-                SourceEntity.abilityManager.abilities[tempindex].SpawnProjectile(SourceEntity.gameObject, rayCastTarget.point, SourceEntity.gameObject, forward, SourceEntity.abilityManager.abilities[tempindex].ID, true);
-                yield return new WaitForSeconds(0.1f);
+                SourceEntity.abilityManager.abilities[tempindex].SpawnProjectile(SourceEntity.gameObject, SourceEntity.gameObject, forward, SourceEntity.abilityManager.abilities[tempindex].ID, isplayer);
+                    //SpawnProjectile(SourceEntity.gameObject, rayCastTarget.point, SourceEntity.gameObject, forward, SourceEntity.abilityManager.abilities[tempindex].ID, true);
+                yield return new WaitForSeconds(0.25f);
             }
 
 
-                yield return null;
+            yield return null;
         }
     }
 
@@ -119,14 +126,14 @@ sealed public class chaosbarrage : Aura
     /// <returns></returns>
     public override Aura Clone(Entity target, Entity caster, Aura prototpe)
     {
-        return new chaosbarrage(target, caster, prototpe);
+        return new fireballbarrage(target, caster, prototpe);
     }
 
     #endregion
 
     #region Private Constructor
 
-    private chaosbarrage(Entity target, Entity caster, Aura prototype) : base(target, caster, prototype) { }
+    private fireballbarrage(Entity target, Entity caster, Aura prototype) : base(target, caster, prototype) { }
 
     #endregion
 }
