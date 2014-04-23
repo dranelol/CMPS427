@@ -298,7 +298,7 @@ public class AIPursuit : StateMachine
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                     entity.abilityManager.abilities[0].AttackHandler(gameObject, entity, false);
-                    GetComponent<AnimationController>().AttackAnim(1);
+                    GetComponent<AnimationController>().Attack(1);
                 }
 
                 else if (entity.abilityManager.abilities[0].AttackType == AttackType.PROJECTILE)
@@ -309,6 +309,18 @@ public class AIPursuit : StateMachine
 
                     entity.abilityManager.abilities[0].SpawnProjectile(gameObject, gameObject, (currentTarget.transform.position - transform.position).normalized, entity.abilityManager.abilities[0].ID, false);
 
+                }
+
+                else if (entity.abilityManager.abilities[0].AttackType == AttackType.HONINGPROJECTILE)
+                {
+                    //combatFSM.Attack(0.0f);
+
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                    // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                    // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+                    entity.abilityManager.abilities[0].SpawnProjectile(gameObject, currentTarget.transform.position, gameObject, (currentTarget.transform.position - transform.position).normalized, entity.abilityManager.abilities[0].ID, false);
                 }
 
                 else

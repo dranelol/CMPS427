@@ -16,6 +16,9 @@ public class MasterAuraManager : MonoBehaviour
         Auras["Corruption"] = new Corruption("Corruption");
         Auras["BlessingOfMight"] = new BlessingOfMight("Blessing of Might");
 
+        Auras["root"] = new Root("root");
+
+
 	}
 
     #region Public Methods

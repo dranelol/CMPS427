@@ -5,12 +5,12 @@ import math
 
 #DEFINES
 
-minDamage = 10.0
-maxDamage = 40.0
+minDamage = 40.0
+maxDamage =140.0
 attackPower = 1.0
 defense = 1.0
 magicNumber = 200.0
-startHP = 60.0
+startHP = 100.0
 
 #ENDDEF
 

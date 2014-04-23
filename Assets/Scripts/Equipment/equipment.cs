@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class equipment{
 
+    public const string FILEPATH = "weaponmodels/";
+
     public Attributes equipmentAttributes;
 
     
@@ -18,6 +20,8 @@ public class equipment{
     public bool twohand;
     public bool ranged;
     public string onhit;
+
+    public string modelname;
 
     private Dictionary<string, equipSlots.slots> slotList = new Dictionary<string, equipSlots.slots>(); 
 
@@ -41,6 +45,7 @@ public class equipment{
         twohand = false;
         ranged = false;
         onhit = "";
+        modelname = "default";
     }
 
     public equipment(string name, equipSlots.equipmentType type, equipSlots.slots slot, int equipmentTier, int minlevel, int maxlevel, float health, float resource, float power, float defense, float mindmg, float maxdmg, float movespeed, float attackspeed, string flavortxt)
@@ -74,6 +79,7 @@ public class equipment{
         twohand = false;
         ranged = false;
         onhit = "";
+        modelname = "default";
 
     }
 
@@ -111,6 +117,7 @@ public class equipment{
         ranged = isranged;
 
         onhit = "";
+        modelname = "default";
 
     }
 
@@ -149,7 +156,48 @@ public class equipment{
         ranged = isranged;
 
         onhit = onhitability;
+        modelname = "default";
         
+
+    }
+
+
+    public equipment(string name, equipSlots.equipmentType type, equipSlots.slots slot, int equipmentTier, int minlevel, int maxlevel,
+                        float health, float resource, float power, float defense, float mindmg, float maxdmg, float movespeed, float attackspeed,
+                            string flavortxt, bool istwohand, bool isranged, string onhitability, string model)
+    {
+
+        equipmentAttributes = new Attributes();
+        equipmentName = name;
+        equipmentType = type;
+        flavorText = flavortxt;
+        validSlot = slot;
+        tier = equipmentTier;
+        minlvl = minlevel;
+        maxlvl = maxlevel;
+        equipmentAttributes.Health = health;
+        equipmentAttributes.Resource = resource;
+        equipmentAttributes.Power = power;
+        equipmentAttributes.Defense = defense;
+        equipmentAttributes.MinDamage = mindmg;
+        equipmentAttributes.MaxDamage = maxdmg;
+        equipmentAttributes.AttackSpeed = attackspeed;
+        equipmentAttributes.MovementSpeed = movespeed;
+
+
+        slotList.Add("Head", equipSlots.slots.Head);
+        slotList.Add("Legs", equipSlots.slots.Legs);
+        slotList.Add("Feet", equipSlots.slots.Feet);
+        slotList.Add("Chest", equipSlots.slots.Chest);
+        slotList.Add("Main", equipSlots.slots.Main);
+        slotList.Add("Off", equipSlots.slots.Off);
+
+        twohand = istwohand;
+        ranged = isranged;
+
+        onhit = onhitability;
+        modelname = model;
+
 
     }
 

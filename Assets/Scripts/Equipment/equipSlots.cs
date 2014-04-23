@@ -7,10 +7,10 @@ public class equipSlots
 
     public enum slots
     {
-        Main,
-        Off,
         Head,
         Chest,
+        Main,
+        Off,
         Legs,
         Feet
     }

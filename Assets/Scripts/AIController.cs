@@ -405,7 +405,7 @@ public class AIController : StateMachine
         Aggro.gameObject.SetActive(false);
         Destroy(rigidbody);
 
-        GetComponent<AnimationController>().DeathAnim();
+        GetComponent<AnimationController>().Death();
         yield return null;
     }
 
