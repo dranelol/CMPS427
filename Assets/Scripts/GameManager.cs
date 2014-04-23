@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public GameObject ChaosboltExplosion;
     public GameObject BlinkStrikeProjectile;
 
+
     public GameObject OnHitNormalParticles;
     public GameObject BlinkParticles;
 
@@ -78,6 +79,7 @@ public class GameManager : MonoBehaviour
 
 
         Abilities["onhitnormal"] = new OnHitNormal(AttackType.MELEE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, "onhitnormal", "On Hit Normal", OnHitNormalParticles);
+
 
         #endregion
 
