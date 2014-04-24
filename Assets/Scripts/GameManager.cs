@@ -41,6 +41,11 @@ public class GameManager : MonoBehaviour
     public GameObject IceBoltparticles;
     public GameObject IceBoltProjectile;
 
+    public GameObject BoomerangBladeProjectile;
+    public GameObject BoomerangBladeExplosion;
+    public GameObject AxeThrowProjectile;
+    public GameObject AxeThrowExplosion;
+
     public GameObject rotationEffect;
 
 
@@ -105,6 +110,11 @@ public class GameManager : MonoBehaviour
         Abilities["fireballturretfireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.0f, 5.0f, "fireballturretfireball", "Fireball Turret Fireball", FireballExplosion);
         Abilities["frozenorb"] = new FrozenOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 8.0f, 0.0f, "frozenorb", "Frozen Orb", frozenorbparticles);
         Abilities["icebolt"] = new IceBolt(AttackType.PROJECTILE, DamageType.WATER, 1f, 1f, 0.0f, 0f, "icebolt", "Ice Bolt", IceBoltparticles);
+
+        Abilities["boomerangblade"] = new BoomerangBlade(AttackType.PROJECTILE, DamageType.PHYSICAL, 0f, 0f, 0f, 0f, "boomerangblade", "Boomerang Blade", FireballExplosion);
+        Abilities["boomerangbladereturn"] = new BoomerangBladeReturn(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL,0.0f, 0.0f, 0.0f, 0.0f, "boomerangbladereturn", "Boomerang Blade(returning)", FireballExplosion);
+
+        Abilities["axethrow"] = new AxeThrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, "axethrow", "Axe Throw", FireballExplosion);
 
         #endregion
 
