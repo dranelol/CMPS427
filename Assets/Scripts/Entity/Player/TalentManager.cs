@@ -28,7 +28,16 @@ public class TalentManager : MonoBehaviour
     }
 
     private HashSet<Talent> mightTree;
+    public HashSet<Talent> MightTree
+    {
+        get { return mightTree; }
+    }
+
     private HashSet<Talent> magicTree;
+    public HashSet<Talent> MagicTree
+    {
+        get { return magicTree; }
+    }
 
     private PlayerController playerController;
     
@@ -72,6 +81,8 @@ public class TalentManager : MonoBehaviour
             {
                 magicTreePoints++;
             }
+
+            AddAbility(talent);
         }
     }
 
@@ -112,6 +123,11 @@ public class TalentManager : MonoBehaviour
 
             talentPointPool++;
             talent.CurrentPoints--;
+
+            if (talent.CurrentPoints == 0)
+            {
+                RemoveAbility(talent);
+            }
         }
     }
 
@@ -122,13 +138,30 @@ public class TalentManager : MonoBehaviour
         foreach (Talent t in mightTree)
         {
             t.CurrentPoints = 0;
-            t.RemoveAblilty();
+            RemoveAbility(t);
         }
 
         foreach (Talent t in magicTree)
         {
             t.CurrentPoints = 0;
-            t.RemoveAblilty();
+            RemoveAbility(t);
+        }
+    }
+
+    public void AddAbility(Talent talent)
+    {
+        if (playerController.spellBook.Contains(talent.TalentAbility) == false)
+        {
+            playerController.spellBook.Add(talent.TalentAbility);
+        }     
+        
+    }
+
+    public void RemoveAbility(Talent talent)
+    {
+        if (playerController.spellBook.Contains(talent.TalentAbility) == true)
+        {
+            playerController.spellBook.Remove(talent.TalentAbility);
         }
     }
 

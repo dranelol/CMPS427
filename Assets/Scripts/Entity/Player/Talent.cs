@@ -26,7 +26,11 @@ public class Talent
         get { return depth; }
     }
 
-    private Ability ability; //The ability spending points on this talent will unlock.
+    private Ability talentAbility; //The ability spending points on this talent will unlock.
+    public Ability TalentAbility
+    {
+        get { return talentAbility; }    
+    }
     
 
     /// <summary>
@@ -35,23 +39,13 @@ public class Talent
     /// <param name="maxPoints">Max number of points the talent will have.</param>
     /// <param name="ability">The ability spending points on this talent will unlock.</param>
     /// <param name="depth">Depth the talent is on the tree.</param>
-    public Talent(int maxPoints, Ability ability, int depth, HashSet<Ability> spellbook)
+    public Talent(int maxPoints, Ability ability, int depth)
     {
         currentPoints = 0;
         this.maxPoints = maxPoints;
-        this.ability = ability;
+        this.talentAbility = ability;
         this.depth = depth;
     }
 
-    public void AddAblilty()
-    {
-        
-
-    }
-
-    public void RemoveAblilty()
-    {
-        //Remove ability from spellbook
-
-    }
+    
 }

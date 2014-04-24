@@ -19,11 +19,15 @@ public class PlayerController : MonoBehaviour {
     public MovementFSM moveFSM;
     public CombatFSM combatFSM;
 
-    private HashSet<Ability> spellBook;
+    public HashSet<Ability> spellBook;
 
     private GameManager gameManager;
 
     private TalentManager talentManager;
+    public TalentManager TalentManager
+    {
+        get { return talentManager; }
+    }
 
     void Awake()
     {
