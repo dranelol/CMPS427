@@ -73,7 +73,7 @@ public class OrbRotate : MonoBehaviour
         }
 
         previousPositionVector = currentPositionVector = (transform.position - orbitPosition);
-        Debug.Log("orb starting position: " + transform.position.ToString());
+        
     }
 
 	void Update () 
@@ -83,7 +83,6 @@ public class OrbRotate : MonoBehaviour
             orbitPosition = orbitObject.transform.position;
         }
 
-        Debug.Log(movingOrbit);
         // figuring out how much we've rotated so far
         previousPositionVector = currentPositionVector;
         currentPositionVector = (transform.position - orbitPosition);
@@ -96,7 +95,6 @@ public class OrbRotate : MonoBehaviour
         {
             // suicide and cleanup 
             //StartCoroutine(orbCleanup());
-            Debug.Log("destroying");
             Destroy(gameObject, GetComponent<TrailRenderer>().time);
             this.enabled = false;
         }
