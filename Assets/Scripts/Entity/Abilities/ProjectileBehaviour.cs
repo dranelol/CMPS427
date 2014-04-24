@@ -167,7 +167,6 @@ public class ProjectileBehaviour : MonoBehaviour
                     {
                         Debug.Log("attacked an enemy!");
 
-
                         Entity ownerEntity = owner.GetComponent<Entity>();
 
                         int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
