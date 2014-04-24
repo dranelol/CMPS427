@@ -196,6 +196,9 @@ public class BladeWaltz : Ability
         portpos = portpos + offset + owner.transform.position;
 
         owner.GetComponent<NavMeshAgent>().Warp(portpos);
+        Vector3 tempforward = target.transform.position-portpos;
+        tempforward.y = 0;
+        owner.transform.forward = Vector3.Normalize(tempforward);
 
     }
 }

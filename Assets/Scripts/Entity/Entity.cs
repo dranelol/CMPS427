@@ -62,7 +62,7 @@ public class Entity : MonoBehaviour
         UpdateCurrentAttributes();
     }
 
-    private void UpdateCurrentAttributes()
+    public void UpdateCurrentAttributes()
     {
         currentAtt = new Attributes();
         currentAtt.Add(baseAtt);
