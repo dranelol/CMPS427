@@ -145,7 +145,7 @@ public class Entity : MonoBehaviour
     }
 
     /// <summary>
-    /// Remove an item from an equipment slot, clearing that slot. Returns false if that slot is already empty.
+    /// Removing the attributes of an equipment item from the character.
     /// </summary>
     /// <param name="slot"></param>
     /// <returns></returns>

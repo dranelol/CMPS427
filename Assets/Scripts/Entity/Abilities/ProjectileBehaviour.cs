@@ -178,12 +178,10 @@ public class ProjectileBehaviour : MonoBehaviour
 
                 if (other.gameObject.tag == "Terrain")
                 {
-                    Debug.Log("hit terrain");
                 }
 
                 if (homing == true && other.gameObject.tag == "Terrain")
                 {
-                    Debug.Log("hit terrain");
                     hascollided = true;
                     DetachParticleSystem();
                     Destroy(gameObject);

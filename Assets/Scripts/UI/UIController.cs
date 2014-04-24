@@ -9,7 +9,8 @@ public class UIController : MonoBehaviour {
         MACHINE_ROOT,
 		INGAME,
 		MENU,
-		CHARACTER
+		CHARACTER,
+		LEVELUP
 	}
 
 	private States guiState;
@@ -44,6 +45,7 @@ public class UIController : MonoBehaviour {
         stateMachine.AddDefaultState(new InGameUI((int)States.INGAME, this));
         stateMachine.AddState(new MenuUI((int)States.MENU, this));
         stateMachine.AddState(new CharacterUI((int)States.CHARACTER, this));
+		stateMachine.AddState(new LevelupUI((int)States.LEVELUP, this));
 	}
 	
 	// Update is called once per frame
@@ -71,6 +73,18 @@ public class UIController : MonoBehaviour {
 				guiState = States.INGAME;
 			else if (guiState == States.INGAME)
 				guiState = States.CHARACTER;
+		}
+
+		/* Levelup Screen
+		 * 
+		 * Can only be accessed ingame. 
+		 * Accessed by Key Input for testing purposes.
+		 */
+		if (Input.GetKeyUp (KeyCode.L)) {
+			if (guiState == States.LEVELUP)
+				guiState = States.INGAME;
+			else if (guiState == States.INGAME)
+				guiState = States.LEVELUP;
 		}
 
         stateMachine.Update();
