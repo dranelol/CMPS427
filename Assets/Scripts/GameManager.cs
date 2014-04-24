@@ -110,10 +110,10 @@ public class GameManager : MonoBehaviour
         Abilities["frozenorb"] = new FrozenOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 8.0f, 0.0f, "frozenorb", "Frozen Orb", FrozenOrbParticles);
         Abilities["icebolt"] = new IceBolt(AttackType.PROJECTILE, DamageType.WATER, 1f, 1f, 0.0f, 0f, "icebolt", "Ice Bolt", IceBoltParticles);
 
-        Abilities["boomerangblade"] = new BoomerangBlade(AttackType.PROJECTILE, DamageType.PHYSICAL, 0f, 0f, 0f, 0f, "boomerangblade", "Boomerang Blade", FireballExplosion);
-        Abilities["boomerangbladereturn"] = new BoomerangBladeReturn(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL,0.0f, 0.0f, 0.0f, 0.0f, "boomerangbladereturn", "Boomerang Blade(returning)", FireballExplosion);
+        Abilities["boomerangblade"] = new BoomerangBlade(AttackType.PROJECTILE, DamageType.PHYSICAL, 0f, 0f, 0f, 0f, "boomerangblade", "Boomerang Blade", BoomerangBladeExplosion);
+        Abilities["boomerangbladereturn"] = new BoomerangBladeReturn(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL,0.0f, 0.0f, 0.0f, 0.0f, "boomerangbladereturn", "Boomerang Blade(returning)", BoomerangBladeExplosion);
 
-        Abilities["axethrow"] = new AxeThrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, "axethrow", "Axe Throw", FireballExplosion);
+        Abilities["axethrow"] = new AxeThrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, "axethrow", "Axe Throw", AxeThrowExplosion);
 
         #endregion
 
