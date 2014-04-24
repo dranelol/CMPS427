@@ -209,7 +209,6 @@ public class ProjectileBehaviour : MonoBehaviour
                     {
                         Debug.Log("attacked an enemy!");
 
-
                         Entity ownerEntity = owner.GetComponent<Entity>();
 
                         int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
@@ -278,12 +277,10 @@ public class ProjectileBehaviour : MonoBehaviour
 
                 if (other.gameObject.tag == "Terrain")
                 {
-                    Debug.Log("hit terrain");
                 }
 
                 if (homing == true && other.gameObject.tag == "Terrain" && CollidesWithTerrain == true)
                 {
-                    Debug.Log("hit terrain");
                     hascollided = true;
                     DetachParticleSystem();
                     Destroy(gameObject);

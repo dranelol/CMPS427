@@ -44,7 +44,6 @@ public class OrbSpawn : MonoBehaviour
 
             }
 
-            Debug.Log("spawning orb at: " + newOrbPos.ToString());
 
             GameObject newOrb = (GameObject)GameObject.Instantiate(orb, newOrbPos, transform.rotation);
             newOrb.GetComponent<OrbRotate>().minHeight = minHeight;
@@ -62,7 +61,6 @@ public class OrbSpawn : MonoBehaviour
             {
                 if (orbitObject == null)
                 {
-                    Debug.Log("asd");
                     if (transform.parent == null)
                     {
                         newOrb.GetComponent<OrbRotate>().orbitObject = gameObject;

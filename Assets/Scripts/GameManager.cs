@@ -31,22 +31,21 @@ public class GameManager : MonoBehaviour
 
     public GameObject OnHitNormalParticles;
 
-    public GameObject AOEfreezeParticles;
+    public GameObject AOEFreezeParticles;
 
-    public GameObject chaosbarrageparticles;
-    public GameObject fireballbarrageparticles;
+    public GameObject ChaosBarrageParticles;
+    public GameObject FireballBarrageParticles;
 
-    public GameObject fireballturretparticles;
-    public GameObject frozenorbparticles;
-    public GameObject IceBoltparticles;
+    public GameObject FireballTurretParticles;
+    public GameObject FrozenOrbParticles;
+    public GameObject IceBoltParticles;
     public GameObject IceBoltProjectile;
 
     public GameObject BoomerangBladeProjectile;
     public GameObject BoomerangBladeExplosion;
     public GameObject AxeThrowProjectile;
     public GameObject AxeThrowExplosion;
-
-    public GameObject rotationEffect;
+    public GameObject RotationEffect;
 
 
 
@@ -98,18 +97,18 @@ public class GameManager : MonoBehaviour
         Abilities["chaosbolt"] = new Chaosbolt(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.1f, 10.0f, "chaosbolt", "chaosbolt", ChaosboltExplosion);
         
         Abilities["ShockMine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 10.0f, "ShockMine", "Shock Mine", ShockMineProjectile);
-        Abilities["aoefreeze"] = new AOEfreeze(AttackType.PBAOE, DamageType.WATER, 5, 360f, 2f, 1f, "aoefreeze", "Flashfreeze", AOEfreezeParticles);
+        Abilities["aoefreeze"] = new AOEfreeze(AttackType.PBAOE, DamageType.WATER, 5, 360f, 2f, 1f, "aoefreeze", "Flashfreeze", AOEFreezeParticles);
 
         Abilities["onhitnormal"] = new OnHitNormal(AttackType.MELEE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, "onhitnormal", "On Hit Normal", OnHitNormalParticles);
 
 
-        Abilities["chaosbarrage"] = new chaosbarrageability(AttackType.STATUS, DamageType.NONE, 0.0f, 0.0f, 0.0f, 0.0f, "chaosbarrage", "Chaos Barrage", chaosbarrageparticles);
-        Abilities["fireballbarrage"] = new fireballbarrageability(AttackType.STATUS, DamageType.NONE, 0.0f, 0.0f, 5.0f, 0.0f, "fireballbarrage", "Fireball Barrage", fireballbarrageparticles);
+        Abilities["chaosbarrage"] = new ChaosBarrageAbility(AttackType.STATUS, DamageType.NONE, 0.0f, 0.0f, 0.0f, 0.0f, "chaosbarrage", "Chaos Barrage", ChaosBarrageParticles);
+        Abilities["fireballbarrage"] = new FireballBarrageAbility(AttackType.STATUS, DamageType.NONE, 0.0f, 0.0f, 5.0f, 0.0f, "fireballbarrage", "Fireball Barrage", FireballBarrageParticles);
 
-        Abilities["fireballturret"] = new fireballturret(AttackType.PROJECTILE, DamageType.NONE,10.0f, 360.0f, 12.0f, 0.0f, "fireballturret", "Fireball Turret", fireballturretparticles);
+        Abilities["fireballturret"] = new FireballTurret(AttackType.PROJECTILE, DamageType.NONE,10.0f, 360.0f, 12.0f, 0.0f, "fireballturret", "Fireball Turret", FireballTurretParticles);
         Abilities["fireballturretfireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.0f, 5.0f, "fireballturretfireball", "Fireball Turret Fireball", FireballExplosion);
-        Abilities["frozenorb"] = new FrozenOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 8.0f, 0.0f, "frozenorb", "Frozen Orb", frozenorbparticles);
-        Abilities["icebolt"] = new IceBolt(AttackType.PROJECTILE, DamageType.WATER, 1f, 1f, 0.0f, 0f, "icebolt", "Ice Bolt", IceBoltparticles);
+        Abilities["frozenorb"] = new FrozenOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 8.0f, 0.0f, "frozenorb", "Frozen Orb", FrozenOrbParticles);
+        Abilities["icebolt"] = new IceBolt(AttackType.PROJECTILE, DamageType.WATER, 1f, 1f, 0.0f, 0f, "icebolt", "Ice Bolt", IceBoltParticles);
 
         Abilities["boomerangblade"] = new BoomerangBlade(AttackType.PROJECTILE, DamageType.PHYSICAL, 0f, 0f, 0f, 0f, "boomerangblade", "Boomerang Blade", FireballExplosion);
         Abilities["boomerangbladereturn"] = new BoomerangBladeReturn(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL,0.0f, 0.0f, 0.0f, 0.0f, "boomerangbladereturn", "Boomerang Blade(returning)", FireballExplosion);

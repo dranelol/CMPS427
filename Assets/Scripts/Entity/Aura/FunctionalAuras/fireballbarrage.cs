@@ -94,14 +94,14 @@ sealed public class fireballbarrage : Aura
             base.OnTick();
             
             bool tag = (SourceEntity.tag == "player");
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(barrage(forward, tempindex, rayCastTarget, tag));
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(barrage(forward, tempindex, rayCastTarget, tag, SourceEntity));
         }
 
-        public IEnumerator barrage(Vector3 forward, int tempindex, RaycastHit rayCastTarget, bool isplayer)
+        public IEnumerator barrage(Vector3 forward, int tempindex, RaycastHit rayCastTarget, bool isplayer, Entity sourceEntity)
         {
             for (int i = 0; i < 10; i++)
             {
-                SourceEntity.abilityManager.abilities[tempindex].SpawnProjectile(SourceEntity.gameObject, SourceEntity.gameObject, forward, SourceEntity.abilityManager.abilities[tempindex].ID, isplayer);
+                sourceEntity.abilityManager.abilities[tempindex].SpawnProjectile(sourceEntity.gameObject, sourceEntity.gameObject, forward, sourceEntity.abilityManager.abilities[tempindex].ID, isplayer);
                     //SpawnProjectile(SourceEntity.gameObject, rayCastTarget.point, SourceEntity.gameObject, forward, SourceEntity.abilityManager.abilities[tempindex].ID, true);
                 yield return new WaitForSeconds(0.25f);
             }
