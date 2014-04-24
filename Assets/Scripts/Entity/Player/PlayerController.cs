@@ -461,13 +461,13 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            entity.abilityManager.AddAbility(GameManager.Abilities["icebolt"], 2);
-            entity.abilityManager.AddAbility(GameManager.Abilities["fireballturret"], 3);
+            entity.abilityManager.AddAbility(GameManager.Abilities["chaosbarrage"], 2);
+            entity.abilityManager.AddAbility(GameManager.Abilities["fireballbarrage"], 3);
             entity.abilityManager.AddAbility(GameManager.Abilities["frozenorb"], 4);
             entity.abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 5);
 
-            entity.abilityIndexDict["icebolt"] = 2;
-            entity.abilityIndexDict["fireballturret"] = 3;
+            entity.abilityIndexDict["chaosbarrage"] = 2;
+            entity.abilityIndexDict["fireballbarrage"] = 3;
             entity.abilityIndexDict["frozenorb"] = 4;
             entity.abilityIndexDict["aoefreeze"] = 5;
         }
@@ -524,7 +524,21 @@ public class PlayerController : MonoBehaviour {
 
         #region ABILITY TESTS
 
+        if (Input.GetKeyDown(KeyCode.P))
+        {
 
+            GameObject rotationEffect = (GameObject)Instantiate(gameManager.RotationEffect, transform.position, Quaternion.identity);
+
+            //rotationEffect.transform.parent = transform;
+
+            OrbSpawn orbSpawn = rotationEffect.GetComponent<OrbSpawn>();
+
+            orbSpawn.orbitObject = gameObject;
+            orbSpawn.rotations = 3f;
+            orbSpawn.angularSpeed = 360.0f;
+            orbSpawn.oscillationSpeed = 0.5f;
+
+        }
         #endregion
 
         #region equipment stuff
@@ -586,21 +600,7 @@ public class PlayerController : MonoBehaviour {
         }
 
 
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            
-            GameObject rotationEffect = (GameObject)Instantiate(gameManager.rotationEffect, transform.position, Quaternion.identity);
-
-            //rotationEffect.transform.parent = transform;
-
-            OrbSpawn orbSpawn = rotationEffect.GetComponent<OrbSpawn>();
-
-            orbSpawn.orbitObject = gameObject;
-            orbSpawn.rotations = 3f;
-            orbSpawn.angularSpeed = 360.0f;
-            orbSpawn.oscillationSpeed = 0.5f;
-            
-        }
+        
 
         #endregion
 

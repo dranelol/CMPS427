@@ -51,7 +51,7 @@ sealed public class chaosbarrage : Aura
 
     #region Custom Modules
 
-    protected class doability:Tick
+    protected class doability : Tick
     {
         public doability()
             : base()
@@ -63,16 +63,14 @@ sealed public class chaosbarrage : Aura
         public override void OnTick()
         {
 
-
-
-
-            Debug.Log("asdfsafds");
             base.OnTick();
             int tempindex = 10;
+
             while (SourceEntity.abilityManager.abilities[tempindex] != null && SourceEntity.abilityManager.abilities[tempindex].ID != "chaosbolt")
             {
                 tempindex++;
             }
+
             if (SourceEntity.abilityManager.abilities[tempindex] == null)
             {
                 SourceEntity.abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], tempindex);
@@ -88,19 +86,19 @@ sealed public class chaosbarrage : Aura
             Vector3 forward = new Vector3(vectorToMouse.x, SourceEntity.transform.forward.y, vectorToMouse.z).normalized;
 
 
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(barrage(forward,tempindex,rayCastTarget));
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(barrage(forward,tempindex,rayCastTarget, SourceEntity));
         }
 
-        public IEnumerator barrage(Vector3 forward, int tempindex, RaycastHit rayCastTarget)
+        public IEnumerator barrage(Vector3 forward, int tempindex, RaycastHit rayCastTarget, Entity sourceEntity)
         {
             for (int i = 0; i < 10; i++)
             {
-                SourceEntity.abilityManager.abilities[tempindex].SpawnProjectile(SourceEntity.gameObject, rayCastTarget.point, SourceEntity.gameObject, forward, SourceEntity.abilityManager.abilities[tempindex].ID, true);
+                sourceEntity.abilityManager.abilities[tempindex].SpawnProjectile(sourceEntity.gameObject, rayCastTarget.point, sourceEntity.gameObject, forward, sourceEntity.abilityManager.abilities[tempindex].ID, true);
                 yield return new WaitForSeconds(0.1f);
             }
 
 
-                yield return null;
+            yield return null;
         }
     }
 
