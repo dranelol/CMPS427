@@ -161,4 +161,10 @@ public class TalentManager : MonoBehaviour
             return false;
         }
     }
+
+    public void GiveTalentPoints()
+    {
+        totalTalentPoints += talentPointIncrement;
+        talentPointPool += talentPointIncrement;
+    }
 }

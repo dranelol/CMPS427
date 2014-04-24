@@ -19,11 +19,17 @@ public class PlayerController : MonoBehaviour {
     public MovementFSM moveFSM;
     public CombatFSM combatFSM;
 
+    private HashSet<Ability> spellBook;
+
     private GameManager gameManager;
+
+    private TalentManager talentManager;
 
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        talentManager = transform.GetComponent<TalentManager>();
+        spellBook = new HashSet<Ability>();
     }
 
 	// Use this for initialization
@@ -605,6 +611,16 @@ public class PlayerController : MonoBehaviour {
         #endregion
 
         #endregion
+
+    }
+
+    void LevelUp()
+    {
+        //Play animation
+
+        talentManager.GiveTalentPoints();
+
+
 
     }
 
