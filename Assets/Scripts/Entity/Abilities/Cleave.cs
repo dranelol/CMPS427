@@ -54,6 +54,8 @@ public class Cleave : Ability
                 
             }
         }
+
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer));
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -192,5 +194,48 @@ public class Cleave : Ability
         }
     }
 
-    
+
+    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
+    {
+        GameObject particles;
+
+        // if the player is casting the ability, we need to activate it based on the position of the cursor, not the transform's forward
+        if (isPlayer == true)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit targetRay;
+            Physics.Raycast(ray, out targetRay, Mathf.Infinity);
+            Vector3 vectorToMouse = targetRay.point - source.transform.position;
+            Vector3 cursorForward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
+
+
+            Quaternion rotation = Quaternion.LookRotation(cursorForward);
+            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, rotation);
+        }
+
+        else
+        {
+            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
+        }
+
+        //particles.transform.parent = source.transform;
+
+        yield return new WaitForSeconds(time);
+
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem item in particleSystems)
+        {
+            Debug.Log("asd");
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
+
+        }
+
+        GameObject.Destroy(particles);
+
+        yield return null;
+    }
+
 }
