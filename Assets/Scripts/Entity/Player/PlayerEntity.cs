@@ -55,13 +55,13 @@ public class PlayerEntity : Entity
 
         else
         {
-            abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
-            abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
+            abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
+            abilityManager.AddAbility(GameManager.Abilities["fusrodah"], 3);
             abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], 4);
             abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
 
-            abilityIndexDict["shadowbolt"] = 2;
-            abilityIndexDict["poisonbolt"] = 3;
+            abilityIndexDict["cleave"] = 2;
+            abilityIndexDict["fusrodah"] = 3;
             abilityIndexDict["chaosbolt"] = 4;
             abilityIndexDict["bladewaltz"] = 5;
         }
