@@ -133,9 +133,6 @@ public class EnemySpawner : MonoBehaviour
 
     private void GenerateEnemy()
     {
-
-        
-        
         Vector3 newPosition = transform.position + new Vector3(UnityEngine.Random.Range(-spawnRadius, spawnRadius), 0, UnityEngine.Random.Range(-spawnRadius, spawnRadius));
 
         NavMeshHit meshLocation;

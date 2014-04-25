@@ -30,6 +30,7 @@ public class EntityAuraManager : MonoBehaviour
 
     public bool Add(string name, Entity caster, int count = 0)
     {
+
         if (MasterAuraManager.Contains(name)) // Check if the name exists in the master list
         {
             if (_auraDictionary.ContainsKey(name)) // Check if an aura of this name already exists.
@@ -226,9 +227,13 @@ public class EntityAuraManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.U) && tag == "Player")
+
+        if (Input.GetKeyDown(KeyCode.U))
         {
-            Add("heal", _entity);
+            if (_entity.tag == "Player")
+            {
+                Add("heal", _entity);
+            }
         }
     }
 }

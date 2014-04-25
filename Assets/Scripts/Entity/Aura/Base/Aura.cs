@@ -264,14 +264,14 @@ public abstract class Aura
 
         foreach (Module mod in protoType._allModules)
         {
-            Module newMod = mod.Copy();
-
-            _allModules.Add(newMod);
+            Module modCopy = mod.Copy();
 
             if (mod.GetType().BaseType == typeof(Tick))
             {
-                _tickModules.Add((Tick)newMod);
+                _tickModules.Add((Tick)modCopy);
             }
+
+            _allModules.Add(modCopy);
         }
 
         _timeRemaining = 0;
@@ -636,6 +636,11 @@ public abstract class Aura
         protected Module() 
         { 
             _entityAffected = null;
+        }
+
+        public Module Copy()
+        {
+            return (Module)this.MemberwiseClone();
         }
 
         #endregion
