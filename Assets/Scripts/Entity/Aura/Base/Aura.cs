@@ -259,8 +259,20 @@ public abstract class Aura
         _isStaticAura = protoType.IsStaticAura;
         _stackLimit = protoType.StackLimit;
 
-        _allModules = new List<Module>(protoType._allModules);
-        _tickModules = new List<Tick>(protoType._tickModules);
+        _allModules = new List<Module>();
+        _tickModules = new List<Tick>();
+
+        foreach (Module mod in protoType._allModules)
+        {
+            Module modCopy = mod.Copy();
+
+            if (mod.GetType().BaseType == typeof(Tick))
+            {
+                _tickModules.Add((Tick)modCopy);
+            }
+
+            _allModules.Add(modCopy);
+        }
 
         _timeRemaining = 0;
         _stackCount = 0;
@@ -624,6 +636,11 @@ public abstract class Aura
             _entityAffected = null; 
         }
 
+        public Module Copy()
+        {
+            return (Module)this.MemberwiseClone();
+        }
+
         #endregion
 
         #region Virtual Methods
@@ -822,7 +839,6 @@ public abstract class Aura
         public override void OnEnd()
         {
             base.OnEnd();
-            Debug.LogWarning("end");
             CalculateAttributeChange(EntityAffected, 0);
         }
 
@@ -830,7 +846,6 @@ public abstract class Aura
         {
             float newAttributeChange = _attributeSnapshot * Magnitude * Count * Sign; // Calculate new change in attribute
             float appliedAttribute = newAttributeChange - _attributeChange; // Get the difference from the old change
-            Debug.LogWarning(appliedAttribute);
             Attributes newAttribute = new Attributes();
 
             newAttribute.ModifyValue(Attribute, appliedAttribute);

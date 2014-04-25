@@ -5,7 +5,10 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour 
 {
     public GameObject FusRoDahParticles;
+
     public GameObject CleaveParticles;
+    public GameObject WhirlwindParticles;
+
     public GameObject DeathgripParticles;
     public GameObject HadoukenParticles;
 

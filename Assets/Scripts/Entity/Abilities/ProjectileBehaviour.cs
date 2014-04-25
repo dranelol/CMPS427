@@ -93,6 +93,7 @@ public class ProjectileBehaviour : MonoBehaviour
 
         //velocity = rigidbody.velocity;
 
+        // if this is a homing projectile, rotate towards our homing target
         if (homing == true)
         {
             Vector3 direction = target - transform.position;
@@ -102,21 +103,20 @@ public class ProjectileBehaviour : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(newDirection);
         }
 
-
+        // move along the path
         transform.position = transform.position + transform.forward * Time.deltaTime * speed;
 
+        // explode time, if applicable
         if (timeToActivate <= 0.0f)
         {
-            // do attack things
-         
-            // call do animation
-
+            // if we need to explode
             if (ExplodesOnTimeout == true)
             {
 
                 if (owner.gameObject.tag == "Player")
                 {
-                    
+
+                    // carry out explosion ability
 
                     Entity ownerEntity = owner.GetComponent<Entity>();
 
@@ -134,6 +134,8 @@ public class ProjectileBehaviour : MonoBehaviour
                 else if (owner.gameObject.tag == "Enemy")
                 {
 
+                    // carry out explosion ability
+
                     Entity ownerEntity = owner.GetComponent<Entity>();
 
                     int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
@@ -145,12 +147,13 @@ public class ProjectileBehaviour : MonoBehaviour
                 }
             }
 
-            // clean up and suicide
-            DetachParticleSystem();
-            Destroy(gameObject);
+            else
+            {
+                DetachParticleSystem();
+                Destroy(gameObject);
+            }
         }
 
-        // update position of projectile
 
 	}
 
@@ -158,13 +161,16 @@ public class ProjectileBehaviour : MonoBehaviour
     {
         if (hascollided == false)
         {
-            if (CollidesWithProjectiles)
+            // if we havent collided with, and we collide with projectiles, check if the trigger we just entered was another projectile
+
+            if (CollidesWithProjectiles == true)
             {
-                Debug.Log("asd");
+                
                 if (other.gameObject.tag == "Projectile")
                 {
                     if (other.gameObject.GetComponent<ProjectileBehaviour>().owner.tag == "Player")
                     {
+                        // carry out projectile explosion ability
                         Debug.Log("attacked an enemy!");
 
                         Entity ownerEntity = owner.GetComponent<Entity>();
@@ -180,6 +186,8 @@ public class ProjectileBehaviour : MonoBehaviour
 
                 }
             }
+
+            // else, normal explosion
 
             else
             {

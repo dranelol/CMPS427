@@ -30,7 +30,8 @@ public class EntityAuraManager : MonoBehaviour
 
     public bool Add(string name, Entity caster, int count = 0)
     {
-        Debug.LogWarning("asda");
+        Debug.LogWarning("adding buff: " + name);
+
         if (MasterAuraManager.Contains(name)) // Check if the name exists in the master list
         {
             if (_auraDictionary.ContainsKey(name)) // Check if an aura of this name already exists.
@@ -229,14 +230,12 @@ public class EntityAuraManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            Debug.Log(Add("test", _entity));
-        }
-
         if (Input.GetKeyDown(KeyCode.U))
         {
-            Debug.Log(Add("heal", _entity));
+            if (_entity.tag == "Player")
+            {
+                Add("heal", _entity);
+            }
         }
     }
 }

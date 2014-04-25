@@ -29,6 +29,7 @@ public class OrbSpawn : MonoBehaviour
         {
             Vector3 newOrbPos = Vector3.zero;
 
+            // trig math to spawn orbs around the orbit object, evenly spaced
             if (yOrbit == true)
             {
                 newOrbPos = new Vector3(transform.position.x + orbitScale * Mathf.Cos((360 / orbAmount) * i * Mathf.Deg2Rad),
@@ -44,7 +45,7 @@ public class OrbSpawn : MonoBehaviour
 
             }
 
-
+            // set all orb stuff that needs to be set from master 
             GameObject newOrb = (GameObject)GameObject.Instantiate(orb, newOrbPos, transform.rotation);
             newOrb.GetComponent<OrbRotate>().minHeight = minHeight;
             newOrb.GetComponent<OrbRotate>().maxHeight = maxHeight;
@@ -61,23 +62,26 @@ public class OrbSpawn : MonoBehaviour
             {
                 if (orbitObject == null)
                 {
+                    // if we need to move our orbit, and we dont have a parent, we need to set one as the current attached gameobject
                     if (transform.parent == null)
                     {
                         newOrb.GetComponent<OrbRotate>().orbitObject = gameObject;
                     }
 
+                    // else, set it as our parent
                     else
                     {
                         newOrb.GetComponent<OrbRotate>().orbitObject = transform.parent.gameObject;
                     }
                 }
-
+                // if the orbitobject isnt null, set it as the orbitobject
                 else
                 {
                     newOrb.GetComponent<OrbRotate>().orbitObject = orbitObject;
                 }
             }
 
+            // if we dont need to move our orbit, set the position as the current transform's position
             else
             {
                 newOrb.GetComponent<OrbRotate>().orbitPosition = transform.position;

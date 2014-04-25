@@ -524,19 +524,37 @@ public class PlayerController : MonoBehaviour {
 
         #region ABILITY TESTS
 
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.O))
         {
 
-            GameObject rotationEffect = (GameObject)Instantiate(gameManager.RotationEffect, transform.position, Quaternion.identity);
+            GameObject rotationEffect = (GameObject)Instantiate(gameManager.CleaveParticles, transform.position, Quaternion.identity);
 
             //rotationEffect.transform.parent = transform;
 
-            OrbSpawn orbSpawn = rotationEffect.GetComponent<OrbSpawn>();
+            OrbSpawnSingle orbSpawn = rotationEffect.GetComponent<OrbSpawnSingle>();
 
             orbSpawn.orbitObject = gameObject;
-            orbSpawn.rotations = 3f;
-            orbSpawn.angularSpeed = 360.0f;
-            orbSpawn.oscillationSpeed = 0.5f;
+            orbSpawn.initialAngleFromForward = Rotations.AngleSigned(transform.forward, Vector3.forward, Vector3.up) + 25.0f;
+            //orbSpawn.rotations = 0.25f;
+            //orbSpawn.angularSpeed = 360.0f;
+            //orbSpawn.oscillationSpeed = 0.5f;
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+
+            GameObject rotationEffect = (GameObject)Instantiate(gameManager.WhirlwindParticles, transform.position, Quaternion.identity);
+
+            //rotationEffect.transform.parent = transform;
+
+            OrbSpawnSingle orbSpawn = rotationEffect.GetComponent<OrbSpawnSingle>();
+
+            orbSpawn.orbitObject = gameObject;
+            orbSpawn.initialAngleFromForward = Rotations.AngleSigned(transform.forward, Vector3.forward, Vector3.up) + 25.0f;
+            //orbSpawn.rotations = 0.25f;
+            //orbSpawn.angularSpeed = 360.0f;
+            //orbSpawn.oscillationSpeed = 0.5f;
 
         }
         #endregion
