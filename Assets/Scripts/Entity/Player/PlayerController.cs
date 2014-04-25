@@ -19,9 +19,18 @@ public class PlayerController : MonoBehaviour {
     public MovementFSM moveFSM;
     public CombatFSM combatFSM;
 
-    public HashSet<Ability> spellBook;
+    private HashSet<Ability> spellBook;
+    public HashSet<Ability> SpellBook
+    {
+        get { return spellBook; }
+
+    }
 
     private GameManager gameManager;
+    public GameManager GameManager
+    {
+        get { return gameManager; }
+    }
 
     private TalentManager talentManager;
     public TalentManager TalentManager
@@ -44,6 +53,8 @@ public class PlayerController : MonoBehaviour {
         //agent.updateRotation = false;
 
         agent.avoidancePriority = 1;
+
+        
 
         entity = GetComponent<PlayerEntity>();
         moveFSM = GetComponent<MovementFSM>();

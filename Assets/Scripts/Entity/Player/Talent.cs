@@ -17,7 +17,7 @@ public class Talent
     private int maxPoints; //Max number of points the talent will have.
     public int MaxPoints
     {
-        get { return MaxPoints; }
+        get { return maxPoints; }
     }
 
     private int depth;
@@ -31,20 +31,27 @@ public class Talent
     {
         get { return talentAbility; }    
     }
-    
+
+    private string name;
+    public string Name
+    {
+        get { return name; }
+    }
 
     /// <summary>
     /// Talent Constructor
     /// </summary>
+    /// <param name="name">Name of the talent.</param>
     /// <param name="maxPoints">Max number of points the talent will have.</param>
     /// <param name="ability">The ability spending points on this talent will unlock.</param>
     /// <param name="depth">Depth the talent is on the tree.</param>
-    public Talent(int maxPoints, Ability ability, int depth)
+    public Talent(string name, int maxPoints, Ability ability, int depth)
     {
         currentPoints = 0;
         this.maxPoints = maxPoints;
         this.talentAbility = ability;
         this.depth = depth;
+        this.name = name;
     }
 
     

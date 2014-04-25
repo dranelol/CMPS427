@@ -13,7 +13,8 @@ public class UIController : MonoBehaviour
         MENU,
         CHARACTER,
         LEVELUP,
-        TALENT
+        TALENT,
+        SPELLBOOK
     }
 
     private States guiState;
@@ -44,7 +45,9 @@ public class UIController : MonoBehaviour
         nativeResolution.x = Screen.width;
         nativeResolution.y = Screen.height;
 
+        playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         player = GameObject.FindWithTag("Player").GetComponent<PlayerEntity>();
+        
 
         guiState = States.INGAME;
 
@@ -54,6 +57,7 @@ public class UIController : MonoBehaviour
         stateMachine.AddState(new CharacterUI((int)States.CHARACTER, this));
         stateMachine.AddState(new LevelupUI((int)States.LEVELUP, this));
         stateMachine.AddState(new TalentUI((int)States.TALENT, this));
+        stateMachine.AddState(new SpellbookUI((int)States.SPELLBOOK, this));
     }
 
     // Update is called once per frame
@@ -106,6 +110,14 @@ public class UIController : MonoBehaviour
                 guiState = States.INGAME;
             else if (guiState == States.INGAME)
                 guiState = States.TALENT;
+        }
+
+        if (Input.GetKeyUp(KeyCode.J))
+        {
+            if (guiState == States.SPELLBOOK)
+                guiState = States.INGAME;
+            else if (guiState == States.INGAME)
+                guiState = States.SPELLBOOK;
         }
 
         stateMachine.Update();

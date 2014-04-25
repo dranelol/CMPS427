@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class TalentManager : MonoBehaviour
 {
     public const int talentPointIncrement = 1; //Number of talent points given
-    public const int depthMultiplier = 5; //Mulitple of points needed to advance to the next tier of talents
+    public const int depthMultiplier = 1; //Mulitple of points needed to advance to the next tier of talents
 
     private int totalTalentPoints; //Count of all talent points earned.
 
@@ -40,13 +40,22 @@ public class TalentManager : MonoBehaviour
     }
 
     private PlayerController playerController;
-    
+
+    GameManager gameManager;
+
     void Awake()
     {
         playerController = transform.GetComponent<PlayerController>();
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+
+        totalTalentPoints = 5;
+        talentPointPool = 5;
 
         mightTree = new HashSet<Talent>();
         magicTree = new HashSet<Talent>();
+
+        
+        
 
         mightTreePoints = 0;
         magicTreePoints = 0;
@@ -56,7 +65,15 @@ public class TalentManager : MonoBehaviour
     // Use this for initialization
 	void Start () 
     {
-	
+        mightTree.Add(new Talent("Blink", 1, GameManager.Abilities["blink"], 0));
+        mightTree.Add(new Talent("Blink Strike", 1, GameManager.Abilities["blinkstrike"], 1));
+        mightTree.Add(new Talent("Death Grip", 1, GameManager.Abilities["deathgrip"], 1));
+        mightTree.Add(new Talent("Fus Ro Dah", 1, GameManager.Abilities["fusrodah"], 2));
+
+        magicTree.Add(new Talent("Shadowbolt", 1, GameManager.Abilities["shadowbolt"], 0));
+        magicTree.Add(new Talent("Blink Strike", 1, GameManager.Abilities["blinkstrike"], 1));
+        magicTree.Add(new Talent("Death Grip", 1, GameManager.Abilities["deathgrip"], 1));
+        magicTree.Add(new Talent("Fus Ro Dah", 1, GameManager.Abilities["fusrodah"], 2));
 	}
 	
 	// Update is called once per frame
@@ -68,8 +85,11 @@ public class TalentManager : MonoBehaviour
     public void SpendPoint(Talent talent)
     {
 
+        
+        
         if (talentPointPool > 0 && talent.CurrentPoints < talent.MaxPoints && IsTalentActive(talent) == true)
         {
+            
             talentPointPool--;
             talent.CurrentPoints++;
 
@@ -88,7 +108,7 @@ public class TalentManager : MonoBehaviour
 
     public void RemovePoint(Talent talent)
     {
-
+        
         if (talent.CurrentPoints > 0)
         {
 
@@ -148,27 +168,32 @@ public class TalentManager : MonoBehaviour
         }
     }
 
-    public void AddAbility(Talent talent)
+    private void AddAbility(Talent talent)
     {
-        if (playerController.spellBook.Contains(talent.TalentAbility) == false)
+        if (playerController.SpellBook.Contains(talent.TalentAbility) == false)
         {
-            playerController.spellBook.Add(talent.TalentAbility);
-        }     
+            playerController.SpellBook.Add(talent.TalentAbility);
+        }
+
+
+       
         
     }
 
-    public void RemoveAbility(Talent talent)
+    private void RemoveAbility(Talent talent)
     {
-        if (playerController.spellBook.Contains(talent.TalentAbility) == true)
+        if (playerController.SpellBook.Contains(talent.TalentAbility) == true)
         {
-            playerController.spellBook.Remove(talent.TalentAbility);
+            playerController.SpellBook.Remove(talent.TalentAbility);
         }
     }
 
     public bool IsTalentActive(Talent talent)
     {
+        
         if (mightTree.Contains(talent) == true)
         {
+            
             if (mightTreePoints >= talent.Depth * depthMultiplier)
             {
                 return true;
