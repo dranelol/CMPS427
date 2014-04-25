@@ -125,7 +125,7 @@ public class EnemySpawner : MonoBehaviour
                 {
                     GenerateEnemy();
                 }
-                Debug.Log("Generated " + enemyCount + " enemies at level " + level + ".");
+               // Debug.Log("Generated " + enemyCount + " enemies at level " + level + "!");
                 HasSpawned = true;
             }
         }
