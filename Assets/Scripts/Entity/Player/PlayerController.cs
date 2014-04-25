@@ -482,6 +482,13 @@ public class PlayerController : MonoBehaviour {
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+
+            entity.SetLevel(15);
+            Debug.Log(entity.Level + " is your new level!");
+        }
+
         if(Input.GetKeyDown(KeyCode.M))
         {
             string blah = "";
