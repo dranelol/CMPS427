@@ -22,8 +22,7 @@ public class TalentUI : UIState
         : base(id, controller)
     {
         windowDim = new Rect(Screen.width - (WIDTH + 50), Screen.height / 2 - HEIGHT / 2, WIDTH, HEIGHT);
-        mightTree = Controller.PlayerController.TalentManager.MightTree.ToList<Talent>();
-        magicTree = Controller.PlayerController.TalentManager.MagicTree.ToList<Talent>();
+        
 
         
 
@@ -45,6 +44,9 @@ public class TalentUI : UIState
     public override void Enter()
     {
         base.Enter();
+
+        mightTree = Controller.PlayerController.TalentManager.MightTree.ToList<Talent>();
+        magicTree = Controller.PlayerController.TalentManager.MagicTree.ToList<Talent>();
     }
 
     public override void Exit()
@@ -70,7 +72,7 @@ public class TalentUI : UIState
         float iconWidth = 0f;
         float iconHeight = 50f;
 
-        GUILayout.BeginArea(new Rect(0,20,WIDTH/4, 20));
+        GUILayout.BeginArea(new Rect(5,20,WIDTH/4, 20));
 
         GUILayout.BeginHorizontal();
 
@@ -95,10 +97,15 @@ public class TalentUI : UIState
 
         GUILayout.Space(10);
 
+        
+
         tempTalents = mightTree.FindAll(delegate(Talent tal) { return tal.Depth == count; });
+
         
         while(tempTalents.Count != 0)
         {
+
+            
 
             GUILayout.Space(20);
             
