@@ -259,8 +259,20 @@ public abstract class Aura
         _isStaticAura = protoType.IsStaticAura;
         _stackLimit = protoType.StackLimit;
 
-        _allModules = new List<Module>(protoType._allModules);
-        _tickModules = new List<Tick>(protoType._tickModules);
+        _allModules = new List<Module>();
+        _tickModules = new List<Tick>();
+
+        foreach (Module mod in protoType._allModules)
+        {
+            Module newMod = mod.Copy();
+
+            _allModules.Add(newMod);
+
+            if (mod.GetType().BaseType == typeof(Tick))
+            {
+                _tickModules.Add((Tick)newMod);
+            }
+        }
 
         _timeRemaining = 0;
         _stackCount = 0;
@@ -492,6 +504,8 @@ public abstract class Aura
             _damageType = DamageType.PHYSICAL;
         }
 
+
+
         #endregion
 
         #region Methods
@@ -621,12 +635,12 @@ public abstract class Aura
 
         protected Module() 
         { 
-            _entityAffected = null; 
+            _entityAffected = null;
         }
 
         #endregion
 
-        #region Virtual Methods
+        #region Methods
 
         public virtual void OnStart(Entity target, Entity source, int count) 
         {
@@ -643,6 +657,11 @@ public abstract class Aura
         public virtual void OnEnd() 
         {
             _count = 0;
+        }
+
+        public Module Copy()
+        {
+            return (Module)this.MemberwiseClone();
         }
 
         #endregion
@@ -822,7 +841,6 @@ public abstract class Aura
         public override void OnEnd()
         {
             base.OnEnd();
-            Debug.LogWarning("end");
             CalculateAttributeChange(EntityAffected, 0);
         }
 
@@ -830,7 +848,6 @@ public abstract class Aura
         {
             float newAttributeChange = _attributeSnapshot * Magnitude * Count * Sign; // Calculate new change in attribute
             float appliedAttribute = newAttributeChange - _attributeChange; // Get the difference from the old change
-            Debug.LogWarning(appliedAttribute);
             Attributes newAttribute = new Attributes();
 
             newAttribute.ModifyValue(Attribute, appliedAttribute);
