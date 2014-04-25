@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class UIState {
+public abstract class UIState 
+{
 	private int stateId;
     private UIController controller;
 
