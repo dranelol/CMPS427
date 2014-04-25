@@ -178,7 +178,7 @@ public class Cleave : Ability
     {
         float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
 
-        Debug.Log("damage: " + damageAmt);
+        //Debug.Log("damage: " + damageAmt);
         
 
         defender.ModifyHealth(-damageAmt);

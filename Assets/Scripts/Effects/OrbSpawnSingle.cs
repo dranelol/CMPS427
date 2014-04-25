@@ -29,6 +29,12 @@ public class OrbSpawnSingle : MonoBehaviour
             newOrbPos = new Vector3(transform.position.x + orbitScale * Mathf.Cos(initialAngleFromForward * Mathf.Deg2Rad),
                                     transform.position.y,
                                     transform.position.z + orbitScale * Mathf.Sin(initialAngleFromForward * Mathf.Deg2Rad));
+
+            // rotate based on forward vector of orbit object
+
+            //float turnAngle = Vector3.Angle(Vector3.back, orbitObject.transform.forward);
+
+            
         }
 
         else
@@ -36,6 +42,8 @@ public class OrbSpawnSingle : MonoBehaviour
             newOrbPos = new Vector3(transform.position.x + orbitScale * Mathf.Sin(initialAngleFromForward * Mathf.Deg2Rad),
                                     transform.position.y + orbitScale * Mathf.Cos(initialAngleFromForward * Mathf.Deg2Rad),
                                     transform.position.z);
+
+            
 
         }
 

@@ -14,7 +14,7 @@ public class Fireball : Ability
     public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
         
-        int segments = 8;
+        int segments = 1;
         
         for(int i = 0; i < segments; i++)
         {
@@ -75,7 +75,7 @@ public class Fireball : Ability
             DoDamage(source, target, attacker, defender, isPlayer);
         }
 
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.2f, isPlayer, target));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, target));
     }
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)

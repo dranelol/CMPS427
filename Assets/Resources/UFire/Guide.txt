@@ -1,0 +1,31 @@
+Thanks for purchasing this asset!
+
+This small guide was created in order to help you esily to implement this realistic fire into your game.
+
+
+
+1. Prefabs modification
+ 
+ Every fire prefab consists of several particle systems. You can easily modify them for your particular need.
+ But remember more particles means less perfomance, so try not to increase the number of particles too much 
+
+
+2. Prefabs description
+
+- fire - basic fire without smoke
+- fire_smoke - basic smoke for a fire
+- fire_with_smoke - pretty big fire with smoke
+- fireThrower - well, it's a fire from a firethrower
+- smallFire - small fire with smoke
+- torch_fire - fire for torches with smoke
+- wall_of_fire - can be used to create wall or fences of fire
+- oil_smoke - thick awesome looking smoke to add atmosphere to your backgrounds.
+
+Secondary particles folder:
+-sparks_center - turbulent sparks particles for core part of the fire 
+-sparks_wide - turbulent sparks particles for external part of the fire
+ 
+
+
+If you have any questions feel free to contact me:
+stanislavdol@gmail.com

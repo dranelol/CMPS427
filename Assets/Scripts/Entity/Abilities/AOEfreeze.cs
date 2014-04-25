@@ -16,7 +16,7 @@ public class AOEfreeze : Ability
 
         if (isPlayer == true)
         {
-            Debug.Log(attacked.Count);
+            Debug.Log("attacked: " + attacked.Count);
             foreach (GameObject enemy in attacked)
             {
                 if (enemy.GetComponent<AIController>().IsResetting() == false
@@ -46,7 +46,7 @@ public class AOEfreeze : Ability
 
             }
         }
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.5f, isPlayer));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.5f, isPlayer));
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -197,8 +197,6 @@ public class AOEfreeze : Ability
     {
         GameObject particles;
 
-
-
         particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, Quaternion.Euler(90,90,0));
         
 
@@ -210,7 +208,6 @@ public class AOEfreeze : Ability
 
         foreach (ParticleSystem item in particleSystems)
         {
-            Debug.Log("asd");
             item.transform.parent = null;
             item.emissionRate = 0;
             item.enableEmission = false;

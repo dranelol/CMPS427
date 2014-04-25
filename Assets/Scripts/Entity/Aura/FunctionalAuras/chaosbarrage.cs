@@ -12,10 +12,10 @@ sealed public class chaosbarrage : Aura
      * be used for anything other than outlining status effect information in one place. The base class stores properties to use
      * when referencing status effect information. Use those instead. */
 
-    private const string TEMPLATE_AURA_DESCRIPTION = "This unit is rooted in place"; // Description of the status effect (should be non-empty)
+    private const string TEMPLATE_AURA_DESCRIPTION = "Chaos barraging"; // Description of the status effect (should be non-empty)
     private const string TEMPLATE_AURA_FLAVOR_TEXT = "..."; // Flavor text for the status effect (optional)
     private const string TEMPLATE_AURA_ICON_TEXTURE_NAME = "default_aura_texture"; // The name of the texture for this aura to be displayed on the GUI.
-    private const string TEMPLATE_AURA_PARTICLE_EFFECT_NAME = "default_aura_particle_effect"; // The name of the particle effect to be used by this aura.
+    private const string TEMPLATE_AURA_PARTICLE_EFFECT_NAME = "snowdrop"; // The name of the particle effect to be used by this aura.
     private const AuraType TEMPLATE_AURA_AURATYPE = AuraType.Buff; // The type of aura, buff or debuff.
     private const int TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS = 1; // The number of times this effect can stack. Must be between 1 and 99 (inclusive)
     private const int TEMPLATE_AURA_INITIAL_NUMBER_OF_STACKS = 1; // The number of stacks this aura starts with.
@@ -36,6 +36,7 @@ sealed public class chaosbarrage : Aura
     public chaosbarrage(string name)
         : base(name, TEMPLATE_AURA_DESCRIPTION, TEMPLATE_AURA_FLAVOR_TEXT, TEMPLATE_AURA_ICON_TEXTURE_NAME, TEMPLATE_AURA_PARTICLE_EFFECT_NAME,
         TEMPLATE_AURA_AURATYPE, TEMPLATE_AURA_DURATION, TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS, TEMPLATE_AURA_INITIAL_NUMBER_OF_STACKS
+        , new doability()
     #endregion
 
             /* ----------------------------------------MODIFY THE REST HERE------------------------------------------------- *
@@ -50,26 +51,33 @@ sealed public class chaosbarrage : Aura
 
     #region Custom Modules
 
-    protected class doability:Tick
+    protected class doability : Tick
     {
-        protected doability()
+        public doability()
             : base()
         {
-
+            
         }
 
 
         public override void OnTick()
         {
+
             base.OnTick();
-            int tempindex = 0;
-            while (SourceEntity.abilityManager.tempabilities[tempindex] != null)
+            int tempindex = 10;
+
+            while (SourceEntity.abilityManager.abilities[tempindex] != null && SourceEntity.abilityManager.abilities[tempindex].ID != "chaosbolt")
             {
                 tempindex++;
             }
-            SourceEntity.abilityManager.AddTempAbility(GameManager.Abilities["chaosbolt"], tempindex);
 
+            if (SourceEntity.abilityManager.abilities[tempindex] == null)
+            {
+                SourceEntity.abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], tempindex);
+                SourceEntity.abilityIndexDict["chaosbolt"] = tempindex;
 
+            }
+            Debug.Log(SourceEntity.abilityManager.abilities[tempindex].Name);
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit rayCastTarget;
@@ -78,12 +86,19 @@ sealed public class chaosbarrage : Aura
             Vector3 forward = new Vector3(vectorToMouse.x, SourceEntity.transform.forward.y, vectorToMouse.z).normalized;
 
 
-            SourceEntity.abilityManager.tempabilities[tempindex].SpawnProjectile(SourceEntity.gameObject, rayCastTarget.point, SourceEntity.gameObject, forward, SourceEntity.abilityManager.abilities[tempindex].ID, true);
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(barrage(forward,tempindex,rayCastTarget, SourceEntity));
+        }
+
+        public IEnumerator barrage(Vector3 forward, int tempindex, RaycastHit rayCastTarget, Entity sourceEntity)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                sourceEntity.abilityManager.abilities[tempindex].SpawnProjectile(sourceEntity.gameObject, rayCastTarget.point, sourceEntity.gameObject, forward, sourceEntity.abilityManager.abilities[tempindex].ID, true);
+                yield return new WaitForSeconds(0.1f);
+            }
 
 
-
-
-            SourceEntity.abilityManager.RemoveTempAbility(tempindex);
+            yield return null;
         }
     }
 

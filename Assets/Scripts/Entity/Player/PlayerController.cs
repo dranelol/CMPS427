@@ -482,14 +482,14 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            entity.abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
-            entity.abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
-            entity.abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 4);
+            entity.abilityManager.AddAbility(GameManager.Abilities["chaosbarrage"], 2);
+            entity.abilityManager.AddAbility(GameManager.Abilities["fireballbarrage"], 3);
+            entity.abilityManager.AddAbility(GameManager.Abilities["frozenorb"], 4);
             entity.abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 5);
 
-            entity.abilityIndexDict["shadowbolt"] = 2;
-            entity.abilityIndexDict["poisonbolt"] = 3;
-            entity.abilityIndexDict["bladewaltz"] = 4;
+            entity.abilityIndexDict["chaosbarrage"] = 2;
+            entity.abilityIndexDict["fireballbarrage"] = 3;
+            entity.abilityIndexDict["frozenorb"] = 4;
             entity.abilityIndexDict["aoefreeze"] = 5;
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
@@ -545,7 +545,39 @@ public class PlayerController : MonoBehaviour {
 
         #region ABILITY TESTS
 
+        if (Input.GetKeyDown(KeyCode.O))
+        {
 
+            GameObject rotationEffect = (GameObject)Instantiate(gameManager.CleaveParticles, transform.position, Quaternion.identity);
+
+            //rotationEffect.transform.parent = transform;
+
+            OrbSpawnSingle orbSpawn = rotationEffect.GetComponent<OrbSpawnSingle>();
+
+            orbSpawn.orbitObject = gameObject;
+            orbSpawn.initialAngleFromForward = Rotations.AngleSigned(transform.forward, Vector3.forward, Vector3.up) + 25.0f;
+            //orbSpawn.rotations = 0.25f;
+            //orbSpawn.angularSpeed = 360.0f;
+            //orbSpawn.oscillationSpeed = 0.5f;
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+
+            GameObject rotationEffect = (GameObject)Instantiate(gameManager.WhirlwindParticles, transform.position, Quaternion.identity);
+
+            //rotationEffect.transform.parent = transform;
+
+            OrbSpawnSingle orbSpawn = rotationEffect.GetComponent<OrbSpawnSingle>();
+
+            orbSpawn.orbitObject = gameObject;
+            orbSpawn.initialAngleFromForward = Rotations.AngleSigned(transform.forward, Vector3.forward, Vector3.up) + 25.0f;
+            //orbSpawn.rotations = 0.25f;
+            //orbSpawn.angularSpeed = 360.0f;
+            //orbSpawn.oscillationSpeed = 0.5f;
+
+        }
         #endregion
 
         #region equipment stuff
@@ -607,21 +639,7 @@ public class PlayerController : MonoBehaviour {
         }
 
 
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            
-            GameObject rotationEffect = (GameObject)Instantiate(gameManager.rotationEffect, transform.position, Quaternion.identity);
-
-            //rotationEffect.transform.parent = transform;
-
-            OrbSpawn orbSpawn = rotationEffect.GetComponent<OrbSpawn>();
-
-            orbSpawn.orbitObject = gameObject;
-            orbSpawn.rotations = 3f;
-            orbSpawn.angularSpeed = 360.0f;
-            orbSpawn.oscillationSpeed = 0.5f;
-            
-        }
+        
 
         #endregion
 

@@ -73,7 +73,7 @@ public class BlinkStrike : Ability
             DoDamage(source, target, attacker, defender, isPlayer);
         }
 
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.2f, isPlayer, target));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, target));
     }
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
@@ -102,12 +102,15 @@ public class BlinkStrike : Ability
 
         float portradius = 1.0f;
         Vector3 portpos = (target.transform.position - owner.transform.position);
-        
-        Vector3 offset = Vector3.Normalize(portpos)*portradius;
+
+        Vector3 offset = Vector3.Normalize(portpos) * portradius;
 
         portpos = portpos + offset + owner.transform.position;
 
         owner.GetComponent<NavMeshAgent>().Warp(portpos);
+        Vector3 tempforward = target.transform.position - portpos;
+        tempforward.y = 0;
+        owner.transform.forward = Vector3.Normalize(tempforward);
 
     }
 

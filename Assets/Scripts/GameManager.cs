@@ -5,32 +5,47 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour 
 {
     public GameObject FusRoDahParticles;
+
     public GameObject CleaveParticles;
+    public GameObject WhirlwindParticles;
+
     public GameObject DeathgripParticles;
     public GameObject HadoukenParticles;
 
-    public GameObject BladeWaltzParticles;
-
     public GameObject ArrowParticles;
     public GameObject FireballProjectile;
+    public GameObject FireballTurretFireballProjectile;
     public GameObject ShadowboltProjectile;
     public GameObject PoisonboltProjectile;
     public GameObject BloodboltProjectile;
     public GameObject ChaosboltProjectile;
     public GameObject FiremineParticles;
     public GameObject GETOVERHEREParticles;
+
     public GameObject MineParticles;
     public GameObject ShockMineProjectile;
+
     public GameObject FireballExplosion;
     public GameObject ChaosboltExplosion;
+
     public GameObject BlinkStrikeProjectile;
+    public GameObject BlinkParticles;
+    public GameObject BladeWaltzParticles;
 
 
     public GameObject OnHitNormalParticles;
-    public GameObject BlinkParticles;
-    public GameObject AOEfreezeParticles;
 
-    public GameObject rotationEffect;
+    public GameObject AOEFreezeParticles;
+
+    public GameObject ChaosBarrageParticles;
+    public GameObject FireballBarrageParticles;
+
+    public GameObject FireballTurretParticles;
+    public GameObject FrozenOrbParticles;
+    public GameObject IceBoltParticles;
+    public GameObject IceBoltProjectile;
+
+    public GameObject RotationEffect;
 
 
 
@@ -82,9 +97,18 @@ public class GameManager : MonoBehaviour
         Abilities["chaosbolt"] = new Chaosbolt(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.1f, 10.0f, "chaosbolt", "chaosbolt", ChaosboltExplosion);
         
         Abilities["ShockMine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 10.0f, "ShockMine", "Shock Mine", ShockMineProjectile);
-        Abilities["aoefreeze"] = new AOEfreeze(AttackType.PBAOE, DamageType.WATER, 5, 360f, 2f, 1f, "aoefreeze", "Flashfreeze", AOEfreezeParticles);
+        Abilities["aoefreeze"] = new AOEfreeze(AttackType.PBAOE, DamageType.WATER, 5, 360f, 2f, 1f, "aoefreeze", "Flashfreeze", AOEFreezeParticles);
 
         Abilities["onhitnormal"] = new OnHitNormal(AttackType.MELEE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, "onhitnormal", "On Hit Normal", OnHitNormalParticles);
+
+
+        Abilities["chaosbarrage"] = new ChaosBarrageAbility(AttackType.STATUS, DamageType.NONE, 0.0f, 0.0f, 0.0f, 0.0f, "chaosbarrage", "Chaos Barrage", ChaosBarrageParticles);
+        Abilities["fireballbarrage"] = new FireballBarrageAbility(AttackType.STATUS, DamageType.NONE, 0.0f, 0.0f, 5.0f, 0.0f, "fireballbarrage", "Fireball Barrage", FireballBarrageParticles);
+
+        Abilities["fireballturret"] = new FireballTurret(AttackType.PROJECTILE, DamageType.NONE,10.0f, 360.0f, 12.0f, 0.0f, "fireballturret", "Fireball Turret", FireballTurretParticles);
+        Abilities["fireballturretfireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.0f, 5.0f, "fireballturretfireball", "Fireball Turret Fireball", FireballExplosion);
+        Abilities["frozenorb"] = new FrozenOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 8.0f, 0.0f, "frozenorb", "Frozen Orb", FrozenOrbParticles);
+        Abilities["icebolt"] = new IceBolt(AttackType.PROJECTILE, DamageType.WATER, 1f, 1f, 0.0f, 0f, "icebolt", "Ice Bolt", IceBoltParticles);
 
 
         #endregion
@@ -125,7 +149,7 @@ public class GameManager : MonoBehaviour
     }
     */
 
-    public void RunParticleSystem(IEnumerator coroutine)
+    public void RunCoroutine(IEnumerator coroutine)
     {
         StartCoroutine(coroutine);
     }
