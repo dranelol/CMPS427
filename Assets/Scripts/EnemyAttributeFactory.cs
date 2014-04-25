@@ -170,26 +170,26 @@ public class EnemyAttributeFactory {
         if (type == "critter")
         {
             //enemy.abilityManager.abilities[0]=GameManager.Abilities["cleave"];
-            enemy.abilityManager.AddAbility(GameManager.Abilities["fireball"], 0);
-            enemy.abilityIndexDict["fireball"] = 0;
+            enemy.abilityManager.AddAbility(GameManager.Abilities["cleave"], 0);
+            enemy.abilityIndexDict["cleave"] = 0;
         }
         else if (type == "small")
         {
             // enemy.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
-            enemy.abilityManager.AddAbility(GameManager.Abilities["cleave"], 0);
-            enemy.abilityIndexDict["cleave"] = 0;
+            enemy.abilityManager.AddAbility(GameManager.Abilities["fireball"], 0);
+            enemy.abilityIndexDict["fireball"] = 0;
         }
         else if (type == "med")
         {
             // enemy.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
-            enemy.abilityManager.AddAbility(GameManager.Abilities["fireball"], 0);
-            enemy.abilityIndexDict["fireball"] = 0;
+            enemy.abilityManager.AddAbility(GameManager.Abilities["icebolt"], 0);
+            enemy.abilityIndexDict["icebolt"] = 0;
         }
         else if (type == "large")
         {
             // enemy.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
-            enemy.abilityManager.AddAbility(GameManager.Abilities["fireball"], 0);
-            enemy.abilityIndexDict["fireball"] = 0;
+            enemy.abilityManager.AddAbility(GameManager.Abilities["axethrow"], 0);
+            enemy.abilityIndexDict["axethrow"] = 0;
         }
 
 
@@ -221,5 +221,13 @@ public class EnemyAttributeFactory {
         return temp;
     }
 
+    public string GetRandomEnemyType()
+    {
 
+        string []types = {"critter", "small", "med", "large"};
+
+        int diceroll = Random.Range(0, types.Length);
+
+        return types[diceroll];
+    }
 }

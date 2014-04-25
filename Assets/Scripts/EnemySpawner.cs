@@ -1,10 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour 
 {
     public GameObject enemyPrefab;
+
+    public GameObject critterPrefab;
+    public GameObject smallPrefab;
+    public GameObject medPrefab;
+    public GameObject largePrefab;
+
+    public Dictionary<string, GameObject> prefabdict;
 
     public SphereCollider trigger;
 
@@ -49,6 +57,11 @@ public class EnemySpawner : MonoBehaviour
         trigger = GetComponent<SphereCollider>();
         trigger.radius = triggerRadius;
         level = 1;
+        prefabdict = new Dictionary<string,GameObject>();
+        prefabdict.Add("critter", critterPrefab);
+        prefabdict.Add("small", smallPrefab);
+        prefabdict.Add("med", medPrefab);
+        prefabdict.Add("large", largePrefab);
     }
 
     void Start()
@@ -120,7 +133,9 @@ public class EnemySpawner : MonoBehaviour
             if (other.tag == "Player")
             {
                 level = other.GetComponent<PlayerEntity>().Level;
+                enemytype = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.GetRandomEnemyType();
                 enemyCount = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.DetermineNumberOfEnemies(enemytype);
+                enemyPrefab = prefabdict[enemytype];
                 for (int i = 0; i < enemyCount; i++)
                 {
                     GenerateEnemy();
