@@ -16,6 +16,13 @@ public class EnemySpawner : MonoBehaviour
     // Continuous generation
     public bool isStatic; // This determines if the spawner should generate 1 group or continuously spawn enemies over time.
 
+    //This determines if the spawner should figure out the level, number of enemies, etc, upon entering the trigger
+    //and then spawn them once, and only once
+    public bool GenerateAppropriateOnTrigger = false;
+
+    //If we're spawning a group of enemies only once, this'll stop it from happening again.
+    private bool HasSpawned = false;
+
     // Only visible if continuous generation is selected
     public bool isTrigger;
     public float triggerRadius; // The radius in which a player must be before to trigger generation
@@ -47,27 +54,29 @@ public class EnemySpawner : MonoBehaviour
     void Start()
     {
         //man = GameObject.Find("GameManager");
-
-        if (!isStatic || !isTrigger)
+        if (GenerateAppropriateOnTrigger == false)
         {
-            trigger.enabled = false;
-            spawnCounter = spawnInterval;
-
-            for (int i = 0; i < enemyCount; i++)
+            if (!isStatic || !isTrigger)
             {
-                GenerateEnemy();
-            }
+                trigger.enabled = false;
+                spawnCounter = spawnInterval;
 
-            if (!isStatic)
-            {
-                this.enabled = false;
+                for (int i = 0; i < enemyCount; i++)
+                {
+                    GenerateEnemy();
+                }
+
+                if (!isStatic)
+                {
+                    this.enabled = false;
+                }
             }
         }
     }
 
     void Update()
     {
-        /*
+        
         if (transform.childCount < enemyCount)
         {
             if (spawnCounter > 0)
@@ -78,7 +87,7 @@ public class EnemySpawner : MonoBehaviour
                 {
                     if (!isTrigger)
                     {
-                        GenerateEnemy();
+                       // GenerateEnemy();
                         spawnCounter = spawnInterval;
                     }
 
@@ -89,15 +98,36 @@ public class EnemySpawner : MonoBehaviour
                 }
             }
         }
-         */
+         
     }
 
     void OnTriggerStay()
     {
-        if (spawnCounter <= 0)
+        if (GenerateAppropriateOnTrigger == false)
         {
-            GenerateEnemy();
-            spawnCounter = spawnInterval;
+            if (spawnCounter <= 0)
+            {
+                GenerateEnemy();
+                spawnCounter = spawnInterval;
+            }
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (GenerateAppropriateOnTrigger == true && HasSpawned == false)
+        {
+            if (other.tag == "Player")
+            {
+                level = other.GetComponent<PlayerEntity>().Level;
+                enemyCount = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.DetermineNumberOfEnemies(enemytype);
+                for (int i = 0; i < enemyCount; i++)
+                {
+                    GenerateEnemy();
+                }
+                Debug.Log("Generated " + enemyCount + " enemies at level " + level + ".");
+                HasSpawned = true;
+            }
         }
     }
 
@@ -129,7 +159,9 @@ public class EnemySpawner : MonoBehaviour
 
             enemyEntity.UpdateCurrentAttributes();
             GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.GiveEnemyAbilities(enemyEntity, enemytype);
-            
+
+            enemyEntity.SetLevel(level);
+
             /*
             enemyEntity.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
             enemyEntity.abilityManager.abilities[1] = GameManager.Abilities["hadouken"];

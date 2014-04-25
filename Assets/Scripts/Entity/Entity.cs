@@ -16,6 +16,18 @@ public class Entity : MonoBehaviour
         get { return currentResource; }
     }
 
+    protected int level;
+    public int Level
+    {
+        get { return level; }
+    }
+
+    protected int experience;
+    public int Experience
+    {
+        get { return experience; }
+    }
+
     public Attributes currentAtt; // The entity's current total attributes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
@@ -49,6 +61,8 @@ public class Entity : MonoBehaviour
         baseAtt.Defense = 10;
         baseAtt.AttackSpeed = 1.0f;
         baseAtt.MovementSpeed = 1.0f;
+        level = 1;
+        experience = 0;
     }
 
 
@@ -86,7 +100,22 @@ public class Entity : MonoBehaviour
 
     public void ModifyResource(float delta)
     {
-        currentResource = Mathf.Clamp(currentResource + delta, 0, currentAtt.Power);
+        currentResource = Mathf.Clamp(currentResource + delta, 0, currentAtt.Resource);
+    }
+
+    public void SetLevel(int newlevel)
+    {
+        ModifyLevel(newlevel - level);
+    }
+
+    public void ModifyLevel(int delta)
+    {
+        level = Mathf.Clamp(level + delta, 1, 20);
+    }
+
+    public void ModifyXP(int delta)
+    {
+        experience = Mathf.Clamp(experience + delta, 0, 1000);
     }
 
     /// <summary>

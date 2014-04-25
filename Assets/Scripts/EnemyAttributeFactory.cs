@@ -196,7 +196,30 @@ public class EnemyAttributeFactory {
 
     }
 
+    public int DetermineNumberOfEnemies(string type)
+    {
+        int temp=1;
 
+        //MAN, SCREW CASE STATEMENTS
+
+        if (type == "critter")
+        {
+            temp = Random.Range(10, 14);
+        }
+        else if (type == "small")
+        {
+            temp = Random.Range(7, 11);
+        }
+        else if (type == "med")
+        {
+            temp = Random.Range(5, 8);
+        }
+        else if (type == "large")
+        {
+            temp = Random.Range(3, 6);
+        }
+        return temp;
+    }
 
 
 }

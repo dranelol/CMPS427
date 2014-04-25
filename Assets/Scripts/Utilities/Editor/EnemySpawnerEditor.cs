@@ -35,6 +35,12 @@ public class EnemySpawnerEditor : Editor
             EditorGUILayout.Space();
 
             GUI.changed = false;
+            spawner.GenerateAppropriateOnTrigger = EditorGUILayout.Toggle("Generate Appropriate", spawner.GenerateAppropriateOnTrigger);
+            CheckDirty(spawner);
+
+            EditorGUILayout.Space();
+
+            GUI.changed = false;
             spawner.isStatic = EditorGUILayout.BeginToggleGroup("Always Generate", spawner.isStatic);
             CheckDirty(spawner);
 
