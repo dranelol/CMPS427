@@ -637,12 +637,12 @@ public abstract class Aura
         { 
             _entityAffected = null;
         }
-
+        /*
         public Module Copy()
         {
             return (Module)this.MemberwiseClone();
         }
-
+        */
         #endregion
 
         #region Methods
