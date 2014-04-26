@@ -83,7 +83,6 @@ public class AOEfreeze : Ability
         foreach (Collider collider in colliders)
         {
 
-
             // create a vector from the possible enemy to the attacker
             Vector3 normalizedAttackPosition = new Vector3(source.transform.position.x, 1, source.transform.position.z);
             Vector3 normalizedDefenderPosition = new Vector3(collider.transform.position.x, 1, collider.transform.position.z);

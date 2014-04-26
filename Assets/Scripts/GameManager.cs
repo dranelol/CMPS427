@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour
         Abilities["chaosbolt"] = new Chaosbolt(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.1f, 10.0f, "chaosbolt", "chaosbolt", ChaosboltExplosion);
         
         Abilities["ShockMine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 10.0f, "ShockMine", "Shock Mine", ShockMineProjectile);
-        Abilities["aoefreeze"] = new AOEfreeze(AttackType.PBAOE, DamageType.WATER, 5, 360f, 2f, 1f, "aoefreeze", "Flashfreeze", AOEFreezeParticles);
+        Abilities["aoefreeze"] = new AOEfreeze(AttackType.PBAOE, DamageType.WATER, 50.0f, 360f, 2f, 1f, "aoefreeze", "Flashfreeze", AOEFreezeParticles);
 
         Abilities["onhitnormal"] = new OnHitNormal(AttackType.MELEE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, "onhitnormal", "On Hit Normal", OnHitNormalParticles);
 
