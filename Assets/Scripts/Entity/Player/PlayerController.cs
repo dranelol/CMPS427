@@ -465,12 +465,12 @@ public class PlayerController : MonoBehaviour {
             entity.abilityManager.AddAbility(GameManager.Abilities["chaosbarrage"], 2);
             entity.abilityManager.AddAbility(GameManager.Abilities["fireballbarrage"], 3);
             entity.abilityManager.AddAbility(GameManager.Abilities["frozenorb"], 4);
-            entity.abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 5);
+            entity.abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
 
             entity.abilityIndexDict["chaosbarrage"] = 2;
             entity.abilityIndexDict["fireballbarrage"] = 3;
             entity.abilityIndexDict["frozenorb"] = 4;
-            entity.abilityIndexDict["aoefreeze"] = 5;
+            entity.abilityIndexDict["bladewaltz"] = 5;
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
