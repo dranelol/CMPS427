@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
 
     public static float GLOBAL_COOLDOWN = 0.5f;
 
-
+    public AudioClip YEAAAAA;
 
     public bool loadsavetest = false;
 
@@ -71,6 +71,9 @@ public class GameManager : MonoBehaviour
     {
         EquipmentFactory = new equipmentFactory();
         
+
+
+
 
         #region ability initialization
         Abilities = new Dictionary<string, Ability>();

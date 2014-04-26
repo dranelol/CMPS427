@@ -12,52 +12,13 @@ public class BladeWaltz : Ability
 
     public override void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
     {
+
         List<GameObject> attacked = OnAttack(source, isPlayer);
 
         Debug.Log(attacked.Count);
-        if (isPlayer == true)
-        {
-            
-            foreach (GameObject enemy in attacked)
-            {
-                if (enemy.GetComponent<AIController>().IsResetting() == false
-                    && enemy.GetComponent<AIController>().IsDead() == false)
-                {
-                    Entity defender = enemy.GetComponent<Entity>();
-                    DoDamage(source, enemy, attacker, defender, isPlayer);
-                    DoBlink(enemy, attacker.gameObject);
-                    if (enemy.GetComponent<AIController>().IsInCombat() == false)
-                    {
-                        enemy.GetComponent<AIController>().BeenAttacked(source);
-                    }
 
-                    // do the on-hit attack handler
-                    if (attacker.abilityManager.abilities[6] != null)
-                    {
-                        attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
-                    }
-                }
-            }
-        }
-
-        else
-        {
-            foreach (GameObject enemy in attacked)
-            {
-                Entity defender = enemy.GetComponent<Entity>();
-                DoDamage(source, enemy, attacker, defender, isPlayer);
-                DoBlink(enemy, attacker.gameObject);
-
-                // do the on-hit attack handler
-                if (attacker.abilityManager.abilities[6] != null)
-                {
-                    attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
-                }
-            }
-        }
-
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoWaltz(isPlayer, attacked,  source, attacker));
         
-    
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -168,15 +129,18 @@ public class BladeWaltz : Ability
                 }
             }
         }
-        List<GameObject> enemytoAttack = new List<GameObject>();
+        /*
+        List<GameObject> enemyToAttack = new List<GameObject>();
 
         if (enemiesToAttack.Count > 0)
         {
-            enemytoAttack.Add(enemiesToAttack[Random.Range(0, enemiesToAttack.Count)]);
+            enemyToAttack.Add(enemiesToAttack[Random.Range(0, enemiesToAttack.Count)]);
         }
+        
+        return enemyToAttack;
+        */
 
-        return enemytoAttack;
-
+        return enemiesToAttack;
     }
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
@@ -212,6 +176,62 @@ public class BladeWaltz : Ability
 
     }
 
+    public IEnumerator DoWaltz(bool isPlayer, List<GameObject> attacked, GameObject source, Entity attacker)
+    {
+        if (isPlayer == true)
+        {
+            foreach (GameObject enemy in attacked)
+            {
+                if (enemy.GetComponent<AIController>().IsResetting() == false
+                    && enemy.GetComponent<AIController>().IsDead() == false)
+                {
+                    Entity defender = enemy.GetComponent<Entity>();
+
+                    DoDamage(source, enemy, attacker, defender, isPlayer);
+
+                    DoBlink(enemy, attacker.gameObject);
+
+                    GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, enemy));
+
+                    if (enemy.GetComponent<AIController>().IsInCombat() == false)
+                    {
+                        enemy.GetComponent<AIController>().BeenAttacked(source);
+                    }
+
+                    // do the on-hit attack handler
+                    if (attacker.abilityManager.abilities[6] != null)
+                    {
+                        attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
+                    }
+                }
+
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+
+        else
+        {
+            foreach (GameObject enemy in attacked)
+            {
+                Entity defender = enemy.GetComponent<Entity>();
+                DoDamage(source, enemy, attacker, defender, isPlayer);
+                DoBlink(enemy, attacker.gameObject);
+
+                GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, enemy));
+
+                // do the on-hit attack handler
+                if (attacker.abilityManager.abilities[6] != null)
+                {
+                    attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
+                }
+
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+
+        yield return null;
+    }
+
     public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
     {
         GameObject particles;
@@ -227,7 +247,9 @@ public class BladeWaltz : Ability
 
 
             Quaternion rotation = Quaternion.LookRotation(cursorForward);
-            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, rotation);
+            Vector3 offsetPosition = source.transform.position;
+            offsetPosition.Set(source.transform.position.x, source.transform.position.y + 1.0f, source.transform.position.z);
+            particles = (GameObject)GameObject.Instantiate(particlePrefab, offsetPosition, rotation);
         }
 
         else

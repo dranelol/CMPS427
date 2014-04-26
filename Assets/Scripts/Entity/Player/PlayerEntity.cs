@@ -68,8 +68,6 @@ public class PlayerEntity : Entity
             abilityIndexDict["bladewaltz"] = 5;
         }
 
-
-        baseAtt.Health = int.MaxValue;
 	}
 	
 	// Update is called once per frame

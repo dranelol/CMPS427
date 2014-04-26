@@ -108,12 +108,14 @@ public class CharacterUI : UIState {
             new Rect(0, 0, 10, viewSize));
 
         yOffset = 0;
+
         foreach (equipment item in Controller.Player.Inventory.Items)
         {
             if (GUI.Button(new Rect(0, yOffset, WIDTH - 30, 50), item.equipmentName, Controller.style)) 
             {
                 Controller.Player.addEquipment(item);
             }
+
             yOffset += 60;
         }
 
