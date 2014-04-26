@@ -5,25 +5,23 @@ using System.Linq;
 
 public class TalentUI : UIState
 {
-    private const float WIDTH = 800;
-    private const float HEIGHT = 500;
+    private const float WIDTH = 800;  //Total width of the window.
+    private const float HEIGHT = 500; //Total height of the window.
     private Rect windowDim;
-    private List<Talent> mightTree;
-    private List<Talent> magicTree;
-    private const int bufferSpace = 5;
+    private List<Talent> mightTree;  //List of the talents in the might tree.
+    private List<Talent> magicTree;  //List of the talents in the magic tree.
+    private const int bufferSpace = 5;  //Space between most GUI objects.
 
-    private GUIContent mightLabel;
-    private GUIContent magicLabel;
+    private GUIContent mightLabel;      //The label for the might tree
+    private GUIContent magicLabel;      //The label for the magic tree
 
-    private GUIStyle titleStyle;
+    private GUIStyle titleStyle;        //The style for titl
     private GUIStyle labelStyle;
 
     public TalentUI(int id, UIController controller)
         : base(id, controller)
     {
         windowDim = new Rect(Screen.width - (WIDTH + 50), Screen.height / 2 - HEIGHT / 2, WIDTH, HEIGHT);
-        
-
         
 
         titleStyle = new GUIStyle();
@@ -44,7 +42,8 @@ public class TalentUI : UIState
     public override void Enter()
     {
         base.Enter();
-
+        
+        //Get the talent trees from the TalentManager and convert them to lists.
         mightTree = Controller.PlayerController.TalentManager.MightTree.ToList<Talent>();
         magicTree = Controller.PlayerController.TalentManager.MagicTree.ToList<Talent>();
     }
@@ -90,9 +89,30 @@ public class TalentUI : UIState
 
         GUILayout.Space(10);
         GUILayout.BeginHorizontal();
-        GUILayout.Label(mightLabel, titleStyle, GUILayout.Width(WIDTH/4), GUILayout.Height(25));
+        GUILayout.Label(mightLabel, titleStyle, GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
 
-        GUILayout.Label(new GUIContent(Controller.PlayerController.TalentManager.MightTreePoints.ToString()+" points"), titleStyle, GUILayout.Width(WIDTH / 4), GUILayout.Height(25));
+        GUILayout.Label(new GUIContent(Controller.PlayerController.TalentManager.MightTreePoints.ToString() + " points"), titleStyle, GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
+
+
+
+        if (Controller.PlayerController.TalentManager.MightTreePoints > 0)
+        {
+
+            if (GUILayout.Button("RESPEC", GUILayout.Width((WIDTH / 6)-bufferSpace), GUILayout.Height(25)))
+            {
+                Controller.PlayerController.TalentManager.Respec("might");
+            }
+        }
+        else
+        {
+            GUI.enabled = false;
+            GUILayout.Button("RESPEC", GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
+            GUI.enabled = true;
+        }
+
+
+
+
         GUILayout.EndHorizontal();
 
         GUILayout.Space(10);
@@ -172,9 +192,25 @@ public class TalentUI : UIState
 
         GUILayout.Space(10);
         GUILayout.BeginHorizontal();
-        GUILayout.Label(magicLabel, titleStyle, GUILayout.Width(WIDTH / 4), GUILayout.Height(25));
+        GUILayout.Label(magicLabel, titleStyle, GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
 
-        GUILayout.Label(new GUIContent(Controller.PlayerController.TalentManager.MagicTreePoints.ToString() + " points"), titleStyle, GUILayout.Width(WIDTH / 4), GUILayout.Height(25));
+        GUILayout.Label(new GUIContent(Controller.PlayerController.TalentManager.MagicTreePoints.ToString() + " points"), titleStyle, GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
+
+
+        if (Controller.PlayerController.TalentManager.MagicTreePoints > 0)
+        {
+
+            if (GUILayout.Button("RESPEC", GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25)))
+            {
+                Controller.PlayerController.TalentManager.Respec("magic");
+            }
+        }
+        else
+        {
+            GUI.enabled = false;
+            GUILayout.Button("RESPEC", GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
+            GUI.enabled = true;
+        }
 
         GUILayout.EndHorizontal();
 
@@ -184,9 +220,6 @@ public class TalentUI : UIState
 
         while (tempTalents.Count != 0)
         {
-
-            
-
             GUILayout.Space(20);
 
             iconWidth = (((WIDTH / 2)) / tempTalents.Count) - (bufferSpace * 2);
@@ -236,12 +269,14 @@ public class TalentUI : UIState
             tempTalents = magicTree.FindAll(delegate(Talent tal) { return tal.Depth == count; });
         }
 
-
+        
 
         GUILayout.EndVertical();
 
         GUILayout.EndArea();
 
         #endregion
+
+
     }
 }

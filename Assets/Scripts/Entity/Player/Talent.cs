@@ -20,7 +20,7 @@ public class Talent
         get { return maxPoints; }
     }
 
-    private int depth;
+    private int depth; //Depth in the tree the talent lies. Starts at 0.
     public int Depth
     {
         get { return depth; }
@@ -32,7 +32,7 @@ public class Talent
         get { return talentAbility; }    
     }
 
-    private string name;
+    private string name; //Name of the talent. Usually the same as the ability name.
     public string Name
     {
         get { return name; }

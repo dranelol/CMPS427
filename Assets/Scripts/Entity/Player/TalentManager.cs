@@ -15,25 +15,25 @@ public class TalentManager : MonoBehaviour
         get { return talentPointPool; }
     }
 
-    private int mightTreePoints;
+    private int mightTreePoints; //Points currently spent in the Might Tree
     public int MightTreePoints
     {
         get { return mightTreePoints; }
     }
 
-    private int magicTreePoints;
+    private int magicTreePoints; //Points currently spent in the Magic Tree
     public int MagicTreePoints
     {
         get { return magicTreePoints; }
     }
 
-    private HashSet<Talent> mightTree;
+    private HashSet<Talent> mightTree; //Set of talents in the Might Tree.
     public HashSet<Talent> MightTree
     {
         get { return mightTree; }
     }
 
-    private HashSet<Talent> magicTree;
+    private HashSet<Talent> magicTree; //Set of talents in the Magic Tree.
     public HashSet<Talent> MagicTree
     {
         get { return magicTree; }
@@ -54,9 +54,6 @@ public class TalentManager : MonoBehaviour
         mightTree = new HashSet<Talent>();
         magicTree = new HashSet<Talent>();
 
-        
-        
-
         mightTreePoints = 0;
         magicTreePoints = 0;
     }
@@ -65,15 +62,15 @@ public class TalentManager : MonoBehaviour
     // Use this for initialization
 	void Start () 
     {
-        mightTree.Add(new Talent("Blink", 1, GameManager.Abilities["blink"], 0));
-        mightTree.Add(new Talent("Blink Strike", 1, GameManager.Abilities["blinkstrike"], 1));
-        mightTree.Add(new Talent("Death Grip", 1, GameManager.Abilities["deathgrip"], 1));
-        mightTree.Add(new Talent("Fus Ro Dah", 1, GameManager.Abilities["fusrodah"], 2));
+        mightTree.Add(new Talent("Fus Ro Dah", 1, GameManager.Abilities["fusrodah"], 0));
+        mightTree.Add(new Talent("Hadouken", 1, GameManager.Abilities["hadouken"], 1));
+        mightTree.Add(new Talent("Fireball Turret", 1, GameManager.Abilities["fireballturret"], 1));
+        mightTree.Add(new Talent("Blink Strike", 1, GameManager.Abilities["blinkstrike"], 2));
 
-        magicTree.Add(new Talent("Shadowbolt", 1, GameManager.Abilities["shadowbolt"], 0));
-        magicTree.Add(new Talent("Blink Strike", 1, GameManager.Abilities["blinkstrike"], 1));
+        magicTree.Add(new Talent("Blink", 1, GameManager.Abilities["blink"], 0));
+        magicTree.Add(new Talent("Frozen orb", 1, GameManager.Abilities["frozenorb"], 1));
         magicTree.Add(new Talent("Death Grip", 1, GameManager.Abilities["deathgrip"], 1));
-        magicTree.Add(new Talent("Fus Ro Dah", 1, GameManager.Abilities["fusrodah"], 2));
+        magicTree.Add(new Talent("Chaos Barrage", 1, GameManager.Abilities["chaosbarrage"], 2));
 	}
 	
 	// Update is called once per frame
@@ -82,10 +79,15 @@ public class TalentManager : MonoBehaviour
 	
 	}
 
+
+    /// <summary>
+    /// Handles spending a talent point. 
+    /// Adds the ability tied to the passed talent, increments the number of points spent on that talent and
+    /// the number of points spent in that talent's tree, and decrements the number of unused talent points.
+    /// </summary>
+    /// <param name="talent">The talent to spend the point on.</param>
     public void SpendPoint(Talent talent)
     {
-
-        
         
         if (talentPointPool > 0 && talent.CurrentPoints < talent.MaxPoints && IsTalentActive(talent) == true)
         {
@@ -106,6 +108,13 @@ public class TalentManager : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// Handles Removing a Talent Point
+    /// Removes a point from the passed talent, adds the point back to the unused talent pool, and removes the ability attached to the talent if removing a point will zero out the talent.
+    /// If removing a point from this talent does means that talents at lower depths will not have enough points above them to be valid, a point will not be removed from this talent. 
+    /// </summary>
+    /// <param name="talent">The talent to remove a point from.</param>
     public void RemovePoint(Talent talent)
     {
         
@@ -115,12 +124,15 @@ public class TalentManager : MonoBehaviour
             if (mightTree.Contains(talent) == true)
             {
 
-                //Checks to see that there are no talents with points in them at a lower depth in the tree than the current talent.
+                
                 foreach (Talent t in mightTree)
                 {
                     if (t.Depth > talent.Depth && t.CurrentPoints > 0)
                     {
-                        return;
+                        if ((mightTreePoints - 1) <= t.Depth * depthMultiplier)
+                        {
+                            return;
+                        }
                     }
                 }
 
@@ -129,12 +141,15 @@ public class TalentManager : MonoBehaviour
             else if (magicTree.Contains(talent) == true)
             {
 
-                //Checks to see that there are no talents with points in them at a lower depth in the tree than the current talent.
+                
                 foreach (Talent t in magicTree)
                 {
                     if (t.Depth > talent.Depth && t.CurrentPoints > 0)
                     {
-                        return;
+                        if ((magicTreePoints - 1) <= t.Depth * depthMultiplier)
+                        {
+                            return;
+                        }
                     }
                 }
                 
@@ -151,35 +166,57 @@ public class TalentManager : MonoBehaviour
         }
     }
 
-    public void Respec()
+
+    /// <summary>
+    /// Removes all points from a talent tree and refunds them to the unused talent pool.
+    /// </summary>
+    /// <param name="tree">The tree to reset. Either "might" or "magic".</param>
+    public void Respec(string tree)
     {
-        talentPointPool = totalTalentPoints;
+        
 
-        foreach (Talent t in mightTree)
+        if (tree == "might")
         {
-            t.CurrentPoints = 0;
-            RemoveAbility(t);
-        }
+            foreach (Talent t in mightTree)
+            {
+                t.CurrentPoints = 0;
+                RemoveAbility(t);
+            }
 
-        foreach (Talent t in magicTree)
-        {
-            t.CurrentPoints = 0;
-            RemoveAbility(t);
+            talentPointPool += mightTreePoints;
+            mightTreePoints = 0;
         }
+        else if (tree == "magic")
+        {
+            foreach (Talent t in magicTree)
+            {
+                t.CurrentPoints = 0;
+                RemoveAbility(t);
+            }
+
+            talentPointPool += magicTreePoints;
+            magicTreePoints = 0;
+        }
+        
     }
 
+    
+    /// <summary>
+    /// Adds a talent's ability to the player's spellbook if it is not already present.
+    /// </summary>
+    /// <param name="talent">The talent to add.</param>
     private void AddAbility(Talent talent)
     {
         if (playerController.SpellBook.Contains(talent.TalentAbility) == false)
         {
             playerController.SpellBook.Add(talent.TalentAbility);
-        }
-
-
-       
-        
+        } 
     }
 
+    /// <summary>
+    /// Removes a talent's ability from the player's spellbook if it is present.
+    /// </summary>
+    /// <param name="talent"></param>
     private void RemoveAbility(Talent talent)
     {
         if (playerController.SpellBook.Contains(talent.TalentAbility) == true)
@@ -188,6 +225,12 @@ public class TalentManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks to see if a talent is active.
+    /// A talent is active if there are enough points in the talent's tree to make its use valid based on the talent's depth.
+    /// </summary>
+    /// <param name="talent">The talent to determine active/inactive.</param>
+    /// <returns></returns>
     public bool IsTalentActive(Talent talent)
     {
         
@@ -220,9 +263,13 @@ public class TalentManager : MonoBehaviour
         }
     }
 
-    public void GiveTalentPoints()
+    /// <summary>
+    /// Adds the specified number of talent points.
+    /// </summary>
+    /// <param name="points">The points to add.</param>
+    public void GiveTalentPoints(int points)
     {
-        totalTalentPoints += talentPointIncrement;
-        talentPointPool += talentPointIncrement;
+        totalTalentPoints += points;
+        talentPointPool += points;
     }
 }
