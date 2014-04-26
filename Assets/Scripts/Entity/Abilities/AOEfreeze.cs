@@ -16,7 +16,6 @@ public class AOEfreeze : Ability
 
         if (isPlayer == true)
         {
-            Debug.Log("attacked: " + attacked.Count);
             foreach (GameObject enemy in attacked)
             {
                 if (enemy.GetComponent<AIController>().IsResetting() == false
