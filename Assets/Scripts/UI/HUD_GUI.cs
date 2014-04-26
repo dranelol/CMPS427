@@ -59,6 +59,8 @@ public class HUD_GUI : MonoBehaviour {
     private Rect CDBox3;
     private Rect CDBox4;
 
+    private Rect TempManaBox;
+
 	private int lastDamageFrame;
 
 	public float health = 0.0f;
@@ -105,6 +107,8 @@ public class HUD_GUI : MonoBehaviour {
         
 
         #endregion
+
+        TempManaBox = new Rect(Screen.width * .9f, Screen.height * .80f, Screen.width * .45f, Screen.height * .1f);
 	}
 
 	void OnGUI(){
@@ -300,6 +304,8 @@ public class HUD_GUI : MonoBehaviour {
 
         GUI.Label(InfoBox1, attackList, infoBoxStyle);
         GUI.Label(InfoBox2, version, infoBoxStyle);
+        GUI.Label(TempManaBox, player.CurrentResource.ToString() + "/" + player.currentAtt.Resource.ToString() + " Resource", infoBoxStyle);
+
 
         #region ability cooldown GUI
 

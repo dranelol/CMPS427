@@ -115,7 +115,7 @@ public abstract class Ability
     
     #endregion
 
-    public Ability(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
+    public Ability(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
     {
         this.attackType = attackType;
         this.damageType = damageType;
@@ -126,6 +126,7 @@ public abstract class Ability
         this.damageMod = damageMod;
         this.particleSystem = particles;
         this.id = id;
+        this.resourceCost = resourceCost;
     }
 
     public virtual void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
