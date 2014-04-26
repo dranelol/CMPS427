@@ -16,7 +16,6 @@ public class AOEfreeze : Ability
 
         if (isPlayer == true)
         {
-            Debug.Log("attacked: " + attacked.Count);
             foreach (GameObject enemy in attacked)
             {
                 if (enemy.GetComponent<AIController>().IsResetting() == false
@@ -83,7 +82,6 @@ public class AOEfreeze : Ability
         foreach (Collider collider in colliders)
         {
 
-
             // create a vector from the possible enemy to the attacker
             Vector3 normalizedAttackPosition = new Vector3(source.transform.position.x, 1, source.transform.position.z);
             Vector3 normalizedDefenderPosition = new Vector3(collider.transform.position.x, 1, collider.transform.position.z);
@@ -131,7 +129,7 @@ public class AOEfreeze : Ability
                 {
                     // try to cast a ray from the player to the enemy
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {

@@ -15,6 +15,8 @@ public class PlayerEntity : Entity
     {
         base.Awake();
         gamemanager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+
+        
     }
 
 
@@ -56,14 +58,14 @@ public class PlayerEntity : Entity
         else
         {
             abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
-            abilityManager.AddAbility(GameManager.Abilities["fusrodah"], 3);
+            abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 3);
             abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], 4);
-            abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
+            abilityManager.AddAbility(GameManager.Abilities["erenwaltz"], 5);
 
             abilityIndexDict["cleave"] = 2;
-            abilityIndexDict["fusrodah"] = 3;
+            abilityIndexDict["aoefreeze"] = 3;
             abilityIndexDict["chaosbolt"] = 4;
-            abilityIndexDict["bladewaltz"] = 5;
+            abilityIndexDict["erenwaltz"] = 5;
         }
 
 	}
