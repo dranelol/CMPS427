@@ -106,7 +106,7 @@ public class AOEfreeze : Ability
                 {
                     // try to cast a ray from the enemy to the player
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << enemyMask));
 
 
                     if (!rayCastHit)
@@ -131,7 +131,7 @@ public class AOEfreeze : Ability
                 {
                     // try to cast a ray from the player to the enemy
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {

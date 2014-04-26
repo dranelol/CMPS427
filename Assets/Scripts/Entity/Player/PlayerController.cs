@@ -457,7 +457,7 @@ public class PlayerController : MonoBehaviour {
             }
         }
         #endregion
-
+        #endregion
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -622,7 +622,7 @@ public class PlayerController : MonoBehaviour {
 
         #endregion
 
-        #endregion
+        
 
     }
 

@@ -14,9 +14,10 @@ public class BladeWaltz : Ability
     {
         List<GameObject> attacked = OnAttack(source, isPlayer);
 
+        Debug.Log(attacked.Count);
         if (isPlayer == true)
         {
-            Debug.Log(attacked.Count);
+            
             foreach (GameObject enemy in attacked)
             {
                 if (enemy.GetComponent<AIController>().IsResetting() == false
@@ -29,6 +30,8 @@ public class BladeWaltz : Ability
                     {
                         enemy.GetComponent<AIController>().BeenAttacked(source);
                     }
+
+                    // do the on-hit attack handler
                     if (attacker.abilityManager.abilities[6] != null)
                     {
                         attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
@@ -44,12 +47,17 @@ public class BladeWaltz : Ability
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
                 DoBlink(enemy, attacker.gameObject);
+
+                // do the on-hit attack handler
                 if (attacker.abilityManager.abilities[6] != null)
                 {
                     attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
                 }
             }
         }
+
+        
+    
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -109,7 +117,7 @@ public class BladeWaltz : Ability
                 {
                     // try to cast a ray from the enemy to the player
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << enemyMask));
 
 
                     if (!rayCastHit)
@@ -134,7 +142,7 @@ public class BladeWaltz : Ability
                 {
                     // try to cast a ray from the player to the enemy
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
@@ -161,10 +169,12 @@ public class BladeWaltz : Ability
             }
         }
         List<GameObject> enemytoAttack = new List<GameObject>();
+
         if (enemiesToAttack.Count > 0)
         {
             enemytoAttack.Add(enemiesToAttack[Random.Range(0, enemiesToAttack.Count)]);
         }
+
         return enemytoAttack;
 
     }
@@ -200,5 +210,47 @@ public class BladeWaltz : Ability
         tempforward.y = 0;
         owner.transform.forward = Vector3.Normalize(tempforward);
 
+    }
+
+    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
+    {
+        GameObject particles;
+
+        // if the player is casting the ability, we need to activate it based on the position of the cursor, not the transform's forward
+        if (isPlayer == true)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit targetRay;
+            Physics.Raycast(ray, out targetRay, Mathf.Infinity);
+            Vector3 vectorToMouse = targetRay.point - source.transform.position;
+            Vector3 cursorForward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
+
+
+            Quaternion rotation = Quaternion.LookRotation(cursorForward);
+            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, rotation);
+        }
+
+        else
+        {
+            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
+        }
+
+        //particles.transform.parent = source.transform;
+
+        yield return new WaitForSeconds(time);
+
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem item in particleSystems)
+        {
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
+
+        }
+
+        GameObject.Destroy(particles);
+
+        yield return null;
     }
 }
