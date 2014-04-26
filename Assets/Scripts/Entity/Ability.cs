@@ -115,7 +115,7 @@ public abstract class Ability
     
     #endregion
 
-    public Ability(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod,  ,string id, string readable, GameObject particles)
+    public Ability(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
     {
         this.attackType = attackType;
         this.damageType = damageType;
