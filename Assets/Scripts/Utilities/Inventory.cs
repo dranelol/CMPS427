@@ -68,6 +68,7 @@ public class Inventory {
     {
         for (int i = 0; i < MAX; i++)
         {
+            /*
             equipment item = factory.loadequipment(i + "inventory");
             if (item == null)
             {
@@ -75,6 +76,7 @@ public class Inventory {
             }
 
             items.Add(item);
+             * */
         }
     }
 }

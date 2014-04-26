@@ -504,6 +504,8 @@ public abstract class Aura
             _damageType = DamageType.PHYSICAL;
         }
 
+
+
         #endregion
 
         #region Methods
@@ -633,17 +635,17 @@ public abstract class Aura
 
         protected Module() 
         { 
-            _entityAffected = null; 
+            _entityAffected = null;
         }
-
+        /*
         public Module Copy()
         {
             return (Module)this.MemberwiseClone();
         }
-
+        */
         #endregion
 
-        #region Virtual Methods
+        #region Methods
 
         public virtual void OnStart(Entity target, Entity source, int count) 
         {
@@ -660,6 +662,11 @@ public abstract class Aura
         public virtual void OnEnd() 
         {
             _count = 0;
+        }
+
+        public Module Copy()
+        {
+            return (Module)this.MemberwiseClone();
         }
 
         #endregion
