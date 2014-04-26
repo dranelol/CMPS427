@@ -30,7 +30,6 @@ public class EntityAuraManager : MonoBehaviour
 
     public bool Add(string name, Entity caster, int count = 0)
     {
-        Debug.LogWarning("adding buff: " + name);
 
         if (MasterAuraManager.Contains(name)) // Check if the name exists in the master list
         {
@@ -53,7 +52,6 @@ public class EntityAuraManager : MonoBehaviour
                     {
                         // If this is a new caster, instantiate it, activate it, and return true.
                         Aura newAura = MasterAuraManager.GetInstance(name, _entity, caster);
-
                         _auraDictionary[name].Add(caster, newAura);
                         TrackAura(newAura);
                         StartCoroutine(newAura.Activate());
@@ -72,7 +70,6 @@ public class EntityAuraManager : MonoBehaviour
                 _auraDictionary[name].Add(caster, newAura);
                 TrackAura(newAura);
                 StartCoroutine(newAura.Activate());
-
                 GameObject newAuraParticle = Instantiate(newAura.ParticleEffect, _entity.transform.position, Quaternion.identity) as GameObject;
                 _particleDictionary.Add(name, newAuraParticle);
                 newAuraParticle.transform.parent = _entity.transform;
@@ -230,6 +227,7 @@ public class EntityAuraManager : MonoBehaviour
 
     void Update()
     {
+
         if (Input.GetKeyDown(KeyCode.U))
         {
             if (_entity.tag == "Player")
