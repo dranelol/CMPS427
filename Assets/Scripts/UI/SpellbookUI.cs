@@ -167,7 +167,7 @@ public class SpellbookUI : UIState
 
             if (Controller.Player.abilityManager.abilities[slotIndex] != null)
             {
-                Controller.PlayerController.SpellBook.Add(Controller.Player.abilityManager.abilities[keyBind]);
+                Controller.PlayerController.SpellBook.Add(Controller.Player.abilityManager.abilities[slotIndex]);
                 Controller.Player.abilityManager.RemoveAbility(slotIndex);
             }
 
