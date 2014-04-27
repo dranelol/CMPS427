@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class FadeOverLifetime : MonoBehaviour {
 
@@ -12,12 +13,29 @@ public class FadeOverLifetime : MonoBehaviour {
 
     void Update()
     {
-        if (renderer.material.GetColor("_TintColor").a > 0)
+        // tinted materials
+        try
         {
-            Color newColor = renderer.material.GetColor("_TintColor");
-            newColor.a = newColor.a - (1.0f/lifeTime * Time.deltaTime);
+            if (renderer.material.GetColor("_TintColor").a > 0)
+            {
+                Color newColor = renderer.material.GetColor("_TintColor");
+                newColor.a = newColor.a - (1.0f / lifeTime * Time.deltaTime);
 
-            renderer.material.SetColor("_TintColor", newColor);
+                renderer.material.SetColor("_TintColor", newColor);
+            }
+        }
+
+        catch (Exception e)
+        {
+            // normal color materials
+
+            if (renderer.material.GetColor("_Color").a > 0)
+            {
+                Color newColor = renderer.material.GetColor("_Color");
+                newColor.a = newColor.a - (1.0f / lifeTime * Time.deltaTime);
+
+                renderer.material.SetColor("_Color", newColor);
+            }
         }
     }
 }

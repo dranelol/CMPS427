@@ -60,12 +60,12 @@ public class PlayerEntity : Entity
             abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
             abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 3);
             abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], 4);
-            abilityManager.AddAbility(GameManager.Abilities["erenwaltz"], 5);
+            abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
 
             abilityIndexDict["cleave"] = 2;
             abilityIndexDict["aoefreeze"] = 3;
             abilityIndexDict["chaosbolt"] = 4;
-            abilityIndexDict["erenwaltz"] = 5;
+            abilityIndexDict["bladewaltz"] = 5;
         }
 
 	}

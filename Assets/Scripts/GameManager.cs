@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
         Abilities["cleave"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 0.0f, 5.0f, "cleave", "Cleave", CleaveParticles);
         Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 5.0f, 45.0f, 1.0f, 10.0f, "fusrodah", "Fus Roh Dah", FusRoDahParticles);
 
-        Abilities["bladewaltz"] = new BladeWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 5.0f, "bladewaltz", "Blade Waltz", BladeWaltzParticles);
+        Abilities["bladewaltz"] = new BladeWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 20.0f, 5.0f, "bladewaltz", "Blade Waltz", BladeWaltzParticles);
         Abilities["erenwaltz"] = new ErenWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 5.0f, "erenwaltz", "Eren Waltz", BladeWaltzParticles);
 
 
