@@ -546,6 +546,7 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.N))
         {
             entity.ModifyHealth(entity.currentAtt.Health-entity.CurrentHP);
+            entity.ModifyResource(entity.currentAtt.Resource - entity.CurrentResource);
         }
 
         #region ABILITY TESTS
