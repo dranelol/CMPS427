@@ -220,11 +220,13 @@ public abstract class Aura
         {
             _allModules.Add(module);
 
-            if (module.GetType().BaseType == typeof(Tick))
+            if (module.GetType().BaseType.BaseType == typeof(Tick))
             {
                 _tickModules.Add((Tick)module);
             }
         }
+
+        Debug.Log("length of tickmodules: " + _tickModules.Count);
 
         _timeRemaining = 0;
         _stackCount = 0;
@@ -266,14 +268,15 @@ public abstract class Aura
         {
             Module modCopy = mod.Copy();
 
-            if (mod.GetType().BaseType == typeof(Tick))
+            if (modCopy.GetType().BaseType.BaseType == typeof(Tick))
             {
                 _tickModules.Add((Tick)modCopy);
             }
 
             _allModules.Add(modCopy);
+            
         }
-
+        Debug.Log("length of tickmodules: " + _tickModules.Count);
         _timeRemaining = 0;
         _stackCount = 0;
         _initialStackCount = protoType.InitialStackCount;
@@ -504,6 +507,8 @@ public abstract class Aura
             _damageType = DamageType.PHYSICAL;
         }
 
+
+
         #endregion
 
         #region Methods
@@ -633,17 +638,17 @@ public abstract class Aura
 
         protected Module() 
         { 
-            _entityAffected = null; 
+            _entityAffected = null;
         }
-
+        /*
         public Module Copy()
         {
             return (Module)this.MemberwiseClone();
         }
-
+        */
         #endregion
 
-        #region Virtual Methods
+        #region Methods
 
         public virtual void OnStart(Entity target, Entity source, int count) 
         {
@@ -660,6 +665,11 @@ public abstract class Aura
         public virtual void OnEnd() 
         {
             _count = 0;
+        }
+
+        public Module Copy()
+        {
+            return (Module)this.MemberwiseClone();
         }
 
         #endregion

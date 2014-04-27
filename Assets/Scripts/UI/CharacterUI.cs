@@ -118,6 +118,7 @@ public class CharacterUI : UIState
             new Rect(0, 0, 10, viewSize));
 
         yOffset = 0;
+
         foreach (equipment item in Controller.Player.Inventory.Items)
         {
             
@@ -126,6 +127,7 @@ public class CharacterUI : UIState
             {
                 toBeUsed = item;
             }
+
             */
             GUI.Box(new Rect(0, yOffset, WIDTH - 30, 22), item.equipmentName);
 
@@ -136,6 +138,7 @@ public class CharacterUI : UIState
         {
             EquipItem(toBeUsed);
             toBeUsed = null;
+
         }
 
         GUI.EndScrollView();

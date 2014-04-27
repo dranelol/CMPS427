@@ -40,8 +40,12 @@ public class UIController : MonoBehaviour
 
     private UIStateMachine stateMachine;
 
-    // Use this for initialization
-    void Start()
+
+    void Awake()
+    {
+        DontDestroyOnLoad(transform.gameObject);
+    }
+	void Start () 
     {
         nativeResolution.x = Screen.width;
         nativeResolution.y = Screen.height;

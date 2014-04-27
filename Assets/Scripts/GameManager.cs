@@ -45,6 +45,10 @@ public class GameManager : MonoBehaviour
     public GameObject IceBoltParticles;
     public GameObject IceBoltProjectile;
 
+    public GameObject BoomerangBladeProjectile;
+    public GameObject BoomerangBladeExplosion;
+    public GameObject AxeThrowProjectile;
+    public GameObject AxeThrowExplosion;
     public GameObject RotationEffect;
 
 
@@ -58,7 +62,7 @@ public class GameManager : MonoBehaviour
 
     public static float GLOBAL_COOLDOWN = 0.5f;
 
-
+    public AudioClip YEAAAAA;
 
     public bool loadsavetest = false;
 
@@ -66,9 +70,16 @@ public class GameManager : MonoBehaviour
 	// Use this for initialization
     public void Awake()
     {
+        DontDestroyOnLoad(transform.gameObject);
+
+        if (Application.loadedLevel == 0)
+        {
+            Application.LoadLevel(1);
+        }
+
+        
         EquipmentFactory = new equipmentFactory();
         
-
         #region ability initialization
         Abilities = new Dictionary<string, Ability>();
 
@@ -80,7 +91,9 @@ public class GameManager : MonoBehaviour
         Abilities["cleave"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 0.0f, 5.0f, "cleave", "Cleave", CleaveParticles);
         Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 5.0f, 45.0f, 1.0f, 10.0f, "fusrodah", "Fus Roh Dah", FusRoDahParticles);
 
-        Abilities["bladewaltz"] = new BladeWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 5.0f, "bladewaltz", "Blade Waltz", BladeWaltzParticles);
+        Abilities["bladewaltz"] = new BladeWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 20.0f, 5.0f, "bladewaltz", "Blade Waltz", BladeWaltzParticles);
+        Abilities["erenwaltz"] = new ErenWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 5.0f, "erenwaltz", "Eren Waltz", BladeWaltzParticles);
+
 
         Abilities["arrow"] = new Arrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 5.0f, "arrow", "Arrow", ArrowParticles);
         Abilities["fireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.1f, 10.0f, "fireball", "Fireball", FireballExplosion);
@@ -97,7 +110,8 @@ public class GameManager : MonoBehaviour
         Abilities["chaosbolt"] = new Chaosbolt(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.1f, 10.0f, "chaosbolt", "chaosbolt", ChaosboltExplosion);
         
         Abilities["ShockMine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 10.0f, "ShockMine", "Shock Mine", ShockMineProjectile);
-        Abilities["aoefreeze"] = new AOEfreeze(AttackType.PBAOE, DamageType.WATER, 5, 360f, 2f, 1f, "aoefreeze", "Flashfreeze", AOEFreezeParticles);
+        Abilities["ShockMine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 10.0f, "ShockMine", "Shock Mine", ShockMineProjectile);
+        Abilities["aoefreeze"] = new AOEfreeze(AttackType.PBAOE, DamageType.WATER, 5.0f, 360f, 2f, 1f, "aoefreeze", "Flashfreeze", AOEFreezeParticles);
 
         Abilities["onhitnormal"] = new OnHitNormal(AttackType.MELEE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, "onhitnormal", "On Hit Normal", OnHitNormalParticles);
 
@@ -108,7 +122,12 @@ public class GameManager : MonoBehaviour
         Abilities["fireballturret"] = new FireballTurret(AttackType.PROJECTILE, DamageType.NONE,10.0f, 360.0f, 12.0f, 0.0f, "fireballturret", "Fireball Turret", FireballTurretParticles);
         Abilities["fireballturretfireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.0f, 5.0f, "fireballturretfireball", "Fireball Turret Fireball", FireballExplosion);
         Abilities["frozenorb"] = new FrozenOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 8.0f, 0.0f, "frozenorb", "Frozen Orb", FrozenOrbParticles);
-        Abilities["icebolt"] = new IceBolt(AttackType.PROJECTILE, DamageType.WATER, 1f, 1f, 0.0f, 0f, "icebolt", "Ice Bolt", IceBoltParticles);
+        Abilities["icebolt"] = new IceBolt(AttackType.PROJECTILE, DamageType.WATER, 8f, 0f, 0.5f, 0f, "icebolt", "Ice Bolt", IceBoltParticles);
+
+        Abilities["boomerangblade"] = new BoomerangBlade(AttackType.PROJECTILE, DamageType.PHYSICAL, 5f, 0f, 4.0f, 0f, "boomerangblade", "Boomerang Blade", BoomerangBladeExplosion);
+        Abilities["boomerangbladereturn"] = new BoomerangBladeReturn(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL,0.0f, 0.0f, 0.0f, 0.0f, "boomerangbladereturn", "Boomerang Blade(returning)", BoomerangBladeExplosion);
+
+        Abilities["axethrow"] = new AxeThrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 0.0f, 2.0f, 0.0f, "axethrow", "Axe Throw", AxeThrowExplosion);
 
 
         #endregion
@@ -118,6 +137,10 @@ public class GameManager : MonoBehaviour
         
     }
 
+    public void Update()
+    {
+        Debug.Log(Application.loadedLevel);
+    }
     public void RemovePhysics(Rigidbody toRemove, float time = 0.0f)
     {
         StartCoroutine(removePhysics(toRemove, time));

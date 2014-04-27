@@ -36,9 +36,11 @@ public class PlayerEntity : Entity
     {
         base.Awake();
         gamemanager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+
         Experience = 0;
         Level = 1;
         nextLevelExperience = 100;
+
     }
 
 
@@ -81,13 +83,13 @@ public class PlayerEntity : Entity
 
         else
         {
-            abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
-            abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
+            abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
+            abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 3);
             abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], 4);
             abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
 
-            abilityIndexDict["shadowbolt"] = 2;
-            abilityIndexDict["poisonbolt"] = 3;
+            abilityIndexDict["cleave"] = 2;
+            abilityIndexDict["aoefreeze"] = 3;
             abilityIndexDict["chaosbolt"] = 4;
             abilityIndexDict["bladewaltz"] = 5;
         }

@@ -43,8 +43,12 @@ public class PlayerController : MonoBehaviour {
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+
         talentManager = transform.GetComponent<TalentManager>();
         spellBook = new HashSet<Ability>();
+
+        DontDestroyOnLoad(transform.gameObject);
+
     }
 
 	// Use this for initialization
@@ -480,19 +484,20 @@ public class PlayerController : MonoBehaviour {
             }
         }
         #endregion
-
+        #endregion
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
+
             entity.abilityManager.AddAbility(GameManager.Abilities["chaosbarrage"], 2);
             entity.abilityManager.AddAbility(GameManager.Abilities["fireballbarrage"], 3);
             entity.abilityManager.AddAbility(GameManager.Abilities["frozenorb"], 4);
-            entity.abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 5);
+            entity.abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
 
             entity.abilityIndexDict["chaosbarrage"] = 2;
             entity.abilityIndexDict["fireballbarrage"] = 3;
             entity.abilityIndexDict["frozenorb"] = 4;
-            entity.abilityIndexDict["aoefreeze"] = 5;
+            entity.abilityIndexDict["bladewaltz"] = 5;
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
@@ -502,6 +507,13 @@ public class PlayerController : MonoBehaviour {
                 entity.removeEquipment((equipSlots.slots)i);
                 entity.addEquipment(gameManager.EquipmentFactory.randomEquipment(0, 1, (equipSlots.slots)i));
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+
+            entity.SetLevel(15);
+            Debug.Log(entity.Level + " is your new level!");
         }
 
         if(Input.GetKeyDown(KeyCode.M))
@@ -645,7 +657,7 @@ public class PlayerController : MonoBehaviour {
 
         #endregion
 
-        #endregion
+        
 
         //Check for level up
         if (entity.Experience >= entity.NextLevelExperience)
