@@ -69,12 +69,16 @@ public class GameManager : MonoBehaviour
 	// Use this for initialization
     public void Awake()
     {
+        DontDestroyOnLoad(transform.gameObject);
+
+        if (Application.loadedLevel == 0)
+        {
+            Application.LoadLevel(1);
+        }
+
+        
         EquipmentFactory = new equipmentFactory();
         
-
-
-
-
         #region ability initialization
         Abilities = new Dictionary<string, Ability>();
 
@@ -131,6 +135,10 @@ public class GameManager : MonoBehaviour
         
     }
 
+    public void Update()
+    {
+        Debug.Log(Application.loadedLevel);
+    }
     public void RemovePhysics(Rigidbody toRemove, float time = 0.0f)
     {
         StartCoroutine(removePhysics(toRemove, time));
