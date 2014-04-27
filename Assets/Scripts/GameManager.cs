@@ -69,12 +69,16 @@ public class GameManager : MonoBehaviour
 	// Use this for initialization
     public void Awake()
     {
+        DontDestroyOnLoad(transform.gameObject);
+
+        if (Application.loadedLevel == 0)
+        {
+            Application.LoadLevel(1);
+        }
+
+        
         EquipmentFactory = new equipmentFactory();
         
-
-
-
-
         #region ability initialization
         Abilities = new Dictionary<string, Ability>();
 
@@ -88,6 +92,7 @@ public class GameManager : MonoBehaviour
 
         Abilities["bladewaltz"] = new BladeWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 30.0f, 0f, 50.0f, "bladewaltz", "Blade Waltz", BladeWaltzParticles);
         Abilities["erenwaltz"] = new ErenWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 5.0f, 0f, "erenwaltz", "Eren Waltz", BladeWaltzParticles);
+
 
 
         Abilities["arrow"] = new Arrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 8.0f, 0.0f, 0.0f, 5.0f, 0f, "arrow", "Arrow", ArrowParticles);
@@ -131,6 +136,10 @@ public class GameManager : MonoBehaviour
         
     }
 
+    public void Update()
+    {
+        Debug.Log(Application.loadedLevel);
+    }
     public void RemovePhysics(Rigidbody toRemove, float time = 0.0f)
     {
         StartCoroutine(removePhysics(toRemove, time));

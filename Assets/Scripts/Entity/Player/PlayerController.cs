@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour {
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        DontDestroyOnLoad(transform.gameObject);
     }
 
 	// Use this for initialization

@@ -65,7 +65,14 @@ public class HUD_GUI : MonoBehaviour {
 
 	public float health = 0.0f;
 	float healthLastFrame = 0.0f;
-	void Start () {
+
+    void Awake()
+    {
+        DontDestroyOnLoad(transform.gameObject);
+    }
+
+	void Start () 
+    {
 		native_width = Screen.width;
 		native_height = Screen.height;
 
