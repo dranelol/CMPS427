@@ -91,10 +91,10 @@ sealed public class chaosbarrage : Aura
 
         public IEnumerator barrage(Vector3 forward, int tempindex, RaycastHit rayCastTarget, Entity sourceEntity)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 4; i++)
             {
                 sourceEntity.abilityManager.abilities[tempindex].SpawnProjectile(sourceEntity.gameObject, rayCastTarget.point, sourceEntity.gameObject, forward, sourceEntity.abilityManager.abilities[tempindex].ID, true);
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.25f);
             }
 
 
