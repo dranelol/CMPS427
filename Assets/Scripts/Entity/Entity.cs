@@ -16,6 +16,20 @@ public class Entity : MonoBehaviour
         get { return currentResource; }
     }
 
+    private int experience;
+    public int Experience
+    {
+        get { return experience; }
+        set { experience = value; }
+    }
+
+    private int level;
+    public int Level
+    {
+        get { return level; }
+        set { level = value; }
+    }
+
     public Attributes currentAtt; // The entity's current total attributes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
@@ -139,7 +153,7 @@ public class Entity : MonoBehaviour
                 abilityIndexDict[item.onhit] = 6;
             }
 
-            Inventory.Equip = item;
+            inventory.Equip(item);
             return true;
         }
     }
@@ -166,7 +180,7 @@ public class Entity : MonoBehaviour
          
             }
 
-            Inventory.Unequip = removed;
+            inventory.Unequip(removed);
             return true;
         }
         else

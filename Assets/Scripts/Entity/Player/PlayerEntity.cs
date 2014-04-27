@@ -6,6 +6,27 @@ public class PlayerEntity : Entity
 {
     public float power, defense, attackSpeed, movementSpeed, minDamage, maxDamage;
 
+    private int nextLevelExperience;
+    public int NextLevelExperience
+    {
+        get
+        {
+            return nextLevelExperience;
+        }
+
+        set
+        {
+            nextLevelExperience = value;
+        }
+    }
+
+    private int attributePoints;
+    public int AttributePoints
+    {
+        get { return attributePoints; }
+        set { attributePoints = value; }
+    }
+
     public Mesh mesh { get { return GetComponent<MeshFilter>().mesh; } }
 
     GameManager gamemanager;
@@ -15,12 +36,17 @@ public class PlayerEntity : Entity
     {
         base.Awake();
         gamemanager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        Experience = 0;
+        Level = 1;
+        nextLevelExperience = 100;
     }
 
 
 	public void Start() 
     {
         base.Start();
+
+        
 
         if (gamemanager.loadsavetest == true)
         {
@@ -93,6 +119,8 @@ public class PlayerEntity : Entity
         maxDamage = currentAtt.MaxDamage;
 
         //Debug.Log(abilities.Count);
+
+        
 	}
 
     public void OnApplicationQuit()
@@ -103,5 +131,19 @@ public class PlayerEntity : Entity
     public Attributes GetAttributes()
     {
         return currentAtt;
+    }
+
+    /// <summary>
+    /// Give the specified amount of experience to the player.
+    /// </summary>
+    /// <param name="expToAdd">Experience to add to the player.</param>
+    public void GiveExperience(int expToAdd)
+    {
+        Experience += expToAdd;
+    }
+
+    public void GiveAttributePoints(int attrPointsToAdd)
+    {
+        attributePoints += attrPointsToAdd;
     }
 }

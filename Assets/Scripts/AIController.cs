@@ -155,6 +155,7 @@ public class AIController : StateMachine
                     target = source;
                     PursuitFSM.Pursue(target);
                 }
+                
             }
 
             else
@@ -340,6 +341,10 @@ public class AIController : StateMachine
     {
         if (EntityObject.CurrentHP <=0.0f) // Check health for death || if (health <= 0)
         {
+            if (target != null)
+            {
+                target.GetComponent<PlayerEntity>().GiveExperience(EntityObject.Experience);
+            }
             Transition(AIStates.dead);
         }
 

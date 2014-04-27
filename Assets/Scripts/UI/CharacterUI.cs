@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class CharacterUI : UIState {
+public class CharacterUI : UIState
+{
     private const float WIDTH = 400;
     private const float HEIGHT = 500;
     private const int EQUIPMENT_SLOTS = 6;
@@ -13,8 +14,11 @@ public class CharacterUI : UIState {
     private Vector2 scrollViewVector;
     private Camera characterCamera;
     private GUITexture titsMcGee;
+
+    private equipment toBeUsed;
+
     public CharacterUI(int id, UIController controller)
-        : base(id, controller) 
+        : base(id, controller)
     {
         windowDimensions = new Rect(Screen.width - (WIDTH + 50), Screen.height / 2 - HEIGHT / 2, WIDTH, HEIGHT);
         scrollViewVector = Vector2.zero;
@@ -24,6 +28,7 @@ public class CharacterUI : UIState {
     {
         Controller.Camera.enabled = true;
         titsMcGee = null;
+        toBeUsed = null;
     }
 
     public override void Exit()
@@ -34,7 +39,7 @@ public class CharacterUI : UIState {
 
     public override void Update()
     {
-        
+
     }
 
     public override void OnGui()
@@ -52,17 +57,22 @@ public class CharacterUI : UIState {
         {
             GUILayout.BeginHorizontal();
 
+            /*
             if (GUILayout.Button("", GUILayout.Width(50), GUILayout.Height(50)))
             {
                 Controller.Player.removeEquipment((equipSlots.slots)i);
             }
+            */
 
             GUILayout.Space(WIDTH - 115);
 
+
+            /*
             if (GUILayout.Button("", GUILayout.Width(50), GUILayout.Height(50)))
             {
                 Controller.Player.removeEquipment((equipSlots.slots)i);
             }
+             */
 
             GUILayout.EndHorizontal();
 
@@ -84,7 +94,7 @@ public class CharacterUI : UIState {
     {
         int viewSize = Controller.Player.currentAtt.StatList.Count * 30;
 
-        scrollViewVector = GUI.BeginScrollView(new Rect(10, 350, WIDTH - 10, 150), scrollViewVector, 
+        scrollViewVector = GUI.BeginScrollView(new Rect(10, 350, WIDTH - 10, 150), scrollViewVector,
             new Rect(0, 0, 10, viewSize));
 
         yOffset = 0;
@@ -110,11 +120,22 @@ public class CharacterUI : UIState {
         yOffset = 0;
         foreach (equipment item in Controller.Player.Inventory.Items)
         {
-            if (GUI.Button(new Rect(0, yOffset, WIDTH - 30, 50), item.equipmentName, Controller.style)) 
+            
+            /*
+            if (GUI.Button(new Rect(0, yOffset, WIDTH - 30, 50), item.equipmentName, Controller.style))
             {
-                Controller.Player.addEquipment(item);
+                toBeUsed = item;
             }
-            yOffset += 60;
+            */
+            GUI.Box(new Rect(0, yOffset, WIDTH - 30, 22), item.equipmentName);
+
+            yOffset += 24;
+        }
+
+        if(toBeUsed != null)
+        {
+            EquipItem(toBeUsed);
+            toBeUsed = null;
         }
 
         GUI.EndScrollView();
@@ -123,5 +144,10 @@ public class CharacterUI : UIState {
     void DrawSkills()
     {
 
+    }
+
+    void EquipItem(equipment item)
+    {
+        Controller.Player.addEquipment(item);
     }
 }

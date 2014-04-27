@@ -14,7 +14,8 @@ public class UIController : MonoBehaviour
         CHARACTER,
         LEVELUP,
         TALENT,
-        SPELLBOOK
+        SPELLBOOK,
+        ATTRIBUTES
     }
 
     private States guiState;
@@ -58,6 +59,9 @@ public class UIController : MonoBehaviour
         stateMachine.AddState(new LevelupUI((int)States.LEVELUP, this));
         stateMachine.AddState(new TalentUI((int)States.TALENT, this));
         stateMachine.AddState(new SpellbookUI((int)States.SPELLBOOK, this));
+        stateMachine.AddState(new AttributesUI((int)States.ATTRIBUTES, this));
+
+        style.normal.textColor = Color.white;
     }
 
     // Update is called once per frame
@@ -118,6 +122,14 @@ public class UIController : MonoBehaviour
                 guiState = States.INGAME;
             else if (guiState == States.INGAME)
                 guiState = States.SPELLBOOK;
+        }
+
+        if (Input.GetKeyUp(KeyCode.H))
+        {
+            if (guiState == States.ATTRIBUTES)
+                guiState = States.INGAME;
+            else if (guiState == States.INGAME)
+                guiState = States.ATTRIBUTES;
         }
 
         stateMachine.Update();

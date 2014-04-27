@@ -38,6 +38,8 @@ public class PlayerController : MonoBehaviour {
         get { return talentManager; }
     }
 
+    
+
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
@@ -623,7 +625,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         // Equipping helmet.
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(KeyCode.Keypad0))
         {
             equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Head);
 
@@ -631,7 +633,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         // Equipping offhand.
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.Keypad1))
         {
             equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Off);
 
@@ -645,14 +647,24 @@ public class PlayerController : MonoBehaviour {
 
         #endregion
 
+        //Check for level up
+        if (entity.Experience >= entity.NextLevelExperience)
+        {
+            LevelUp();
+            entity.Experience = entity.NextLevelExperience - entity.Experience;
+            entity.NextLevelExperience += 100;
+        }
+
     }
 
     void LevelUp()
     {
+        entity.Level++;
+        
         //Play animation
 
         talentManager.GiveTalentPoints(1);
-
+        entity.GiveAttributePoints(5);
 
 
     }

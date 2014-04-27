@@ -48,8 +48,8 @@ public class TalentManager : MonoBehaviour
         playerController = transform.GetComponent<PlayerController>();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
-        totalTalentPoints = 5;
-        talentPointPool = 5;
+        totalTalentPoints = 0;
+        talentPointPool = 0;
 
         mightTree = new HashSet<Talent>();
         magicTree = new HashSet<Talent>();

@@ -364,7 +364,7 @@ public class AIPursuit : StateMachine
     void flee_Update()
     {
 
-        Debug.DrawRay(transform.position, debugNSD.transform.position - transform.position, Color.blue);
+        //Debug.DrawRay(transform.position, debugNSD.transform.position - transform.position, Color.blue);
         
         if (fleeEnd < Time.time)
         {

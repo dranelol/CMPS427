@@ -50,7 +50,7 @@ public class HUD_GUI : MonoBehaviour {
     public Rect InfoBox1;
     public Rect InfoBox2;
 
-    public Entity player;
+    public PlayerEntity player;
 	bool damageFlag = false;
     
 
@@ -92,7 +92,7 @@ public class HUD_GUI : MonoBehaviour {
         InfoBox1 = new Rect(Screen.width * .5f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
         InfoBox2 = new Rect(Screen.width * .9f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
 
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Entity>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>();
 		currentLiquid = HealthLiquid;
 
 
@@ -373,6 +373,16 @@ public class HUD_GUI : MonoBehaviour {
             GUI.Label(CDBox4, player.abilityManager.abilities[5].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
         }
         #endregion
+
+        #endregion
+
+        #region Level and Exp and Health
+
+        GUI.Label(new Rect(Screen.width * .025f, Screen.height * .75f, Screen.width * .45f, Screen.height * .1f), "Health: " + player.CurrentHP.ToString()+"/"+player.currentAtt.Health, infoBoxStyle);
+
+        GUI.Label(new Rect(Screen.width * .025f, Screen.height * .025f, Screen.width * .45f, Screen.height * .1f),"Level: "+player.Level.ToString(), infoBoxStyle );
+
+        GUI.Label(new Rect(Screen.width * .025f, Screen.height * .05f, Screen.width * .45f, Screen.height * .1f), "Experience: "+player.Experience.ToString() + "/" + player.NextLevelExperience, infoBoxStyle);
 
         #endregion
 

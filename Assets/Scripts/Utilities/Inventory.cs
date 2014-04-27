@@ -9,29 +9,15 @@ public class Inventory {
     private const int MAX = 50;
 
     private equipmentFactory factory;
-    private List<equipment> items, equippedItems;
-    public List<equipment> Items { get { return items; } }
-    public equipment Equip
-    {
-        set
-        {
-            items.Remove(value);
-            equippedItems.Add(value);
-        }
-    }
-    public equipment Unequip
-    {
-        set
-        {
-            equippedItems.Remove(value);
-            items.Add(value);
-        }
-    }
+    private HashSet<equipment> items, equippedItems;
+    public HashSet<equipment> Items { get { return items; } }
+    
+    
     
     public Inventory()
     {
-        items = new List<equipment>();
-        equippedItems = new List<equipment>();
+        items = new HashSet<equipment>();
+        equippedItems = new HashSet<equipment>();
         factory = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
 
         //LoadItems();
@@ -76,5 +62,17 @@ public class Inventory {
 
             items.Add(item);
         }
+    }
+
+    public void Equip(equipment item)
+    {
+        items.Remove(item);
+        equippedItems.Add(item);
+    }
+
+    public void Unequip(equipment item)
+    {
+        equippedItems.Remove(item);
+        items.Add(item);
     }
 }
