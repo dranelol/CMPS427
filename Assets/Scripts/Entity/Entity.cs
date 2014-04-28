@@ -29,10 +29,10 @@ public class Entity : MonoBehaviour
     public AbilityManager abilityManager;
 
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
-    private Inventory inventory;
-
-    public Inventory Inventory { get { return inventory; } }
     public Dictionary<string, int> abilityIndexDict = new Dictionary<string, int>();
+
+    protected Inventory inventory;
+    public Inventory Inventory { get { return inventory; } }
 
     public void Awake()
     {
@@ -139,7 +139,7 @@ public class Entity : MonoBehaviour
                 abilityIndexDict[item.onhit] = 6;
             }
 
-            Inventory.Equip = item;
+            Inventory.EquipItem(item);
             return true;
         }
     }
@@ -166,7 +166,7 @@ public class Entity : MonoBehaviour
          
             }
 
-            Inventory.Unequip = removed;
+            Inventory.UnequipItem((int)slot);
             return true;
         }
         else
@@ -179,6 +179,7 @@ public class Entity : MonoBehaviour
     private void LoadInventory()
     {
         inventory = new Inventory();
+        Inventory.LoadItems();
     }
 
     /// <summary>

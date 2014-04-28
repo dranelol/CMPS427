@@ -15,6 +15,9 @@ public class PlayerEntity : Entity
     {
         base.Awake();
         gamemanager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+
+        // Load saved items, if any.
+        inventory.LoadItems();
     }
 
 
@@ -49,8 +52,6 @@ public class PlayerEntity : Entity
                 }
             }
 
-            // Load saved items, if any.
-            Inventory.LoadItems();
         }
 
         else
@@ -97,7 +98,8 @@ public class PlayerEntity : Entity
 
     public void OnApplicationQuit()
     {
-       // Inventory.SaveItems();
+       Inventory.UnSaveShit();
+       Inventory.SaveItems();
     }
 
     public Attributes GetAttributes()
