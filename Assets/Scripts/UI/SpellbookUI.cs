@@ -45,13 +45,6 @@ public class SpellbookUI : UIState
     public override void Update()
     {
 
-        
-        
-        
-        if (draggedAbility != null)
-        {
-            Debug.Log("Ability: " + draggedAbility.Name);
-        }
 
     }
 

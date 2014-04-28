@@ -40,6 +40,12 @@ public class UIController : MonoBehaviour
 
     private UIStateMachine stateMachine;
 
+    private equipment draggedEquip;
+    public equipment DraggedEquip
+    {
+        get { return draggedEquip; }
+        set { draggedEquip = value; }
+    }
 
     void Awake()
     {
@@ -66,6 +72,8 @@ public class UIController : MonoBehaviour
         stateMachine.AddState(new AttributesUI((int)States.ATTRIBUTES, this));
 
         style.normal.textColor = Color.white;
+
+        draggedEquip = null;
     }
 
     // Update is called once per frame

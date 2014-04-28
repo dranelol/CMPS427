@@ -17,6 +17,9 @@ public class CharacterUI : UIState
 
     private equipment toBeUsed;
 
+
+    private equipment hoverEquip;
+
     public CharacterUI(int id, UIController controller)
         : base(id, controller)
     {
@@ -29,6 +32,9 @@ public class CharacterUI : UIState
         Controller.Camera.enabled = true;
         titsMcGee = null;
         toBeUsed = null;
+        hoverEquip = null;
+
+        Controller.DraggedEquip = null;
     }
 
     public override void Exit()
@@ -39,12 +45,26 @@ public class CharacterUI : UIState
 
     public override void Update()
     {
-
+        if (Controller.DraggedEquip != null)
+        {
+            Debug.Log("Equipment: "+ Controller.DraggedEquip.equipmentName);
+        }
     }
 
     public override void OnGui()
     {
+        GUI.depth = 0;
+        
         GUI.Window(0, windowDimensions, OnWindow, "Character");
+        if (hoverEquip != null)
+        {
+            
+            GUI.Box(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, 250, 25), hoverEquip.equipmentName);
+
+            
+        }
+
+        
     }
 
     void OnWindow(int windowID)
@@ -57,6 +77,21 @@ public class CharacterUI : UIState
         {
             GUILayout.BeginHorizontal();
 
+            if (Controller.Player.EquippedEquip.ContainsKey(((equipSlots.slots)i)))
+            {
+
+                GUILayout.Box(new GUIContent(Controller.Player.EquippedEquip[((equipSlots.slots)i)].equipmentName), GUILayout.Width(50), GUILayout.Height(50));
+
+                Drag(Controller.Player.EquippedEquip[((equipSlots.slots)i)], GUILayoutUtility.GetLastRect());
+            }
+            else
+            {
+                GUILayout.Box(new GUIContent(((equipSlots.slots)i).ToString()), GUILayout.Width(50), GUILayout.Height(50));
+            }
+
+
+            DropToEquip(GUILayoutUtility.GetLastRect(), i);
+
             /*
             if (GUILayout.Button("", GUILayout.Width(50), GUILayout.Height(50)))
             {
@@ -67,6 +102,20 @@ public class CharacterUI : UIState
             GUILayout.Space(WIDTH - 115);
 
 
+            if (Controller.Player.EquippedEquip.ContainsKey(((equipSlots.slots)i+1)))
+            {
+
+                GUILayout.Box(new GUIContent(Controller.Player.EquippedEquip[((equipSlots.slots)i+1)].equipmentName), GUILayout.Width(50), GUILayout.Height(50));
+
+                Drag(Controller.Player.EquippedEquip[((equipSlots.slots)i+1)], GUILayoutUtility.GetLastRect());
+            }
+            else
+            {
+                GUILayout.Box(new GUIContent(((equipSlots.slots)i+1).ToString()), GUILayout.Width(50), GUILayout.Height(50));
+            }
+
+
+            DropToEquip(GUILayoutUtility.GetLastRect(), i+1);
             /*
             if (GUILayout.Button("", GUILayout.Width(50), GUILayout.Height(50)))
             {
@@ -87,7 +136,36 @@ public class CharacterUI : UIState
         if (selection == 0)
             DrawStats();
         if (selection == 1)
-            DrawInventory();
+        {
+
+            int viewSize = Controller.Player.Inventory.Items.Count * 30;
+
+            Rect viewArea = new Rect(0, 0, 10, viewSize);
+
+            scrollViewVector = GUI.BeginScrollView(new Rect(10, 350, WIDTH - 10, 150), scrollViewVector,
+                viewArea);
+
+
+            DropToUnequip(viewArea);
+
+            yOffset = 0;
+
+            foreach (equipment item in Controller.Player.Inventory.Items)
+            {
+
+
+                GUI.Box(new Rect(0, yOffset, WIDTH - 30, 22), item.equipmentName);
+
+                Drag(item, new Rect(0, yOffset, WIDTH - 30, 22));
+                Tooltip(new Rect(0, yOffset, WIDTH - 30, 22), item);
+
+                yOffset += 24;
+            }
+
+
+
+            GUI.EndScrollView();
+        }
     }
 
     void DrawStats()
@@ -104,7 +182,7 @@ public class CharacterUI : UIState
             GUI.Label(new Rect(0, yOffset, WIDTH - 30, 20), pair.Key.ToString());
             GUI.skin.label.alignment = TextAnchor.MiddleRight;
             GUI.Label(new Rect(0, yOffset, WIDTH - 30, 20), "" + pair.Value.ToString());
-            yOffset += 30;
+            yOffset += 30; 
         }
 
         GUI.EndScrollView();
@@ -117,40 +195,100 @@ public class CharacterUI : UIState
         scrollViewVector = GUI.BeginScrollView(new Rect(10, 350, WIDTH - 10, 150), scrollViewVector,
             new Rect(0, 0, 10, viewSize));
 
+
+        DropToUnequip(new Rect(10, 350, WIDTH - 10, 150));
+
         yOffset = 0;
 
         foreach (equipment item in Controller.Player.Inventory.Items)
         {
             
-            /*
-            if (GUI.Button(new Rect(0, yOffset, WIDTH - 30, 50), item.equipmentName, Controller.style))
-            {
-                toBeUsed = item;
-            }
+            
+            GUI.Box(new Rect(0, yOffset, WIDTH - 30, 22), new GUIContent(item.equipmentName));
 
-            */
-            GUI.Box(new Rect(0, yOffset, WIDTH - 30, 22), item.equipmentName);
+            Drag(item, new Rect(0, yOffset, WIDTH - 30, 22));
+            Tooltip(new Rect(0, yOffset, WIDTH - 30, 22), item);
 
             yOffset += 24;
         }
 
-        if(toBeUsed != null)
-        {
-            EquipItem(toBeUsed);
-            toBeUsed = null;
-
-        }
+        
 
         GUI.EndScrollView();
     }
 
-    void DrawSkills()
+    
+    void Drag(equipment draggingEquip, Rect draggingRect)
     {
+        //To Drag:
+        //Check to see if the current event type is MouseDown and if the mouse position of the current event is inside the target rect. If it is, assign the target ability to a temporary variable that can be accessed from where you will be dropping the ability later.
+        if (Event.current.type == EventType.MouseDown && draggingRect.Contains(Event.current.mousePosition) && Controller.DraggedEquip == null)
+        {
+            Controller.DraggedEquip = draggingEquip;
+        }
 
     }
 
-    void EquipItem(equipment item)
+    
+    void DropToEquip(Rect overRect, int slotIndex)
     {
-        Controller.Player.addEquipment(item);
+
+        equipSlots.slots thisSlot = ((equipSlots.slots)slotIndex);
+
+        //To Drop:
+        //Check to see if the current event type is MouseUp and if the mouse position of the current event is inside the target rect. If it is, perform the necessary operation (in this case, replacing the currently slotted ability with the dragged ability) and set the temporary variable to null.
+        if (Event.current.type == EventType.MouseUp && overRect.Contains(Event.current.mousePosition) && Controller.DraggedEquip != null)
+        {
+
+            if(thisSlot == Controller.DraggedEquip.validSlot)
+            {
+
+                if (Controller.Player.EquippedEquip.ContainsKey(thisSlot))
+                {
+
+                    Controller.Player.removeEquipment(thisSlot);
+
+                    
+                }
+
+                Controller.Player.addEquipment(Controller.DraggedEquip);
+            }
+
+            Controller.DraggedEquip = null;
+        }
+    }
+
+    
+    void DropToUnequip(Rect overRect)
+    {
+
+        //To Drop:
+        //Check to see if the current event type is MouseUp and if the mouse position of the current event is inside the target rect. If it is, perform the necessary operation (in this case, removing the currently slotted ability and adding it to the spellbook list) and set the temporary variable to null.
+        if (Event.current.type == EventType.MouseUp && overRect.Contains(Event.current.mousePosition) && Controller.DraggedEquip != null)
+        {
+
+
+            if (Controller.Player.Inventory.Items.Count < Controller.Player.Inventory.Max)
+            {
+                Controller.Player.removeEquipment(Controller.DraggedEquip.validSlot);
+            }
+
+            Controller.DraggedEquip = null;
+        }
+    }
+
+    void Tooltip(Rect hoverRect, equipment item)
+    {
+
+        if (hoverRect.Contains(new Vector2(Input.mousePosition.x, Input.mousePosition.y)) && Controller.DraggedEquip == null)
+        {
+
+            
+            hoverEquip = item;            
+        }
+        else
+        {
+            hoverEquip = null;
+        }
     }
 }

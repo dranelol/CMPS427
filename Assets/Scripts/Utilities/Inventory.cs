@@ -5,19 +5,23 @@ using System.Collections.Generic;
 /// <summary>
 /// WE GOT DE BAG AND WE PUT DE STUF IN DE BAG
 /// </summary>
-public class Inventory {
+public class Inventory
+{
     private const int MAX = 50;
+    public int Max
+    {
+        get { return MAX; }
+    }
 
     private equipmentFactory factory;
-    private HashSet<equipment> items, equippedItems;
+    private HashSet<equipment> items;
     public HashSet<equipment> Items { get { return items; } }
+
     
-    
-    
+
     public Inventory()
     {
         items = new HashSet<equipment>();
-        equippedItems = new HashSet<equipment>();
         factory = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
 
         //LoadItems();
@@ -64,17 +68,5 @@ public class Inventory {
             items.Add(item);
              * */
         }
-    }
-
-    public void Equip(equipment item)
-    {
-        items.Remove(item);
-        equippedItems.Add(item);
-    }
-
-    public void Unequip(equipment item)
-    {
-        equippedItems.Remove(item);
-        items.Add(item);
     }
 }
