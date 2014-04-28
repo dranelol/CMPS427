@@ -15,7 +15,6 @@ public class ProjectileBehaviour : MonoBehaviour
     public Vector3 velocity;
 
     /// <summary>
-
     /// The public identifier of the ability tied to this projectile on hit
     /// </summary>
     public string abilityID;
@@ -30,11 +29,15 @@ public class ProjectileBehaviour : MonoBehaviour
     /// </summary>
     public float timeToActivate;
 
+    /// <summary>
+    /// Whether or not this projectile exists until interacted with
+    /// </summary>
+    public bool Infinite = false;
 
     /// <summary>
     /// this sees if the projectile has collided with anything yet. Keeps it from colliding with two things
     /// </summary>
-    public bool hascollided = false;
+    public bool hasCollided = false;
 
     /// <summary>
     /// flag for if the projectile collides with other projectiles instead of players/enemies
@@ -81,7 +84,7 @@ public class ProjectileBehaviour : MonoBehaviour
     /// <summary>
     /// if the projectile needs to home to an object, this is it
     /// </summary>
-    public GameObject targetobject = null;
+    public GameObject targetObject = null;
 
     /// <summary>
     /// Is this a homing projectile?
@@ -124,9 +127,9 @@ public class ProjectileBehaviour : MonoBehaviour
 
         if (homing == true)
         {
-            if (targetobject != null)
+            if (targetObject != null)
             {
-                Vector3 direction = targetobject.transform.position - transform.position;
+                Vector3 direction = targetObject.transform.position - transform.position;
 
                 Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.22f, 0f);
                 transform.rotation = Quaternion.LookRotation(newDirection);
@@ -165,7 +168,7 @@ public class ProjectileBehaviour : MonoBehaviour
 
                     ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(gameObject, owner, ownerEntity, true);
 
-                    hascollided = true;
+                    hasCollided = true;
                     DetachParticleSystem();
                     Destroy(gameObject);
 
@@ -182,7 +185,7 @@ public class ProjectileBehaviour : MonoBehaviour
                     int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
 
                     ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(gameObject, owner, ownerEntity, false);
-                    hascollided = true;
+                    hasCollided = true;
                     DetachParticleSystem();
                     Destroy(gameObject);
                 }
@@ -200,7 +203,7 @@ public class ProjectileBehaviour : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (hascollided == false)
+        if (hasCollided == false)
         {
             // if we havent collided with, and we collide with projectiles, check if the trigger we just entered was another projectile
 
@@ -220,7 +223,7 @@ public class ProjectileBehaviour : MonoBehaviour
 
                         ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
 
-                        hascollided = true;
+                        hasCollided = true;
                         DetachParticleSystem();
                         Destroy(gameObject);
                     }
@@ -251,7 +254,7 @@ public class ProjectileBehaviour : MonoBehaviour
                         if (DiesOnHit == true)
                         {
 
-                            hascollided = true;
+                            hasCollided = true;
                             DetachParticleSystem();
                             Destroy(gameObject);
                         }
@@ -275,7 +278,7 @@ public class ProjectileBehaviour : MonoBehaviour
                         if (DiesOnHit == true)
                         {
 
-                            hascollided = true;
+                            hasCollided = true;
                             DetachParticleSystem();
                             Destroy(gameObject);
                         }
@@ -288,14 +291,14 @@ public class ProjectileBehaviour : MonoBehaviour
 
                 if (homing == true && other.gameObject.tag == "Terrain" && CollidesWithTerrain == true)
                 {
-                    hascollided = true;
+                    hasCollided = true;
                     DetachParticleSystem();
                     Destroy(gameObject);
                 }
                 if(other.gameObject == owner.gameObject && DiesOnOwnerHit == true)
                 {
                     Debug.Log("hit owner");
-                    hascollided = true;
+                    hasCollided = true;
                     DetachParticleSystem();
                     Destroy(gameObject);
                 }

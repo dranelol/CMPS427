@@ -20,7 +20,7 @@ public class FrozenOrb : Ability
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 4.0f;
         projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
         projectile.GetComponent<ProjectileBehaviour>().ExplodesOnTimeout = false;
-        projectile.GetComponent<ProjectileBehaviour>().hascollided = true;
+        projectile.GetComponent<ProjectileBehaviour>().hasCollided = true;
 
 
         projectile.rigidbody.velocity = forward.normalized * 5.0f;

@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class normalmine : Ability
+public class NormalMine : Ability
 {
-    public normalmine(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
+    public NormalMine(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
         : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
     {
 
