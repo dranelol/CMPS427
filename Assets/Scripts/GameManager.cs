@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour
     public GameObject EnvironmentHealOrbParticles;
     public GameObject EnvironmentHealOrbExplosion;
 
+    public GameObject spawnInParticles;
 
 
     public equipmentFactory EquipmentFactory;

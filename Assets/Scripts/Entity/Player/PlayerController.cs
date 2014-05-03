@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour {
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         DontDestroyOnLoad(transform.gameObject);
+        Instantiate(gameManager.spawnInParticles, transform.position, Quaternion.identity);
+        
     }
 
 	// Use this for initialization

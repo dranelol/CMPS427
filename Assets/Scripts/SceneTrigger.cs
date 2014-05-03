@@ -34,11 +34,15 @@ public class SceneTrigger : Trigger
         if (Application.loadedLevel == 1)
         {
             Application.LoadLevel(2);
+            Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().spawnInParticles, GameObject.FindGameObjectWithTag("Player").transform.position, Quaternion.identity);
+        
         }
 
         else
         {
             Application.LoadLevel(1);
+            Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().spawnInParticles, GameObject.FindGameObjectWithTag("Player").transform.position, Quaternion.identity);
+        
         }
 
         base.SetOff();
