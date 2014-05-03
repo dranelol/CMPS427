@@ -220,9 +220,9 @@ public abstract class Aura
         {
             _allModules.Add(module);
 
-            if (module.GetType().BaseType == typeof(TickAttribute))
+            if (module.GetType().BaseType == typeof(Tick))
             {
-                _tickModules.Add((TickAttribute)module);
+                _tickModules.Add((Tick)module);
             }
         }
 

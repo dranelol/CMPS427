@@ -30,10 +30,10 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
 		targetPosition = Vector3.zero;
         agent = GetComponent<NavMeshAgent>();
-		agent.acceleration = 100f;
         //agent.updateRotation = false;
 
         agent.avoidancePriority = 1;
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
 
         entity = GetComponent<PlayerEntity>();
         moveFSM = GetComponent<MovementFSM>();
