@@ -26,7 +26,7 @@ public class BoomerangBladeReturn : Ability
         projectile.GetComponent<ProjectileBehaviour>().accelerationConstant = 40f;
         projectile.GetComponent<ProjectileBehaviour>().CollidesWithTerrain = false;
         projectile.GetComponent<ProjectileBehaviour>().DiesOnHit = false;
-        projectile.GetComponent<ProjectileBehaviour>().targetobject = owner;
+        projectile.GetComponent<ProjectileBehaviour>().targetObject = owner;
         projectile.GetComponent<ProjectileBehaviour>().DiesOnOwnerHit = true;
 
         /*

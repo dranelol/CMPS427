@@ -29,13 +29,13 @@ public class PlayerEntity : Entity
 
     public Mesh mesh { get { return GetComponent<MeshFilter>().mesh; } }
 
-    GameManager gamemanager;
+    GameManager gameManager;
 
 	// Use this for initialization
     public void Awake()
     {
         base.Awake();
-        gamemanager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
         Experience = 0;
         Level = 1;
@@ -48,9 +48,8 @@ public class PlayerEntity : Entity
     {
         base.Start();
 
-        
 
-        if (gamemanager.loadsavetest == true)
+        if (gameManager.loadSaveTest == true)
         {
             for (int i = 2; i < 6; i++)
             {
@@ -65,7 +64,7 @@ public class PlayerEntity : Entity
                 
                 if(PlayerPrefs.HasKey(i+"name") == true)
                 {
-                    equipment tempequip = gamemanager.EquipmentFactory.loadequipment(i+"");
+                    equipment tempequip = gameManager.EquipmentFactory.loadequipment(i+"");
                     if (addEquipment(tempequip))
                     {
                         Debug.Log("EQUIPPING " + tempequip.equipmentName + " FROM LOAD");
@@ -85,12 +84,12 @@ public class PlayerEntity : Entity
         {
             abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
             abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 3);
-            abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], 4);
+            abilityManager.AddAbility(GameManager.Abilities["bloodbolt"], 4);
             abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
 
             abilityIndexDict["cleave"] = 2;
             abilityIndexDict["aoefreeze"] = 3;
-            abilityIndexDict["chaosbolt"] = 4;
+            abilityIndexDict["bloodbolt"] = 4;
             abilityIndexDict["bladewaltz"] = 5;
         }
 

@@ -59,10 +59,9 @@ public class AIController : StateMachine
     // Reset variables
     public Vector3 localHomePosition; // The position around the home position this unit returns to upon reset
 
-    // Target variabels
+    // Target variables
     private Dictionary<GameObject, Hostile> ThreatTable; // A dictionary of all threat targets
     private GameObject target; // The Target object that holds information about the current target
-
 
     private float wanderInterval; //Time between wanders in seconds
     private float wanderDistance; //Radius around the wanderer that it will travel
