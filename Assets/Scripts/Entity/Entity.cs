@@ -16,6 +16,18 @@ public class Entity : MonoBehaviour
         get { return currentResource; }
     }
 
+    protected int level;
+    public int Level
+    {
+        get { return level; }
+    }
+
+    protected int experience;
+    public int Experience
+    {
+        get { return experience; }
+    }
+
     public Attributes currentAtt; // The entity's current total attributes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
@@ -29,24 +41,32 @@ public class Entity : MonoBehaviour
     public AbilityManager abilityManager;
 
     private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
+    private Inventory inventory;
 
+    public Inventory Inventory { get { return inventory; } }
     public Dictionary<string, int> abilityIndexDict = new Dictionary<string, int>();
 
     public void Awake()
     {
+        LoadInventory();
         abilityManager = gameObject.GetComponent<AbilityManager>();
 
         equipAtt = new Attributes();
         buffAtt = new Attributes();
         baseAtt = new Attributes();
 
-        baseAtt.Health = currentHP = 1000;
+        baseAtt.Health = currentHP = 500;
         baseAtt.Resource = currentResource = 100;
         baseAtt.Power = 10;
         baseAtt.Defense = 10;
         baseAtt.AttackSpeed = 1.0f;
         baseAtt.MovementSpeed = 1.0f;
+        level = 1;
+        experience = 0;
     }
+
+
+    public void OnApplicationQuit() { }
 
     /// <summary>
     /// Creates the entity with a given set of base attributes,
@@ -56,7 +76,7 @@ public class Entity : MonoBehaviour
         UpdateCurrentAttributes();
     }
 
-    private void UpdateCurrentAttributes()
+    public void UpdateCurrentAttributes()
     {
         currentAtt = new Attributes();
         currentAtt.Add(baseAtt);
@@ -80,7 +100,22 @@ public class Entity : MonoBehaviour
 
     public void ModifyResource(float delta)
     {
-        currentResource = Mathf.Clamp(currentResource + delta, 0, currentAtt.Power);
+        currentResource = Mathf.Clamp(currentResource + delta, 0, currentAtt.Resource);
+    }
+
+    public void SetLevel(int newlevel)
+    {
+        ModifyLevel(newlevel - level);
+    }
+
+    public void ModifyLevel(int delta)
+    {
+        level = Mathf.Clamp(level + delta, 1, 20);
+    }
+
+    public void ModifyXP(int delta)
+    {
+        experience = Mathf.Clamp(experience + delta, 0, 1000);
     }
 
     /// <summary>
@@ -95,38 +130,51 @@ public class Entity : MonoBehaviour
     /// Add the attribute changes of an item to the entity. The item must correlate to one of the equipment slots,
     /// Head, Chest, Legs, Feet, Main, Off. Attribute changes are taken as an attributes object. Returns
     /// false if the slot is already filled.
+    /// 
+    /// Removes the equipped item from the list of inventory items and adds it to the list of equipped items.
     /// </summary>
     /// <param name="slot">The equipment slot being filled.</param>
-    /// <param name="itemAtt">The attributes of the item being equipped.</param>
     /// <returns></returns>
-    public bool addEquipment(equipSlots.slots slot, equipment item)
+    public bool addEquipment(equipment item)
     {
-        if (this.equippedEquip.ContainsKey(slot))
+
+        if (this.equippedEquip.ContainsKey(item.validSlot))
+        {
             return false;
+        }
+
         else if (item.twohand == true && this.equippedEquip.ContainsKey(equipSlots.slots.Off))
+        {
             return false;
-        else if (slot == equipSlots.slots.Off && equippedEquip[equipSlots.slots.Main].twohand == true)
+        }
+
+        else if (item.validSlot == equipSlots.slots.Off && equippedEquip.ContainsKey(equipSlots.slots.Main) && equippedEquip[equipSlots.slots.Main].twohand == true)
+        {
             return false;
+        }
+
         else
         {
-            this.equippedEquip.Add(slot, item);
+            this.equippedEquip.Add(item.validSlot, item);
             this.equipAtt.Add(item.equipmentAttributes);
             UpdateCurrentAttributes();
 
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.saveequipment(((int)slot).ToString(), item);
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.saveequipment(((int)item.validSlot).ToString(), item);
 
-            if (slot == equipSlots.slots.Main && item.onhit != "")
+            if (item.validSlot == equipSlots.slots.Main && item.onhit != "")
             {
                 abilityManager.RemoveAbility(6);
                 abilityManager.AddAbility(GameManager.Abilities[item.onhit], 6);
                 abilityIndexDict[item.onhit] = 6;
             }
+
+            Inventory.Equip = item;
             return true;
         }
     }
 
     /// <summary>
-    /// Remove an item from an equipment slot, clearing that slot. Returns false if that slot is already empty.
+    /// Removing the attributes of an equipment item from the character.
     /// </summary>
     /// <param name="slot"></param>
     /// <returns></returns>
@@ -146,10 +194,20 @@ public class Entity : MonoBehaviour
                 abilityManager.RemoveAbility(6);
          
             }
+
+            Inventory.Unequip = removed;
             return true;
         }
         else
             return false;
+    }
+
+    /// <summary>
+    /// Currently just initializes the inventory object.
+    /// </summary>
+    private void LoadInventory()
+    {
+        inventory = new Inventory();
     }
 
     /// <summary>

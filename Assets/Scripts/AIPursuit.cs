@@ -231,7 +231,6 @@ public class AIPursuit : StateMachine
             else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.PROJECTILE)
             {
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-
                 _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
             }
 

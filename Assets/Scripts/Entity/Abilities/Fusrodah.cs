@@ -44,7 +44,7 @@ public class Fusrodah : Ability
         }
 
 
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.2f, isPlayer));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer));
     
     }
 
@@ -103,7 +103,7 @@ public class Fusrodah : Ability
                 if (isPlayer == true)
                 {
                     // try to cast a ray from the enemy to the player
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, ~(1 << enemyMask));
 
                     if (!rayCastHit)
                     {
@@ -124,7 +124,7 @@ public class Fusrodah : Ability
                 else
                 {
                     // try to cast a ray from the player to the enemy
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {

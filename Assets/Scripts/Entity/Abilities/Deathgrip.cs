@@ -102,7 +102,7 @@ public class Deathgrip : Ability
                 if (isPlayer == true)
                 {
                     // try to cast a ray from the enemy to the player
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, ~(1 << enemyMask));
 
                     if (!rayCastHit)
                     {
@@ -123,7 +123,7 @@ public class Deathgrip : Ability
                 else
                 {
                     // try to cast a ray from the player to the enemy
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {

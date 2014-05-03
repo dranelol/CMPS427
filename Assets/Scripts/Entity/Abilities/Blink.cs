@@ -11,7 +11,7 @@ public class Blink : Ability
 
     public override void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
     {
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.2f, isPlayer));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer));
         DoBlink(source, isPlayer);
     }
 

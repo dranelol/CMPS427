@@ -15,7 +15,6 @@ public class ProjectileBehaviour : MonoBehaviour
     public Vector3 velocity;
 
     /// <summary>
-
     /// The public identifier of the ability tied to this projectile on hit
     /// </summary>
     public string abilityID;
@@ -30,11 +29,15 @@ public class ProjectileBehaviour : MonoBehaviour
     /// </summary>
     public float timeToActivate;
 
+    /// <summary>
+    /// Whether or not this projectile exists until interacted with
+    /// </summary>
+    public bool Infinite = false;
 
     /// <summary>
     /// this sees if the projectile has collided with anything yet. Keeps it from colliding with two things
     /// </summary>
-    private bool hascollided = false;
+    public bool hasCollided = false;
 
     /// <summary>
     /// flag for if the projectile collides with other projectiles instead of players/enemies
@@ -42,9 +45,46 @@ public class ProjectileBehaviour : MonoBehaviour
     public bool CollidesWithProjectiles = false;
 
     /// <summary>
+    /// flag for if the projectile(homing only right now) cares about terrain 
+    /// </summary>
+    public bool CollidesWithTerrain = true;
+
+    /// <summary>
+    /// flag for if the projectile does it's attack when it times out
+    /// </summary>
+    public bool ExplodesOnTimeout = false;
+
+    /// <summary>
+    /// flag for if the projectile kills itself when it hits a target
+    /// </summary>
+    public bool DiesOnHit = true;
+
+    /// <summary>
+    /// flag for if the projectile kills itself when it hits its owner
+    /// </summary>
+    public bool DiesOnOwnerHit = false;
+
+    /// <summary>
+    /// counter for... things. use it for whatever.
+    /// </summary>
+    public int count;
+
+    /// <summary>
+    /// A list of every player and enemy the projectile has collided with.
+    /// </summary>
+    public List<GameObject> HasCollidedWith;
+
+
+
+    /// <summary>
     /// If this projectile needs a target, this is it
     /// </summary>
     public Vector3 target = Vector3.zero;
+
+    /// <summary>
+    /// if the projectile needs to home to an object, this is it
+    /// </summary>
+    public GameObject targetObject = null;
 
     /// <summary>
     /// Is this a homing projectile?
@@ -83,47 +123,99 @@ public class ProjectileBehaviour : MonoBehaviour
 
         //velocity = rigidbody.velocity;
 
+        // if this is a homing projectile, rotate towards our homing target
+
         if (homing == true)
         {
-            Vector3 direction = target - transform.position;
+            if (targetObject != null)
+            {
+                Vector3 direction = targetObject.transform.position - transform.position;
 
-            Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.2f, 0f);
+                Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.22f, 0f);
+                transform.rotation = Quaternion.LookRotation(newDirection);
+            }
+            else
+            {
 
-            transform.rotation = Quaternion.LookRotation(newDirection);
+                Vector3 direction = target - transform.position;
+
+                Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.22f, 0f);
+                transform.rotation = Quaternion.LookRotation(newDirection);
+            }
+
+            
         }
 
-
+        // move along the path
         transform.position = transform.position + transform.forward * Time.deltaTime * speed;
+        speed += accelerationConstant * Time.deltaTime;
 
+        // explode time, if applicable
         if (timeToActivate <= 0.0f)
         {
-            // do attack things
-            Debug.Log("explode!");
-            
-            // call do animation
+            // if we need to explode
+            if (ExplodesOnTimeout == true)
+            {
 
-            // clean up and suicide
-            DetachParticleSystem();
-            Destroy(gameObject);
+                if (owner.gameObject.tag == "Player")
+                {
+
+                    // carry out explosion ability
+
+                    Entity ownerEntity = owner.GetComponent<Entity>();
+
+                    int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
+
+                    ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(gameObject, owner, ownerEntity, true);
+
+                    hasCollided = true;
+                    DetachParticleSystem();
+                    Destroy(gameObject);
+
+
+                }
+
+                else if (owner.gameObject.tag == "Enemy")
+                {
+
+                    // carry out explosion ability
+
+                    Entity ownerEntity = owner.GetComponent<Entity>();
+
+                    int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
+
+                    ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(gameObject, owner, ownerEntity, false);
+                    hasCollided = true;
+                    DetachParticleSystem();
+                    Destroy(gameObject);
+                }
+            }
+
+            else
+            {
+                DetachParticleSystem();
+                Destroy(gameObject);
+            }
         }
 
-        // update position of projectile
 
 	}
 
     void OnTriggerEnter(Collider other)
     {
-        if (hascollided == false)
+        if (hasCollided == false)
         {
-            if (CollidesWithProjectiles)
+            // if we havent collided with, and we collide with projectiles, check if the trigger we just entered was another projectile
+
+            if (CollidesWithProjectiles == true)
             {
-                Debug.Log("asd");
+                
                 if (other.gameObject.tag == "Projectile")
                 {
                     if (other.gameObject.GetComponent<ProjectileBehaviour>().owner.tag == "Player")
                     {
+                        // carry out projectile explosion ability
                         Debug.Log("attacked an enemy!");
-
 
                         Entity ownerEntity = owner.GetComponent<Entity>();
 
@@ -131,7 +223,7 @@ public class ProjectileBehaviour : MonoBehaviour
 
                         ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
 
-                        hascollided = true;
+                        hasCollided = true;
                         DetachParticleSystem();
                         Destroy(gameObject);
                     }
@@ -139,52 +231,74 @@ public class ProjectileBehaviour : MonoBehaviour
                 }
             }
 
+            // else, normal explosion
+
             else
             {
 
-
+                
                 if (other.gameObject.tag == "Enemy" && owner.gameObject.tag == "Player")
                 {
-                    Debug.Log("attacked an enemy!");
+                    if (HasCollidedWith.Contains(other.gameObject) == false)
+                    {
+                        Debug.Log("attacked an enemy!");
+                        HasCollidedWith.Add(other.gameObject);
+
+                        Entity ownerEntity = owner.GetComponent<Entity>();
+
+                        int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
+
+                        ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
 
 
-                    Entity ownerEntity = owner.GetComponent<Entity>();
+                        if (DiesOnHit == true)
+                        {
 
-                    int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
-
-                    ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
-
-                    hascollided = true;
-                    DetachParticleSystem();
-                    Destroy(gameObject);
-
+                            hasCollided = true;
+                            DetachParticleSystem();
+                            Destroy(gameObject);
+                        }
+                    }
 
                 }
 
                 else if (other.gameObject.tag == "Player" && owner.gameObject.tag == "Enemy")
                 {
-                    Debug.Log("attacked a player");
+                    if (HasCollidedWith.Contains(other.gameObject) == false)
+                    {
+                        Debug.Log("attacked a player");
+                        HasCollidedWith.Add(other.gameObject);
 
+                        Entity ownerEntity = owner.GetComponent<Entity>();
 
-                    Entity ownerEntity = owner.GetComponent<Entity>();
+                        int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
 
-                    int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
+                        ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), false);
 
-                    ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), false);
-                    hascollided = true;
-                    DetachParticleSystem();
-                    Destroy(gameObject);
+                        if (DiesOnHit == true)
+                        {
+
+                            hasCollided = true;
+                            DetachParticleSystem();
+                            Destroy(gameObject);
+                        }
+                    }
                 }
 
                 if (other.gameObject.tag == "Terrain")
                 {
-                    Debug.Log("hit terrain");
                 }
 
-                if (homing == true && other.gameObject.tag == "Terrain")
+                if (homing == true && other.gameObject.tag == "Terrain" && CollidesWithTerrain == true)
                 {
-                    Debug.Log("hit terrain");
-                    hascollided = true;
+                    hasCollided = true;
+                    DetachParticleSystem();
+                    Destroy(gameObject);
+                }
+                if(other.gameObject == owner.gameObject && DiesOnOwnerHit == true)
+                {
+                    Debug.Log("hit owner");
+                    hasCollided = true;
                     DetachParticleSystem();
                     Destroy(gameObject);
                 }
@@ -207,9 +321,6 @@ public class ProjectileBehaviour : MonoBehaviour
             // call attackhandler on this projectile's ability
 
             // clean up and suicide
-
-
-
             //Destroy(gameObject);
             
         }
@@ -226,8 +337,6 @@ public class ProjectileBehaviour : MonoBehaviour
                 Debug.Log("unparenting orbs");
                 child.parent = null;
             }
-
-
         }
         */
 
@@ -237,13 +346,8 @@ public class ProjectileBehaviour : MonoBehaviour
         {
             item.transform.parent = null;
             item.emissionRate = 0;
-            item.enableEmission = false; 
-
-
+            //item.enableEmission = false; 
         }
-
-        
-
         //particles.GetComponent<ParticleAnimator>().autodestruct = true;
     }
 }

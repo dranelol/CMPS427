@@ -24,7 +24,7 @@ public class Chaosbolt : Ability
         projectile.GetComponent<ProjectileBehaviour>().speed = 15f;
 
 
-        Vector3 randPos = source.transform.position /* + forward*/ + Random.onUnitSphere * 1.25f;
+        Vector3 randPos = source.transform.position  + forward + Random.onUnitSphere * 1f;
 
         randPos.Set(randPos.x, randPos.y + 2, randPos.z);
 
@@ -59,7 +59,7 @@ public class Chaosbolt : Ability
             DoDamage(source, target, attacker, defender, isPlayer);
         }
 
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.2f, isPlayer, target));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, target));
     }
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)

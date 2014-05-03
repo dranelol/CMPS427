@@ -6,17 +6,17 @@ public class PlayerEntity : Entity
 {
     public float power, defense, attackSpeed, movementSpeed, minDamage, maxDamage;
 
+    public Mesh mesh { get { return GetComponent<MeshFilter>().mesh; } }
 
-    GameManager gamemanager;
+    GameManager gameManager;
 
 	// Use this for initialization
     public void Awake()
     {
         base.Awake();
-        baseAtt.Health = 3000;
-        currentHP = 3000;
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
-        gamemanager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        
     }
 
 
@@ -24,7 +24,7 @@ public class PlayerEntity : Entity
     {
         base.Start();
 
-        if (gamemanager.loadsavetest == true)
+        if (gameManager.loadSaveTest == true)
         {
             for (int i = 2; i < 6; i++)
             {
@@ -39,8 +39,8 @@ public class PlayerEntity : Entity
                 
                 if(PlayerPrefs.HasKey(i+"name") == true)
                 {
-                    equipment tempequip = gamemanager.EquipmentFactory.loadequipment(i+"");
-                    if (addEquipment(tempequip.validSlot, tempequip))
+                    equipment tempequip = gameManager.EquipmentFactory.loadequipment(i+"");
+                    if (addEquipment(tempequip))
                     {
                         Debug.Log("EQUIPPING " + tempequip.equipmentName + " FROM LOAD");
                     }
@@ -51,26 +51,28 @@ public class PlayerEntity : Entity
                 }
             }
 
+            // Load saved items, if any.
+            Inventory.LoadItems();
         }
 
         else
         {
-            abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
-            abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
-            abilityManager.AddAbility(GameManager.Abilities["ShockMine"], 4);
-            abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], 5);
+            abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
+            abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 3);
+            abilityManager.AddAbility(GameManager.Abilities["bloodbolt"], 4);
+            abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
 
-            abilityIndexDict["shadowbolt"] = 2;
-            abilityIndexDict["poisonbolt"] = 3;
-            abilityIndexDict["ShockMine"] = 4;
-            abilityIndexDict["chaosbolt"] = 5;
+            abilityIndexDict["cleave"] = 2;
+            abilityIndexDict["aoefreeze"] = 3;
+            abilityIndexDict["bloodbolt"] = 4;
+            abilityIndexDict["bladewaltz"] = 5;
         }
+
 	}
 	
 	// Update is called once per frame
 	public void Update () 
     {
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit target;
         Physics.Raycast(ray, out target, Mathf.Infinity);
@@ -85,14 +87,23 @@ public class PlayerEntity : Entity
         //abilities[5].AttackHandler(GameObject.FindGameObjectWithTag("Player"), true);
 
         // update these on-demand instead of every update
-
-        //power = currentAtt.Power;
-        //defense = currentAtt.Defense;
-        //attackSpeed = currentAtt.AttackSpeed;
-        //movementSpeed = currentAtt.MovementSpeed;
-        //minDamage = currentAtt.MinDamage;
-        //maxDamage = currentAtt.MaxDamage;
+        power = currentAtt.Power;
+        defense = currentAtt.Defense;
+        attackSpeed = currentAtt.AttackSpeed;
+        movementSpeed = currentAtt.MovementSpeed;
+        minDamage = currentAtt.MinDamage;
+        maxDamage = currentAtt.MaxDamage;
 
         //Debug.Log(abilities.Count);
 	}
+
+    public void OnApplicationQuit()
+    {
+       // Inventory.SaveItems();
+    }
+
+    public Attributes GetAttributes()
+    {
+        return currentAtt;
+    }
 }

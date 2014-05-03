@@ -12,6 +12,16 @@ public class OrbSpawn : MonoBehaviour
     public bool yOrbit;
     public float orbitScale;
     public GameObject orbitObject;
+    public float initialAngleFromForward;
+    public bool clockwiseRotate;
+    public float rotations;
+    public bool movingOrbit;
+    /// <summary>
+    /// Whether or not this will rotate till death
+    /// </summary>
+    public bool infiniteRotation;
+
+
 
 	void Awake () 
     {
@@ -19,26 +29,23 @@ public class OrbSpawn : MonoBehaviour
         {
             Vector3 newOrbPos = Vector3.zero;
 
+            // trig math to spawn orbs around the orbit object, evenly spaced
             if (yOrbit == true)
             {
-                newOrbPos = new Vector3(orbitObject.transform.position.x + orbitScale * Mathf.Sin((360 / orbAmount) * i * Mathf.Deg2Rad),
-                                        orbitObject.transform.position.y,
-                                        orbitObject.transform.position.z + orbitScale * Mathf.Cos((360 / orbAmount) * i * Mathf.Deg2Rad));
+                newOrbPos = new Vector3(transform.position.x + orbitScale * Mathf.Cos((360 / orbAmount) * i * Mathf.Deg2Rad),
+                                        minHeight,
+                                        transform.position.z + orbitScale * Mathf.Sin((360 / orbAmount) * i * Mathf.Deg2Rad));
             }
-            
 
-            else 
+            else
             {
-                newOrbPos = new Vector3(orbitObject.transform.position.x + orbitScale * Mathf.Sin((360 / orbAmount) * i * Mathf.Deg2Rad),
-                                        orbitObject.transform.position.y + orbitScale * Mathf.Cos((360 / orbAmount) * i * Mathf.Deg2Rad),
-                                        orbitObject.transform.position.z);
+                newOrbPos = new Vector3(transform.position.x + orbitScale * Mathf.Sin((360 / orbAmount) * i * Mathf.Deg2Rad),
+                                        transform.position.y + orbitScale * Mathf.Cos((360 / orbAmount) * i * Mathf.Deg2Rad),
+                                        transform.position.z);
 
-                
             }
 
-            //newOrbPos = Rotations.RotateAboutY(transform.parent.transform.forward, (360 / orbAmount) * i) * 2;
-            //newOrbPos.y = minHeight;
-
+            // set all orb stuff that needs to be set from master 
             GameObject newOrb = (GameObject)GameObject.Instantiate(orb, newOrbPos, transform.rotation);
             newOrb.GetComponent<OrbRotate>().minHeight = minHeight;
             newOrb.GetComponent<OrbRotate>().maxHeight = maxHeight;
@@ -46,26 +53,43 @@ public class OrbSpawn : MonoBehaviour
             newOrb.GetComponent<OrbRotate>().oscillationSpeed = oscillationSpeed;
             newOrb.GetComponent<OrbRotate>().yOrbit = yOrbit;
             newOrb.GetComponent<OrbRotate>().orbitScale = orbitScale;
+            newOrb.GetComponent<OrbRotate>().rotations = rotations;
+            newOrb.GetComponent<OrbRotate>().clockwiseRotate = clockwiseRotate;
+            newOrb.GetComponent<OrbRotate>().movingOrbit = movingOrbit;
+            newOrb.GetComponent<OrbRotate>().infiniteRotation = infiniteRotation;
 
-            if (orbitObject == null)
+            if (movingOrbit == true)
             {
-                Debug.Log("asd");
-                if (transform.parent == null)
+                if (orbitObject == null)
                 {
-                    newOrb.GetComponent<OrbRotate>().orbitObject = gameObject;
-                }
+                    // if we need to move our orbit, and we dont have a parent, we need to set one as the current attached gameobject
+                    if (transform.parent == null)
+                    {
+                        newOrb.GetComponent<OrbRotate>().orbitObject = gameObject;
+                    }
 
+                    // else, set it as our parent
+                    else
+                    {
+                        newOrb.GetComponent<OrbRotate>().orbitObject = transform.parent.gameObject;
+                    }
+                }
+                // if the orbitobject isnt null, set it as the orbitobject
                 else
                 {
-                    newOrb.GetComponent<OrbRotate>().orbitObject = transform.parent.gameObject;
+                    newOrb.GetComponent<OrbRotate>().orbitObject = orbitObject;
                 }
             }
 
+            // if we dont need to move our orbit, set the position as the current transform's position
             else
             {
-                newOrb.GetComponent<OrbRotate>().orbitObject = orbitObject;
+                newOrb.GetComponent<OrbRotate>().orbitPosition = transform.position;
             }
-            
+
+
+
+
             newOrb.transform.parent = transform;
             
         }

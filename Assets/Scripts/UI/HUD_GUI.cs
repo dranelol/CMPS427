@@ -63,7 +63,14 @@ public class HUD_GUI : MonoBehaviour {
 
 	public float health = 0.0f;
 	float healthLastFrame = 0.0f;
-	void Start () {
+
+    void Awake()
+    {
+        DontDestroyOnLoad(transform.gameObject);
+    }
+
+	void Start () 
+    {
 		native_width = Screen.width;
 		native_height = Screen.height;
 
@@ -296,7 +303,7 @@ public class HUD_GUI : MonoBehaviour {
                           + "E = " + player.abilityManager.abilities[4].Name + " \n"
                           + "R = " + player.abilityManager.abilities[5].Name + " \n";
         */
-        string version = "Week10v2";
+        string version = "Week12v1";
 
         GUI.Label(InfoBox1, attackList, infoBoxStyle);
         GUI.Label(InfoBox2, version, infoBoxStyle);

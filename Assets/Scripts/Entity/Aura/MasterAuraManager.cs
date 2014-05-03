@@ -13,6 +13,9 @@ public class MasterAuraManager : MonoBehaviour
 
         Auras["test"] = new AuraTemplate("test");
         Auras["heal"] = new Heal("heal");
+        Auras["root"] = new Root("root");
+        Auras["chaosbarrage"] = new chaosbarrage("chaosbarrage");
+        Auras["fireballbarrage"] = new fireballbarrage("fireballbarrage");
 
 	}
 
