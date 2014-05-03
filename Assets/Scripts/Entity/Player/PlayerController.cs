@@ -13,8 +13,6 @@ public class PlayerController : MonoBehaviour {
 	public float RotationSpeed = 10f;
     public NavMeshAgent agent;
 
-    private bool hadouken = false;
-
     public PlayerEntity entity;
     public MovementFSM moveFSM;
     public CombatFSM combatFSM;
@@ -25,7 +23,7 @@ public class PlayerController : MonoBehaviour {
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         DontDestroyOnLoad(transform.gameObject);
-        Instantiate(gameManager.spawnInParticles, transform.position, Quaternion.identity);
+        Instantiate(gameManager.SpawnInParticles, transform.position, Quaternion.identity);
         
     }
 
