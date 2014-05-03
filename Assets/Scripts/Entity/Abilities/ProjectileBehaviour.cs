@@ -96,6 +96,11 @@ public class ProjectileBehaviour : MonoBehaviour
     /// </summary>
     public float speed;
 
+    /// <summary>
+    /// If true, then this projectile isn't attributed to any ability
+    /// </summary>
+    public bool EnvironmentProjectile = false;
+
     void Awake()
     {
         ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
@@ -161,13 +166,14 @@ public class ProjectileBehaviour : MonoBehaviour
                 {
 
                     // carry out explosion ability
+                    if (EnvironmentProjectile == false)
+                    {
+                        Entity ownerEntity = owner.GetComponent<Entity>();
 
-                    Entity ownerEntity = owner.GetComponent<Entity>();
+                        int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
 
-                    int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
-
-                    ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(gameObject, owner, ownerEntity, true);
-
+                        ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(gameObject, owner, ownerEntity, true);
+                    }
                     hasCollided = true;
                     DetachParticleSystem();
                     Destroy(gameObject);
@@ -179,12 +185,14 @@ public class ProjectileBehaviour : MonoBehaviour
                 {
 
                     // carry out explosion ability
+                    if (EnvironmentProjectile == false)
+                    {
+                        Entity ownerEntity = owner.GetComponent<Entity>();
 
-                    Entity ownerEntity = owner.GetComponent<Entity>();
+                        int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
 
-                    int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
-
-                    ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(gameObject, owner, ownerEntity, false);
+                        ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(gameObject, owner, ownerEntity, false);
+                    }
                     hasCollided = true;
                     DetachParticleSystem();
                     Destroy(gameObject);
@@ -209,7 +217,6 @@ public class ProjectileBehaviour : MonoBehaviour
 
             if (CollidesWithProjectiles == true)
             {
-                
                 if (other.gameObject.tag == "Projectile")
                 {
                     if (other.gameObject.GetComponent<ProjectileBehaviour>().owner.tag == "Player")
@@ -217,12 +224,14 @@ public class ProjectileBehaviour : MonoBehaviour
                         // carry out projectile explosion ability
                         Debug.Log("attacked an enemy!");
 
-                        Entity ownerEntity = owner.GetComponent<Entity>();
+                        if (EnvironmentProjectile == false)
+                        {
+                            Entity ownerEntity = owner.GetComponent<Entity>();
 
-                        int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
+                            int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
 
-                        ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
-
+                            ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
+                        }
                         hasCollided = true;
                         DetachParticleSystem();
                         Destroy(gameObject);
@@ -233,23 +242,37 @@ public class ProjectileBehaviour : MonoBehaviour
 
             // else, normal explosion
 
+            else if (EnvironmentProjectile == true)
+            {
+                if (other.gameObject.tag == "Terrain")
+                {
+                    Debug.Log("environment hit!");
+                    if (DiesOnHit == true)
+                    {
+                        hasCollided = true;
+                        DetachParticleSystem();
+                        Destroy(gameObject);
+                    }
+                }
+            }
+
             else
             {
-
-                
                 if (other.gameObject.tag == "Enemy" && owner.gameObject.tag == "Player")
                 {
                     if (HasCollidedWith.Contains(other.gameObject) == false)
                     {
-                        Debug.Log("attacked an enemy!");
+                        Debug.Log("attacked an enemy: " + gameObject.name.ToString());
                         HasCollidedWith.Add(other.gameObject);
 
-                        Entity ownerEntity = owner.GetComponent<Entity>();
+                        if (EnvironmentProjectile == false)
+                        {
+                            Entity ownerEntity = owner.GetComponent<Entity>();
 
-                        int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
+                            int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
 
-                        ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
-
+                            ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
+                        }
 
                         if (DiesOnHit == true)
                         {
@@ -268,13 +291,14 @@ public class ProjectileBehaviour : MonoBehaviour
                     {
                         Debug.Log("attacked a player");
                         HasCollidedWith.Add(other.gameObject);
+                        if (EnvironmentProjectile == false)
+                        {
+                            Entity ownerEntity = owner.GetComponent<Entity>();
 
-                        Entity ownerEntity = owner.GetComponent<Entity>();
+                            int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
 
-                        int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
-
-                        ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), false);
-
+                            ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), false);
+                        }
                         if (DiesOnHit == true)
                         {
 
@@ -285,9 +309,7 @@ public class ProjectileBehaviour : MonoBehaviour
                     }
                 }
 
-                if (other.gameObject.tag == "Terrain")
-                {
-                }
+                
 
                 if (homing == true && other.gameObject.tag == "Terrain" && CollidesWithTerrain == true)
                 {
@@ -295,7 +317,7 @@ public class ProjectileBehaviour : MonoBehaviour
                     DetachParticleSystem();
                     Destroy(gameObject);
                 }
-                if(other.gameObject == owner.gameObject && DiesOnOwnerHit == true)
+                if (other.gameObject == owner.gameObject && DiesOnOwnerHit == true)
                 {
                     Debug.Log("hit owner");
                     hasCollided = true;
