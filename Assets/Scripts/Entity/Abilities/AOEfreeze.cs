@@ -186,7 +186,6 @@ public class AOEfreeze : Ability
 
         defender.ModifyHealth(-damageAmt);
 
-        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
     }
 
     public override void DoPhysics(GameObject source, GameObject target)

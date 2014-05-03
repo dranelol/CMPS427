@@ -59,10 +59,9 @@ public class AIController : StateMachine
     // Reset variables
     public Vector3 localHomePosition; // The position around the home position this unit returns to upon reset
 
-    // Target variabels
+    // Target variables
     private Dictionary<GameObject, Hostile> ThreatTable; // A dictionary of all threat targets
     private GameObject target; // The Target object that holds information about the current target
-
 
     private float wanderInterval; //Time between wanders in seconds
     private float wanderDistance; //Radius around the wanderer that it will travel
@@ -400,6 +399,28 @@ public class AIController : StateMachine
         Destroy(rigidbody);
 
         GetComponent<AnimationController>().Death();
+        GameObject healOrb = (GameObject)Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnvironmentHealOrbProjectile, new Vector3(transform.position.x, transform.position.y + 2, transform.position.z), Quaternion.identity);
+
+        ProjectileBehaviour healOrbProjectile = healOrb.GetComponent<ProjectileBehaviour>();
+
+        healOrbProjectile.EnvironmentProjectile = true;
+        healOrbProjectile.homing = true;
+        healOrbProjectile.speed = 10.0f;
+        healOrbProjectile.timeToActivate = 5.0f;
+        
+
+        Vector3 randPosition = transform.position + UnityEngine.Random.onUnitSphere;
+
+        healOrbProjectile.target = randPosition;
+
+        //randPosition.Set(randPosition.x, randPosition.y + 1, randPosition.z);
+
+        Vector3 randDirection = (randPosition - transform.position).normalized;
+
+        healOrbProjectile.transform.rotation = Quaternion.LookRotation(randDirection);
+
+        
+
         yield return null;
     }
 

@@ -160,7 +160,6 @@ public class Hadouken : Ability
         Debug.Log("damage: " + damageAmt);
 
         defender.ModifyHealth(-damageAmt);
-
     }
 
     public override void DoPhysics(GameObject source, GameObject target)

@@ -79,7 +79,6 @@ public class Chaosbolt : Ability
         }
 
         defender.ModifyHealth(-damageAmt);
-
     }
 
 

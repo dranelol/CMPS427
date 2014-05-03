@@ -20,7 +20,7 @@ public class FireballTurret : Ability
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 12.0f;
         projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
         projectile.GetComponent<ProjectileBehaviour>().ExplodesOnTimeout = false;
-        projectile.GetComponent<ProjectileBehaviour>().hascollided = true;
+        projectile.GetComponent<ProjectileBehaviour>().hasCollided = true;
         
 
         projectile.rigidbody.velocity = Vector3.zero;

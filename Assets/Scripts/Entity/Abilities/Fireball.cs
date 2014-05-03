@@ -95,7 +95,6 @@ public class Fireball : Ability
         }
 
         defender.ModifyHealth(-damageAmt);
-
     }
 
 

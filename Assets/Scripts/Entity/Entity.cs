@@ -98,6 +98,11 @@ public class Entity : MonoBehaviour
         currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); 
     }
 
+    public void ModifyHealthPercentage(float deltaPercent)
+    {
+        currentHP = Mathf.Clamp(currentHP + currentAtt.Health / deltaPercent, 0, currentAtt.Health);
+    }
+
     public void ModifyResource(float delta)
     {
         currentResource = Mathf.Clamp(currentResource + delta, 0, currentAtt.Resource);

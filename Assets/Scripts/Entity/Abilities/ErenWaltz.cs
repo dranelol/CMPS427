@@ -157,7 +157,6 @@ public class ErenWaltz : Ability
         Debug.Log("damage: " + damageAmt);
 
         defender.ModifyHealth(-damageAmt);
-
     }
 
 

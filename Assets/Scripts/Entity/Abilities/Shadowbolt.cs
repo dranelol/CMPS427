@@ -79,7 +79,6 @@ public class Shadowbolt : Ability
         }
 
         defender.ModifyHealth(-damageAmt);
-
     }
 
 

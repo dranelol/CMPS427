@@ -67,6 +67,5 @@ public class Arrow : Ability
         }
 
         defender.ModifyHealth(-damageAmt);
-
     }
 }

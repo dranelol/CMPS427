@@ -50,6 +50,10 @@ public class GameManager : MonoBehaviour
     public GameObject AxeThrowExplosion;
     public GameObject RotationEffect;
 
+    public GameObject EnvironmentHealOrbProjectile;
+    public GameObject EnvironmentHealOrbParticles;
+    public GameObject EnvironmentHealOrbExplosion;
+
 
 
     public equipmentFactory EquipmentFactory;
@@ -63,7 +67,7 @@ public class GameManager : MonoBehaviour
 
     public AudioClip YEAAAAA;
 
-    public bool loadsavetest = false;
+    public bool loadSaveTest = false;
 
     public GameObject thing;
 	// Use this for initialization
@@ -92,7 +96,6 @@ public class GameManager : MonoBehaviour
 
         Abilities["bladewaltz"] = new BladeWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 30.0f, 0f, 50.0f, "bladewaltz", "Blade Waltz", BladeWaltzParticles);
         Abilities["erenwaltz"] = new ErenWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 5.0f, 0f, "erenwaltz", "Eren Waltz", BladeWaltzParticles);
-
 
 
         Abilities["arrow"] = new Arrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 8.0f, 0.0f, 0.0f, 5.0f, 0f, "arrow", "Arrow", ArrowParticles);
@@ -138,7 +141,6 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-       // Debug.Log(Application.loadedLevel);
     }
     public void RemovePhysics(Rigidbody toRemove, float time = 0.0f)
     {

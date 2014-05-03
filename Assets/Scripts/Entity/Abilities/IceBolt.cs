@@ -106,7 +106,6 @@ public class IceBolt : Ability
         }
 
         defender.ModifyHealth(-damageAmt);
-
     }
 
 

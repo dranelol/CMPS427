@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class firemine : Ability
+public class FireMine : Ability
 {
+
     public firemine(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
         : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
@@ -79,13 +80,7 @@ public class firemine : Ability
         {
             damageAmt = DamageCalc.DamageCalculation(attacker, defender, 0);
         }
-        if (isPlayer == true)
-        {
-            Debug.Log("player fire mine damage: " + damageAmt);
-        }
-
         defender.ModifyHealth(-damageAmt);
-
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)

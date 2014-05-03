@@ -79,7 +79,6 @@ public class Poisonbolt : Ability
         }
 
         defender.ModifyHealth(-damageAmt);
-
     }
 
 

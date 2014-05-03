@@ -79,7 +79,6 @@ public class Bloodbolt : Ability
         }
 
         defender.ModifyHealth(-damageAmt);
-
     }
 
 

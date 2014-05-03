@@ -5,12 +5,32 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-public class MovementFSM : StateMachine 
+public class MovementFSM : StateMachine
 {
-    public const float DEFAULT_MOVEMENT_SPEED = 5;
+    #region Constants
+
+    public const float MINIMUM_HEIGHT = 0.5f;
+    public const float MAXIMUM_HEIGHT = 5f;
+
+    public const float MINIMUM_RADIUS = 0.05f;
+    public const float MAXIMUM_RADIUS = 4f;
+
+    public const float MINIMUM_BASE_MOVEMENT_SPEED = 3f;
+    public const float MAXIMUM_BASE_MOVEMENT_SPEED = 7f;
+
+    #endregion
+
+    #region Properties
 
     private NavMeshAgent _navMeshAgent;
     private AnimationController _animController;
+    private CapsuleCollider _collider;
+
+    private float _baseMovementSpeed;
+    public float BaseMovementSpeed
+    {
+        get { return _baseMovementSpeed; }
+    }
 
     private float _movementSpeed;
     public float MovementSpeed
@@ -26,11 +46,22 @@ public class MovementFSM : StateMachine
     public float Height
     {
         get { return _navMeshAgent.height; }
+        set 
+        {
+            _navMeshAgent.height = Mathf.Clamp(value, MINIMUM_HEIGHT, MAXIMUM_HEIGHT);
+            _collider.height = Height;
+        }
     }
 
     public float Radius
     {
         get { return _navMeshAgent.radius; }
+        set 
+        {
+            _navMeshAgent.radius = Mathf.Clamp(value, MINIMUM_RADIUS, MAXIMUM_RADIUS);
+            _collider.radius = _navMeshAgent.stoppingDistance = Radius;
+            _navMeshAgent.stoppingDistance = Radius * 1.1f;
+        }
     }
 
     public float RemainingDistance
@@ -43,11 +74,6 @@ public class MovementFSM : StateMachine
         get { return _navMeshAgent.steeringTarget; }
     }
 
-    public float StoppingDistance
-    {
-        get { return _navMeshAgent.stoppingDistance; }
-    }
-
     public Vector3 Velocity
     {
         get { return _navMeshAgent.velocity; }
@@ -55,20 +81,23 @@ public class MovementFSM : StateMachine
 
     public void UpdateMovementSpeed(float value)
     {
-        _navMeshAgent.speed = _movementSpeed = DEFAULT_MOVEMENT_SPEED * value;
+        _navMeshAgent.speed = _movementSpeed = _baseMovementSpeed * value;
     }
 
     public enum MoveStates
     {
         idle,
         moving,
-        moveLocked
+        moveLocked,
     }
+
+    #endregion
 
     void Awake()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _animController = GetComponent<AnimationController>();
+        _collider = GetComponent<CapsuleCollider>();
 
         SetupMachine(MoveStates.idle);
 
@@ -82,13 +111,19 @@ public class MovementFSM : StateMachine
 
         StartMachine(MoveStates.idle);
 
-        _movementSpeed = DEFAULT_MOVEMENT_SPEED;
         _navMeshAgent.updateRotation = false;
     }
 
     void Start()
     {
-        _navMeshAgent.stoppingDistance = _navMeshAgent.radius;
+        _navMeshAgent.stoppingDistance = Radius * 1.1f;
+        _navMeshAgent.acceleration = 1000f;
+        _navMeshAgent.autoBraking = true;
+        _navMeshAgent.autoRepath = true;
+        _baseMovementSpeed = Mathf.Lerp(MAXIMUM_BASE_MOVEMENT_SPEED, MINIMUM_BASE_MOVEMENT_SPEED, Radius / MAXIMUM_RADIUS);
+
+        UpdateMovementSpeed(1f);
+
     }
 
     #region public functions
@@ -102,8 +137,32 @@ public class MovementFSM : StateMachine
             if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
             {
                 _navMeshAgent.SetDestination(navMeshHit.position);
-                Transition(MoveStates.moving);
-            }      
+
+                if (tag == "Player")
+                {
+                    if (_navMeshAgent.Raycast(targetPosition, out navMeshHit))
+                    {
+                        _navMeshAgent.SetDestination(navMeshHit.position);
+                    }
+
+                    else
+                    {
+                        _navMeshAgent.SetDestination(targetPosition);
+                    }
+
+                    Transition(MoveStates.moving);
+                }
+
+                else
+                {
+                    if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
+                    {
+                        _navMeshAgent.SetDestination(navMeshHit.position);
+                    }
+
+                    Transition(MoveStates.moving);
+                }
+            }
         }
     }
 
@@ -135,7 +194,14 @@ public class MovementFSM : StateMachine
 
                 Transition(MoveStates.idle);
             }
+
         }
+    }
+
+    public void Turn(Vector3 steeringTarget)
+    {
+        Vector3 direction = steeringTarget - transform.position;
+        transform.forward = Vector3.Slerp(transform.forward, new Vector3(direction.x, 0, direction.z).normalized, 0.2f);
     }
 
     public void AddForce(Vector3 force, float duration, ForceMode forceMode = ForceMode.Force)
@@ -181,15 +247,14 @@ public class MovementFSM : StateMachine
 
     void moving_Update()
     {
-        if (!_navMeshAgent.hasPath && !_navMeshAgent.pathPending) // || _navMeshAgent.hasPath && _navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete)
+        if (!_navMeshAgent.hasPath && !_navMeshAgent.pathPending)
         {
             Stop();
         }
 
         else if (_navMeshAgent.hasPath)
         {
-            Vector3 direction = SteeringTarget - transform.position;
-            transform.forward = Vector3.Slerp(transform.forward, new Vector3(direction.x, 0, direction.z).normalized, Time.deltaTime * 10f);
+            Turn(SteeringTarget);
         }
     }
 

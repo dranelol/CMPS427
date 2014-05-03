@@ -108,7 +108,7 @@ public class BoomerangBlade : Ability
         yield return new WaitForSeconds(0.4f);
         if (source != null)
         {
-        Vector3 forward = (source.transform.position-owner.transform.position).normalized;
+            Vector3 forward = (source.transform.position-owner.transform.position).normalized;
 
         //source.transform.forward *= -1f;
         //source.GetComponent<ProjectileBehaviour>().transform.forward *= -1f;
@@ -161,7 +161,6 @@ public class BoomerangBlade : Ability
         }
 
         defender.ModifyHealth(-damageAmt);
-
     }
 
 
