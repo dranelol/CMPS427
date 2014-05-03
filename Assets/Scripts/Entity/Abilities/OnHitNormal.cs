@@ -46,13 +46,6 @@ public class OnHitNormal : Ability
         Debug.Log("damage: " + damageAmt);
 
         defender.ModifyHealth(-damageAmt);
-
-        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
-
-        if (isPlayer == true)
-        {
-            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
-        }
     }
 
     public override void DoPhysics(GameObject source, GameObject target)

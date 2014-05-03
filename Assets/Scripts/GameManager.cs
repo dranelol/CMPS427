@@ -50,10 +50,11 @@ public class GameManager : MonoBehaviour
     public GameObject AxeThrowExplosion;
     public GameObject RotationEffect;
 
-    public GameObject HealOrbProjectile;
-    public GameObject HealOrbParticles;
-    public GameObject HealOrbExplosion;
+    public GameObject EnvironmentHealOrbProjectile;
+    public GameObject EnvironmentHealOrbParticles;
+    public GameObject EnvironmentHealOrbExplosion;
 
+    public GameObject spawnInParticles;
 
 
     public equipmentFactory EquipmentFactory;
@@ -131,7 +132,6 @@ public class GameManager : MonoBehaviour
 
         Abilities["axethrow"] = new AxeThrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 0.0f, 2.0f, 0.0f, "axethrow", "Axe Throw", AxeThrowExplosion);
 
-        Abilities["healorb"] = new HealOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 0.0f, 0.0f, "healorb", "Heal Orb", HealOrbExplosion);
         #endregion
 
 
@@ -141,7 +141,6 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        // Debug.Log(Application.loadedLevel);
     }
 
     public void RemovePhysics(Rigidbody toRemove, float time = 0.0f)
