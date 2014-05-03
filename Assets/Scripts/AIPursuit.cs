@@ -66,7 +66,7 @@ public class AIPursuit : StateMachine
     void Start()
     {
         _abilityManager = GetComponent<AbilityManager>();
-        _nextAbilityIndex = 1;
+        _nextAbilityIndex = 0;
         _adjustedRange = 5f;
 
     }
@@ -170,7 +170,7 @@ public class AIPursuit : StateMachine
         {
             if (currentTarget != null)
             {
-                if (combatFSM.IsIdle() && _abilityManager.activeCoolDowns[_nextAbilityIndex] <= Time.time) // check resource as well
+                if (combatFSM.IsIdle())// && _abilityManager.activeCoolDowns[_nextAbilityIndex] <= Time.time) // check resource as well
                 {
                     Vector3 directionToTarget = currentTarget.transform.position - transform.position;
 
@@ -231,7 +231,7 @@ public class AIPursuit : StateMachine
             else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.PROJECTILE)
             {
                 combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
+                _abilityManager.abilities[0].SpawnProjectile(gameObject, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[0].ID, false);
             }
 
             else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.HONINGPROJECTILE)
@@ -249,7 +249,7 @@ public class AIPursuit : StateMachine
             _abilityManager.activeCoolDowns[_nextAbilityIndex] = Time.time + _abilityManager.abilities[_nextAbilityIndex].Cooldown;
             // Incurr resource cost
             // play animation
-            GetComponent<AnimationController>().Attack(1); // DELETE THIS
+            GetComponent<AnimationController>().Attack(AnimationType.Melee, 0); // DELETE THIS
 
             CalculateAbilityRange();
 

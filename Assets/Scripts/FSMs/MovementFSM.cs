@@ -59,6 +59,7 @@ public class MovementFSM : StateMachine
         set 
         {
             _navMeshAgent.radius = Mathf.Clamp(value, MINIMUM_RADIUS, MAXIMUM_RADIUS);
+            _navMeshAgent.stoppingDistance = Radius * 1.1f;
             _collider.radius = _navMeshAgent.stoppingDistance = Radius;
         }
     }
@@ -115,7 +116,7 @@ public class MovementFSM : StateMachine
 
     void Start()
     {
-        _navMeshAgent.stoppingDistance = 1f;
+        _navMeshAgent.stoppingDistance = Radius * 1.1f;
         _navMeshAgent.acceleration = 1000f;
         _navMeshAgent.autoBraking = true;
         _navMeshAgent.autoRepath = true;

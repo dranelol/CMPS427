@@ -1,66 +1,147 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AnimationController : MonoBehaviour 
+public class AnimationController : MonoBehaviour
 {
-    public Transform _upperBody;
+    #region Properties
+
+    public Transform _attackTransform;
 
     public AnimationClip _idle;
     public AnimationClip _run;
     public AnimationClip _death;
-    public AnimationClip _attack1;
-    public AnimationClip _attack2;
-    public AnimationClip _attack3;
+
+    public AnimationClip[] _meleeAnimations;
+    public AnimationClip[] _spellAnimations;
+    public AnimationClip[] _miscAnimations;
+
+    #endregion
+
+    #region Initialization
 
     void Awake()
     {
-        animation[_idle.name].layer = 1;
-        animation[_run.name].layer = 1;
-        animation[_death.name].layer = 1;
-        animation[_attack1.name].layer = 2;
-        animation[_attack2.name].layer = 2;
-        animation[_attack3.name].layer = 2;
-        animation[_attack1.name].wrapMode = WrapMode.Once;
-        animation[_attack2.name].wrapMode = WrapMode.Once;
-        animation[_attack3.name].wrapMode = WrapMode.Once;
+        if (!animation)
+        {
+            gameObject.AddComponent<Animation>();
+        }
 
-        animation[_attack1.name].AddMixingTransform(_upperBody, true);
-        animation[_attack2.name].AddMixingTransform(_upperBody, true);
-        animation[_attack3.name].AddMixingTransform(_upperBody, true);
+        animation.playAutomatically = true;
+
+        animation.AddClip(_idle, "Idle");
+        animation["Idle"].layer = 1;
+
+        animation.AddClip(_run, "Run");
+        animation["Run"].layer = 1;
+
+        animation.AddClip(_death, "Death");
+        animation["Death"].layer = 1;
+
+        ProcessCombatAnimations(_meleeAnimations);
+        ProcessCombatAnimations(_spellAnimations);
+        ProcessCombatAnimations(_miscAnimations);
     }
+
+    #endregion
+
+    #region Public Functions
 
     public void StopMoving()
     {
-        animation.CrossFade(_idle.name, 0.2f);
+        animation.CrossFade("Idle", 0.3f);
     }
 
     public void StartMoving()
     {
-        animation.CrossFade(_run.name, 0.2f);
+        animation.CrossFade("Run", 0.2f);
     }
 
     public void Death()
     {
-        animation.Play(_death.name, PlayMode.StopAll);
+        animation.Play("Death", PlayMode.StopAll);
     }
 
-    public void Attack(int number)
+    /// <summary>
+    /// Perform an animation of the given type and index. No animation will be played if the animation
+    /// is not present. The index given is the index of the animation in the array specified on the 
+    /// prefab, not the index of the animation out of all the animations
+    /// </summary>
+    /// <param name="type">The type of animation to play</param>
+    /// <param name="index">The index of the animation</param>
+    public void Attack(AnimationType type, int index)
     {
-        AnimationClip attackAnim;
+        AnimationClip[] animations;
 
-        switch (number)
+        switch (type)
         {
-            case 3:
-                attackAnim = _attack3;
+            case AnimationType.Spell:
+                animations = _spellAnimations;
                 break;
-            case 2:
-                attackAnim = _attack2;
+
+            case AnimationType.Misc:
+                animations = _miscAnimations;
                 break;
+
             default:
-                attackAnim = _attack1;
-                break;                
+                animations = _meleeAnimations;
+                break;
         }
 
-        animation.Play(attackAnim.name);
+        try
+        {
+            animation.Play(animations[index].name);
+        }
+
+        catch
+        {
+            Debug.LogWarning("There is no " + type + " animation " + "indexed at " + index + ".");
+        } 
     }
+
+
+    public void Attack(string animationName)
+    {
+        try
+        {
+            animation.Play(animationName);
+        }
+
+        catch
+        {
+            Debug.LogWarning("There is no animation named " + animationName + ".");
+        }
+    }
+
+    #endregion
+
+    #region Private Functions
+
+    private void ProcessCombatAnimations(AnimationClip[] animations)
+    {
+        for (int i = 0; i < animations.Length; i++)
+        {
+            string name = animations[i].name;
+            animation.AddClip(animations[0], name);
+            animation[name].layer = 2;
+            animation[name].wrapMode = WrapMode.Once;
+
+            if (_attackTransform != null)
+            {
+                animation[name].AddMixingTransform(_attackTransform, true);
+            }
+        }
+    }
+
+    #endregion
 }
+
+#region Enums
+
+public enum AnimationType
+{
+    Melee,
+    Spell,
+    Misc,
+}
+
+#endregion
