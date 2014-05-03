@@ -128,9 +128,13 @@ public class MovementFSM : StateMachine
     {
         if ((MoveStates)CurrentState == MoveStates.moveLocked)
         {
-            rigidbody.velocity = Vector3.zero;
-            rigidbody.angularVelocity = Vector3.zero;
-            Transition(MoveStates.idle);
+            if (rigidbody != null)
+            {
+                rigidbody.velocity = Vector3.zero;
+                rigidbody.angularVelocity = Vector3.zero;
+
+                Transition(MoveStates.idle);
+            }
         }
     }
 

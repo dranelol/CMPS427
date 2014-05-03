@@ -96,8 +96,8 @@ public class GameManager : MonoBehaviour
 
 
         Abilities["arrow"] = new Arrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 8.0f, 0.0f, 0.0f, 5.0f, 0f, "arrow", "Arrow", ArrowParticles);
-        Abilities["fireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.1f, 10.0f, 5f, "fireball", "Fireball", FireballExplosion);
-        Abilities["firemine"] = new firemine(AttackType.PROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 4.0f, 1.0f, 10f, "firemine", "Fire Mine", FiremineParticles);
+        Abilities["fireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 1.0f, 10.0f, 5f, "fireball", "Fireball", FireballExplosion);
+        Abilities["firemine"] = new firemine(AttackType.PROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 4.0f, 200.0f, 10f, "firemine", "Fire Mine", FiremineParticles);
         Abilities["GETOVERHERE"] = new GETOVERHERE(AttackType.PROJECTILE, DamageType.SHADOW, 4.0f, 0.0f, 5.0f, 0.1f, 10f, "GETOVERHERE", "Shadow Pull", GETOVERHEREParticles);
         Abilities["normalmine"] = new normalmine(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 360.0f, 4.0f, 1.0f, 10f, "normalmine", "Mine", MineParticles);
         Abilities["blinkstrike"] = new BlinkStrike(AttackType.PROJECTILE, DamageType.SHADOW, 4.0f, 1.0f, 7.0f, 5.0f, 10f, "blinkstrike", "Blink Strike", BlinkStrikeProjectile);
@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
         Abilities["bloodbolt"] = new Bloodbolt(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL, 10.0f, 0.0f, 0.1f, 10.0f, 5f, "bloodbolt", "bloodbolt", FireballExplosion);
         Abilities["chaosbolt"] = new Chaosbolt(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.1f, 10.0f, 5f, "chaosbolt", "chaosbolt", ChaosboltExplosion);
         
-        Abilities["ShockMine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 10.0f, 5f, "ShockMine", "Shock Mine", ShockMineProjectile);
+        Abilities["shockmine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 30.0f, 5f, "shockmine", "Shock Mine", ShockMineProjectile);
         Abilities["aoefreeze"] = new AOEfreeze(AttackType.PBAOE, DamageType.WATER, 5.0f, 360f, 15f, 1f, 30f, "aoefreeze", "Flashfreeze", AOEFreezeParticles);
 
         Abilities["onhitnormal"] = new OnHitNormal(AttackType.MELEE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, 0f, "onhitnormal", "On Hit Normal", OnHitNormalParticles);
@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        Debug.Log(Application.loadedLevel);
+       // Debug.Log(Application.loadedLevel);
     }
     public void RemovePhysics(Rigidbody toRemove, float time = 0.0f)
     {
