@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class CharacterUI : UIState
@@ -15,6 +16,7 @@ public class CharacterUI : UIState
     private int xOffset = 0;
     private int totalInvWidth = 0;
     private int rowLength = 8;
+    private Dictionary<Rect, equipment> slotRects;
 
     private Vector2 scrollViewVector;
     private Camera characterCamera;
@@ -65,7 +67,9 @@ public class CharacterUI : UIState
         GUI.Window(0, windowDimensions, OnWindow, "Character");
         if (hoverEquip != null)
         {
+
             
+
             GUI.Box(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, 250, 25), hoverEquip.equipmentName);
 
             
@@ -148,7 +152,7 @@ public class CharacterUI : UIState
             yOffset = 0;
             xOffset = 0;
 
-
+            slotRects = new Dictionary<Rect, equipment>();
             
 
             for (int i = 0; i < Controller.Player.Inventory.Max; i++ )
@@ -158,28 +162,35 @@ public class CharacterUI : UIState
                     yOffset += (totalInvWidth / rowLength) + 2;
                     xOffset = 0;
                 }
+
+                Rect thisRect = new Rect(xOffset, yOffset, totalInvWidth / rowLength, totalInvWidth / rowLength);
                 
                 
                 if (i < Controller.Player.Inventory.Items.Count)
                 {
-                    GUI.Box(new Rect(xOffset, yOffset, totalInvWidth / rowLength, totalInvWidth / rowLength), Controller.Player.Inventory.Items[i].equipmentName);
+                    GUI.Box(thisRect, Controller.Player.Inventory.Items[i].equipmentName);
 
-                    Drag(Controller.Player.Inventory.Items[i], new Rect(xOffset, yOffset, totalInvWidth / rowLength, totalInvWidth / rowLength));
-                    Tooltip(new Rect(xOffset, yOffset, totalInvWidth / rowLength, totalInvWidth / rowLength), Controller.Player.Inventory.Items[i]);
+                    Drag(Controller.Player.Inventory.Items[i], thisRect);
 
-                    xOffset += (totalInvWidth / rowLength) + 4;
+                    slotRects.Add(thisRect, Controller.Player.Inventory.Items[i]);
                 }
                 else
                 {
-                    GUI.Box(new Rect(xOffset, yOffset, totalInvWidth / rowLength, totalInvWidth / rowLength), "");
+                    GUI.Box(thisRect, "");
 
-                    DropToUnequip(new Rect(xOffset, yOffset, totalInvWidth / rowLength, totalInvWidth / rowLength));
+                    DropToUnequip(thisRect);
 
-                    xOffset += (totalInvWidth / rowLength) + 4;
 
+                    slotRects.Add(thisRect, null);
                 }
 
+                
+
+                xOffset += (totalInvWidth / rowLength) + 4;
+
             }
+
+            Tooltip(slotRects);
 
             GUI.EndScrollView();
         }
@@ -224,7 +235,6 @@ public class CharacterUI : UIState
             GUI.Box(new Rect(0, yOffset, WIDTH - 30, 22), new GUIContent(item.equipmentName));
 
             Drag(item, new Rect(0, yOffset, WIDTH - 30, 22));
-            Tooltip(new Rect(0, yOffset, WIDTH - 30, 22), item);
 
             yOffset += 24;
         }
@@ -294,18 +304,25 @@ public class CharacterUI : UIState
         }
     }
 
-    void Tooltip(Rect hoverRect, equipment item)
+    void Tooltip(Dictionary<Rect, equipment> hoverRects)
     {
+        
+        Vector2 mPos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
 
-        if (hoverRect.Contains(new Vector2(Input.mousePosition.x, Input.mousePosition.y)) && Controller.DraggedEquip == null)
+
+
+        foreach (Rect hoverRect in hoverRects.Keys)
         {
-            Debug.Log("in if");
-            
-            hoverEquip = item;            
-        }
-        else
-        {
-            hoverEquip = null;
+
+            if (hoverRect.Contains(GUIUtility.ScreenToGUIPoint(mPos)) && Controller.DraggedEquip == null)
+            {
+                hoverEquip = hoverRects[hoverRect];
+                return;
+            }
+            else
+            {
+                hoverEquip = null;
+            }
         }
     }
 }
