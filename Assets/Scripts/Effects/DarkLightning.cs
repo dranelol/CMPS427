@@ -3,19 +3,27 @@ using System.Collections;
 
 public class DarkLightning : MonoBehaviour 
 {
-    private LineRenderer _lineRenderer;
-    private GameObject _source;
-    private GameObject _target;
+    public LineRenderer _lineRenderer;
+    public GameObject _source;
+    public GameObject _target;
 
-    private int Frequency = 3; // The number of vertices per Unity meter.
-    private float Deviation = 0.2f; // The maximum distance a vertex can deviate.
-    private float Speed = 0.02f; // The time in between vertex updates.
+    public int Frequency = 3; // The number of vertices per Unity meter.
+    public float Deviation = 0.2f; // The maximum distance a vertex can deviate.
+    public float Speed = 0.02f; // The time in between vertex updates.
 
 	void Awake () 
     {
         _lineRenderer = GetComponent<LineRenderer>();
         _lineRenderer.useWorldSpace = true;
 	}
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Activate(_source, _target, 5);
+        }
+    }
 
     public void Activate(GameObject start, GameObject end, float time)
     {
@@ -54,6 +62,7 @@ public class DarkLightning : MonoBehaviour
     private void Deactivate()
     {
         StopCoroutine("Lightning");
-        Destroy(this.gameObject);
+        _lineRenderer.SetVertexCount(0);
+        //Destroy(this.gameObject);
     }
 }
