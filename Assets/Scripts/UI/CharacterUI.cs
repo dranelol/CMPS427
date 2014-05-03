@@ -26,6 +26,7 @@ public class CharacterUI : UIState
 
 
     private equipment hoverEquip;
+    private equipment hoverEquipped;
 
     public CharacterUI(int id, UIController controller)
         : base(id, controller)
@@ -42,6 +43,7 @@ public class CharacterUI : UIState
         titsMcGee = null;
         toBeUsed = null;
         hoverEquip = null;
+        hoverEquipped = null;
 
         Controller.DraggedEquip = null;
     }
@@ -68,132 +70,171 @@ public class CharacterUI : UIState
         if (hoverEquip != null)
         {
 
-            
+            GUIContent thisContent = new GUIContent(
+                hoverEquip.equipmentName + "\n"
+                + "Health: " + hoverEquip.equipmentAttributes.Health.ToString() + "\n"
+                + "Resource: " + hoverEquip.equipmentAttributes.Resource.ToString() + "\n"
+                + "Power: " + hoverEquip.equipmentAttributes.Power.ToString() + "\n"
+                + "Defense: " + hoverEquip.equipmentAttributes.Defense.ToString() + "\n"
+                + "Damage: " + hoverEquip.equipmentAttributes.MinDamage.ToString() + " - " + hoverEquip.equipmentAttributes.MaxDamage.ToString() + "\n"
+                + "Attack Speed: " + hoverEquip.equipmentAttributes.AttackSpeed.ToString() + "\n"
+                + "Movement Speed: " + hoverEquip.equipmentAttributes.MovementSpeed.ToString() + "\n"
+                );
 
-            GUI.Box(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, 250, 25), hoverEquip.equipmentName);
+            GUIStyle thisStyle = new GUIStyle("box");
+            thisStyle.alignment = TextAnchor.UpperLeft;
+            thisStyle.normal.textColor = Color.white;
+
+            GUI.Box(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, 250, 127), thisContent, thisStyle);
 
             
         }
+        else if (hoverEquipped != null)
+        {
 
-        
+
+            GUIContent thisContent = new GUIContent(
+                hoverEquipped.equipmentName + "\n"
+                + "Health: " + hoverEquipped.equipmentAttributes.Health.ToString() + "\n"
+                + "Resource: " + hoverEquipped.equipmentAttributes.Resource.ToString() + "\n"
+                + "Power: " + hoverEquipped.equipmentAttributes.Power.ToString() + "\n"
+                + "Defense: " + hoverEquipped.equipmentAttributes.Defense.ToString() + "\n"
+                + "Damage: " + hoverEquipped.equipmentAttributes.MinDamage.ToString() + " - " + hoverEquipped.equipmentAttributes.MaxDamage.ToString() + "\n"
+                + "Attack Speed: " + hoverEquipped.equipmentAttributes.AttackSpeed.ToString() + "\n"
+                + "Movement Speed: " + hoverEquipped.equipmentAttributes.MovementSpeed.ToString() + "\n"
+                );
+
+            GUIStyle thisStyle = new GUIStyle("box");
+            thisStyle.alignment = TextAnchor.UpperLeft;
+            thisStyle.normal.textColor = Color.white;
+
+            GUI.Box(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, 250, 127), thisContent, thisStyle);
+        }
     }
 
     void OnWindow(int windowID)
     {
+
+        slotRects = new Dictionary<Rect, equipment>();
+
+        yOffset = 30;
+
         // Equipment slots.
         GUILayout.BeginArea(new Rect(5, 20, WIDTH, 300));
-        GUILayout.BeginVertical();
-        GUILayout.Space(10);
+
         for (int i = 0; i < EQUIPMENT_SLOTS; i += 2)
         {
-            GUILayout.BeginHorizontal();
+            
+
+            Rect thisRect = new Rect(5, yOffset, 50, 50);
 
             if (Controller.Player.EquippedEquip.ContainsKey(((equipSlots.slots)i)))
             {
+                
+                
+                
+                GUI.Box(thisRect, new GUIContent(Controller.Player.EquippedEquip[((equipSlots.slots)i)].equipmentName));
 
-                GUILayout.Box(new GUIContent(Controller.Player.EquippedEquip[((equipSlots.slots)i)].equipmentName), GUILayout.Width(50), GUILayout.Height(50));
+                Drag(Controller.Player.EquippedEquip[((equipSlots.slots)i)], thisRect);
 
-                Drag(Controller.Player.EquippedEquip[((equipSlots.slots)i)], GUILayoutUtility.GetLastRect());
+
+                slotRects.Add(thisRect, Controller.Player.EquippedEquip[((equipSlots.slots)i)]);
             }
             else
             {
-                GUILayout.Box(new GUIContent(((equipSlots.slots)i).ToString()), GUILayout.Width(50), GUILayout.Height(50));
+                GUI.Box(thisRect, new GUIContent(((equipSlots.slots)i).ToString()));
+                slotRects.Add(thisRect, null);
             }
 
 
-            DropToEquip(GUILayoutUtility.GetLastRect(), i);
+            DropToEquip(thisRect, i);
 
             
 
-            GUILayout.Space(WIDTH - 115);
+            //GUILayout.Space(WIDTH - 115);
 
+            thisRect = new Rect((WIDTH - 65), yOffset, 50, 50);
 
             if (Controller.Player.EquippedEquip.ContainsKey(((equipSlots.slots)i+1)))
             {
 
-                GUILayout.Box(new GUIContent(Controller.Player.EquippedEquip[((equipSlots.slots)i+1)].equipmentName), GUILayout.Width(50), GUILayout.Height(50));
+                GUI.Box(thisRect, new GUIContent(Controller.Player.EquippedEquip[((equipSlots.slots)i+1)].equipmentName));
 
-                Drag(Controller.Player.EquippedEquip[((equipSlots.slots)i+1)], GUILayoutUtility.GetLastRect());
+                Drag(Controller.Player.EquippedEquip[((equipSlots.slots)i+1)], thisRect);
+
+                slotRects.Add(thisRect, Controller.Player.EquippedEquip[((equipSlots.slots)i + 1)]);
             }
             else
             {
-                GUILayout.Box(new GUIContent(((equipSlots.slots)i+1).ToString()), GUILayout.Width(50), GUILayout.Height(50));
+                GUI.Box(thisRect, new GUIContent(((equipSlots.slots)i+1).ToString()));
+                slotRects.Add(thisRect, null);
             }
 
 
-            DropToEquip(GUILayoutUtility.GetLastRect(), i+1);
+            DropToEquip(thisRect, i + 1);
+
+            yOffset += 100;
             
-
-            GUILayout.EndHorizontal();
-
-            GUILayout.Space(50);
         }
-
-        GUILayout.EndVertical();
+        TooltipEquipment(slotRects);
         GUILayout.EndArea();
 
-        selection = GUI.Toolbar(new Rect(10, 300, WIDTH - 20, 50), selection, HEADERS);
+        //selection = GUI.Toolbar(new Rect(10, 300, WIDTH - 20, 50), selection, HEADERS);
 
-        if (selection == 0)
-            DrawStats();
-        if (selection == 1)
+        int viewSize = (Controller.Player.Inventory.Max * ((totalInvWidth / rowLength) + 2)) / rowLength;
+
+        Rect viewArea = new Rect(0, 0, 10, viewSize);
+
+        scrollViewVector = GUI.BeginScrollView(new Rect(10, 320, WIDTH - 10, 180), scrollViewVector,
+            viewArea);
+
+
+            
+
+        yOffset = 0;
+        xOffset = 0;
+
+        
+            
+
+        for (int i = 0; i < Controller.Player.Inventory.Max; i++ )
         {
-
-            int viewSize = (Controller.Player.Inventory.Max * ((totalInvWidth / rowLength) + 2)) / rowLength;
-
-            Rect viewArea = new Rect(0, 0, 10, viewSize);
-
-            scrollViewVector = GUI.BeginScrollView(new Rect(10, 350, WIDTH - 10, 150), scrollViewVector,
-                viewArea);
-
-
-            
-
-            yOffset = 0;
-            xOffset = 0;
-
-            slotRects = new Dictionary<Rect, equipment>();
-            
-
-            for (int i = 0; i < Controller.Player.Inventory.Max; i++ )
+            if (i != 0 && i % rowLength == 0)
             {
-                if (i != 0 && i % 8 == 0)
-                {
-                    yOffset += (totalInvWidth / rowLength) + 2;
-                    xOffset = 0;
-                }
-
-                Rect thisRect = new Rect(xOffset, yOffset, totalInvWidth / rowLength, totalInvWidth / rowLength);
-                
-                
-                if (i < Controller.Player.Inventory.Items.Count)
-                {
-                    GUI.Box(thisRect, Controller.Player.Inventory.Items[i].equipmentName);
-
-                    Drag(Controller.Player.Inventory.Items[i], thisRect);
-
-                    slotRects.Add(thisRect, Controller.Player.Inventory.Items[i]);
-                }
-                else
-                {
-                    GUI.Box(thisRect, "");
-
-                    DropToUnequip(thisRect);
-
-
-                    slotRects.Add(thisRect, null);
-                }
-
-                
-
-                xOffset += (totalInvWidth / rowLength) + 4;
-
+                yOffset += (totalInvWidth / rowLength) + 2;
+                xOffset = 0;
             }
 
-            Tooltip(slotRects);
+            Rect thisRect = new Rect(xOffset, yOffset, totalInvWidth / rowLength, totalInvWidth / rowLength);
+                
+                
+            if (i < Controller.Player.Inventory.Items.Count)
+            {
+                GUI.Box(thisRect, Controller.Player.Inventory.Items[i].equipmentName);
 
-            GUI.EndScrollView();
+                Drag(Controller.Player.Inventory.Items[i], thisRect);
+
+                slotRects.Add(thisRect, Controller.Player.Inventory.Items[i]);
+            }
+            else
+            {
+                GUI.Box(thisRect, "");
+
+                DropToUnequip(thisRect);
+
+
+                slotRects.Add(thisRect, null);
+            }
+
+                
+
+            xOffset += (totalInvWidth / rowLength) + 4;
+
         }
+        TooltipInventory(slotRects);
+
+        GUI.EndScrollView();
+        
     }
 
     void DrawStats()
@@ -212,34 +253,6 @@ public class CharacterUI : UIState
             GUI.Label(new Rect(0, yOffset, WIDTH - 30, 20), "" + pair.Value.ToString());
             yOffset += 30; 
         }
-
-        GUI.EndScrollView();
-    }
-
-    void DrawInventory()
-    {
-        int viewSize = Controller.Player.Inventory.Items.Count * 30;
-
-        scrollViewVector = GUI.BeginScrollView(new Rect(10, 350, WIDTH - 10, 150), scrollViewVector,
-            new Rect(0, 0, 10, viewSize));
-
-
-        DropToUnequip(new Rect(10, 350, WIDTH - 10, 150));
-
-        yOffset = 0;
-
-        foreach (equipment item in Controller.Player.Inventory.Items)
-        {
-            
-            
-            GUI.Box(new Rect(0, yOffset, WIDTH - 30, 22), new GUIContent(item.equipmentName));
-
-            Drag(item, new Rect(0, yOffset, WIDTH - 30, 22));
-
-            yOffset += 24;
-        }
-
-        
 
         GUI.EndScrollView();
     }
@@ -282,6 +295,7 @@ public class CharacterUI : UIState
             }
 
             Controller.DraggedEquip = null;
+            hoverEquip = null;
         }
     }
 
@@ -301,10 +315,11 @@ public class CharacterUI : UIState
             }
 
             Controller.DraggedEquip = null;
+            hoverEquip = null;
         }
     }
 
-    void Tooltip(Dictionary<Rect, equipment> hoverRects)
+    void TooltipInventory(Dictionary<Rect, equipment> hoverRects)
     {
         
         Vector2 mPos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
@@ -316,12 +331,38 @@ public class CharacterUI : UIState
 
             if (hoverRect.Contains(GUIUtility.ScreenToGUIPoint(mPos)) && Controller.DraggedEquip == null)
             {
+
+                //Debug.Log("in rect: " + hoverRects[hoverRect].equipmentName.ToString());
                 hoverEquip = hoverRects[hoverRect];
                 return;
             }
             else
             {
                 hoverEquip = null;
+            }
+        }
+    }
+
+    void TooltipEquipment(Dictionary<Rect, equipment> hoverRects)
+    {
+
+        Vector2 mPos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
+
+
+
+        foreach (Rect hoverRect in hoverRects.Keys)
+        {
+
+            if (hoverRect.Contains(GUIUtility.ScreenToGUIPoint(mPos)) && Controller.DraggedEquip == null)
+            {
+
+               // Debug.Log("in rect: " + hoverRects[hoverRect].equipmentName.ToString());
+                hoverEquipped = hoverRects[hoverRect];
+                return;
+            }
+            else
+            {
+                hoverEquipped = null;
             }
         }
     }
