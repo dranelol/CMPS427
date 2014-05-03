@@ -66,7 +66,7 @@ public class AIPursuit : StateMachine
     void Start()
     {
         _abilityManager = GetComponent<AbilityManager>();
-        _nextAbilityIndex = 1;
+        _nextAbilityIndex = 0;
         _adjustedRange = 5f;
 
     }
