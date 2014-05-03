@@ -87,13 +87,6 @@ public class BlinkStrike : Ability
         }
 
         defender.ModifyHealth(-damageAmt);
-
-        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
-
-        if (isPlayer == true)
-        {
-            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
-        }
     }
 
 

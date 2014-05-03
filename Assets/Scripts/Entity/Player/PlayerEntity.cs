@@ -57,14 +57,14 @@ public class PlayerEntity : Entity
 
         else
         {
-            abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
+            abilityManager.AddAbility(GameManager.Abilities["icebolt"], 2);
             abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 3);
-            abilityManager.AddAbility(GameManager.Abilities["bloodbolt"], 4);
+            abilityManager.AddAbility(GameManager.Abilities["frozenorb"], 4);
             abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
 
-            abilityIndexDict["cleave"] = 2;
+            abilityIndexDict["icebolt"] = 2;
             abilityIndexDict["aoefreeze"] = 3;
-            abilityIndexDict["bloodbolt"] = 4;
+            abilityIndexDict["frozenorb"] = 4;
             abilityIndexDict["bladewaltz"] = 5;
         }
 

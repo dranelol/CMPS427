@@ -399,6 +399,28 @@ public class AIController : StateMachine
         Destroy(rigidbody);
 
         GetComponent<AnimationController>().Death();
+        GameObject healOrb = (GameObject)Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnvironmentHealOrbProjectile, new Vector3(transform.position.x, transform.position.y + 2, transform.position.z), Quaternion.identity);
+
+        ProjectileBehaviour healOrbProjectile = healOrb.GetComponent<ProjectileBehaviour>();
+
+        healOrbProjectile.EnvironmentProjectile = true;
+        healOrbProjectile.homing = true;
+        healOrbProjectile.speed = 10.0f;
+        healOrbProjectile.timeToActivate = 5.0f;
+        
+
+        Vector3 randPosition = transform.position + UnityEngine.Random.onUnitSphere;
+
+        healOrbProjectile.target = randPosition;
+
+        //randPosition.Set(randPosition.x, randPosition.y + 1, randPosition.z);
+
+        Vector3 randDirection = (randPosition - transform.position).normalized;
+
+        healOrbProjectile.transform.rotation = Quaternion.LookRotation(randDirection);
+
+        
+
         yield return null;
     }
 
