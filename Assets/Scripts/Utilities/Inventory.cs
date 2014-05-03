@@ -7,21 +7,21 @@ using System.Collections.Generic;
 /// </summary>
 public class Inventory
 {
-    private const int MAX = 50;
+    private const int MAX = 64;
     public int Max
     {
         get { return MAX; }
     }
 
     private equipmentFactory factory;
-    private HashSet<equipment> items;
-    public HashSet<equipment> Items { get { return items; } }
+    private List<equipment> items;
+    public List<equipment> Items { get { return items; } }
 
     
 
     public Inventory()
     {
-        items = new HashSet<equipment>();
+        items = new List<equipment>();
         factory = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
 
         //LoadItems();

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class CharacterUI : UIState
 {
@@ -11,6 +12,10 @@ public class CharacterUI : UIState
     private Rect windowDimensions;
     private int selection = 0;
     private int yOffset = 0;
+    private int xOffset = 0;
+    private int totalInvWidth = 0;
+    private int rowLength = 8;
+
     private Vector2 scrollViewVector;
     private Camera characterCamera;
     private GUITexture titsMcGee;
@@ -25,6 +30,8 @@ public class CharacterUI : UIState
     {
         windowDimensions = new Rect(Screen.width - (WIDTH + 50), Screen.height / 2 - HEIGHT / 2, WIDTH, HEIGHT);
         scrollViewVector = Vector2.zero;
+
+        totalInvWidth = Convert.ToInt32(WIDTH) - 62;
     }
 
     public override void Enter()
@@ -92,12 +99,7 @@ public class CharacterUI : UIState
 
             DropToEquip(GUILayoutUtility.GetLastRect(), i);
 
-            /*
-            if (GUILayout.Button("", GUILayout.Width(50), GUILayout.Height(50)))
-            {
-                Controller.Player.removeEquipment((equipSlots.slots)i);
-            }
-            */
+            
 
             GUILayout.Space(WIDTH - 115);
 
@@ -116,12 +118,7 @@ public class CharacterUI : UIState
 
 
             DropToEquip(GUILayoutUtility.GetLastRect(), i+1);
-            /*
-            if (GUILayout.Button("", GUILayout.Width(50), GUILayout.Height(50)))
-            {
-                Controller.Player.removeEquipment((equipSlots.slots)i);
-            }
-             */
+            
 
             GUILayout.EndHorizontal();
 
@@ -138,7 +135,7 @@ public class CharacterUI : UIState
         if (selection == 1)
         {
 
-            int viewSize = Controller.Player.Inventory.Items.Count * 30;
+            int viewSize = (Controller.Player.Inventory.Max * ((totalInvWidth / rowLength) + 2)) / rowLength;
 
             Rect viewArea = new Rect(0, 0, 10, viewSize);
 
@@ -146,23 +143,43 @@ public class CharacterUI : UIState
                 viewArea);
 
 
-            DropToUnequip(viewArea);
+            
 
             yOffset = 0;
+            xOffset = 0;
 
-            foreach (equipment item in Controller.Player.Inventory.Items)
+
+            
+
+            for (int i = 0; i < Controller.Player.Inventory.Max; i++ )
             {
+                if (i != 0 && i % 8 == 0)
+                {
+                    yOffset += (totalInvWidth / rowLength) + 2;
+                    xOffset = 0;
+                }
+                
+                
+                if (i < Controller.Player.Inventory.Items.Count)
+                {
+                    GUI.Box(new Rect(xOffset, yOffset, totalInvWidth / rowLength, totalInvWidth / rowLength), Controller.Player.Inventory.Items[i].equipmentName);
 
+                    Drag(Controller.Player.Inventory.Items[i], new Rect(xOffset, yOffset, totalInvWidth / rowLength, totalInvWidth / rowLength));
+                    Tooltip(new Rect(xOffset, yOffset, totalInvWidth / rowLength, totalInvWidth / rowLength), Controller.Player.Inventory.Items[i]);
 
-                GUI.Box(new Rect(0, yOffset, WIDTH - 30, 22), item.equipmentName);
+                    xOffset += (totalInvWidth / rowLength) + 4;
+                }
+                else
+                {
+                    GUI.Box(new Rect(xOffset, yOffset, totalInvWidth / rowLength, totalInvWidth / rowLength), "");
 
-                Drag(item, new Rect(0, yOffset, WIDTH - 30, 22));
-                Tooltip(new Rect(0, yOffset, WIDTH - 30, 22), item);
+                    DropToUnequip(new Rect(xOffset, yOffset, totalInvWidth / rowLength, totalInvWidth / rowLength));
 
-                yOffset += 24;
+                    xOffset += (totalInvWidth / rowLength) + 4;
+
+                }
+
             }
-
-
 
             GUI.EndScrollView();
         }
@@ -282,7 +299,7 @@ public class CharacterUI : UIState
 
         if (hoverRect.Contains(new Vector2(Input.mousePosition.x, Input.mousePosition.y)) && Controller.DraggedEquip == null)
         {
-
+            Debug.Log("in if");
             
             hoverEquip = item;            
         }
