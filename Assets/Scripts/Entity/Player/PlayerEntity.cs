@@ -16,9 +16,7 @@ public class PlayerEntity : Entity
         base.Awake();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
-        
     }
-
 
 	public void Start() 
     {
@@ -34,9 +32,9 @@ public class PlayerEntity : Entity
                     abilityIndexDict[PlayerPrefs.GetString("ability"+i)] = i;
                 }
             }
+
             for( int i=0;i<6;i++)
             {
-                
                 if(PlayerPrefs.HasKey(i+"name") == true)
                 {
                     equipment tempequip = gameManager.EquipmentFactory.loadequipment(i+"");
@@ -44,6 +42,7 @@ public class PlayerEntity : Entity
                     {
                         Debug.Log("EQUIPPING " + tempequip.equipmentName + " FROM LOAD");
                     }
+
                     else
                     {
                         Debug.Log("CAN'T EQUIP THE "+tempequip.equipmentName+" FOR SOME REASON");
@@ -57,11 +56,13 @@ public class PlayerEntity : Entity
 
         else
         {
+            abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], 1);
             abilityManager.AddAbility(GameManager.Abilities["icebolt"], 2);
             abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 3);
             abilityManager.AddAbility(GameManager.Abilities["frozenorb"], 4);
             abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
 
+            abilityIndexDict["chaosbolt"] = 1;
             abilityIndexDict["icebolt"] = 2;
             abilityIndexDict["aoefreeze"] = 3;
             abilityIndexDict["frozenorb"] = 4;

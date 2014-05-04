@@ -14,7 +14,7 @@ public class SpawnOnDestroy : MonoBehaviour {
 
         else
         {
-            GameObject spawned = (GameObject)GameObject.Instantiate(spawnThing, transform.position, Quaternion.identity);
+            GameObject.Instantiate(spawnThing, transform.position, Quaternion.identity);
         }
         
     }
@@ -34,7 +34,6 @@ public class SpawnOnDestroy : MonoBehaviour {
             item.transform.parent = null;
             item.emissionRate = 0;
             item.enableEmission = false;
-
         }
 
         GameObject.Destroy(particles);
