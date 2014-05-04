@@ -151,6 +151,7 @@ public class EnemyAttributeFactory : MonoBehaviour
     // The costs for each type of enemy.
     public int _ogreCost = 10;
     public int _ghostCost = 6;
+    public int _trollCost = 8;
     public int _demonCost = 20;
 
     #endregion
@@ -161,6 +162,7 @@ public class EnemyAttributeFactory : MonoBehaviour
 
         EnemyList.Add(new EnemyType("OgreEnemy", _ogreCost)); // Add each type of prefab to the master list.
         EnemyList.Add(new EnemyType("GhostEnemy", _ghostCost));
+        EnemyList.Add(new EnemyType("TrollEnemy", _trollCost));
         // EnemyList.Add(new EnemyType("DemonEnemy", _demonCost));
     }
 
@@ -187,24 +189,17 @@ public class EnemyAttributeFactory : MonoBehaviour
 
         List<GameObject> spawnList = new List<GameObject>();
 
-        spawnList.Add(enemyPool[0].Prefab);
-        return spawnList;
-
-        while (enemyPool.Count > 0 && spawnList.Count <= maxCount && resources > resourceCutoff)
+        while (enemyPool.Count > 0 && maxCount > spawnList.Count  && resources > resourceCutoff)
         {
-            Debug.Log(enemyPool.Last().Cost > resources);
             if (enemyPool.Last().Cost > resources)
             {
-                enemyPool.RemoveAt(EnemyList.Count - 1);
-                enemyPool.TrimExcess();
+                enemyPool.RemoveAt(enemyPool.Count - 1);
                 continue;
             }
 
             else
             {
-                int i = UnityEngine.Random.Range(0, EnemyList.Count - 1);
-                Debug.Log(enemyPool.Count);
-                Debug.Log(i);
+                int i = UnityEngine.Random.Range((int)0, (int)enemyPool.Count);
                 EnemyType randomEnemy = enemyPool[i];
                 spawnList.Add(randomEnemy.Prefab);
                 resources = Mathf.Max(0, resources - randomEnemy.Cost);
