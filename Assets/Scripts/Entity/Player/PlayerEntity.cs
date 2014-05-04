@@ -56,17 +56,17 @@ public class PlayerEntity : Entity
 
         else
         {
-            abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], 1);
-            abilityManager.AddAbility(GameManager.Abilities["icebolt"], 2);
-            abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 3);
-            abilityManager.AddAbility(GameManager.Abilities["frozenorb"], 4);
-            abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
+            abilityManager.AddAbility(GameManager.Abilities["fireball"], 1);
+            abilityManager.AddAbility(GameManager.Abilities["flamestrike"], 2);
+            abilityManager.AddAbility(GameManager.Abilities["fireballturret"], 3);
+            //abilityManager.AddAbility(GameManager.Abilities["firemine"], 4);
+            abilityManager.AddAbility(GameManager.Abilities["fireballbarrage"], 5);
 
-            abilityIndexDict["chaosbolt"] = 1;
-            abilityIndexDict["icebolt"] = 2;
-            abilityIndexDict["aoefreeze"] = 3;
-            abilityIndexDict["frozenorb"] = 4;
-            abilityIndexDict["bladewaltz"] = 5;
+            abilityIndexDict["fireball"] = 1;
+            abilityIndexDict["flamestrike"] = 2;
+            abilityIndexDict["fireballturret"] = 3;
+            //abilityIndexDict["firemine"] = 4;
+            abilityIndexDict["fireballbarrage"] = 5;
         }
 
 	}

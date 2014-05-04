@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
     public GameObject FireballExplosion;
     public GameObject ChaosboltExplosion;
 
+    public GameObject FlamestrikeParticles;
+
     public GameObject BlinkStrikeProjectile;
     public GameObject BlinkParticles;
     public GameObject BladeWaltzParticles;
@@ -89,6 +91,7 @@ public class GameManager : MonoBehaviour
 
 
         Abilities["hadouken"] = new Hadouken(AttackType.PBAOE, DamageType.AIR, 5.0f, 360.0f, 3.0f, 10.0f, "hadouken", "Hadouken", HadoukenParticles);
+        Abilities["flamestrike"] = new Flamestrike(AttackType.PBAOE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 10.0f, "flamestrike", "Flamestrike", FlamestrikeParticles);
         Abilities["deathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 5.0f, 360.0f, 3.0f, 15.0f, "deathgrip", "AoE Deathgrip", DeathgripParticles);
         Abilities["cleave"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 0.0f, 5.0f, "cleave", "Cleave", CleaveParticles);
         Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 5.0f, 45.0f, 1.0f, 10.0f, "fusrodah", "Fus Roh Dah", FusRoDahParticles);
@@ -98,7 +101,7 @@ public class GameManager : MonoBehaviour
 
 
         Abilities["arrow"] = new Arrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 5.0f, "arrow", "Arrow", ArrowParticles);
-        Abilities["fireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.1f, 10.0f, "fireball", "Fireball", FireballExplosion);
+        Abilities["fireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.0f, 10.0f, "fireball", "Fireball", FireballExplosion);
         Abilities["firemine"] = new FireMine(AttackType.PROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 4.0f, 1.0f, "firemine", "Fire Mine", FiremineParticles);
         Abilities["GETOVERHERE"] = new GETOVERHERE(AttackType.PROJECTILE, DamageType.SHADOW, 1.0f, 0.0f, 3.0f, 0.1f, "GETOVERHERE", "Shadow Pull", GETOVERHEREParticles);
         Abilities["normalmine"] = new NormalMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 360.0f, 4.0f, 1.0f, "normalmine", "Mine", MineParticles);
@@ -116,7 +119,6 @@ public class GameManager : MonoBehaviour
         Abilities["aoefreeze"] = new AOEfreeze(AttackType.PBAOE, DamageType.WATER, 5.0f, 360f, 2f, 1f, "aoefreeze", "Flashfreeze", AOEFreezeParticles);
 
         Abilities["onhitnormal"] = new OnHitNormal(AttackType.MELEE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, "onhitnormal", "On Hit Normal", OnHitNormalParticles);
-
 
         Abilities["chaosbarrage"] = new ChaosBarrageAbility(AttackType.STATUS, DamageType.NONE, 0.0f, 0.0f, 0.0f, 0.0f, "chaosbarrage", "Chaos Barrage", ChaosBarrageParticles);
         Abilities["fireballbarrage"] = new FireballBarrageAbility(AttackType.STATUS, DamageType.NONE, 0.0f, 0.0f, 5.0f, 0.0f, "fireballbarrage", "Fireball Barrage", FireballBarrageParticles);
