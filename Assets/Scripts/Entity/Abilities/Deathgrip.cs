@@ -33,6 +33,8 @@ public class Deathgrip : Ability
 
                 }
 
+                GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, enemy));
+
             }
         }
 
@@ -43,8 +45,11 @@ public class Deathgrip : Ability
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
                 DoPhysics(source, enemy);
+                GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, enemy));
             }
         }
+
+
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -168,6 +173,31 @@ public class Deathgrip : Ability
         float normalizedMagnitude = Vector3.Distance(target.transform.position, source.transform.position);
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
         target.GetComponent<MovementFSM>().AddForce(relativeVector * force * 2, 0.1f, ForceMode.Impulse);
+    }
+
+    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target)
+    {
+        GameObject particles;
+
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position, target.transform.rotation);
+
+        GameObject secondaryParticles = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DeathgripTrailParticles, source.transform.position, source.transform.rotation);
+
+        yield return new WaitForSeconds(time);
+
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem item in particleSystems)
+        {
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            //item.enableEmission = false;
+
+        }
+
+        GameObject.Destroy(particles);
+
+        yield return null;
     }
 
 }
