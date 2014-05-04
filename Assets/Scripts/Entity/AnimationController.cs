@@ -11,6 +11,8 @@ public class AnimationController : MonoBehaviour
     public AnimationClip _run;
     public AnimationClip _death;
 
+    public AnimationClip _sleep;
+
     public AnimationClip[] _meleeAnimations;
     public AnimationClip[] _spellAnimations;
     public AnimationClip[] _miscAnimations;
@@ -41,6 +43,18 @@ public class AnimationController : MonoBehaviour
         animation.AddClip(_death, "Death");
         animation["Death"].layer = 1;
 
+        if (_sleep != null)
+        {
+            animation.AddClip(_sleep, "Sleep");
+            animation["Sleep"].layer = 1;
+        }
+
+        else
+        {
+            animation.AddClip(_idle, "Sleep");
+            animation["Sleep"].layer = 1;
+        }
+
         ProcessCombatAnimations(_meleeAnimations);
         ProcessCombatAnimations(_spellAnimations);
         ProcessCombatAnimations(_miscAnimations);
@@ -68,6 +82,14 @@ public class AnimationController : MonoBehaviour
     public void Death()
     {
         animation.Play("Death", PlayMode.StopAll);
+    }
+
+    public void Sleep()
+    {
+        if (!animation.IsPlaying("Sleep"))
+        {
+            animation.Play("Sleep", PlayMode.StopAll);
+        }
     }
 
     /// <summary>
