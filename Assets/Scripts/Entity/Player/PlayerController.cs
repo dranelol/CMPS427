@@ -137,6 +137,42 @@ public class PlayerController : MonoBehaviour {
                 moveFSM.SetPath(targetPosition);
             }
         }
+        #region moving and turning
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            if (mouseOverGUI == true)
+            {
+                return;
+            }
+
+            moveFSM.LockMovement();
+        }
+
+        if(Input.GetKey(KeyCode.LeftShift))
+        {
+            int terrainMask = LayerMask.NameToLayer("Terrain");
+
+            int enemyMask = LayerMask.NameToLayer("Enemy");
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            RaycastHit target;
+
+            if (Physics.Raycast(ray, out target, Mathf.Infinity, 1 << terrainMask))
+            {
+                moveFSM.Turn(target.point);
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            if (mouseOverGUI == true)
+            {
+                return;
+            }
+
+            moveFSM.UnlockMovement();
+        }
 
         // If the move/attack key was pressed...
         if (Input.GetAxis("Move/Attack") != 0) 
@@ -189,6 +225,9 @@ public class PlayerController : MonoBehaviour {
 			}
 
         }
+
+        
+        #endregion
 
         #region abilities
 
