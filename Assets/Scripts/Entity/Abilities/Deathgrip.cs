@@ -24,7 +24,8 @@ public class Deathgrip : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
-                    DoPhysics(source, enemy);
+                    //DoPhysics(source, enemy);
+                    DoBlink(source, enemy);
 
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
@@ -44,7 +45,8 @@ public class Deathgrip : Ability
             {
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
-                DoPhysics(source, enemy);
+                //DoPhysics(source, enemy);
+                DoBlink(source, enemy);
                 GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, enemy));
             }
         }
@@ -175,6 +177,13 @@ public class Deathgrip : Ability
         target.GetComponent<MovementFSM>().AddForce(relativeVector * force * 2, 0.1f, ForceMode.Impulse);
     }
 
+    private void DoBlink(GameObject source, GameObject target)
+    {
+        // warp target to source
+        target.GetComponent<NavMeshAgent>().Warp(source.transform.position);
+        
+    }
+
     public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target)
     {
         GameObject particles;
@@ -182,6 +191,10 @@ public class Deathgrip : Ability
         particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position, target.transform.rotation);
 
         GameObject secondaryParticles = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DeathgripTrailParticles, source.transform.position, source.transform.rotation);
+        BounceBetween bounce = secondaryParticles.GetComponent<BounceBetween>();
+
+        bounce.origin = source;
+        bounce.target = target;
 
         yield return new WaitForSeconds(time);
 
