@@ -13,8 +13,6 @@ public class PlayerController : MonoBehaviour {
 	public float RotationSpeed = 10f;
     public NavMeshAgent agent;
 
-    private bool hadouken = false;
-
     public PlayerEntity entity;
     public MovementFSM moveFSM;
     public CombatFSM combatFSM;
@@ -49,16 +47,18 @@ public class PlayerController : MonoBehaviour {
 
         DontDestroyOnLoad(transform.gameObject);
 
+        Instantiate(gameManager.SpawnInParticles, transform.position, Quaternion.identity);
+
     }
 
 	// Use this for initialization
 	void Start () {
 		targetPosition = Vector3.zero;
         agent = GetComponent<NavMeshAgent>();
-		agent.acceleration = 100f;
         //agent.updateRotation = false;
 
         agent.avoidancePriority = 1;
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
 
         
 

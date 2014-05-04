@@ -14,23 +14,21 @@ public class AIPursuit : StateMachine
         flee
     }
 
-    
     private MovementFSM MoveFSM;
-    private NavMeshAgent NavAgent;
     private Entity entity;
     private CombatFSM combatFSM;
 
     private GameObject currentTarget = null;
 
-    private GameManager gameManager;
+    private int _nextAbilityIndex;
+    private List<int> _abilityIndices;
+    private AbilityManager _abilityManager;
+    private float _adjustedRange;
 
-    private List<Ability> _abilityList = new List<Ability>(); // List of usuable abilities. This will be sorted by cooldown time then damagemod (for now)
-
-
-    
+    public bool doesFlee;
     public float fleeDistance; //Max distance to travel from the position the enemy starts fleeing from.
     public float fleeTime; //Time the enemy will flee before returning to attack
-    private Vector3 fleeStartLocation; //The position the enemy starts to flee from. 
+
     private float fleeEnd; //Future time the enemy will stop fleeing.
     private bool hasFled;
 
@@ -62,22 +60,19 @@ public class AIPursuit : StateMachine
         StartMachine(PursuitStates.inactive);
 
         MoveFSM = GetComponent<MovementFSM>();
-        NavAgent = GetComponent<NavMeshAgent>();
         entity = GetComponent<Entity>();
         combatFSM = GetComponent<CombatFSM>();
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-
 
         hasFled = false;
-        
+        doesFlee = true;
     }
 
     void Start()
     {
-        // Make Enemy Entity class later
-        
+        _abilityManager = GetComponent<AbilityManager>();
+        _nextAbilityIndex = 0;
+        _adjustedRange = 5f;
 
-        _abilityList.Add(entity.abilityManager.abilities[0]);
     }
 
     #region public functions
@@ -96,13 +91,13 @@ public class AIPursuit : StateMachine
         Transition(PursuitStates.inactive);
     }
 
+
     public bool IsFleeing()
     {
         return (PursuitStates)CurrentState == PursuitStates.flee;
     }
 
     #endregion
-
 
     #region private functions
 
@@ -119,8 +114,6 @@ public class AIPursuit : StateMachine
 
         Vector3 targetPosition = new Vector3(randomDirection.x, 0, randomDirection.y);
 
-
-
         targetPosition += currentPosition;
         targetPosition.y = currentPosition.y;
 
@@ -135,10 +128,8 @@ public class AIPursuit : StateMachine
             targetPosition.y = currentPosition.y;
         }
 
-
         MoveFSM.SetPath(targetPosition);
     }
-
 
     private void Flee()
     {
@@ -180,14 +171,17 @@ public class AIPursuit : StateMachine
             targetPosition = new Vector3(newdirection.x, 0, newdirection.z);
         }
 
-        
-
         targetPosition += transform.position;
         targetPosition.y = transform.position.y;
 
-        Debug.Log("target position: " + targetPosition.ToString());
+
 
         MoveFSM.SetPath(targetPosition);
+    }
+
+    private void CalculateAbilityRange()
+    {
+        _adjustedRange = _abilityManager.abilities[_nextAbilityIndex].Range + MoveFSM.Radius + currentTarget.GetComponent<MovementFSM>().Radius;
     }
 
     #endregion
@@ -210,46 +204,33 @@ public class AIPursuit : StateMachine
     {
         if ((MovementFSM.MoveStates)MoveFSM.CurrentState == MovementFSM.MoveStates.idle)
         {
-            Vector3 direction = currentTarget.transform.position - transform.position;
-
-            transform.forward = Vector3.Slerp(transform.forward, new Vector3(direction.x, 0, direction.z).normalized, Time.deltaTime * 10f);
+            MoveFSM.Turn(currentTarget.transform.position);
         }
 
-        if ((entity.CurrentHP < (entity.currentAtt.Health * 0.2f)) && hasFled == false)
+        if (doesFlee && (entity.CurrentHP < (entity.currentAtt.Health * 0.2f)) && hasFled == false)
         {
-
             Transition(PursuitStates.flee);
         }
 
         else
         {
-            if (entity.abilityManager.activeCoolDowns[0] > Time.time)
-            {
-                float timeLeft = entity.abilityManager.activeCoolDowns[0] - Time.time;
-                //Debug.Log("Enemy Ability 1 Cooldown Left: " + timeLeft.ToString());
-            }
-
-
             if (currentTarget != null)
             {
-                if (combatFSM.IsIdle())
+                if (combatFSM.IsIdle() && _abilityManager.activeCoolDowns[_nextAbilityIndex] <= Time.time) // check resource as well
                 {
                     Vector3 directionToTarget = currentTarget.transform.position - transform.position;
 
                     // If the enemy is within range of its next attack, transition to attack.
-                    if (directionToTarget.magnitude < _abilityList[0].Range - NavAgent.radius)
+                    if (directionToTarget.magnitude < _adjustedRange)
                     {
                         RaycastHit hit;
 
-
                         // Cast a ray from the enemy to the player, ignoring other enemy colliders.
-                        bool raycastSuccess = Physics.Raycast(transform.position, directionToTarget, out hit, _abilityList[0].Range, ~(1 << LayerMask.NameToLayer("Enemy")));
-
+                        bool raycastSuccess = Physics.Raycast(transform.position, directionToTarget, out hit, _adjustedRange, ~(1 << LayerMask.NameToLayer("Enemy")));
 
                         // if we succeeded our raycast, and we hit the player first: we're in attack range and LoS
                         if (raycastSuccess == true && hit.transform.tag == "Player")
                         {
-                            //MoveFSM.Stop();
                             Transition(PursuitStates.attack);
                         }
                     }
@@ -261,7 +242,7 @@ public class AIPursuit : StateMachine
                     }
                 }
 
-                else if (Vector3.Distance(transform.position, currentTarget.transform.position) <= _abilityList[0].Range + MoveFSM.Radius + currentTarget.GetComponent<NavMeshAgent>().radius + MoveFSM.StoppingDistance)
+                else if (Vector3.Distance(transform.position, currentTarget.transform.position) <= _adjustedRange)
                 {
                     MoveFSM.Stop();
                 }
@@ -281,70 +262,49 @@ public class AIPursuit : StateMachine
 
     void attack_Update()
     {
-        if ((entity.CurrentHP < (entity.currentAtt.Health * 0.2f)) && hasFled == false)
+        if (currentTarget != null)
         {
+            Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
 
-            Transition(PursuitStates.flee);
-        }
+            //check resource
 
-        else
-        {
-            if (currentTarget != null && entity.abilityManager.activeCoolDowns[0] <= Time.time)
+            if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.MELEE)
             {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
-
-                if (entity.abilityManager.abilities[0].AttackType == AttackType.MELEE)
-                {
-                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
-                    entity.abilityManager.abilities[0].AttackHandler(gameObject, entity, false);
-                    GetComponent<AnimationController>().Attack(1);
-                }
-
-                else if (entity.abilityManager.abilities[0].AttackType == AttackType.PROJECTILE)
-                {
-                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                    // if this is a projectile, attackhandler is only called when the projectile scores a hit.
-                    // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
-
-                    entity.abilityManager.abilities[0].SpawnProjectile(gameObject, gameObject, (currentTarget.transform.position - transform.position).normalized, entity.abilityManager.abilities[0].ID, false);
-
-                }
-
-                else if (entity.abilityManager.abilities[0].AttackType == AttackType.HONINGPROJECTILE)
-                {
-                    //combatFSM.Attack(0.0f);
-
-                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-
-                    // if this is a projectile, attackhandler is only called when the projectile scores a hit.
-                    // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
-
-                    entity.abilityManager.abilities[0].SpawnProjectile(gameObject, currentTarget.transform.position, gameObject, (currentTarget.transform.position - transform.position).normalized, entity.abilityManager.abilities[0].ID, false);
-                }
-
-                else
-                {
-                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                    entity.abilityManager.abilities[0].AttackHandler(gameObject, entity, false);
-                }
-
-                entity.abilityManager.activeCoolDowns[0] = Time.time + entity.abilityManager.abilities[0].Cooldown;
-                /*
-                _abilityList[0].AttackHandler(gameObject, false);
-                _abilityList.OrderBy(Ability => Ability.Cooldown).ThenBy(Ability => Ability.DamageMod); Use this later */
-                Transition(PursuitStates.seek);
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                _abilityManager.abilities[_nextAbilityIndex].AttackHandler(gameObject, entity, false);
             }
 
-            else if (entity.abilityManager.activeCoolDowns[0] > Time.time)
+            else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.PROJECTILE)
             {
-                Transition(PursuitStates.seek);
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
+            }
+
+            else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.HONINGPROJECTILE)
+            {
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, currentTarget.transform.position, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
             }
 
             else
             {
-                //Transition(PursuitStates.inactive); NO
+                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                _abilityManager.abilities[_nextAbilityIndex].AttackHandler(gameObject, entity, false);
             }
+
+            _abilityManager.activeCoolDowns[_nextAbilityIndex] = Time.time + _abilityManager.abilities[_nextAbilityIndex].Cooldown;
+            // Incurr resource cost
+            // play animation
+            GetComponent<AnimationController>().Attack(1); // DELETE THIS
+
+            CalculateAbilityRange();
+
+            Transition(PursuitStates.seek);
+        }
+
+        else if (_abilityManager.activeCoolDowns[_nextAbilityIndex] > Time.time)
+        {
+            Transition(PursuitStates.seek);
         }
     }
 
@@ -354,7 +314,6 @@ public class AIPursuit : StateMachine
 
     IEnumerator flee_EnterState()
     {
-        fleeStartLocation = transform.position;
         fleeEnd = Time.time + fleeTime;
         hasFled = true;
         Flee();

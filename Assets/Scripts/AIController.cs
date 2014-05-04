@@ -410,6 +410,8 @@ public class AIController : StateMachine
         Destroy(rigidbody);
 
         GetComponent<AnimationController>().Death();
+
+        #region heal orb spawning
         GameObject healOrb = (GameObject)Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnvironmentHealOrbProjectile, new Vector3(transform.position.x, transform.position.y + 2, transform.position.z), Quaternion.identity);
 
         ProjectileBehaviour healOrbProjectile = healOrb.GetComponent<ProjectileBehaviour>();
@@ -420,18 +422,35 @@ public class AIController : StateMachine
         healOrbProjectile.timeToActivate = 5.0f;
         
 
-        Vector3 randPosition = transform.position + UnityEngine.Random.onUnitSphere;
-
+        Vector3 randPosition = transform.position + UnityEngine.Random.onUnitSphere*3;
+        Vector3 randDirection = (randPosition - transform.position).normalized;
+        randPosition.Set(randPosition.x, 0, randPosition.z);
         healOrbProjectile.target = randPosition;
 
-        //randPosition.Set(randPosition.x, randPosition.y + 1, randPosition.z);
-
-        Vector3 randDirection = (randPosition - transform.position).normalized;
-
         healOrbProjectile.transform.rotation = Quaternion.LookRotation(randDirection);
+        #endregion
 
-        
+        yield return new WaitForSeconds(5.0f);
 
+        #region loot spawning
+
+        #endregion
+
+        #region chest spawning
+
+        #endregion
+
+        #region fading
+
+
+        #endregion
+
+
+        #region cleanup and destroy
+
+        Destroy(gameObject);
+
+        #endregion
         yield return null;
     }
 

@@ -103,7 +103,7 @@ public class ProjectileBehaviour : MonoBehaviour
 
     void Awake()
     {
-        ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
+        //ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
 
         // if we need to fuck with particle scale, do it here
 
