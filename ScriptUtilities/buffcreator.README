@@ -7,7 +7,7 @@ Order for fields in the input file for the buffcreator script (all separated by 
 5* - One of the Functional Modules defined in Aura.cs
 6* - The ModType, DamageType, or attribute needed by the buff
 7 - Magnitude
-8 - Icon Texture File Name
+8 - Icon Texture File Name (without file type)
 9 - Particle Effect Name
 10 - Maximum Buff Count
 11 - Initial Buff Count

@@ -773,7 +773,7 @@ public class PlayerController : MonoBehaviour {
         {
             LevelUp();
             entity.Experience = entity.NextLevelExperience - entity.Experience;
-            entity.NextLevelExperience += 100;
+            entity.NextLevelExperience *= 2;
         }
 
     }
