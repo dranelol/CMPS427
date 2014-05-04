@@ -88,7 +88,7 @@ public class EnemyAttributeFactory : MonoBehaviour
     public const int MIN_NODE_COUNT = 1;
     public const int MAX_NODE_COUNT = 10;
 
-    public const float MIN_PERCENT_RESOURCES = 0.75f;
+    public const float MIN_PERCENT_RESOURCES = 0.25f;
 
     public const string PREFAB_FOLDER_PATH = "Enemy Prefabs/";
 
@@ -150,6 +150,8 @@ public class EnemyAttributeFactory : MonoBehaviour
 
     // The costs for each type of enemy.
     public int _ogreCost = 10;
+    public int _ghostCost = 6;
+    public int _demonCost = 20;
 
     #endregion
 
@@ -158,6 +160,8 @@ public class EnemyAttributeFactory : MonoBehaviour
         EnemyList = new List<EnemyType>();
 
         EnemyList.Add(new EnemyType("OgreEnemy", _ogreCost)); // Add each type of prefab to the master list.
+        EnemyList.Add(new EnemyType("GhostEnemy", _ghostCost));
+        // EnemyList.Add(new EnemyType("DemonEnemy", _demonCost));
     }
 
     public static List<GameObject> GetEnemies(int resources, int maxCount, int maxCost, int minCost)
@@ -167,7 +171,7 @@ public class EnemyAttributeFactory : MonoBehaviour
         maxCost = Mathf.Clamp(maxCost, MIN_ENEMY_COST, MAX_ENEMY_COST);
         minCost = Mathf.Clamp(minCost, MIN_ENEMY_COST, maxCost);
 
-        int resourceCutoff = Mathf.Max(1, resources - (int)Math.Ceiling(UnityEngine.Random.Range((float)resources * MIN_PERCENT_RESOURCES, (float)resources)));
+        int resourceCutoff = (int)Math.Ceiling(UnityEngine.Random.Range(1f, (float)resources * MIN_PERCENT_RESOURCES));
 
         List<EnemyType> enemyPool = new List<EnemyType>(); // The list of possible enemies to spawn.
 
@@ -183,18 +187,25 @@ public class EnemyAttributeFactory : MonoBehaviour
 
         List<GameObject> spawnList = new List<GameObject>();
 
+        spawnList.Add(enemyPool[0].Prefab);
+        return spawnList;
+
         while (enemyPool.Count > 0 && spawnList.Count <= maxCount && resources > resourceCutoff)
         {
-            Debug.Log(resourceCutoff + ", " + resources);
+            Debug.Log(enemyPool.Last().Cost > resources);
             if (enemyPool.Last().Cost > resources)
             {
                 enemyPool.RemoveAt(EnemyList.Count - 1);
+                enemyPool.TrimExcess();
                 continue;
             }
 
             else
             {
-                EnemyType randomEnemy = enemyPool[UnityEngine.Random.Range(0, EnemyList.Count)];
+                int i = UnityEngine.Random.Range(0, EnemyList.Count - 1);
+                Debug.Log(enemyPool.Count);
+                Debug.Log(i);
+                EnemyType randomEnemy = enemyPool[i];
                 spawnList.Add(randomEnemy.Prefab);
                 resources = Mathf.Max(0, resources - randomEnemy.Cost);
             }
