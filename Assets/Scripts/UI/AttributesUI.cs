@@ -7,7 +7,7 @@ public class AttributesUI : UIState
 {
     private const float WIDTH = 400;
     private const float HEIGHT = 500;
-    private Rect windowDim;
+    private Rect windowDimensions;
 
     private GUIStyle labelStyle;
 
@@ -21,7 +21,7 @@ public class AttributesUI : UIState
     public AttributesUI(int id, UIController controller)
         : base(id, controller)
     {
-        windowDim = new Rect(Screen.width - (WIDTH + 50), Screen.height / 2 - HEIGHT / 2, WIDTH, HEIGHT);
+        windowDimensions = new Rect(Screen.width - (WIDTH + 50), Screen.height / 2 - HEIGHT / 2, WIDTH, HEIGHT);
         
 
 
@@ -63,11 +63,28 @@ public class AttributesUI : UIState
 
     public override void OnGui()
     {
-        GUI.Window(0, windowDim, OnWindow, "Attributes");
+        GUI.Window(0, windowDimensions, OnWindow, "Attributes");
     }
 
     void OnWindow(int windowID)
     {
+
+        #region Mouse in GUI check
+
+        Vector2 mPos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
+        if (mPos.x > windowDimensions.x
+            && mPos.x < windowDimensions.width + windowDimensions.x
+            && mPos.y > windowDimensions.y
+            && mPos.y < windowDimensions.height + windowDimensions.y)
+        {
+            Controller.PlayerController.MouseOverGUI = true;
+        }
+        else
+        {
+            Controller.PlayerController.MouseOverGUI = false;
+        }
+
+        #endregion
 
         float rowWidth = (WIDTH - 5) / 2;
         float rowHeight = 20f;

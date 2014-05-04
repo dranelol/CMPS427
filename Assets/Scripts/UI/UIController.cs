@@ -15,7 +15,8 @@ public class UIController : MonoBehaviour
         LEVELUP,
         TALENT,
         SPELLBOOK,
-        ATTRIBUTES
+        ATTRIBUTES,
+        LOOT
     }
 
     private States guiState;
@@ -32,6 +33,12 @@ public class UIController : MonoBehaviour
 
     private PlayerController playerController;
     public PlayerController PlayerController { get { return playerController; } }
+
+    private Inventory chestInventory;
+    public Inventory ChestInventory
+    {
+        get { return chestInventory; }
+    }
 
     private Vector2 nativeResolution;
     public Vector2 NativeResolution { get { return nativeResolution; } }
@@ -60,6 +67,7 @@ public class UIController : MonoBehaviour
         player = GameObject.FindWithTag("Player").GetComponent<PlayerEntity>();
         
 
+
         guiState = States.INGAME;
 
         stateMachine = new UIStateMachine((int)States.MACHINE_ROOT, this);
@@ -70,6 +78,7 @@ public class UIController : MonoBehaviour
         stateMachine.AddState(new TalentUI((int)States.TALENT, this));
         stateMachine.AddState(new SpellbookUI((int)States.SPELLBOOK, this));
         stateMachine.AddState(new AttributesUI((int)States.ATTRIBUTES, this));
+        stateMachine.AddState(new LootUI((int)States.LOOT, this));
 
         style.normal.textColor = Color.white;
 
@@ -154,5 +163,10 @@ public class UIController : MonoBehaviour
         GUI.matrix = Matrix4x4.TRS(new Vector3(0f, 0f, 0f), Quaternion.identity, new Vector3(rx, ry, 1));
 
         stateMachine.OnGui();
+    }
+
+    public void SetInventory(Inventory i)
+    {
+        chestInventory = i;
     }
 }

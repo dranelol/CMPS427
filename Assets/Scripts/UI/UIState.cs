@@ -32,5 +32,8 @@ public abstract class UIState
 	public abstract void OnGui();
 
     public virtual void Enter() { }
-    public virtual void Exit() { }
+    public virtual void Exit() 
+    {
+        Controller.PlayerController.MouseOverGUI = false;
+    }
 }

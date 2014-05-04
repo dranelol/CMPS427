@@ -38,6 +38,11 @@ public class Inventory
         items.Remove(item);
     }
 
+    public bool IsEmpty()
+    {
+        return (items.Count <= 0);
+    }
+
     /// <summary>
     /// Saves current items.
     /// </summary>

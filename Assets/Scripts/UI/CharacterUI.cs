@@ -56,17 +56,14 @@ public class CharacterUI : UIState
 
     public override void Update()
     {
-        if (Controller.DraggedEquip != null)
-        {
-            Debug.Log("Equipment: "+ Controller.DraggedEquip.equipmentName);
-        }
+        
     }
 
     public override void OnGui()
     {
         GUI.depth = 0;
         
-        GUI.Window(0, windowDimensions, OnWindow, "Character");
+        Rect windowRect = GUI.Window(0, windowDimensions, OnWindow, "Character");
         if (hoverEquip != null)
         {
 
@@ -109,11 +106,31 @@ public class CharacterUI : UIState
             thisStyle.normal.textColor = Color.white;
 
             GUI.Box(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, 250, 127), thisContent, thisStyle);
+
+            
+
         }
     }
 
     void OnWindow(int windowID)
     {
+
+        #region Mouse in GUI check
+
+        Vector2 mPos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
+        if (mPos.x > windowDimensions.x 
+            && mPos.x < windowDimensions.width + windowDimensions.x
+            && mPos.y > windowDimensions.y
+            && mPos.y < windowDimensions.height + windowDimensions.y)
+        {
+            Controller.PlayerController.MouseOverGUI = true;
+        }
+        else
+        {
+            Controller.PlayerController.MouseOverGUI = false;
+        }
+
+        #endregion
 
         slotRects = new Dictionary<Rect, equipment>();
 
@@ -181,6 +198,8 @@ public class CharacterUI : UIState
 
         //selection = GUI.Toolbar(new Rect(10, 300, WIDTH - 20, 50), selection, HEADERS);
 
+        #region Inventory Area
+
         int viewSize = (Controller.Player.Inventory.Max * ((totalInvWidth / rowLength) + 2)) / rowLength;
 
         Rect viewArea = new Rect(0, 0, 10, viewSize);
@@ -234,7 +253,7 @@ public class CharacterUI : UIState
         TooltipInventory(slotRects);
 
         GUI.EndScrollView();
-        
+        #endregion
     }
 
     void DrawStats()

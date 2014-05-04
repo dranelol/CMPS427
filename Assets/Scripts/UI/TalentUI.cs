@@ -7,7 +7,7 @@ public class TalentUI : UIState
 {
     private const float WIDTH = 800;  //Total width of the window.
     private const float HEIGHT = 500; //Total height of the window.
-    private Rect windowDim;
+    private Rect windowDimensions;
     private List<Talent> mightTree;  //List of the talents in the might tree.
     private List<Talent> magicTree;  //List of the talents in the magic tree.
     private const int bufferSpace = 5;  //Space between most GUI objects.
@@ -21,7 +21,7 @@ public class TalentUI : UIState
     public TalentUI(int id, UIController controller)
         : base(id, controller)
     {
-        windowDim = new Rect(Screen.width - (WIDTH + 50), Screen.height / 2 - HEIGHT / 2, WIDTH, HEIGHT);
+        windowDimensions = new Rect(Screen.width - (WIDTH + 50), Screen.height / 2 - HEIGHT / 2, WIDTH, HEIGHT);
         
 
         titleStyle = new GUIStyle();
@@ -59,12 +59,29 @@ public class TalentUI : UIState
 
     public override void OnGui()
     {
-        GUI.Window(0, windowDim, OnWindow, "Talents");
+        GUI.Window(0, windowDimensions, OnWindow, "Talents");
     }
 
     void OnWindow(int windowID)
     {
-  
+
+        #region Mouse in GUI check
+
+        Vector2 mPos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
+        if (mPos.x > windowDimensions.x
+            && mPos.x < windowDimensions.width + windowDimensions.x
+            && mPos.y > windowDimensions.y
+            && mPos.y < windowDimensions.height + windowDimensions.y)
+        {
+            Controller.PlayerController.MouseOverGUI = true;
+        }
+        else
+        {
+            Controller.PlayerController.MouseOverGUI = false;
+        }
+
+        #endregion
+
         List<Talent> tempTalents = new List<Talent>();
         GUIContent tempTalentLabel = new GUIContent();
         int count = 0;
