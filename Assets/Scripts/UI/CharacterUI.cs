@@ -50,6 +50,8 @@ public class CharacterUI : UIState
 
     public override void Exit()
     {
+        base.Exit();
+
         Controller.Camera.enabled = false;
         titsMcGee = Controller.Camera.guiTexture;
     }

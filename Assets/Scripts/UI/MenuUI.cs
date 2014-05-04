@@ -20,7 +20,9 @@ public class MenuUI : UIState {
 
     public override void Exit()
     {
+        base.Exit();
         Debug.Log("Exiting Menu state.");
+
     }
 
     public override void Update()

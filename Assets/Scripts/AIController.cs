@@ -445,8 +445,12 @@ public class AIController : StateMachine
 
         #endregion
 
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>().Experience += 25;
+
 
         #region cleanup and destroy
+
+
 
         Destroy(gameObject);
 

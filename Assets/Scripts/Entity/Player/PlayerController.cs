@@ -196,6 +196,12 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetMouseButton(1))
         {
+
+            if (mouseOverGUI == true)
+            {
+                return;
+            }
+            
             if (entity.abilityManager.abilities[1] != null)
             {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[1] <= Time.time)
