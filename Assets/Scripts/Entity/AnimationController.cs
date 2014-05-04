@@ -15,6 +15,10 @@ public class AnimationController : MonoBehaviour
     public AnimationClip[] _spellAnimations;
     public AnimationClip[] _miscAnimations;
 
+    public static float DEFAULT_CHARACTER_RADIUS = 0.3f;
+
+    private float _baseAnimationSpeed;
+
     #endregion
 
     #region Initialization
@@ -40,6 +44,11 @@ public class AnimationController : MonoBehaviour
         ProcessCombatAnimations(_meleeAnimations);
         ProcessCombatAnimations(_spellAnimations);
         ProcessCombatAnimations(_miscAnimations);
+    }
+
+    void Start()
+    {
+        _baseAnimationSpeed = GetComponent<MovementFSM>().Radius / DEFAULT_CHARACTER_RADIUS;
     }
 
     #endregion
@@ -110,6 +119,11 @@ public class AnimationController : MonoBehaviour
         {
             Debug.LogWarning("There is no animation named " + animationName + ".");
         }
+    }
+
+    public void UpdateMovementSpeed(float value)
+    {
+       animation["Run"].speed = value * 1.5f;
     }
 
     #endregion

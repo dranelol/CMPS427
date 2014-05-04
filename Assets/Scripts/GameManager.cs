@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public GameObject WhirlwindParticles;
 
     public GameObject DeathgripParticles;
+    public GameObject DeathgripTrailParticles;
     public GameObject HadoukenParticles;
 
     public GameObject ArrowParticles;
@@ -33,7 +34,6 @@ public class GameManager : MonoBehaviour
     public GameObject BlinkStrikeProjectile;
     public GameObject BlinkParticles;
     public GameObject BladeWaltzParticles;
-
 
     public GameObject OnHitNormalParticles;
 
@@ -144,6 +144,7 @@ public class GameManager : MonoBehaviour
         Abilities["enemycleaveslow"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 5.0f, 5.0f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemycleavenormal"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 2.5f, 2.5f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemycleavefast"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 1.0f, 1.0f, 0f, "cleave", "Cleave", CleaveParticles);
+        Abilities["enemydeathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 5.0f, 360.0f, 2.0f, 0.0f, 0.0f, "deathgrip", "Enemy Deathgrip", DeathgripParticles);
         #endregion
         #endregion
 
