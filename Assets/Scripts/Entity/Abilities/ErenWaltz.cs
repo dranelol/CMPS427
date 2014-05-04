@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class ErenWaltz : Ability
 {
-    public ErenWaltz(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
+    public ErenWaltz(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
 
     }
@@ -145,7 +145,15 @@ public class ErenWaltz : Ability
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
-        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
+        float damageAmt;
+        if (isPlayer == true)
+        {
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
+        }
+        else
+        {
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, 0);
+        }
         Debug.Log("damage: " + damageAmt);
 
         defender.ModifyHealth(-damageAmt);

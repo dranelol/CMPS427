@@ -58,6 +58,9 @@ public class HUD_GUI : MonoBehaviour {
     private Rect CDBox2;
     private Rect CDBox3;
     private Rect CDBox4;
+    private Rect CDBox5;
+
+    private Rect TempManaBox;
 
 	private int lastDamageFrame;
 
@@ -96,8 +99,8 @@ public class HUD_GUI : MonoBehaviour {
 		HealthGroupSize.x = Screen.width * .491f;//300f;//.491f
 		HealthGroupSize.y = Screen.height * .21834f;//100f;//.21834f
 
-        InfoBox1 = new Rect(Screen.width * .5f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
-        InfoBox2 = new Rect(Screen.width * .9f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
+        InfoBox1 = new Rect(Screen.width * .5f, Screen.height * .87f, Screen.width * .45f, Screen.height * .1f);
+        InfoBox2 = new Rect(Screen.width * .91f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
 
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>();
 		currentLiquid = HealthLiquid;
@@ -105,13 +108,16 @@ public class HUD_GUI : MonoBehaviour {
 
         #region Cooldown GUI init
 
-        CDBox1 = new Rect(Screen.width * .65f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
-        CDBox2 = new Rect(Screen.width * .65f, Screen.height * .925f, Screen.width * .45f, Screen.height * .1f);
-        CDBox3 = new Rect(Screen.width * .65f, Screen.height * .950f, Screen.width * .45f, Screen.height * .1f);
-        CDBox4 = new Rect(Screen.width * .65f, Screen.height * .975f, Screen.width * .45f, Screen.height * .1f);
+        CDBox1 = new Rect(Screen.width * .65f, Screen.height * .875f, Screen.width * .45f, Screen.height * .1f);
+        CDBox2 = new Rect(Screen.width * .65f, Screen.height * .900f, Screen.width * .45f, Screen.height * .1f);
+        CDBox3 = new Rect(Screen.width * .65f, Screen.height * .925f, Screen.width * .45f, Screen.height * .1f);
+        CDBox4 = new Rect(Screen.width * .65f, Screen.height * .950f, Screen.width * .45f, Screen.height * .1f);
+        CDBox5 = new Rect(Screen.width * .65f, Screen.height * .975f, Screen.width * .45f, Screen.height * .1f);
         
 
         #endregion
+
+        TempManaBox = new Rect(Screen.width * .9f, Screen.height * .80f, Screen.width * .45f, Screen.height * .1f);
 	}
 
 	void OnGUI(){
@@ -257,7 +263,18 @@ public class HUD_GUI : MonoBehaviour {
         //GUI.color = Color.white;
         infoBoxStyle.normal.textColor = Color.white;
 
-        string qname, wname, ename, rname;
+        string qname, wname, ename, rname, rClickName;
+
+        if (player.abilityManager.abilities[1] != null)
+        {
+            rClickName = player.abilityManager.abilities[1].Name;
+        }
+        else
+        {
+            rClickName = "none";
+        }
+
+
         if (player.abilityManager.abilities[2] != null)
         {
             qname = player.abilityManager.abilities[2].Name;
@@ -266,6 +283,7 @@ public class HUD_GUI : MonoBehaviour {
         {
             qname = "none";
         }
+
         if (player.abilityManager.abilities[3] != null)
         {
             wname = player.abilityManager.abilities[3].Name;
@@ -292,7 +310,8 @@ public class HUD_GUI : MonoBehaviour {
         }
         
 
-        string attackList = "Q = " + qname + " \n"
+        string attackList = "RClick = " + rClickName + " \n"
+                          + "Q = " + qname + " \n"
                           + "W = " + wname + " \n"
                           + "E = " + ename + " \n"
                           + "R = " + rname + " \n";
@@ -307,6 +326,8 @@ public class HUD_GUI : MonoBehaviour {
 
         GUI.Label(InfoBox1, attackList, infoBoxStyle);
         GUI.Label(InfoBox2, version, infoBoxStyle);
+        GUI.Label(TempManaBox, player.CurrentResource.ToString() + "/" + player.currentAtt.Resource.ToString() + " Resource", infoBoxStyle);
+
 
         #region ability cooldown GUI
 
@@ -314,6 +335,24 @@ public class HUD_GUI : MonoBehaviour {
         float timeLeft = 0;
 
         #region ability 1
+        if (player.abilityManager.abilities[1] != null)
+        {
+            if (player.abilityManager.activeCoolDowns[1] > Time.time)
+            {
+
+
+                timeLeft = player.abilityManager.activeCoolDowns[1] - Time.time;
+            }
+            else
+            {
+                timeLeft = 0;
+            }
+
+            GUI.Label(CDBox1, player.abilityManager.abilities[1].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+        }
+        #endregion
+
+        #region ability 2
         if (player.abilityManager.abilities[2] != null)
         {
             if (player.abilityManager.activeCoolDowns[2] > Time.time)
@@ -327,11 +366,11 @@ public class HUD_GUI : MonoBehaviour {
                 timeLeft = 0;
             }
 
-            GUI.Label(CDBox1, player.abilityManager.abilities[2].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+            GUI.Label(CDBox2, player.abilityManager.abilities[2].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
         }
         #endregion
         
-        #region ability 2
+        #region ability 3
         if (player.abilityManager.abilities[3] != null)
         {
             if (player.abilityManager.activeCoolDowns[3] > Time.time)
@@ -344,11 +383,11 @@ public class HUD_GUI : MonoBehaviour {
                 timeLeft = 0;
             }
 
-            GUI.Label(CDBox2, player.abilityManager.abilities[3].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+            GUI.Label(CDBox3, player.abilityManager.abilities[3].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
         }
         #endregion
 
-        #region ability 3
+        #region ability 4
         if (player.abilityManager.abilities[4] != null)
         {
             if (player.abilityManager.activeCoolDowns[4] > Time.time)
@@ -360,11 +399,11 @@ public class HUD_GUI : MonoBehaviour {
                 timeLeft = 0;
             }
 
-            GUI.Label(CDBox3, player.abilityManager.abilities[4].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+            GUI.Label(CDBox4, player.abilityManager.abilities[4].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
         }
         #endregion
 
-        #region ability 4
+        #region ability 5
         if (player.abilityManager.abilities[5] != null)
         {
             if (player.abilityManager.activeCoolDowns[5] > Time.time)
@@ -377,7 +416,7 @@ public class HUD_GUI : MonoBehaviour {
             }
 
 
-            GUI.Label(CDBox4, player.abilityManager.abilities[5].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
+            GUI.Label(CDBox5, player.abilityManager.abilities[5].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
         }
         #endregion
 

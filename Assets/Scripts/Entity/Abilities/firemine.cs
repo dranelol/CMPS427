@@ -4,8 +4,9 @@ using System.Collections.Generic;
 
 public class FireMine : Ability
 {
-    public FireMine(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
+
+    public FireMine(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
 
     }
@@ -41,7 +42,10 @@ public class FireMine : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
-                    DoPhysics(target, enemy);
+                    if (defender.CurrentHP > 0f)
+                    {
+                        DoPhysics(target, enemy);
+                    }
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
                         enemy.GetComponent<AIController>().BeenAttacked(source);
@@ -56,7 +60,10 @@ public class FireMine : Ability
             {
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
-                DoPhysics(target, enemy);
+                if (defender.CurrentHP > 0f)
+                {
+                    DoPhysics(target, enemy);
+                }
 
             }
         }
@@ -64,14 +71,15 @@ public class FireMine : Ability
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
-
-        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
-
+        float damageAmt;
         if (isPlayer == true)
         {
-            Debug.Log("damage: " + damageAmt);
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
         }
-
+        else
+        {
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, 0);
+        }
         defender.ModifyHealth(-damageAmt);
     }
 

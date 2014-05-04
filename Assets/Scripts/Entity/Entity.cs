@@ -110,7 +110,7 @@ public class Entity : MonoBehaviour
 
     public void ModifyHealthPercentage(float deltaPercent)
     {
-        currentHP = Mathf.Clamp(currentHP + currentAtt.Health / deltaPercent, 0, currentAtt.Health);
+        currentHP = Mathf.Clamp(currentHP + (currentAtt.Health / deltaPercent), 0, currentAtt.Health);
     }
 
     public void ModifyResource(float delta)

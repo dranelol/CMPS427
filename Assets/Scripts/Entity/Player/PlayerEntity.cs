@@ -37,12 +37,12 @@ public class PlayerEntity : Entity
         base.Awake();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
+
         Experience = 0;
         Level = 1;
         nextLevelExperience = 100;
 
     }
-
 
 	public void Start() 
     {
@@ -59,9 +59,9 @@ public class PlayerEntity : Entity
                     abilityIndexDict[PlayerPrefs.GetString("ability"+i)] = i;
                 }
             }
+
             for( int i=0;i<6;i++)
             {
-                
                 if(PlayerPrefs.HasKey(i+"name") == true)
                 {
                     equipment tempequip = gameManager.EquipmentFactory.loadequipment(i+"");
@@ -69,6 +69,7 @@ public class PlayerEntity : Entity
                     {
                         Debug.Log("EQUIPPING " + tempequip.equipmentName + " FROM LOAD");
                     }
+
                     else
                     {
                         Debug.Log("CAN'T EQUIP THE "+tempequip.equipmentName+" FOR SOME REASON");
@@ -82,15 +83,17 @@ public class PlayerEntity : Entity
 
         else
         {
-            abilityManager.AddAbility(GameManager.Abilities["icebolt"], 2);
-            abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 3);
-            abilityManager.AddAbility(GameManager.Abilities["frozenorb"], 4);
-            abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
+            abilityManager.AddAbility(GameManager.Abilities["fireball"], 1);
+            abilityManager.AddAbility(GameManager.Abilities["flamestrike"], 2);
+            abilityManager.AddAbility(GameManager.Abilities["fireballturret"], 3);
+            //abilityManager.AddAbility(GameManager.Abilities["firemine"], 4);
+            abilityManager.AddAbility(GameManager.Abilities["fireballbarrage"], 5);
 
-            abilityIndexDict["icebolt"] = 2;
-            abilityIndexDict["aoefreeze"] = 3;
-            abilityIndexDict["frozenorb"] = 4;
-            abilityIndexDict["bladewaltz"] = 5;
+            abilityIndexDict["fireball"] = 1;
+            abilityIndexDict["flamestrike"] = 2;
+            abilityIndexDict["fireballturret"] = 3;
+            //abilityIndexDict["firemine"] = 4;
+            abilityIndexDict["fireballbarrage"] = 5;
         }
 
 	}
@@ -121,7 +124,8 @@ public class PlayerEntity : Entity
 
         //Debug.Log(abilities.Count);
 
-        
+
+        ModifyResource(0.5f);
 	}
 
     public void OnApplicationQuit()

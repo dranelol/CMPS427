@@ -136,18 +136,19 @@ public class MovementFSM : StateMachine
 
             if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
             {
-                _navMeshAgent.SetDestination(navMeshHit.position);
-
                 if (tag == "Player")
                 {
-                    if (_navMeshAgent.Raycast(targetPosition, out navMeshHit))
+                    NavMeshHit playerNavMeshHit;
+
+                    if (_navMeshAgent.Raycast(targetPosition, out playerNavMeshHit))
                     {
-                        _navMeshAgent.SetDestination(navMeshHit.position);
+                        _navMeshAgent.Move((playerNavMeshHit.position - transform.position).normalized / 50f);
+                        _navMeshAgent.SetDestination(playerNavMeshHit.position);
                     }
 
                     else
                     {
-                        _navMeshAgent.SetDestination(targetPosition);
+                        _navMeshAgent.SetDestination(navMeshHit.position);
                     }
 
                     Transition(MoveStates.moving);
@@ -191,9 +192,10 @@ public class MovementFSM : StateMachine
             {
                 rigidbody.velocity = Vector3.zero;
                 rigidbody.angularVelocity = Vector3.zero;
+
+                Transition(MoveStates.idle);
             }
 
-            Transition(MoveStates.idle);
         }
     }
 

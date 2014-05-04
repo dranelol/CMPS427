@@ -38,19 +38,6 @@ public class EnemySpawnerEditor : Editor
             spawner.GenerateAppropriateOnTrigger = EditorGUILayout.Toggle("Generate Appropriate", spawner.GenerateAppropriateOnTrigger);
             CheckDirty(spawner);
 
-            GUI.changed = false;
-            spawner.critterPrefab = EditorGUILayout.ObjectField("critter Prefab", spawner.critterPrefab, typeof(GameObject), false) as GameObject;
-            CheckDirty(spawner);
-            GUI.changed = false;
-            spawner.smallPrefab = EditorGUILayout.ObjectField("small Prefab", spawner.smallPrefab, typeof(GameObject), false) as GameObject;
-            CheckDirty(spawner);
-            GUI.changed = false;
-            spawner.medPrefab = EditorGUILayout.ObjectField("med Prefab", spawner.medPrefab, typeof(GameObject), false) as GameObject;
-            CheckDirty(spawner);
-            GUI.changed = false;
-            spawner.largePrefab = EditorGUILayout.ObjectField("large Prefab", spawner.largePrefab, typeof(GameObject), false) as GameObject;
-            CheckDirty(spawner);
-
             EditorGUILayout.Space();
 
             GUI.changed = false;

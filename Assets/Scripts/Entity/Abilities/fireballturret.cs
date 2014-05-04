@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class FireballTurret : Ability
 {
-    public FireballTurret(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
+    public FireballTurret(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
 
     }
@@ -17,7 +17,7 @@ public class FireballTurret : Ability
 
 
         projectile.GetComponent<ProjectileBehaviour>().owner = owner;
-        projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 10.0f;
+        projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 12.0f;
         projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
         projectile.GetComponent<ProjectileBehaviour>().ExplodesOnTimeout = false;
         projectile.GetComponent<ProjectileBehaviour>().hasCollided = true;
@@ -52,7 +52,7 @@ public class FireballTurret : Ability
     
     public IEnumerator launch(GameObject source, GameObject owner, int tempindex, bool isplayer)
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 12; i++)
         {
             List<GameObject> target;
             target = OnAttack(source, isplayer);
