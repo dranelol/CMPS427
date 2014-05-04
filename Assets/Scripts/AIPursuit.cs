@@ -264,8 +264,6 @@ public class AIPursuit : StateMachine
     {
         if (currentTarget != null)
         {
-            
-
             //check resource, combat fsm, and cooldowns
             if (_abilityManager.activeCoolDowns[_nextAbilityIndex] <= Time.time)
             {
