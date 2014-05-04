@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-public class EnemyAttributeFactory
+public class EnemyAttributeFactory : MonoBehaviour
 {
     #region Constants
 
@@ -15,6 +15,8 @@ public class EnemyAttributeFactory
 
     public const int MIN_NODE_COUNT = 1;
     public const int MAX_NODE_COUNT = 10;
+
+    public const float MIN_PERCENT_RESOURCES = 0.75f;
 
     public const string PREFAB_FOLDER_PATH = "Enemy Prefabs/";
 
@@ -92,6 +94,8 @@ public class EnemyAttributeFactory
         maxCost = Mathf.Clamp(maxCost, MIN_ENEMY_COST, MAX_ENEMY_COST);
         minCost = Mathf.Clamp(minCost, MIN_ENEMY_COST, maxCost);
 
+        int resourceCutoff = (int)Math.Ceiling(UnityEngine.Random.Range((float)resources * MIN_PERCENT_RESOURCES, (float)resources));
+
         List<EnemyType> enemyPool = new List<EnemyType>(); // The list of possible enemies to spawn.
 
         foreach (EnemyType enemy in EnemyList)
@@ -106,7 +110,7 @@ public class EnemyAttributeFactory
 
         List<GameObject> spawnList = new List<GameObject>();
 
-        while (enemyPool.Count > 0 && spawnList.Count <= maxCount)
+        while (enemyPool.Count > 0 && spawnList.Count <= maxCount && resources > resourceCutoff)
         {
             if (enemyPool.Last().Cost > resources)
             {

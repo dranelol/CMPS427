@@ -56,9 +56,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject spawnInParticles;
 
-
     public equipmentFactory EquipmentFactory;
-    public EnemyAttributeFactory EnemyStatFactory;
 
     public static Dictionary<string, Ability> Abilities;
     public static Dictionary<int, Aura> Auras;
@@ -133,9 +131,6 @@ public class GameManager : MonoBehaviour
         Abilities["axethrow"] = new AxeThrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 0.0f, 2.0f, 0.0f, "axethrow", "Axe Throw", AxeThrowExplosion);
 
         #endregion
-
-
-        EnemyStatFactory = new EnemyAttributeFactory();
         
     }
 
