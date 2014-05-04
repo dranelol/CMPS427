@@ -6,7 +6,8 @@ public class EnemyAttributeFactory {
     public void Awake()
     {
     }
-
+    #region oldcode with statblocks
+    /*
     #region critter stats
     public Attributes critterbase;
     public float critterscalingHP = 2.5f;
@@ -166,7 +167,7 @@ public class EnemyAttributeFactory {
         abilityIndexDict["poisonbolt"] = 3;
         abilityIndexDict["ShockMine"] = 4;
         abilityIndexDict["bladewaltz"] = 5;
-         * */
+         * *
         if (type == "critter")
         {
             //enemy.abilityManager.abilities[0]=GameManager.Abilities["cleave"];
@@ -237,5 +238,6 @@ public class EnemyAttributeFactory {
         int diceroll = Random.Range(0, types.Length);
 
         return types[diceroll];
-    }
+    }*/
+    #endregion
 }
