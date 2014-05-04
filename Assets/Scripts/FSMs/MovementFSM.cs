@@ -23,7 +23,7 @@ public class MovementFSM : StateMachine
     #region Properties
 
     private NavMeshAgent _navMeshAgent;
-    private AnimationController _animController;
+    private AnimationController _animationController;
     private CapsuleCollider _collider;
 
     private float _baseMovementSpeed;
@@ -82,6 +82,7 @@ public class MovementFSM : StateMachine
     public void UpdateMovementSpeed(float value)
     {
         _navMeshAgent.speed = _movementSpeed = _baseMovementSpeed * value;
+        _animationController.UpdateMovementSpeed(value);
     }
 
     public enum MoveStates
@@ -96,7 +97,7 @@ public class MovementFSM : StateMachine
     void Awake()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
-        _animController = GetComponent<AnimationController>();
+        _animationController = GetComponent<AnimationController>();
         _collider = GetComponent<CapsuleCollider>();
 
         SetupMachine(MoveStates.idle);
@@ -123,7 +124,6 @@ public class MovementFSM : StateMachine
         _baseMovementSpeed = Mathf.Lerp(MAXIMUM_BASE_MOVEMENT_SPEED, MINIMUM_BASE_MOVEMENT_SPEED, Radius / MAXIMUM_RADIUS);
 
         UpdateMovementSpeed(1f);
-
     }
 
     #region public functions
@@ -232,7 +232,7 @@ public class MovementFSM : StateMachine
 
     private IEnumerator idle_EnterState()
     {
-        _animController.StopMoving();
+        _animationController.StopMoving();
         yield return null;
     }
 
@@ -242,7 +242,7 @@ public class MovementFSM : StateMachine
 
     private IEnumerator moving_EnterState()
     {
-        _animController.StartMoving();
+        _animationController.StartMoving();
         yield return null;
     }
 
