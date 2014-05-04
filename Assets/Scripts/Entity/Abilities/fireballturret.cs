@@ -35,7 +35,7 @@ public class FireballTurret : Ability
         {
             owner.GetComponent<Entity>().abilityManager.AddAbility(GameManager.Abilities["fireball"], tempindex);
             owner.GetComponent<Entity>().abilityIndexDict["fireball"] = tempindex;
-
+            Debug.Log("fireball added to " + tempindex);
         }
         /*
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
