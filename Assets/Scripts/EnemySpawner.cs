@@ -126,26 +126,6 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (GenerateAppropriateOnTrigger == true && HasSpawned == false)
-        {
-            if (other.tag == "Player")
-            {
-                level = other.GetComponent<PlayerEntity>().Level;
-                enemytype = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.GetRandomEnemyType();
-                enemyCount = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.DetermineNumberOfEnemies(enemytype);
-                enemyPrefab = prefabdict[enemytype];
-                for (int i = 0; i < enemyCount; i++)
-                {
-                    GenerateEnemy();
-                }
-               // Debug.Log("Generated " + enemyCount + " enemies at level " + level + "!");
-                HasSpawned = true;
-            }
-        }
-    }
-
     private void GenerateEnemy()
     {
         Vector3 newPosition = transform.position + new Vector3(UnityEngine.Random.Range(-spawnRadius, spawnRadius), 0, UnityEngine.Random.Range(-spawnRadius, spawnRadius));
@@ -167,10 +147,6 @@ public class EnemySpawner : MonoBehaviour
 
             # region giving enemies stats and abilities
             
-            enemyEntity.baseAtt = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.MakeEnemyAttributes(level, enemytype);
-
-            enemyEntity.UpdateCurrentAttributes();
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.GiveEnemyAbilities(enemyEntity, enemytype);
 
             enemyEntity.SetLevel(level);
 

@@ -128,6 +128,7 @@ public class TitanSpawner : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        /*
         if (GenerateAppropriateOnTrigger == true && HasSpawned == false)
         {
             if (other.tag == "Player")
@@ -144,6 +145,7 @@ public class TitanSpawner : MonoBehaviour
                 HasSpawned = true;
             }
         }
+         */
     }
 
     private void GenerateEnemy()
@@ -167,7 +169,7 @@ public class TitanSpawner : MonoBehaviour
 
             # region giving enemies stats and abilities
             
-            enemyEntity.baseAtt = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.MakeEnemyAttributes(level, enemytype);
+          //  enemyEntity.baseAtt = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.MakeEnemyAttributes(level, enemytype);
 
             enemyEntity.UpdateCurrentAttributes();
             //GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.GiveEnemyAbilities(enemyEntity, enemytype);
