@@ -218,35 +218,41 @@ public class AIPursuit : StateMachine
     {
         if (currentTarget != null)
         {
-            Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
+            
 
-            //check resource
-
-            if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.MELEE)
+            //check resource, combat fsm, and cooldowns
+            if (_abilityManager.activeCoolDowns[_nextAbilityIndex] <= Time.time)
             {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
-                _abilityManager.abilities[_nextAbilityIndex].AttackHandler(gameObject, entity, false);
+                Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
+
+                if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.MELEE)
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                    _abilityManager.abilities[_nextAbilityIndex].AttackHandler(gameObject, entity, false);
+                }
+
+                else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.PROJECTILE)
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                    _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
+                }
+
+                else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.HONINGPROJECTILE)
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                    _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, currentTarget.transform.position, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
+                }
+
+                else
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                    _abilityManager.abilities[_nextAbilityIndex].AttackHandler(gameObject, entity, false);
+                }
+
+                _abilityManager.activeCoolDowns[_nextAbilityIndex] = Time.time + _abilityManager.abilities[_nextAbilityIndex].Cooldown;
             }
 
-            else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.PROJECTILE)
-            {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
-            }
-
-            else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.HONINGPROJECTILE)
-            {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, currentTarget.transform.position, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
-            }
-
-            else
-            {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                _abilityManager.abilities[_nextAbilityIndex].AttackHandler(gameObject, entity, false);
-            }
-
-            _abilityManager.activeCoolDowns[_nextAbilityIndex] = Time.time + _abilityManager.abilities[_nextAbilityIndex].Cooldown;
+            
             // Incurr resource cost
             // play animation
             GetComponent<AnimationController>().Attack(AnimationType.Melee, 0); // DELETE THIS

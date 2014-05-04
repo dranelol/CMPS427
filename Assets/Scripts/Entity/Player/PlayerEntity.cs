@@ -96,6 +96,8 @@ public class PlayerEntity : Entity
         maxDamage = currentAtt.MaxDamage;
 
         //Debug.Log(abilities.Count);
+
+        ModifyResource(0.5f);
 	}
 
     public void OnApplicationQuit()

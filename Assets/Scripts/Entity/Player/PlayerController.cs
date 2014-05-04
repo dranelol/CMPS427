@@ -308,7 +308,6 @@ public class PlayerController : MonoBehaviour {
 
                         }
 
-
                         entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
 
                     }
