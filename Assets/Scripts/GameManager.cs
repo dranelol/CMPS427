@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour
     public GameObject EnvironmentHealOrbParticles;
     public GameObject EnvironmentHealOrbExplosion;
 
+    public GameObject SpawnInParticles;
 
 
     public equipmentFactory EquipmentFactory;
@@ -63,7 +64,7 @@ public class GameManager : MonoBehaviour
     public static Dictionary<int, Aura> Auras;
     public static Dictionary<string, int> AuraStringToIntMap;
 
-    public static float GLOBAL_COOLDOWN = 0.5f;
+    public static float GLOBAL_COOLDOWN = 0.1f;
 
     public AudioClip YEAAAAA;
 
@@ -88,7 +89,6 @@ public class GameManager : MonoBehaviour
 
         // Attack type, damage type, range, angle, cooldown, damagemod, resource cost
 
-
         Abilities["hadouken"] = new Hadouken(AttackType.PBAOE, DamageType.AIR, 5.0f, 360.0f, 10.0f, 10.0f, 25.0f, "hadouken", "Hadouken", HadoukenParticles);
         Abilities["deathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 5.0f, 360.0f, 10.0f, 15.0f, 25.0f, "deathgrip", "AoE Deathgrip", DeathgripParticles);
         Abilities["cleave"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 0.0f, 5.0f, 0f, "cleave", "Cleave", CleaveParticles);
@@ -104,6 +104,7 @@ public class GameManager : MonoBehaviour
         Abilities["GETOVERHERE"] = new GETOVERHERE(AttackType.PROJECTILE, DamageType.SHADOW, 4.0f, 0.0f, 5.0f, 0.1f, 10f, "GETOVERHERE", "Shadow Pull", GETOVERHEREParticles);
         Abilities["normalmine"] = new NormalMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 360.0f, 4.0f, 1.0f, 10f, "normalmine", "Mine", MineParticles);
         Abilities["blinkstrike"] = new BlinkStrike(AttackType.PROJECTILE, DamageType.SHADOW, 4.0f, 1.0f, 7.0f, 5.0f, 10f, "blinkstrike", "Blink Strike", BlinkStrikeProjectile);
+
 
         Abilities["blink"] = new Blink(AttackType.GROUNDTARGET, DamageType.NONE, 5.0f, 0.0f, 7.0f, 0.0f, 25f, "blink", "Blink", BlinkParticles);
 
@@ -142,6 +143,7 @@ public class GameManager : MonoBehaviour
     public void Update()
     {
     }
+
     public void RemovePhysics(Rigidbody toRemove, float time = 0.0f)
     {
         StartCoroutine(removePhysics(toRemove, time));

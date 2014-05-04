@@ -176,7 +176,6 @@ public class Cleave : Ability
 
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
-
     {
         float damageAmt;
         if (isPlayer == true)

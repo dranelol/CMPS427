@@ -157,10 +157,9 @@ public class Deathgrip : Ability
         {
             damageAmt = DamageCalc.DamageCalculation(attacker, defender, 0);
         }
-        Debug.Log("damage: " + damageAmt);
+       // Debug.Log("damage: " + damageAmt);
 
         defender.ModifyHealth(-damageAmt);
-
     }
 
     public override void DoPhysics(GameObject source, GameObject target)
