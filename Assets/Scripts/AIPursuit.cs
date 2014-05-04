@@ -282,7 +282,7 @@ public class AIPursuit : StateMachine
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                     _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
                 }
-
+            
                 else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.HONINGPROJECTILE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);

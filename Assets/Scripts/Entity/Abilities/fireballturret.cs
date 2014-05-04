@@ -56,11 +56,12 @@ public class FireballTurret : Ability
         {
             List<GameObject> target;
             target = OnAttack(source, isplayer);
-
+            Debug.Log("attacking");
 
             foreach (GameObject enemy in target)
             {
                 Vector3 forward = (enemy.transform.position - source.transform.position).normalized;
+                
                 owner.GetComponent<Entity>().abilityManager.abilities[tempindex].SpawnProjectile(source, owner, forward, owner.GetComponent<Entity>().abilityManager.abilities[tempindex].ID, isplayer);
                   
             }
@@ -149,6 +150,7 @@ public class FireballTurret : Ability
             colliders = Physics.OverlapSphere(source.transform.position, range, 1 << playerMask);
         }
 
+
         foreach (Collider collider in colliders)
         {
 
@@ -173,11 +175,10 @@ public class FireballTurret : Ability
 
                 if (isPlayer == true)
                 {
-                    // try to cast a ray from the enemy to the player
+                    // try to cast a ray from the enemy to the turret
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range);
-
-
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << enemyMask));
+                    Debug.DrawRay(normalizedDefenderPosition, enemyVector2, Color.red, 0.5f);
                     if (!rayCastHit)
                     {
 
@@ -185,9 +186,9 @@ public class FireballTurret : Ability
                     // if the ray hits, the enemy is in line of sight of the player, this is a successful attack hit
                     else
                     {
-                        if (hit.collider.gameObject.tag == "Projectile")
+                        Debug.Log("hit: " + hit.collider.gameObject.name.ToString());
+                        if (hit.collider.gameObject.tag == "Turret")
                         {
-
                             Debug.DrawRay(normalizedDefenderPosition, enemyVector, Color.green, 0.5f);
                             Debug.DrawRay(normalizedDefenderPosition, enemyVector2, Color.red, 0.5f);
 
@@ -198,9 +199,9 @@ public class FireballTurret : Ability
 
                 else
                 {
-                    // try to cast a ray from the player to the enemy
+                    // try to cast a ray from the player to the turret
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
@@ -209,7 +210,7 @@ public class FireballTurret : Ability
                     // if the ray hits, the player is in line of sight of the enemy, this is a successful attack hit
                     else
                     {
-                        if (hit.collider.gameObject.tag == "Projectile")
+                        if (hit.collider.gameObject.tag == "Turret")
                         {
                             Debug.DrawRay(normalizedDefenderPosition, enemyVector, Color.green, 0.5f);
                             Debug.DrawRay(normalizedDefenderPosition, enemyVector2, Color.red, 0.5f);
@@ -227,10 +228,13 @@ public class FireballTurret : Ability
             }
         }
         List<GameObject> enemytoAttack = new List<GameObject>();
+
         if (enemiesToAttack.Count > 0)
         {
             enemytoAttack.Add(enemiesToAttack[Random.Range(0, enemiesToAttack.Count)]);
         }
+
+        Debug.Log("enemies found: " + enemiesToAttack.Count.ToString());
         return enemytoAttack;
 
     }
