@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public GameObject WhirlwindParticles;
 
     public GameObject DeathgripParticles;
+    public GameObject DeathgripTrailParticles;
     public GameObject HadoukenParticles;
 
     public GameObject ArrowParticles;
