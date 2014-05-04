@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
     public static Dictionary<int, Aura> Auras;
     public static Dictionary<string, int> AuraStringToIntMap;
 
-    public static float GLOBAL_COOLDOWN = 0.1f;
+    public static float GLOBAL_COOLDOWN = 0.5f;
 
     public AudioClip YEAAAAA;
 
@@ -92,18 +92,15 @@ public class GameManager : MonoBehaviour
 
         Abilities["hadouken"] = new Hadouken(AttackType.PBAOE, DamageType.AIR, 5.0f, 360.0f, 3.0f, 10.0f, "hadouken", "Hadouken", HadoukenParticles);
         Abilities["deathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 5.0f, 360.0f, 3.0f, 15.0f, "deathgrip", "AoE Deathgrip", DeathgripParticles);
-        Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 5.0f, 45.0f, 1.0f, 10.0f, "fusrodah", "Fus Roh Dah", FusRoDahParticles);
         Abilities["cleave"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 0.0f, 5.0f, "cleave", "Cleave", CleaveParticles);
+        Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 5.0f, 45.0f, 1.0f, 10.0f, "fusrodah", "Fus Roh Dah", FusRoDahParticles);
+
         Abilities["bladewaltz"] = new BladeWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 20.0f, 5.0f, "bladewaltz", "Blade Waltz", BladeWaltzParticles);
         Abilities["erenwaltz"] = new ErenWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 5.0f, "erenwaltz", "Eren Waltz", BladeWaltzParticles);
 
 
         Abilities["arrow"] = new Arrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 5.0f, "arrow", "Arrow", ArrowParticles);
-
         Abilities["fireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.1f, 10.0f, "fireball", "Fireball", FireballExplosion);
-        //Abilities["fireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.1f, 10.0f, "fireball", "Fireball", FireballExplosion);
-
-
         Abilities["firemine"] = new FireMine(AttackType.PROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 4.0f, 1.0f, "firemine", "Fire Mine", FiremineParticles);
         Abilities["GETOVERHERE"] = new GETOVERHERE(AttackType.PROJECTILE, DamageType.SHADOW, 1.0f, 0.0f, 3.0f, 0.1f, "GETOVERHERE", "Shadow Pull", GETOVERHEREParticles);
         Abilities["normalmine"] = new NormalMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 360.0f, 4.0f, 1.0f, "normalmine", "Mine", MineParticles);
@@ -146,7 +143,6 @@ public class GameManager : MonoBehaviour
     public void Update()
     {
     }
-
     public void RemovePhysics(Rigidbody toRemove, float time = 0.0f)
     {
         StartCoroutine(removePhysics(toRemove, time));

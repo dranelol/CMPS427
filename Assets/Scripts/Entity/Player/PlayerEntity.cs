@@ -42,6 +42,7 @@ public class PlayerEntity : Entity
                     {
                         Debug.Log("EQUIPPING " + tempequip.equipmentName + " FROM LOAD");
                     }
+
                     else
                     {
                         Debug.Log("CAN'T EQUIP THE "+tempequip.equipmentName+" FOR SOME REASON");
