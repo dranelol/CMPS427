@@ -56,15 +56,13 @@ public class GameManager : MonoBehaviour
 
     public GameObject SpawnInParticles;
 
-
     public equipmentFactory EquipmentFactory;
-    public EnemyAttributeFactory EnemyStatFactory;
 
     public static Dictionary<string, Ability> Abilities;
     public static Dictionary<int, Aura> Auras;
     public static Dictionary<string, int> AuraStringToIntMap;
 
-    public static float GLOBAL_COOLDOWN = 0.1f;
+    public static float GLOBAL_COOLDOWN = 0.5f;
 
     public AudioClip YEAAAAA;
 
@@ -112,6 +110,7 @@ public class GameManager : MonoBehaviour
         Abilities["poisonbolt"] = new Poisonbolt(AttackType.HONINGPROJECTILE, DamageType.POISON, 10.0f, 0.0f, 0.1f, 10.0f, 5f, "poisonbolt", "poisonbolt", FireballExplosion);
         Abilities["bloodbolt"] = new Bloodbolt(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL, 10.0f, 0.0f, 0.1f, 10.0f, 5f, "bloodbolt", "bloodbolt", FireballExplosion);
         Abilities["chaosbolt"] = new Chaosbolt(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.1f, 10.0f, 5f, "chaosbolt", "chaosbolt", ChaosboltExplosion);
+
         
         Abilities["shockmine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 30.0f, 5f, "shockmine", "Shock Mine", ShockMineProjectile);
         Abilities["aoefreeze"] = new AOEfreeze(AttackType.PBAOE, DamageType.WATER, 5.0f, 360f, 15f, 1f, 30f, "aoefreeze", "Flashfreeze", AOEFreezeParticles);
@@ -134,16 +133,12 @@ public class GameManager : MonoBehaviour
         Abilities["axethrow"] = new AxeThrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 0.0f, 2.0f, 0.0f, 3f, "axethrow", "Axe Throw", AxeThrowExplosion);
 
         #endregion
-
-
-        EnemyStatFactory = new EnemyAttributeFactory();
         
     }
 
     public void Update()
     {
     }
-
     public void RemovePhysics(Rigidbody toRemove, float time = 0.0f)
     {
         StartCoroutine(removePhysics(toRemove, time));

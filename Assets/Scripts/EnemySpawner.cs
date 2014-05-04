@@ -143,7 +143,7 @@ public class EnemySpawner : MonoBehaviour
                 //enemyPrefab = prefabdict[enemytype];
 
 
-                List<GameObject> enemies = new List<GameObject>();//EnemyAttributeFactory.GetEnemies(MAX_NODE_RESOURCES,MAX_NODE_COUNT, MAX_ENEMY_COST, MIN_ENEMY_COST);//enemyattributefacory get enemies stuff
+                List<GameObject> enemies = EnemyAttributeFactory.GetEnemies(EnemyAttributeFactory.MAX_NODE_RESOURCES, EnemyAttributeFactory.MAX_NODE_COUNT, EnemyAttributeFactory.MAX_ENEMY_COST,EnemyAttributeFactory.MIN_ENEMY_COST);//enemyattributefacory get enemies stuff
 
                 for (int i = 0; i < enemies.Count; i++)
                 {
@@ -206,9 +206,6 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-
-
-
     private void GenerateEnemy()
     {
         Vector3 newPosition = transform.position + new Vector3(UnityEngine.Random.Range(-spawnRadius, spawnRadius), 0, UnityEngine.Random.Range(-spawnRadius, spawnRadius));
@@ -230,10 +227,6 @@ public class EnemySpawner : MonoBehaviour
 
             # region giving enemies stats and abilities
             
-            enemyEntity.baseAtt = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.MakeEnemyAttributes(level, enemytype);
-
-            enemyEntity.UpdateCurrentAttributes();
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.GiveEnemyAbilities(enemyEntity, enemytype);
 
             enemyEntity.SetLevel(level);
 
