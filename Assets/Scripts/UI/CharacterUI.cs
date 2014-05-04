@@ -28,6 +28,9 @@ public class CharacterUI : UIState
     private equipment hoverEquip;
     private equipment hoverEquipped;
 
+    private equipment equipItem;
+    private equipment deleteItem;
+
     public CharacterUI(int id, UIController controller)
         : base(id, controller)
     {
@@ -44,6 +47,7 @@ public class CharacterUI : UIState
         toBeUsed = null;
         hoverEquip = null;
         hoverEquipped = null;
+        equipItem = null;
 
         Controller.DraggedEquip = null;
     }
@@ -160,6 +164,19 @@ public class CharacterUI : UIState
 
 
                 slotRects.Add(thisRect, Controller.Player.EquippedEquip[((equipSlots.slots)i)]);
+
+                if (thisRect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseUp && Event.current.button == 1 && Event.current.shift == true)
+                {
+                    deleteItem = Controller.Player.EquippedEquip[((equipSlots.slots)i)];
+                }
+                else if (thisRect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseUp && Event.current.button == 1)
+                {
+                    equipItem = Controller.Player.EquippedEquip[((equipSlots.slots)i)];
+                }
+
+
+
+
             }
             else
             {
@@ -184,6 +201,15 @@ public class CharacterUI : UIState
                 Drag(Controller.Player.EquippedEquip[((equipSlots.slots)i+1)], thisRect);
 
                 slotRects.Add(thisRect, Controller.Player.EquippedEquip[((equipSlots.slots)i + 1)]);
+
+                if (thisRect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseUp && Event.current.button == 1 && Event.current.shift == true)
+                {
+                    deleteItem = Controller.Player.EquippedEquip[((equipSlots.slots)i+1)];
+                }
+                else if (thisRect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseUp && Event.current.button == 1)
+                {
+                    equipItem = Controller.Player.EquippedEquip[((equipSlots.slots)i+1)];
+                }
             }
             else
             {
@@ -197,6 +223,19 @@ public class CharacterUI : UIState
             yOffset += 100;
             
         }
+
+        if (equipItem != null)
+        {
+            RightClickUnEquip(equipItem);
+            equipItem = null;
+        }
+
+        if (deleteItem != null)
+        {
+            DeleteItem(deleteItem);
+            deleteItem = null;
+        }
+
         TooltipEquipment(slotRects);
         GUILayout.EndArea();
 
@@ -240,6 +279,17 @@ public class CharacterUI : UIState
                 Drag(Controller.Player.Inventory.Items[i], thisRect);
 
                 slotRects.Add(thisRect, Controller.Player.Inventory.Items[i]);
+
+
+                if (thisRect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseUp && Event.current.button == 1 && Event.current.shift == true)
+                {
+                    deleteItem = Controller.Player.Inventory.Items[i];
+                }
+                else if (thisRect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseUp && Event.current.button == 1)
+                {
+                    equipItem = Controller.Player.Inventory.Items[i];
+                }
+
             }
             else
             {
@@ -257,18 +307,17 @@ public class CharacterUI : UIState
 
         }
 
-        int k = 0;
 
-        foreach (var r in slotRects)
+        if (equipItem != null)
         {
+            RightClickEquip(equipItem);
+            equipItem = null;
+        }
 
-            if (r.Value != null)
-            {
-                Debug.Log("Rect " + k.ToString() + ": " + r.Key.ToString());
-                Debug.Log("Equip " + k.ToString() + ": " + r.Value.equipmentName.ToString());
-            }
-
-            k++;
+        if (deleteItem != null)
+        {
+            DeleteItem(deleteItem);
+            deleteItem = null;
         }
 
 
@@ -403,7 +452,7 @@ public class CharacterUI : UIState
             if (hoverRect.Contains(GUIUtility.ScreenToGUIPoint(mPos)) && Controller.DraggedEquip == null)
             {
 
-                Debug.Log("in rect: " + hoverRect.ToString());
+                //Debug.Log("in rect: " + hoverRect.ToString());
                 hoverEquipped = hoverRects[hoverRect];
                 return;
             }
@@ -412,5 +461,33 @@ public class CharacterUI : UIState
                 hoverEquipped = null;
             }
         }
+    }
+
+    void RightClickEquip(equipment item)
+    {
+        if (Controller.Player.EquippedEquip.ContainsKey(item.validSlot))
+        {
+            Controller.Player.removeEquipment(item.validSlot);
+        }
+
+        Controller.Player.addEquipment(item);
+        hoverEquip = null;
+    }
+
+    void RightClickUnEquip(equipment item)
+    {
+        Controller.Player.removeEquipment(item.validSlot);
+        hoverEquip = null;
+    }
+
+    void DeleteItem(equipment item)
+    {
+        if (Controller.Player.EquippedEquip.ContainsKey(item.validSlot))
+        {
+            Controller.Player.removeEquipment(item.validSlot);
+        }
+
+        Controller.Player.Inventory.RemoveItem(item);
+        
     }
 }
