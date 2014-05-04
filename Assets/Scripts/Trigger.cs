@@ -18,7 +18,7 @@ public class Trigger : MonoBehaviour {
         }
 	}
 
-	void Update () 
+	public virtual void Update () 
     {
         //Debug.Log(inRange.ToString());
 		if(isActive == true 

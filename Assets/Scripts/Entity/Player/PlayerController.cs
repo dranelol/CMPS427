@@ -17,14 +17,43 @@ public class PlayerController : MonoBehaviour {
     public MovementFSM moveFSM;
     public CombatFSM combatFSM;
 
+    private HashSet<Ability> spellBook;
+    public HashSet<Ability> SpellBook
+    {
+        get { return spellBook; }
+
+    }
+
     private GameManager gameManager;
+    public GameManager GameManager
+    {
+        get { return gameManager; }
+    }
+
+    private TalentManager talentManager;
+    public TalentManager TalentManager
+    {
+        get { return talentManager; }
+    }
+
+    private bool mouseOverGUI;
+    public bool MouseOverGUI
+    {
+        get { return mouseOverGUI; }
+        set { mouseOverGUI = value; }
+    }
 
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+
+        talentManager = transform.GetComponent<TalentManager>();
+        spellBook = new HashSet<Ability>();
+
         DontDestroyOnLoad(transform.gameObject);
+
         Instantiate(gameManager.SpawnInParticles, transform.position, Quaternion.identity);
-        
+        mouseOverGUI = false;
     }
 
 	// Use this for initialization
@@ -35,6 +64,8 @@ public class PlayerController : MonoBehaviour {
 
         agent.avoidancePriority = 1;
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+
+        
 
         entity = GetComponent<PlayerEntity>();
         moveFSM = GetComponent<MovementFSM>();
@@ -56,8 +87,7 @@ public class PlayerController : MonoBehaviour {
 	void Update () 
     {
         
-        if (GameObject.FindWithTag("UI Controller").GetComponent<UIController>().GuiState != UIController.States.INGAME)
-            return;
+      
 
         Debug.DrawRay(transform.position, transform.forward);
         //Debug.DrawRay(transform.position, Rotations.RotateAboutY(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f), -22.5f));
@@ -107,10 +137,51 @@ public class PlayerController : MonoBehaviour {
                 moveFSM.SetPath(targetPosition);
             }
         }
+        #region moving and turning
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            if (mouseOverGUI == true)
+            {
+                return;
+            }
+
+            moveFSM.LockMovement();
+        }
+
+        if(Input.GetKey(KeyCode.LeftShift))
+        {
+            int terrainMask = LayerMask.NameToLayer("Terrain");
+
+            int enemyMask = LayerMask.NameToLayer("Enemy");
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            RaycastHit target;
+
+            if (Physics.Raycast(ray, out target, Mathf.Infinity, 1 << terrainMask))
+            {
+                moveFSM.Turn(target.point);
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            if (mouseOverGUI == true)
+            {
+                return;
+            }
+
+            moveFSM.UnlockMovement();
+        }
 
         // If the move/attack key was pressed...
         if (Input.GetAxis("Move/Attack") != 0) 
         {
+            if (mouseOverGUI == true)
+            {
+                return;
+            }
+            
             int terrainMask = LayerMask.NameToLayer("Terrain");
 
             int enemyMask = LayerMask.NameToLayer("Enemy");
@@ -154,6 +225,9 @@ public class PlayerController : MonoBehaviour {
 			}
 
         }
+
+        
+        #endregion
 
         #region abilities
 
@@ -228,7 +302,7 @@ public class PlayerController : MonoBehaviour {
                     }
 
 
-                    entity.abilityManager.activeCoolDowns[1] = Time.time + entity.abilityManager.abilities[2].Cooldown;
+                    entity.abilityManager.activeCoolDowns[1] = Time.time + entity.abilityManager.abilities[1].Cooldown;
 
 
                 }
@@ -307,7 +381,6 @@ public class PlayerController : MonoBehaviour {
 
 
                         }
-
 
                         entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
 
@@ -706,7 +779,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         // Equipping helmet.
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(KeyCode.Keypad0))
         {
             equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Head);
 
@@ -714,7 +787,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         // Equipping offhand.
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.Keypad1))
         {
             equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Off);
 
@@ -727,6 +800,26 @@ public class PlayerController : MonoBehaviour {
         #endregion
 
         
+
+        //Check for level up
+        if (entity.Experience >= entity.NextLevelExperience)
+        {
+            LevelUp();
+            entity.Experience = entity.NextLevelExperience - entity.Experience;
+            entity.NextLevelExperience += 100;
+        }
+
+    }
+
+    void LevelUp()
+    {
+        entity.Level++;
+        
+        //Play animation
+
+        talentManager.GiveTalentPoints(1);
+        entity.GiveAttributePoints(5);
+
 
     }
 

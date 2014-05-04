@@ -26,6 +26,14 @@ public class AggroRadius : MonoBehaviour
             group.Threat(other.gameObject, 1);
             trigger.enabled = false;
         }
+        else if (other.tag == "Enemy"
+            && transform.parent.GetComponent<AIController>().homeNodePosition != other.GetComponent<AIController>().homeNodePosition)
+        {
+            if (other.GetComponent<AIController>().Target != null)
+            {
+                group.Threat(other.GetComponent<AIController>().Target, 1);
+            }
+        }
     }
 
     public SphereCollider Trigger
