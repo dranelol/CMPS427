@@ -5,33 +5,23 @@ using System.Collections.Generic;
 /// <summary>
 /// WE GOT DE BAG AND WE PUT DE STUF IN DE BAG
 /// </summary>
-public class Inventory {
-    private const int MAX = 50;
+public class Inventory
+{
+    private const int MAX = 64;
+    public int Max
+    {
+        get { return MAX; }
+    }
 
     private equipmentFactory factory;
-    private List<equipment> items, equippedItems;
+    private List<equipment> items;
     public List<equipment> Items { get { return items; } }
-    public equipment Equip
-    {
-        set
-        {
-            items.Remove(value);
-            equippedItems.Add(value);
-        }
-    }
-    public equipment Unequip
-    {
-        set
-        {
-            equippedItems.Remove(value);
-            items.Add(value);
-        }
-    }
+
     
+
     public Inventory()
     {
         items = new List<equipment>();
-        equippedItems = new List<equipment>();
         factory = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
 
         //LoadItems();
@@ -46,6 +36,11 @@ public class Inventory {
     public void RemoveItem(equipment item)
     {
         items.Remove(item);
+    }
+
+    public bool IsEmpty()
+    {
+        return (items.Count <= 0);
     }
 
     /// <summary>

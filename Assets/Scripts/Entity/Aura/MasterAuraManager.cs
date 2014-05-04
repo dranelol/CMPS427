@@ -13,9 +13,13 @@ public class MasterAuraManager : MonoBehaviour
 
         Auras["test"] = new AuraTemplate("test");
         Auras["heal"] = new Heal("heal");
+        Auras["Corruption"] = new Corruption("Corruption");
+        Auras["BlessingOfMight"] = new BlessingOfMight("Blessing of Might");
+
         Auras["root"] = new Root("root");
         Auras["chaosbarrage"] = new chaosbarrage("chaosbarrage");
         Auras["fireballbarrage"] = new fireballbarrage("fireballbarrage");
+
 
 	}
 

@@ -94,13 +94,18 @@ sealed public class fireballbarrage : Aura
             base.OnTick();
             
             bool tag = (SourceEntity.tag == "player");
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(barrage(forward, tempindex, rayCastTarget, tag, SourceEntity));
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(barrage(tempindex, rayCastTarget, tag, SourceEntity));
         }
 
-        public IEnumerator barrage(Vector3 forward, int tempindex, RaycastHit rayCastTarget, bool isplayer, Entity sourceEntity)
+        public IEnumerator barrage(int tempindex, RaycastHit rayCastTarget, bool isplayer, Entity sourceEntity)
         {
             for (int i = 0; i < 4; i++)
             {
+                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                vectorToMouse = rayCastTarget.point - sourceEntity.transform.position;
+                Vector3 forward = new Vector3(vectorToMouse.x, sourceEntity.transform.forward.y, vectorToMouse.z).normalized;
+
                 sourceEntity.abilityManager.abilities[tempindex].SpawnProjectile(sourceEntity.gameObject, sourceEntity.gameObject, forward, sourceEntity.abilityManager.abilities[tempindex].ID, isplayer);
                     //SpawnProjectile(SourceEntity.gameObject, rayCastTarget.point, SourceEntity.gameObject, forward, SourceEntity.abilityManager.abilities[tempindex].ID, true);
                 yield return new WaitForSeconds(0.5f);

@@ -31,6 +31,10 @@ public class AIPursuit : StateMachine
 
     private float fleeEnd; //Future time the enemy will stop fleeing.
     private bool hasFled;
+
+
+
+    private GameObject debugNSD;
     
     void Awake()
     {
@@ -87,6 +91,12 @@ public class AIPursuit : StateMachine
         Transition(PursuitStates.inactive);
     }
 
+
+    public bool IsFleeing()
+    {
+        return (PursuitStates)CurrentState == PursuitStates.flee;
+    }
+
     #endregion
 
     #region private functions
@@ -123,12 +133,48 @@ public class AIPursuit : StateMachine
 
     private void Flee()
     {
-        Vector3 newdirection = ((transform.position - currentTarget.transform.position).normalized * fleeDistance);
 
-        Vector3 targetPosition = Rotations.RotateAboutY(newdirection, UnityEngine.Random.Range(-90f, 90f));
+        GameObject nodeOfSmallestDistance  = null;
+        Vector3 newdirection = Vector3.zero;
+        Vector3 targetPosition = Vector3.zero;
+        
+        GameObject[] enemyNodes = GameObject.FindGameObjectsWithTag("EnemyNode");
+
+        foreach (GameObject node in enemyNodes)
+        {
+            if (nodeOfSmallestDistance == null 
+                && node.transform.position != GetComponent<AIController>().homeNodePosition)
+            {
+                nodeOfSmallestDistance = node;
+            }
+            else
+            {
+                if ( node.transform.position != GetComponent<AIController>().homeNodePosition
+                    && Vector3.Distance(transform.position, node.transform.position) < Vector3.Distance(transform.position, nodeOfSmallestDistance.transform.position))
+                {
+                    nodeOfSmallestDistance = node;
+                }
+
+            }
+        }
+
+        debugNSD = nodeOfSmallestDistance;
+
+        if (nodeOfSmallestDistance == null)
+        {
+            newdirection = ((transform.position - currentTarget.transform.position).normalized * fleeDistance);
+            targetPosition = Rotations.RotateAboutY(newdirection, UnityEngine.Random.Range(-90f, 90f));
+        }
+        else
+        {
+            newdirection = ((nodeOfSmallestDistance.transform.position - transform.position).normalized * fleeDistance);
+            targetPosition = new Vector3(newdirection.x, 0, newdirection.z);
+        }
 
         targetPosition += transform.position;
         targetPosition.y = transform.position.y;
+
+
 
         MoveFSM.SetPath(targetPosition);
     }
@@ -218,35 +264,41 @@ public class AIPursuit : StateMachine
     {
         if (currentTarget != null)
         {
-            Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
+            
 
-            //check resource
-
-            if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.MELEE)
+            //check resource, combat fsm, and cooldowns
+            if (_abilityManager.activeCoolDowns[_nextAbilityIndex] <= Time.time)
             {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
-                _abilityManager.abilities[_nextAbilityIndex].AttackHandler(gameObject, entity, false);
+                Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
+
+                if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.MELEE)
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                    _abilityManager.abilities[_nextAbilityIndex].AttackHandler(gameObject, entity, false);
+                }
+
+                else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.PROJECTILE)
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                    _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
+                }
+            
+                else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.HONINGPROJECTILE)
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                    _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, currentTarget.transform.position, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
+                }
+
+                else
+                {
+                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                    _abilityManager.abilities[_nextAbilityIndex].AttackHandler(gameObject, entity, false);
+                }
+
+                _abilityManager.activeCoolDowns[_nextAbilityIndex] = Time.time + _abilityManager.abilities[_nextAbilityIndex].Cooldown;
             }
 
-            else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.PROJECTILE)
-            {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
-            }
-
-            else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.HONINGPROJECTILE)
-            {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, currentTarget.transform.position, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
-            }
-
-            else
-            {
-                combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                _abilityManager.abilities[_nextAbilityIndex].AttackHandler(gameObject, entity, false);
-            }
-
-            _abilityManager.activeCoolDowns[_nextAbilityIndex] = Time.time + _abilityManager.abilities[_nextAbilityIndex].Cooldown;
+            
             // Incurr resource cost
             // play animation
             GetComponent<AnimationController>().Attack(AnimationType.Melee, 0); // DELETE THIS
@@ -277,6 +329,8 @@ public class AIPursuit : StateMachine
     void flee_Update()
     {
 
+        //Debug.DrawRay(transform.position, debugNSD.transform.position - transform.position, Color.blue);
+        
         if (fleeEnd < Time.time)
         {
             Transition(PursuitStates.seek);

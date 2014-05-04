@@ -235,5 +235,10 @@ public class EntityAuraManager : MonoBehaviour
                 Add("heal", _entity);
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Debug.Log(Add("Corruption", _entity));
+        }
     }
 }

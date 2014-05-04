@@ -50,7 +50,7 @@ public class HUD_GUI : MonoBehaviour {
     public Rect InfoBox1;
     public Rect InfoBox2;
 
-    public Entity player;
+    public PlayerEntity player;
 	bool damageFlag = false;
     
 
@@ -102,7 +102,7 @@ public class HUD_GUI : MonoBehaviour {
         InfoBox1 = new Rect(Screen.width * .5f, Screen.height * .87f, Screen.width * .45f, Screen.height * .1f);
         InfoBox2 = new Rect(Screen.width * .91f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
 
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Entity>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>();
 		currentLiquid = HealthLiquid;
 
 
@@ -129,10 +129,6 @@ public class HUD_GUI : MonoBehaviour {
 		//health = GUI.VerticalSlider(new Rect(10f,10f,20f,50f),health,1f,0f);
         health = (player.CurrentHP / player.currentAtt.Health);
         //health = (player.currentHP / player.maxHP);
-		Ability1CoolDownTime = (player.abilityManager.activeCoolDowns[2]-Time.time)/ GameManager.Abilities["cleave"].Cooldown;
-		Ability2CoolDownTime = (player.abilityManager.activeCoolDowns[3]-Time.time)/ GameManager.Abilities["fusrodah"].Cooldown;
-		Ability3CoolDownTime = (player.abilityManager.activeCoolDowns[4]-Time.time)/ GameManager.Abilities["hadouken"].Cooldown;
-		Ability4CoolDownTime = (player.abilityManager.activeCoolDowns[5]-Time.time)/ GameManager.Abilities["deathgrip"].Cooldown;
 
 
 		if(health < healthLastFrame){
@@ -339,8 +335,6 @@ public class HUD_GUI : MonoBehaviour {
         {
             if (player.abilityManager.activeCoolDowns[1] > Time.time)
             {
-
-
                 timeLeft = player.abilityManager.activeCoolDowns[1] - Time.time;
             }
             else
@@ -419,6 +413,16 @@ public class HUD_GUI : MonoBehaviour {
             GUI.Label(CDBox5, player.abilityManager.abilities[5].Name + " CD Remaining: " + timeLeft.ToString("F") + "s", infoBoxStyle);
         }
         #endregion
+
+        #endregion
+
+        #region Level and Exp and Health
+
+        GUI.Label(new Rect(Screen.width * .025f, Screen.height * .75f, Screen.width * .45f, Screen.height * .1f), "Health: " + player.CurrentHP.ToString()+"/"+player.currentAtt.Health, infoBoxStyle);
+
+        GUI.Label(new Rect(Screen.width * .025f, Screen.height * .025f, Screen.width * .45f, Screen.height * .1f),"Level: "+player.Level.ToString(), infoBoxStyle );
+
+        GUI.Label(new Rect(Screen.width * .025f, Screen.height * .05f, Screen.width * .45f, Screen.height * .1f), "Experience: "+player.Experience.ToString() + "/" + player.NextLevelExperience, infoBoxStyle);
 
         #endregion
 

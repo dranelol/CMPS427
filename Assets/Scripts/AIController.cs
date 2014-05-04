@@ -154,6 +154,7 @@ public class AIController : StateMachine
                     target = source;
                     PursuitFSM.Pursue(target);
                 }
+                
             }
 
             else
@@ -171,6 +172,11 @@ public class AIController : StateMachine
     public void BeenAttacked(GameObject attacker)
     {
         Group.Threat(attacker, 1);
+    }
+
+    public Vector3 homeNodePosition
+    {
+        get { return Group.HomePosition; }
     }
 
     /// <summary>
@@ -195,6 +201,7 @@ public class AIController : StateMachine
     {
         return (AIStates)CurrentState == AIStates.pursuit;
     }
+
 
     #endregion
 
@@ -333,6 +340,10 @@ public class AIController : StateMachine
     {
         if (EntityObject.CurrentHP <=0.0f) // Check health for death || if (health <= 0)
         {
+            if (target != null)
+            {
+                target.GetComponent<PlayerEntity>().GiveExperience(EntityObject.Experience);
+            }
             Transition(AIStates.dead);
         }
 

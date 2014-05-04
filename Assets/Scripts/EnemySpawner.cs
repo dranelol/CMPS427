@@ -226,7 +226,9 @@ public class EnemySpawner : MonoBehaviour
 
 
             # region giving enemies stats and abilities
+
             
+
 
             enemyEntity.SetLevel(level);
 
@@ -235,9 +237,13 @@ public class EnemySpawner : MonoBehaviour
             //enemyEntity.abilityManager.abilities[1] = GameManager.Abilities["hadouken"];
 
 
+
+           
+            enemyEntity.Experience = 25;
+
             //enemyEntity.abilityIndexDict["cleave"] = 0;
             //enemyEntity.abilityIndexDict["hadouken"] = 1;
-            
+
 
             #endregion
 
