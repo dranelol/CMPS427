@@ -63,6 +63,8 @@ public class CharacterUI : UIState
 
     public override void OnGui()
     {
+        
+        
         GUI.depth = 0;
         
         Rect windowRect = GUI.Window(0, windowDimensions, OnWindow, "Character");
@@ -202,6 +204,8 @@ public class CharacterUI : UIState
 
         #region Inventory Area
 
+        slotRects = new Dictionary<Rect, equipment>();
+
         int viewSize = (Controller.Player.Inventory.Max * ((totalInvWidth / rowLength) + 2)) / rowLength;
 
         Rect viewArea = new Rect(0, 0, 10, viewSize);
@@ -252,10 +256,32 @@ public class CharacterUI : UIState
             xOffset += (totalInvWidth / rowLength) + 4;
 
         }
+
+        int k = 0;
+
+        foreach (var r in slotRects)
+        {
+
+            if (r.Value != null)
+            {
+                Debug.Log("Rect " + k.ToString() + ": " + r.Key.ToString());
+                Debug.Log("Equip " + k.ToString() + ": " + r.Value.equipmentName.ToString());
+            }
+
+            k++;
+        }
+
+
+
         TooltipInventory(slotRects);
 
         GUI.EndScrollView();
         #endregion
+
+
+
+
+
     }
 
     void DrawStats()
@@ -377,7 +403,7 @@ public class CharacterUI : UIState
             if (hoverRect.Contains(GUIUtility.ScreenToGUIPoint(mPos)) && Controller.DraggedEquip == null)
             {
 
-               // Debug.Log("in rect: " + hoverRects[hoverRect].equipmentName.ToString());
+                Debug.Log("in rect: " + hoverRect.ToString());
                 hoverEquipped = hoverRects[hoverRect];
                 return;
             }
