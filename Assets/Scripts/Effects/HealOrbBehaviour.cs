@@ -11,7 +11,7 @@ public class HealOrbBehaviour : MonoBehaviour
         {
             Entity playerEntity = other.gameObject.GetComponent<Entity>();
 
-            playerEntity.ModifyHealthPercentage(20.0f);
+            playerEntity.ModifyHealthPercentage(10.0f);
 
             GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(explosionPrefab, 0.5f));
 

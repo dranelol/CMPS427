@@ -157,13 +157,88 @@ public class PlayerController : MonoBehaviour {
 
         #region abilities
 
-
         #region ability 1
 
+        if (Input.GetMouseButton(1))
+        {
+            if (entity.abilityManager.abilities[1] != null)
+            {
+                if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[1] <= Time.time)
+                {
+
+                    Debug.Log("Attack Speed: " + entity.currentAtt.AttackSpeed.ToString());
+
+
+                    if (entity.abilityManager.abilities[1].AttackType == AttackType.MELEE)
+                    {
+                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                        entity.abilityManager.abilities[1].AttackHandler(gameObject, entity, true);
+
+                    }
+
+                    else if (entity.abilityManager.abilities[1].AttackType == AttackType.PROJECTILE)
+                    {
+                        //combatFSM.Attack(0.0f);
+
+                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                        // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                        // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+
+
+                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                        RaycastHit rayCastTarget;
+                        Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                        Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                        Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
+
+
+                        entity.abilityManager.abilities[1].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[1].ID, true);
+                    }
+
+                    else if (entity.abilityManager.abilities[1].AttackType == AttackType.HONINGPROJECTILE)
+                    {
+                        //combatFSM.Attack(0.0f);
+
+                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                        // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                        // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+                        int terrainMask = LayerMask.NameToLayer("Terrain");
+
+                        int enemyMask = LayerMask.NameToLayer("Enemy");
+
+                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                        RaycastHit rayCastTarget;
+                        Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << (terrainMask | enemyMask));
+                        Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                        Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
+
+
+                        entity.abilityManager.abilities[1].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[1].ID, true);
+                    }
+                    else
+                    {
+                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                        entity.abilityManager.abilities[1].AttackHandler(gameObject, entity, true);
+
+
+                    }
+
+
+                    entity.abilityManager.activeCoolDowns[1] = Time.time + entity.abilityManager.abilities[2].Cooldown;
+
+
+                }
+            }
+        }
+        #endregion
+
+        #region ability 2
         if (Input.GetKey(KeyCode.Q))
         {
-
-
             if (entity.abilityManager.abilities[2] != null)
             {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[2] <= Time.time)
@@ -240,7 +315,7 @@ public class PlayerController : MonoBehaviour {
 
         #endregion
 
-        #region ability 2
+        #region ability 3
 
         
 
@@ -317,7 +392,7 @@ public class PlayerController : MonoBehaviour {
         }
         #endregion
 
-        #region ability 3
+        #region ability 4
         
         if (Input.GetKey(KeyCode.E))
         {
@@ -391,7 +466,7 @@ public class PlayerController : MonoBehaviour {
         }
         #endregion
 
-        #region ability 4
+        #region ability 5
         
         if (Input.GetKey(KeyCode.R))
         {
@@ -458,6 +533,7 @@ public class PlayerController : MonoBehaviour {
             }
         }
         #endregion
+
         #endregion
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
