@@ -31,6 +31,10 @@ public class AIPursuit : StateMachine
 
     private float fleeEnd; //Future time the enemy will stop fleeing.
     private bool hasFled;
+
+
+
+    private GameObject debugNSD;
     
     void Awake()
     {
@@ -87,6 +91,12 @@ public class AIPursuit : StateMachine
         Transition(PursuitStates.inactive);
     }
 
+
+    public bool IsFleeing()
+    {
+        return (PursuitStates)CurrentState == PursuitStates.flee;
+    }
+
     #endregion
 
     #region private functions
@@ -123,12 +133,48 @@ public class AIPursuit : StateMachine
 
     private void Flee()
     {
-        Vector3 newdirection = ((transform.position - currentTarget.transform.position).normalized * fleeDistance);
 
-        Vector3 targetPosition = Rotations.RotateAboutY(newdirection, UnityEngine.Random.Range(-90f, 90f));
+        GameObject nodeOfSmallestDistance  = null;
+        Vector3 newdirection = Vector3.zero;
+        Vector3 targetPosition = Vector3.zero;
+        
+        GameObject[] enemyNodes = GameObject.FindGameObjectsWithTag("EnemyNode");
+
+        foreach (GameObject node in enemyNodes)
+        {
+            if (nodeOfSmallestDistance == null 
+                && node.transform.position != GetComponent<AIController>().homeNodePosition)
+            {
+                nodeOfSmallestDistance = node;
+            }
+            else
+            {
+                if ( node.transform.position != GetComponent<AIController>().homeNodePosition
+                    && Vector3.Distance(transform.position, node.transform.position) < Vector3.Distance(transform.position, nodeOfSmallestDistance.transform.position))
+                {
+                    nodeOfSmallestDistance = node;
+                }
+
+            }
+        }
+
+        debugNSD = nodeOfSmallestDistance;
+
+        if (nodeOfSmallestDistance == null)
+        {
+            newdirection = ((transform.position - currentTarget.transform.position).normalized * fleeDistance);
+            targetPosition = Rotations.RotateAboutY(newdirection, UnityEngine.Random.Range(-90f, 90f));
+        }
+        else
+        {
+            newdirection = ((nodeOfSmallestDistance.transform.position - transform.position).normalized * fleeDistance);
+            targetPosition = new Vector3(newdirection.x, 0, newdirection.z);
+        }
 
         targetPosition += transform.position;
         targetPosition.y = transform.position.y;
+
+
 
         MoveFSM.SetPath(targetPosition);
     }
@@ -283,6 +329,8 @@ public class AIPursuit : StateMachine
     void flee_Update()
     {
 
+        //Debug.DrawRay(transform.position, debugNSD.transform.position - transform.position, Color.blue);
+        
         if (fleeEnd < Time.time)
         {
             Transition(PursuitStates.seek);

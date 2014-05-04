@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public GameObject BlinkParticles;
     public GameObject BladeWaltzParticles;
 
+
     public GameObject OnHitNormalParticles;
 
     public GameObject AOEFreezeParticles;
@@ -130,6 +131,11 @@ public class GameManager : MonoBehaviour
         Abilities["boomerangblade"] = new BoomerangBlade(AttackType.PROJECTILE, DamageType.PHYSICAL, 5f, 0f, 4.0f, 0f, 20f, "boomerangblade", "Boomerang Blade", BoomerangBladeExplosion);
         Abilities["boomerangbladereturn"] = new BoomerangBladeReturn(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL,0.0f, 0.0f, 0.0f, 0.0f, 0f, "boomerangbladereturn", "Boomerang Blade(returning)", BoomerangBladeExplosion);
         Abilities["axethrow"] = new AxeThrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 0.0f, 2.0f, 0.0f, 3f, "axethrow", "Axe Throw", AxeThrowExplosion);
+
+
+
+        //Abilities["healorb"] = new HealOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 0.0f, 0.0f, "healorb", "Heal Orb", HealOrbExplosion);
+
 
         #endregion
 

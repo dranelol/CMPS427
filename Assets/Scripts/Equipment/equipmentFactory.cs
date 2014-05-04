@@ -5,7 +5,8 @@ using System.Collections;
 /// <summary>
 /// equipment factory! use this to generate equipment!
 /// </summary>
-public class equipmentFactory {
+public class equipmentFactory 
+{
 
 
     /*
