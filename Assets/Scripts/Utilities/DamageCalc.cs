@@ -27,4 +27,14 @@ public class DamageCalc
 
         return damageAmt;
     }
+
+    static public float HealCalculation(Entity healer, Entity recipient, float multscalingfactor, float addscalingfactor)
+    {
+        float healamt;
+
+        healamt = (healer.currentAtt.Power * multscalingfactor) + addscalingfactor;
+
+        return healamt;
+
+    }
 }

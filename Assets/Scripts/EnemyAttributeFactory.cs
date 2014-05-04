@@ -5,8 +5,80 @@ using System.Collections.Generic;
 
 public class EnemyAttributeFactory : MonoBehaviour
 {
-    #region Constants
+    #region oldcode with statblocks
+	
+    /*
+    #region critter stats
+    public Attributes critterbase;
+    public float critterscalingHP = 2.5f;
+    public float critterscalingresource = 5f;
+    public float critterscalingpower = 2f;
+    public float critterscalingdefense = 2f;
+    public float critterscalingmindmg = .5f;
+    public float critterscalingmaxdmg = .5f;
+    #endregion
 
+    #region small stats
+    public Attributes smallbase;
+    public float smallscalingHP = 5f;
+    public float smallscalingresource = 10f;
+    public float smallscalingpower = 4f;
+    public float smallscalingdefense = 4f;
+    public float smallscalingmindmg = .75f;
+    public float smallscalingmaxdmg = .75f;
+	
+	  public void GiveEnemyAbilities(Entity enemy, string type)
+    {
+        /*
+        abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
+        abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
+        abilityManager.AddAbility(GameManager.Abilities["ShockMine"], 4);
+        abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
+
+        abilityIndexDict["shadowbolt"] = 2;
+        abilityIndexDict["poisonbolt"] = 3;
+        abilityIndexDict["ShockMine"] = 4;
+        abilityIndexDict["bladewaltz"] = 5;
+         * *
+        if (type == "critter")
+        {
+            //enemy.abilityManager.abilities[0]=GameManager.Abilities["cleave"];
+            enemy.abilityManager.AddAbility(GameManager.Abilities["cleave"], 0);
+            enemy.abilityIndexDict["cleave"] = 0;
+            enemy.abilityManager.AddAbility(GameManager.Abilities["cleave"], 1);
+            enemy.abilityIndexDict["cleave"] = 1;
+        }
+        else if (type == "small")
+        {
+            // enemy.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
+            enemy.abilityManager.AddAbility(GameManager.Abilities["fireball"], 0);
+            enemy.abilityIndexDict["fireball"] = 0;
+            enemy.abilityManager.AddAbility(GameManager.Abilities["fireball"], 1);
+            enemy.abilityIndexDict["fireball"] = 1;
+        }
+        else if (type == "med")
+        {
+            // enemy.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
+            enemy.abilityManager.AddAbility(GameManager.Abilities["icebolt"], 0);
+            enemy.abilityIndexDict["icebolt"] = 0;
+            enemy.abilityManager.AddAbility(GameManager.Abilities["icebolt"], 1);
+            enemy.abilityIndexDict["icebolt"] = 1;
+        }
+        else if (type == "large")
+        {
+            // enemy.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
+            enemy.abilityManager.AddAbility(GameManager.Abilities["axethrow"], 0);
+            enemy.abilityIndexDict["axethrow"] = 0;
+            enemy.abilityManager.AddAbility(GameManager.Abilities["axethrow"], 1);
+            enemy.abilityIndexDict["axethrow"] = 1;
+        }
+		*/
+		
+	
+    #endregion
+	
+    #region Constants
+	
     public const int MIN_ENEMY_COST = 1;
     public const int MAX_ENEMY_COST = 20;
 
@@ -68,6 +140,7 @@ public class EnemyAttributeFactory : MonoBehaviour
         #endregion
     }
 
+  
     #endregion
 
     #region Properties
@@ -94,7 +167,7 @@ public class EnemyAttributeFactory : MonoBehaviour
         maxCost = Mathf.Clamp(maxCost, MIN_ENEMY_COST, MAX_ENEMY_COST);
         minCost = Mathf.Clamp(minCost, MIN_ENEMY_COST, maxCost);
 
-        int resourceCutoff = (int)Math.Ceiling(UnityEngine.Random.Range((float)resources * MIN_PERCENT_RESOURCES, (float)resources));
+        int resourceCutoff = Mathf.Max(1, resources - (int)Math.Ceiling(UnityEngine.Random.Range((float)resources * MIN_PERCENT_RESOURCES, (float)resources)));
 
         List<EnemyType> enemyPool = new List<EnemyType>(); // The list of possible enemies to spawn.
 
@@ -112,6 +185,7 @@ public class EnemyAttributeFactory : MonoBehaviour
 
         while (enemyPool.Count > 0 && spawnList.Count <= maxCount && resources > resourceCutoff)
         {
+            Debug.Log(resourceCutoff + ", " + resources);
             if (enemyPool.Last().Cost > resources)
             {
                 enemyPool.RemoveAt(EnemyList.Count - 1);
@@ -126,6 +200,6 @@ public class EnemyAttributeFactory : MonoBehaviour
             }
         }
 
-        return spawnList;
-    }
+		return spawnList;
+	}
 }

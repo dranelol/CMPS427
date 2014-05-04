@@ -99,7 +99,7 @@ sealed public class fireballbarrage : Aura
 
         public IEnumerator barrage(Vector3 forward, int tempindex, RaycastHit rayCastTarget, bool isplayer, Entity sourceEntity)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 4; i++)
             {
                 sourceEntity.abilityManager.abilities[tempindex].SpawnProjectile(sourceEntity.gameObject, sourceEntity.gameObject, forward, sourceEntity.abilityManager.abilities[tempindex].ID, isplayer);
                     //SpawnProjectile(SourceEntity.gameObject, rayCastTarget.point, SourceEntity.gameObject, forward, SourceEntity.abilityManager.abilities[tempindex].ID, true);

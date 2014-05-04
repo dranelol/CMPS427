@@ -192,9 +192,10 @@ public class MovementFSM : StateMachine
             {
                 rigidbody.velocity = Vector3.zero;
                 rigidbody.angularVelocity = Vector3.zero;
+
+                Transition(MoveStates.idle);
             }
 
-            Transition(MoveStates.idle);
         }
     }
 
