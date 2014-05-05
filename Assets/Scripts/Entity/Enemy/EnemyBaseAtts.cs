@@ -28,6 +28,7 @@ public class EnemyBaseAtts : MonoBehaviour {
     public bool flees;
     public bool wanders;
     public float _aggroRadius;
+    public float _swingSpeed;
 
     public void InitializeStats()
     {
@@ -54,16 +55,18 @@ public class EnemyBaseAtts : MonoBehaviour {
     {
         List<string> actualAblities = new List<string>();
 
-        for(int i = 0;i<maxAbilities;i++)
-        {
+        actualAblities.Add(possibleAbilities[0]);
+        gameObject.GetComponent<Entity>().abilityManager.AddAbility(GameManager.Abilities[possibleAbilities[0]], 0);
+        gameObject.GetComponent<Entity>().abilityIndexDict[actualAblities[0]] = 0;
 
-            int diceroll = Random.Range(0,possibleAbilities.Count);
+        for(int i = 1;i<maxAbilities;i++)
+        {
+            int diceroll = UnityEngine.Random.Range((int)0,(int)possibleAbilities.Count);
             string abilityname = possibleAbilities[diceroll];
 
             if(actualAblities.Contains(abilityname) == false)
             {
                 actualAblities.Add(abilityname);
-
                 gameObject.GetComponent<Entity>().abilityManager.AddAbility(GameManager.Abilities[abilityname], i);
                 gameObject.GetComponent<Entity>().abilityIndexDict[abilityname] = i;
             }

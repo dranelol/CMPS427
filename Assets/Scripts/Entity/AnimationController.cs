@@ -47,6 +47,7 @@ public class AnimationController : MonoBehaviour
 
         animation.AddClip(_death, "Death");
         animation["Death"].layer = 1;
+        animation["Death"].wrapMode = WrapMode.Once;
 
         if (_sleep != null)
         {
@@ -174,7 +175,7 @@ public class AnimationController : MonoBehaviour
         for (int i = 0; i < animations.Length; i++)
         {
             string name = animations[i].name;
-            animation.AddClip(animations[0], name);
+            animation.AddClip(animations[i], name);
             animation[name].layer = 2;
             animation[name].wrapMode = WrapMode.Once;
 

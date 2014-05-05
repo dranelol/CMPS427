@@ -357,6 +357,7 @@ public class AIController : StateMachine
             {
                 target.GetComponent<PlayerEntity>().GiveExperience(EntityObject.Experience);
             }
+
             Transition(AIStates.dead);
         }
 
