@@ -143,7 +143,7 @@ public class EnemySpawner : MonoBehaviour
                 //enemyPrefab = prefabdict[enemytype];
 
 
-                List<GameObject> enemies = EnemyAttributeFactory.GetEnemies(EnemyAttributeFactory.MAX_NODE_RESOURCES, EnemyAttributeFactory.MAX_NODE_COUNT, 6, 6);//enemyattributefacory get enemies stuff
+                List<GameObject> enemies = EnemyAttributeFactory.GetEnemies(EnemyAttributeFactory.MAX_NODE_RESOURCES, EnemyAttributeFactory.MAX_NODE_COUNT, 30,1);//enemyattributefacory get enemies stuff
 
                 for (int i = 0; i < enemies.Count; i++)
                 {
