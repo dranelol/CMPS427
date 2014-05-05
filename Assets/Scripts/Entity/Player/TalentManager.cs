@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class TalentManager : MonoBehaviour
 {
     public const int talentPointIncrement = 1; //Number of talent points given
-    public const int depthMultiplier = 1; //Mulitple of points needed to advance to the next tier of talents
+    public static int depthMultiplier = 1; //Mulitple of points needed to advance to the next tier of talents
 
     private int totalTalentPoints; //Count of all talent points earned.
 
@@ -13,18 +13,21 @@ public class TalentManager : MonoBehaviour
     public int TalentPointPool
     {
         get { return talentPointPool; }
+        set { talentPointPool = value; }
     }
 
     private int mightTreePoints; //Points currently spent in the Might Tree
     public int MightTreePoints
     {
         get { return mightTreePoints; }
+        set { mightTreePoints = value; }
     }
 
     private int magicTreePoints; //Points currently spent in the Magic Tree
     public int MagicTreePoints
     {
         get { return magicTreePoints; }
+        set { magicTreePoints = value; }
     }
 
     private HashSet<Talent> mightTree; //Set of talents in the Might Tree.
@@ -223,6 +226,13 @@ public class TalentManager : MonoBehaviour
         {
             playerController.SpellBook.Remove(talent.TalentAbility);
         }
+        else if (playerController.entity.abilityManager.abilities.Contains(talent.TalentAbility))
+        {
+           
+            
+            playerController.entity.abilityManager.RemoveAbility(playerController.entity.abilityIndexDict[talent.TalentAbility.ID]);
+        }
+
     }
 
     /// <summary>
