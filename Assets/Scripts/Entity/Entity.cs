@@ -84,6 +84,10 @@ public class Entity : MonoBehaviour
     public void Start()
     {
         UpdateCurrentAttributes();
+
+        // fix for "activated" cooldowns on start
+
+        
     }
 
     public void UpdateCurrentAttributes()

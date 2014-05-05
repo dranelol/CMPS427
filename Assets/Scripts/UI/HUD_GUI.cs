@@ -129,10 +129,6 @@ public class HUD_GUI : MonoBehaviour {
 		//health = GUI.VerticalSlider(new Rect(10f,10f,20f,50f),health,1f,0f);
         health = (player.CurrentHP / player.currentAtt.Health);
         //health = (player.currentHP / player.maxHP);
-		Ability1CoolDownTime = (player.abilityManager.activeCoolDowns[2]-Time.time)/ GameManager.Abilities["cleave"].Cooldown;
-		Ability2CoolDownTime = (player.abilityManager.activeCoolDowns[3]-Time.time)/ GameManager.Abilities["fusrodah"].Cooldown;
-		Ability3CoolDownTime = (player.abilityManager.activeCoolDowns[4]-Time.time)/ GameManager.Abilities["hadouken"].Cooldown;
-		Ability4CoolDownTime = (player.abilityManager.activeCoolDowns[5]-Time.time)/ GameManager.Abilities["deathgrip"].Cooldown;
 
 
 		if(health < healthLastFrame){
@@ -339,8 +335,6 @@ public class HUD_GUI : MonoBehaviour {
         {
             if (player.abilityManager.activeCoolDowns[1] > Time.time)
             {
-
-
                 timeLeft = player.abilityManager.activeCoolDowns[1] - Time.time;
             }
             else
