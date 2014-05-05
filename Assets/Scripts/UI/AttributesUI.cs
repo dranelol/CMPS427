@@ -11,7 +11,7 @@ public class AttributesUI : UIState
 
     private GUIStyle labelStyle;
 
-    private float power, defense, attackSpeed, movementSpeed;
+    private float health, resource, power, defense, attackSpeed, movementSpeed;
 
     private bool applied;
 
@@ -33,7 +33,8 @@ public class AttributesUI : UIState
     public override void Enter()
     {
         base.Enter();
-
+        health = Controller.Player.currentAtt.Health;
+        resource = Controller.Player.currentAtt.Resource;
         power = Controller.Player.currentAtt.Power;
         defense = Controller.Player.currentAtt.Defense;
         attackSpeed = Controller.Player.currentAtt.AttackSpeed;
@@ -105,6 +106,120 @@ public class AttributesUI : UIState
         GUILayout.BeginArea(new Rect(5, 50, WIDTH-5, HEIGHT-20));
 
         GUILayout.BeginVertical();
+
+        #region Health
+
+        GUILayout.BeginHorizontal();
+
+        GUILayout.Label(new GUIContent("Health"), labelStyle, GUILayout.Width(rowWidth), GUILayout.Height(rowHeight));
+
+        GUILayout.Space(5);
+
+        if (attrPoints > 0 && applied == false)
+        {
+            if (GUILayout.Button("+", GUILayout.Width(buttonWidth), GUILayout.Height(rowHeight)))
+            {
+                AddPoints(ref health, 5);
+            }
+        }
+        else if (attrPoints == 0 && applied == false)
+        {
+            GUI.enabled = false;
+            GUILayout.Button("+", GUILayout.Width(buttonWidth), GUILayout.Height(rowHeight));
+            GUI.enabled = true;
+        }
+        else
+        {
+            GUILayout.Space(buttonWidth);
+        }
+
+
+        GUILayout.Space(5);
+
+        GUILayout.Box(new GUIContent(health.ToString()), GUILayout.Width(boxWidth), GUILayout.Height(rowHeight));
+
+        GUILayout.Space(5);
+
+        if (health > Controller.Player.currentAtt.Health && applied == false)
+        {
+            if (GUILayout.Button("-", GUILayout.Width(buttonWidth), GUILayout.Height(rowHeight)))
+            {
+                RemovePoints(ref health, 5);
+            }
+        }
+        else if (health == Controller.Player.currentAtt.Health && applied == false)
+        {
+            GUI.enabled = false;
+            GUILayout.Button("-", GUILayout.Width(buttonWidth), GUILayout.Height(rowHeight));
+            GUI.enabled = true;
+        }
+        else
+        {
+            GUILayout.Space(buttonWidth);
+        }
+
+        GUILayout.EndHorizontal();
+
+        #endregion
+
+        GUILayout.Space(15);
+
+        #region Resource
+
+        GUILayout.BeginHorizontal();
+
+        GUILayout.Label(new GUIContent("Resource"), labelStyle, GUILayout.Width(rowWidth), GUILayout.Height(rowHeight));
+
+        GUILayout.Space(5);
+
+        if (attrPoints > 0 && applied == false)
+        {
+            if (GUILayout.Button("+", GUILayout.Width(buttonWidth), GUILayout.Height(rowHeight)))
+            {
+                AddPoints(ref resource, 5);
+            }
+        }
+        else if (attrPoints == 0 && applied == false)
+        {
+            GUI.enabled = false;
+            GUILayout.Button("+", GUILayout.Width(buttonWidth), GUILayout.Height(rowHeight));
+            GUI.enabled = true;
+        }
+        else
+        {
+            GUILayout.Space(buttonWidth);
+        }
+
+
+        GUILayout.Space(5);
+
+        GUILayout.Box(new GUIContent(resource.ToString()), GUILayout.Width(boxWidth), GUILayout.Height(rowHeight));
+
+        GUILayout.Space(5);
+
+        if (resource > Controller.Player.currentAtt.Resource && applied == false)
+        {
+            if (GUILayout.Button("-", GUILayout.Width(buttonWidth), GUILayout.Height(rowHeight)))
+            {
+                RemovePoints(ref resource, 5);
+            }
+        }
+        else if (resource == Controller.Player.currentAtt.Resource && applied == false)
+        {
+            GUI.enabled = false;
+            GUILayout.Button("-", GUILayout.Width(buttonWidth), GUILayout.Height(rowHeight));
+            GUI.enabled = true;
+        }
+        else
+        {
+            GUILayout.Space(buttonWidth);
+        }
+
+        GUILayout.EndHorizontal();
+
+        #endregion
+
+        GUILayout.Space(15);
 
         #region Power
 
@@ -359,6 +474,15 @@ public class AttributesUI : UIState
         }
     }
 
+    private void AddPoints(ref float attr, int points)
+    {
+        if (attrPoints > 0)
+        {
+            attr += points;
+            attrPoints--;
+        }
+    }
+
     private void RemovePoint(ref float attr)
     {
         if (attrPoints < Controller.Player.AttributePoints)
@@ -368,8 +492,19 @@ public class AttributesUI : UIState
         }
     }
 
+    private void RemovePoints(ref float attr, int points)
+    {
+        if (attrPoints < Controller.Player.AttributePoints)
+        {
+            attr -= points;
+            attrPoints++;
+        }
+    }
+
     private void ApplyChanges()
     {
+        Controller.Player.currentAtt.Health = health;
+        Controller.Player.currentAtt.Resource = resource;
         Controller.Player.currentAtt.Power = power;
         Controller.Player.currentAtt.Defense = defense;
         Controller.Player.currentAtt.AttackSpeed = attackSpeed;

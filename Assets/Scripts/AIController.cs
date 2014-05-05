@@ -415,6 +415,8 @@ public class AIController : StateMachine
     {
         // Destroy(this.gameObject);
 
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>().Experience += 25;
+
         PursuitFSM.StopPursuit();
         MoveFSM.LockMovement();
         GetComponent<CapsuleCollider>().enabled = false;
@@ -458,8 +460,12 @@ public class AIController : StateMachine
 
         #endregion
 
+        
+
 
         #region cleanup and destroy
+
+
 
         Destroy(gameObject);
 

@@ -25,10 +25,7 @@ public class SpellbookUI : UIState
         draggedAbility = null;
         
 
-        labelStyle = new GUIStyle();
-        labelStyle.alignment = TextAnchor.MiddleCenter;
-        labelStyle.fontSize = 14;
-        labelStyle.normal.textColor = Color.white;
+        
     }
     public override void Enter()
     {
@@ -50,6 +47,11 @@ public class SpellbookUI : UIState
 
     public override void OnGui()
     {
+
+        labelStyle = new GUIStyle("box");
+        labelStyle.alignment = TextAnchor.MiddleCenter;
+        labelStyle.fontSize = 12;
+        labelStyle.normal.textColor = Color.white;
         GUI.Window(0, windowDimensions, OnWindow, "Spellbook");
     }
 
@@ -118,12 +120,12 @@ public class SpellbookUI : UIState
         {
 
 
-            GUILayout.Label(NumberToKey(i), GUILayout.Width(((WIDTH) / 2) - 10), GUILayout.Height(15));
+            GUILayout.Label(NumberToKey(i), GUILayout.Width(((WIDTH) / 2) - 10), GUILayout.Height(20));
             GUILayout.BeginHorizontal();
             GUILayout.Space(5);
             if (Controller.Player.abilityManager.abilities[i] != null)
             {
-                GUILayout.Box(Controller.Player.abilityManager.abilities[i].Name, GUILayout.Width(((WIDTH) / 2) - 10), GUILayout.Height(50));
+                GUILayout.Box(new GUIContent(Controller.Player.abilityManager.abilities[i].Name), labelStyle,  GUILayout.Width(((WIDTH) / 2) - 10), GUILayout.Height(50));
 
                 
                 DropInactiveToActive(GUILayoutUtility.GetLastRect(), i);
@@ -131,7 +133,7 @@ public class SpellbookUI : UIState
             }
             else
             {
-                GUILayout.Box("Empty", GUILayout.Width(((WIDTH) / 2) - 10), GUILayout.Height(50));
+                GUILayout.Box(new GUIContent("Empty"), labelStyle, GUILayout.Width(((WIDTH) / 2) - 10), GUILayout.Height(50));
                 DropInactiveToActive(GUILayoutUtility.GetLastRect(), i);
             } 
 
