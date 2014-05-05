@@ -167,7 +167,7 @@ public class AnimationController : MonoBehaviour
 
     public void UpdateMovementSpeed(float value)
     {
-       animation["Run"].speed = value * 2f;
+       animation["Run"].speed = value * 1.5f;
     }
 
     #endregion
