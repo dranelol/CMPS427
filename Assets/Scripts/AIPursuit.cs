@@ -32,8 +32,6 @@ public class AIPursuit : StateMachine
     private float fleeEnd; //Future time the enemy will stop fleeing.
     private bool hasFled;
 
-
-
     private GameObject debugNSD;
     
     void Awake()

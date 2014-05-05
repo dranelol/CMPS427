@@ -25,6 +25,10 @@ public class EnemyBaseAtts : MonoBehaviour {
     public List<string> possibleAbilities;
     public int maxAbilities = 3;
 
+    public bool flees;
+    public bool wanders;
+    public float _aggroRadius;
+
     public void InitializeStats()
     {
         Attributes tempatts = new Attributes();
@@ -40,6 +44,10 @@ public class EnemyBaseAtts : MonoBehaviour {
         tempatts.AttackSpeed = baseAttackSpd + scalingAttackSpd * (templvl - 1);
 
         gameObject.GetComponent<Entity>().baseAtt = tempatts;
+
+        GetComponent<AIController>().doesWander = wanders;
+        GetComponent<AIController>().aggroRadius = _aggroRadius;
+        GetComponent<AIPursuit>().doesFlee= flees;
     }
 
     public void SetAbilities()
