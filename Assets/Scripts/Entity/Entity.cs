@@ -65,7 +65,7 @@ public class Entity : MonoBehaviour
         buffAtt = new Attributes();
         baseAtt = new Attributes();
 
-        baseAtt.Health = currentHP = 500;
+        baseAtt.Health = currentHP = 100;
         baseAtt.Resource = currentResource = 100;
         baseAtt.Power = 10;
         baseAtt.Defense = 10;
