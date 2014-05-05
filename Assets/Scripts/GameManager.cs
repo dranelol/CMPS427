@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject ArrowParticles;
     public GameObject FireballProjectile;
+    public GameObject InfernalFireballProjectile;
     public GameObject FireballTurretFireballProjectile;
     public GameObject ShadowboltProjectile;
     public GameObject PoisonboltProjectile;
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour
     public GameObject ShockMineProjectile;
 
     public GameObject FireballExplosion;
+    public GameObject InfernalFireballExplosion;
     public GameObject ChaosboltExplosion;
 
     public GameObject FlamestrikeParticles;
@@ -133,7 +135,7 @@ public class GameManager : MonoBehaviour
         Abilities["boomerangbladereturn"] = new BoomerangBladeReturn(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL,0.0f, 0.0f, 0.0f, 0.0f, 0f, "boomerangbladereturn", "Boomerang Blade(returning)", BoomerangBladeExplosion);
         Abilities["axethrow"] = new AxeThrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 0.0f, 2.0f, 0.0f, 3f, "axethrow", "Axe Throw", AxeThrowExplosion);
 
-
+        Abilities["infernalfireball"] = new InfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 360.0f, 0.0f, 5000.0f, 0f, "infernalfireball", "Infernal Fireball", InfernalFireballExplosion);
 
         //Abilities["healorb"] = new HealOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 0.0f, 0.0f, "healorb", "Heal Orb", HealOrbExplosion);
 
