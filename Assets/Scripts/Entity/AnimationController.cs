@@ -8,6 +8,7 @@ public class AnimationController : MonoBehaviour
     public Transform _attackTransform;
 
     public AnimationClip _idle;
+    public AnimationClip _walk;
     public AnimationClip _run;
     public AnimationClip _death;
 
@@ -20,6 +21,7 @@ public class AnimationController : MonoBehaviour
     public static float DEFAULT_CHARACTER_RADIUS = 0.3f;
 
     private float _baseAnimationSpeed;
+    private string _movementAnimation;
 
     #endregion
 
@@ -36,6 +38,9 @@ public class AnimationController : MonoBehaviour
 
         animation.AddClip(_idle, "Idle");
         animation["Idle"].layer = 1;
+
+        animation.AddClip(_walk, "Walk");
+        animation["Walk"].layer = 1;
 
         animation.AddClip(_run, "Run");
         animation["Run"].layer = 1;
@@ -58,11 +63,13 @@ public class AnimationController : MonoBehaviour
         ProcessCombatAnimations(_meleeAnimations);
         ProcessCombatAnimations(_spellAnimations);
         ProcessCombatAnimations(_miscAnimations);
+
+        _movementAnimation = "Run";
     }
 
     void Start()
     {
-        _baseAnimationSpeed = GetComponent<MovementFSM>().Radius / DEFAULT_CHARACTER_RADIUS;
+        _baseAnimationSpeed = DEFAULT_CHARACTER_RADIUS / GetComponent<MovementFSM>().Radius;
     }
 
     #endregion
@@ -76,7 +83,7 @@ public class AnimationController : MonoBehaviour
 
     public void StartMoving()
     {
-        animation.CrossFade("Run", 0.2f);
+        animation.CrossFade(_movementAnimation, 0.2f);
     }
 
     public void Death()
@@ -141,6 +148,16 @@ public class AnimationController : MonoBehaviour
         {
             Debug.LogWarning("There is no animation named " + animationName + ".");
         }
+    }
+
+    public void WalkToMove()
+    {
+        _movementAnimation = "Walk";
+    }
+
+    public void RunToMove()
+    {
+        _movementAnimation = "Run";
     }
 
     public void UpdateMovementSpeed(float value)

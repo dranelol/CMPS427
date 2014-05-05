@@ -284,7 +284,7 @@ public class AIController : StateMachine
             targetPosition += currentPosition;
         }
 
-        MoveFSM.SetPath(targetPosition);
+        MoveFSM.WalkPath(targetPosition);
     }
 
     private void Reset()
@@ -303,8 +303,8 @@ public class AIController : StateMachine
 
     IEnumerator idle_EnterState()
     {
+        _animationController.WalkToMove();
         Aggro.Trigger.enabled = true;
-
         yield break;
     }
 
@@ -342,6 +342,7 @@ public class AIController : StateMachine
 
     IEnumerator pursuit_EnterState()
     {
+        _animationController.RunToMove();
         PursuitFSM.Pursue(target);
         yield break;
     }

@@ -132,6 +132,8 @@ public class MovementFSM : StateMachine
     {
         if ((MoveStates)CurrentState != MoveStates.moveLocked)
         {
+            _navMeshAgent.speed = _movementSpeed;
+
             NavMeshHit navMeshHit;
 
             if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
@@ -167,6 +169,23 @@ public class MovementFSM : StateMachine
         }
     }
 
+    public void WalkPath(Vector3 targetPosition)
+    {
+        if ((MoveStates)CurrentState != MoveStates.moveLocked)
+        {
+            _navMeshAgent.speed = _movementSpeed * 0.3f;
+
+            NavMeshHit navMeshHit;
+
+            if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
+            {
+                _navMeshAgent.SetDestination(navMeshHit.position);
+
+                Transition(MoveStates.moving);
+            }
+        }
+    }
+
     public void Stop()
     {
         if ((MoveStates)CurrentState == MoveStates.moving)
@@ -188,14 +207,7 @@ public class MovementFSM : StateMachine
     {
         if ((MoveStates)CurrentState == MoveStates.moveLocked)
         {
-            if (rigidbody != null)
-            {
-                rigidbody.velocity = Vector3.zero;
-                rigidbody.angularVelocity = Vector3.zero;
-
-                Transition(MoveStates.idle);
-            }
-
+            Transition(MoveStates.idle);
         }
     }
 
@@ -205,13 +217,13 @@ public class MovementFSM : StateMachine
         transform.forward = Vector3.Slerp(transform.forward, new Vector3(direction.x, 0, direction.z).normalized, 0.2f);
     }
 
-    public void AddForce(Vector3 force, float duration, ForceMode forceMode = ForceMode.Force)
+    public void AddForce(Vector3 force, float duration)
     {
         if (force.magnitude > 0)
         {
             LockMovement();
             Invoke("UnlockMovement", duration);
-            rigidbody.AddForce(force, forceMode);
+            _navMeshAgent.Move(force / 50f);
         }
     }
 
@@ -266,13 +278,11 @@ public class MovementFSM : StateMachine
     private IEnumerator moveLocked_EnterState()
     {
         _navMeshAgent.ResetPath();
-        _navMeshAgent.enabled = false;
         yield return null;
     }
 
     private IEnumerator moveLocked_ExitState()
     {
-        _navMeshAgent.enabled = true;
         _navMeshAgent.ResetPath();
         yield return null;
     }
