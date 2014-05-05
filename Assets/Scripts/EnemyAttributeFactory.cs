@@ -153,6 +153,8 @@ public class EnemyAttributeFactory : MonoBehaviour
     public int _ghostCost = 6;
     public int _trollCost = 8;
     public int _demonCost = 20;
+    public int _treeEntCost = 12;
+    public int _orcCost = 9;
 
     #endregion
 
@@ -163,6 +165,8 @@ public class EnemyAttributeFactory : MonoBehaviour
         EnemyList.Add(new EnemyType("OgreEnemy", _ogreCost)); // Add each type of prefab to the master list.
         EnemyList.Add(new EnemyType("GhostEnemy", _ghostCost));
         EnemyList.Add(new EnemyType("TrollEnemy", _trollCost));
+        EnemyList.Add(new EnemyType("TreeEntEnemy", _treeEntCost));
+        EnemyList.Add(new EnemyType("OrcEnemy", _orcCost));
         // EnemyList.Add(new EnemyType("DemonEnemy", _demonCost));
     }
 

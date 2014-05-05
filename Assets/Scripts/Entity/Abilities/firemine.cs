@@ -190,7 +190,7 @@ public class FireMine : Ability
         float normalizedMagnitude = 5f - Vector3.Distance(target.transform.position, source.transform.position + new Vector3(.01f, 0f, 0f));
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
 
-        target.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force, 0.2f, ForceMode.Impulse);
+        target.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force, 0.2f);
     }
 
 }
