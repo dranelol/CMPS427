@@ -94,8 +94,10 @@ public class LootUI : UIState
         }
 
         #endregion
-        
-        
+
+
+        float yOffset = 0;
+
         lootRects = new Dictionary<Rect, equipment>();
         
         int viewSize = Controller.ChestInventory.Items.Count * 25;
@@ -107,7 +109,7 @@ public class LootUI : UIState
         
         foreach (equipment item in Controller.ChestInventory.Items)
         {
-            Rect thisRect = new Rect(0, 0, totalInvWidth, 25);
+            Rect thisRect = new Rect(0, yOffset, totalInvWidth, 25);
             
             GUI.Box(thisRect, item.equipmentName);
 
@@ -117,6 +119,8 @@ public class LootUI : UIState
             }
 
             lootRects.Add(thisRect, item);
+
+            yOffset += 27;
             
         }
 

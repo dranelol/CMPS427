@@ -235,6 +235,12 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetMouseButton(1))
         {
+
+            if (mouseOverGUI == true)
+            {
+                return;
+            }
+            
             if (entity.abilityManager.abilities[1] != null)
             {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[1] <= Time.time)
@@ -807,7 +813,7 @@ public class PlayerController : MonoBehaviour {
         {
             LevelUp();
             entity.Experience = entity.NextLevelExperience - entity.Experience;
-            entity.NextLevelExperience += 100;
+            entity.NextLevelExperience *= 2;
         }
 
     }

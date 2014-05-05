@@ -26,7 +26,8 @@ public class LootTrigger : Trigger
 
         ef = new equipmentFactory();
 
-        inventory.AddItem(ef.randomEquipment(1,1, equipSlots.slots.Head));
+        inventory.AddItem(ef.randomEquipment(1, 1, equipSlots.slots.Head));
+        inventory.AddItem(ef.randomEquipment(1, 1, equipSlots.slots.Head));
 
         uiController = GameObject.FindWithTag("UI Controller").GetComponent<UIController>();
 

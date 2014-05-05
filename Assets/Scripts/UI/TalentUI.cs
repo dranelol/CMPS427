@@ -15,8 +15,16 @@ public class TalentUI : UIState
     private GUIContent mightLabel;      //The label for the might tree
     private GUIContent magicLabel;      //The label for the magic tree
 
-    private GUIStyle titleStyle;        //The style for titl
+    private GUIStyle titleStyle;        //The style for title
     private GUIStyle labelStyle;
+
+    private bool applied;
+    private int thisPool;
+
+    private Dictionary<Talent, int> talentAllocation;
+
+    private int tempMightTreePoints;
+    private int tempMagicTreePoints;
 
     public TalentUI(int id, UIController controller)
         : base(id, controller)
@@ -38,6 +46,8 @@ public class TalentUI : UIState
         mightLabel = new GUIContent("Might Tree");
         magicLabel = new GUIContent("Magic Tree");
 
+        
+
     }
     public override void Enter()
     {
@@ -46,6 +56,13 @@ public class TalentUI : UIState
         //Get the talent trees from the TalentManager and convert them to lists.
         mightTree = Controller.PlayerController.TalentManager.MightTree.ToList<Talent>();
         magicTree = Controller.PlayerController.TalentManager.MagicTree.ToList<Talent>();
+
+        thisPool = Controller.PlayerController.TalentManager.TalentPointPool;
+
+        tempMightTreePoints = Controller.PlayerController.TalentManager.MightTreePoints;
+        tempMagicTreePoints = Controller.PlayerController.TalentManager.MagicTreePoints;
+
+        InitTalentAllocation();
     }
 
     public override void Exit()
@@ -55,6 +72,10 @@ public class TalentUI : UIState
 
     public override void Update()
     {
+        if (Controller.PlayerController.TalentManager.TalentPointPool > 0)
+        {
+            applied = false;
+        }
     }
 
     public override void OnGui()
@@ -88,11 +109,26 @@ public class TalentUI : UIState
         float iconWidth = 0f;
         float iconHeight = 50f;
 
-        GUILayout.BeginArea(new Rect(5,20,WIDTH/4, 20));
+        GUILayout.BeginArea(new Rect(5,20,WIDTH, 20));
 
         GUILayout.BeginHorizontal();
 
-        GUILayout.Label("Unused Talent Points: " + Controller.PlayerController.TalentManager.TalentPointPool.ToString(), GUILayout.Width(WIDTH / 4), GUILayout.Height(20));
+        GUILayout.Label("Unused Talent Points: " + thisPool.ToString(), GUILayout.Width((WIDTH / 6)+20), GUILayout.Height(20));
+
+
+        if (applied == false)
+        {
+            if (GUILayout.Button("Apply", GUILayout.Width(80), GUILayout.Height(20)))
+            {
+                ApplyChanges();
+            }
+        }
+        else
+        {
+            GUI.enabled = false;
+            GUILayout.Button("Apply", GUILayout.Width(80), GUILayout.Height(20));
+            GUI.enabled = true;
+        }
 
         GUILayout.EndHorizontal();
 
@@ -108,7 +144,7 @@ public class TalentUI : UIState
         GUILayout.BeginHorizontal();
         GUILayout.Label(mightLabel, titleStyle, GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
 
-        GUILayout.Label(new GUIContent(Controller.PlayerController.TalentManager.MightTreePoints.ToString() + " points"), titleStyle, GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
+        GUILayout.Label(new GUIContent(tempMightTreePoints.ToString() + " points"), titleStyle, GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
 
 
 
@@ -117,7 +153,7 @@ public class TalentUI : UIState
 
             if (GUILayout.Button("RESPEC", GUILayout.Width((WIDTH / 6)-bufferSpace), GUILayout.Height(25)))
             {
-                Controller.PlayerController.TalentManager.Respec("might");
+                Respec("might");
             }
         }
         else
@@ -141,9 +177,6 @@ public class TalentUI : UIState
         
         while(tempTalents.Count != 0)
         {
-
-            
-
             GUILayout.Space(20);
             
             iconWidth = (((WIDTH/2)) / tempTalents.Count) - (bufferSpace * 2);
@@ -152,22 +185,22 @@ public class TalentUI : UIState
 
             foreach (Talent t in tempTalents)
             {
-                tempTalentLabel.text = t.CurrentPoints.ToString() + "/" + t.MaxPoints.ToString();
+                tempTalentLabel.text = (t.CurrentPoints + talentAllocation[t]).ToString() + "/" + t.MaxPoints.ToString();
                 
                 GUILayout.Space(bufferSpace);
                 GUILayout.BeginVertical();
 
-                if (Controller.PlayerController.TalentManager.IsTalentActive(t) == true)
+                if (IsTalentActive(t) == true)
                 {
                     if (GUILayout.Button(t.Name, GUILayout.Width(iconWidth), GUILayout.Height(iconHeight)))
                     {
                         if (Event.current.button == 0)
                         {
-                            Controller.PlayerController.TalentManager.SpendPoint(t);
+                            SpendPoint(t);
                         }
                         else if (Event.current.button == 1)
                         {
-                            Controller.PlayerController.TalentManager.RemovePoint(t);
+                            RemovePoint(t);
                         }
                     }
                 }
@@ -211,7 +244,7 @@ public class TalentUI : UIState
         GUILayout.BeginHorizontal();
         GUILayout.Label(magicLabel, titleStyle, GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
 
-        GUILayout.Label(new GUIContent(Controller.PlayerController.TalentManager.MagicTreePoints.ToString() + " points"), titleStyle, GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
+        GUILayout.Label(new GUIContent(tempMagicTreePoints.ToString() + " points"), titleStyle, GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
 
 
         if (Controller.PlayerController.TalentManager.MagicTreePoints > 0)
@@ -219,7 +252,7 @@ public class TalentUI : UIState
 
             if (GUILayout.Button("RESPEC", GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25)))
             {
-                Controller.PlayerController.TalentManager.Respec("magic");
+                Respec("magic");
             }
         }
         else
@@ -245,23 +278,23 @@ public class TalentUI : UIState
 
             foreach (Talent t in tempTalents)
             {
-                tempTalentLabel.text = t.CurrentPoints.ToString() + "/" + t.MaxPoints.ToString();
+                tempTalentLabel.text = (t.CurrentPoints+ talentAllocation[t] ).ToString() + "/" + t.MaxPoints.ToString();
 
                 GUILayout.Space(bufferSpace);
                 GUILayout.BeginVertical();
 
 
-                if (Controller.PlayerController.TalentManager.IsTalentActive(t) == true)
+                if (IsTalentActive(t) == true)
                 {
                     if (GUILayout.Button(t.Name, GUILayout.Width(iconWidth), GUILayout.Height(iconHeight)))
                     {
                         if (Event.current.button == 0)
                         {
-                            Controller.PlayerController.TalentManager.SpendPoint(t);
+                            SpendPoint(t);
                         }
                         else if (Event.current.button == 1)
                         {
-                            Controller.PlayerController.TalentManager.RemovePoint(t);
+                            RemovePoint(t);
                         }
                     }
                 }
@@ -295,5 +328,167 @@ public class TalentUI : UIState
         #endregion
 
 
+    }
+
+    private void ApplyChanges()
+    {
+
+        foreach (var pair in talentAllocation)
+        {
+
+            if(pair.Value > 0)
+            {
+                for(int i = 0; i < pair.Value; i++)
+                {
+                    Controller.PlayerController.TalentManager.SpendPoint(pair.Key);
+                }
+            }
+        }
+        
+        
+        Controller.PlayerController.TalentManager.MightTreePoints = tempMightTreePoints;
+        Controller.PlayerController.TalentManager.MagicTreePoints = tempMagicTreePoints;
+        
+        Controller.PlayerController.TalentManager.TalentPointPool = thisPool;
+
+        InitTalentAllocation();
+
+        applied = true;
+    }
+
+    private bool IsTalentActive(Talent talent)
+    {
+        
+        
+        if (mightTree.Contains(talent) == true)
+        {
+
+            if (tempMightTreePoints >= talent.Depth * TalentManager.depthMultiplier)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if (magicTree.Contains(talent) == true)
+        {
+            if (tempMagicTreePoints >= talent.Depth * TalentManager.depthMultiplier)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private void SpendPoint(Talent talent)
+    {
+        if (thisPool > 0 && (talent.CurrentPoints + talentAllocation[talent]) < talent.MaxPoints && IsTalentActive(talent) == true)
+        {
+
+            thisPool--;
+            talentAllocation[talent]++;
+
+            if (mightTree.Contains(talent) == true)
+            {
+                tempMightTreePoints++;
+            }
+            else if (magicTree.Contains(talent) == true)
+            {
+                tempMagicTreePoints++;
+            }
+        }
+    }
+
+    private void RemovePoint(Talent talent)
+    {
+        if (talentAllocation[talent] > 0)
+        {
+
+            if (mightTree.Contains(talent) == true)
+            {
+
+
+                foreach (Talent t in mightTree)
+                {
+                    if (t.Depth > talent.Depth && (t.CurrentPoints + talentAllocation[t]) > 0)
+                    {
+                        if ((tempMightTreePoints - 1) <= t.Depth * TalentManager.depthMultiplier)
+                        {
+                            return;
+                        }
+                    }
+                }
+
+                tempMightTreePoints--;
+            }
+            else if (magicTree.Contains(talent) == true)
+            {
+
+
+                foreach (Talent t in magicTree)
+                {
+                    if (t.Depth > talent.Depth && (t.CurrentPoints + talentAllocation[t]) > 0)
+                    {
+                        if ((tempMagicTreePoints - 1) <= t.Depth * TalentManager.depthMultiplier)
+                        {
+                            return;
+                        }
+                    }
+                }
+
+                tempMagicTreePoints--;
+            }
+
+            thisPool++;
+            talentAllocation[talent]--;
+            
+        }
+    }
+
+    private void InitTalentAllocation()
+    {
+
+        talentAllocation = new Dictionary<Talent, int>();
+        
+        foreach (Talent t in mightTree)
+        {
+            talentAllocation.Add(t, 0);
+        }
+
+        foreach (Talent t in magicTree)
+        {
+            talentAllocation.Add(t, 0);
+        }
+    }
+
+    private void Respec(string tree)
+    {
+        if (tree == "might")
+        {
+            
+
+            thisPool += tempMightTreePoints;
+            tempMightTreePoints = 0;
+        }
+        else if (tree == "magic")
+        {
+            
+
+            thisPool += tempMagicTreePoints;
+            tempMagicTreePoints = 0;
+        }
+
+        Controller.PlayerController.TalentManager.Respec(tree);
+
+        InitTalentAllocation();
     }
 }

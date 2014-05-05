@@ -15,7 +15,7 @@ public class AggroRadius : MonoBehaviour
 
     void Start()
     {
-        trigger.radius = transform.parent.GetComponent<NavMeshAgent>().radius * 10;
+        trigger.radius = transform.parent.GetComponent<AIController>().aggroRadius;
         
     }
 

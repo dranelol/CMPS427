@@ -167,7 +167,7 @@ public class AOEfreeze : Ability
     /// <param name="source">the entity that is applying the buff/debuff</param>
     public void DoBuff(GameObject target, Entity source)
     {
-        target.GetComponent<EntityAuraManager>().Add("root", source);
+        target.GetComponent<EntityAuraManager>().Add("slow", source);
 
     }
 

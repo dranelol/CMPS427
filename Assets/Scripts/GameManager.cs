@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject ArrowParticles;
     public GameObject FireballProjectile;
+    public GameObject InfernalFireballProjectile;
     public GameObject FireballTurretFireballProjectile;
     public GameObject ShadowboltProjectile;
     public GameObject PoisonboltProjectile;
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour
     public GameObject ShockMineProjectile;
 
     public GameObject FireballExplosion;
+    public GameObject InfernalFireballExplosion;
     public GameObject ChaosboltExplosion;
 
     public GameObject FlamestrikeParticles;
@@ -109,6 +111,7 @@ public class GameManager : MonoBehaviour
 
         Abilities["chaosbarrage"] = new ChaosBarrageAbility(AttackType.STATUS, DamageType.NONE, 10.0f, 0.0f, 30.0f, 0.0f, 100f, "chaosbarrage", "Chaos Barrage", ChaosBarrageParticles);
         Abilities["fireballbarrage"] = new FireballBarrageAbility(AttackType.STATUS, DamageType.NONE, 10.0f, 0.0f, 30.0f, 0.0f, 100f, "fireballbarrage", "Fireball Barrage", FireballBarrageParticles);
+        Abilities["rootability"] = new RootAbility(AttackType.STATUS, DamageType.NONE, 10.0f, 360.0f, 15.0f, 0.0f, 0f, "rootability", "Root Ability", null);
 
         #endregion
 
@@ -132,7 +135,7 @@ public class GameManager : MonoBehaviour
         Abilities["boomerangbladereturn"] = new BoomerangBladeReturn(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL,0.0f, 0.0f, 0.0f, 0.0f, 0f, "boomerangbladereturn", "Boomerang Blade(returning)", BoomerangBladeExplosion);
         Abilities["axethrow"] = new AxeThrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 0.0f, 2.0f, 0.0f, 3f, "axethrow", "Axe Throw", AxeThrowExplosion);
 
-
+        Abilities["infernalfireball"] = new InfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 360.0f, 0.0f, 5000.0f, 0f, "infernalfireball", "Infernal Fireball", InfernalFireballExplosion);
 
         //Abilities["healorb"] = new HealOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 0.0f, 0.0f, "healorb", "Heal Orb", HealOrbExplosion);
 
@@ -144,7 +147,7 @@ public class GameManager : MonoBehaviour
         Abilities["enemycleaveslow"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 5.0f, 5.0f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemycleavenormal"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 2.5f, 2.5f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemycleavefast"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 1.0f, 1.0f, 0f, "cleave", "Cleave", CleaveParticles);
-        Abilities["enemydeathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 5.0f, 360.0f, 2.0f, 0.0f, 0.0f, "deathgrip", "Enemy Deathgrip", DeathgripParticles);
+        Abilities["enemydeathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 10.0f, 360.0f, 2.0f, 0.0f, 0.0f, "deathgrip", "Enemy Deathgrip", DeathgripParticles);
         #endregion
         #endregion
 
