@@ -41,9 +41,11 @@ public class AnimationController : MonoBehaviour
 
         animation.AddClip(_walk, "Walk");
         animation["Walk"].layer = 1;
+        animation["Walk"].wrapMode = WrapMode.Loop;
 
         animation.AddClip(_run, "Run");
         animation["Run"].layer = 1;
+        animation["Run"].wrapMode = WrapMode.Loop;
 
         animation.AddClip(_death, "Death");
         animation["Death"].layer = 1;
