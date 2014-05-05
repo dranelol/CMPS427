@@ -41,7 +41,6 @@ public class RootAbility : Ability
 
             }
         }
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.5f, isPlayer));
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -124,6 +123,8 @@ public class RootAbility : Ability
                 else
                 {
                     // try to cast a ray from the player to the enemy
+
+                    Debug.Log("rootin");
 
                     bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << playerMask));
 
