@@ -16,21 +16,38 @@ public class BounceBetween : MonoBehaviour
 	
 	void Update () 
     {
-        StartCoroutine("bounce");
+        StartCoroutine(invoker());
 	}
 
-    IEnumerable bounce()
+    IEnumerator invoker()
     {
-        for (int i = 0; i < BounceAmount;i++ )
+        for (int i = 0; i < BounceAmount; i++)
         {
-            transform.position = target.transform.position;
-
-            yield return new WaitForSeconds(WaitTime);
-
-            transform.position = origin.transform.position;
-
+            StartCoroutine(bounce());
             yield return new WaitForSeconds(WaitTime);
         }
+
+        yield return null;
+    }
+
+    IEnumerator bounce()
+    {
+        if (transform.position == origin.transform.position)
+        {
+            while (transform.position != target.transform.position)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, target.transform.position, 0.1f);
+            }
+        }
+
+        else
+        {
+            while (transform.position != origin.transform.position)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, origin.transform.position, 0.1f);
+            }
+        }
+        
 
         yield return null;
     }
