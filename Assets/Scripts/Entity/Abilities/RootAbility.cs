@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class AOEfreeze : Ability
+public class RootAbility : Ability
 {
-    public AOEfreeze(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+    public RootAbility(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
         : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
 
@@ -22,10 +22,8 @@ public class AOEfreeze : Ability
                     && enemy.GetComponent<AIController>().IsDead() == false)
                 {
                     Entity defender = enemy.GetComponent<Entity>();
-                    DoDamage(source, enemy, attacker, defender, isPlayer);
-                    //DoPhysics(source, enemy);
                     DoBuff(enemy, attacker);
-                    
+
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
                         enemy.GetComponent<AIController>().BeenAttacked(source);
@@ -39,8 +37,6 @@ public class AOEfreeze : Ability
             foreach (GameObject enemy in attacked)
             {
                 Entity defender = enemy.GetComponent<Entity>();
-                DoDamage(source, enemy, attacker, defender, isPlayer);
-                //DoPhysics(source, enemy);
                 DoBuff(enemy, attacker);
 
             }
@@ -167,55 +163,8 @@ public class AOEfreeze : Ability
     /// <param name="source">the entity that is applying the buff/debuff</param>
     public void DoBuff(GameObject target, Entity source)
     {
-        target.GetComponent<EntityAuraManager>().Add("slow", source);
+        target.GetComponent<EntityAuraManager>().Add("root", source);
 
     }
-
-    public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
-    {
-        float damageAmt;
-        if (isPlayer == true)
-        {
-             damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
-        }
-        else
-        {
-             damageAmt = DamageCalc.DamageCalculation(attacker, defender, 0);
-        }
-        Debug.Log("damage: " + damageAmt);
-
-        defender.ModifyHealth(-damageAmt);
-
-    }
-
-    public override void DoPhysics(GameObject source, GameObject target)
-    {
-        
-    }
-
-    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
-    {
-        GameObject particles;
-
-        particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, Quaternion.Euler(90,90,0));
-        
-
-        //particles.transform.parent = attacker.transform;
-
-        yield return new WaitForSeconds(time);
-
-        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
-
-        foreach (ParticleSystem item in particleSystems)
-        {
-            item.transform.parent = null;
-            item.emissionRate = 0;
-            item.enableEmission = false;
-
-        }
-
-        GameObject.Destroy(particles);
-
-        yield return null;
-    }
+    
 }
