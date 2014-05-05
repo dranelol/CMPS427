@@ -784,7 +784,7 @@ public class PlayerController : MonoBehaviour {
         
         //Play animation
 
-        talentManager.GiveTalentPoints(1);
+        talentManager.GiveTalentPoints(5);
         entity.GiveAttributePoints(5);
 
 
