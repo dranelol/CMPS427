@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class Chaosbolt : Ability
 {
-    public Chaosbolt(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
+    public Chaosbolt(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
 
     }
@@ -64,22 +64,21 @@ public class Chaosbolt : Ability
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
-
-        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
-
+        float damageAmt;
+        if (isPlayer == true)
+        {
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
+        }
+        else
+        {
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, 0);
+        }
         if (isPlayer == true)
         {
             Debug.Log("damage: " + damageAmt);
         }
 
         defender.ModifyHealth(-damageAmt);
-
-        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
-
-        if (isPlayer == true)
-        {
-            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
-        }
     }
 
 

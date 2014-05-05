@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class GETOVERHERE : Ability
 {
-    public GETOVERHERE(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
+    public GETOVERHERE(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
 
     }
@@ -63,6 +63,6 @@ public class GETOVERHERE : Ability
         Vector3 relativeVector = (source.transform.position - target.transform.position).normalized;
         float normalizedMagnitude = Vector3.Distance(target.transform.position, source.transform.position);
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
-        target.GetComponent<MovementFSM>().AddForce(relativeVector * force * 2, 0.1f, ForceMode.Impulse);
+        target.GetComponent<MovementFSM>().AddForce(relativeVector * force * 2, 0.1f);
     }
 }

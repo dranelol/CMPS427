@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class Cleave : Ability
 {
-    public Cleave(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
+    public Cleave(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
        
     }
@@ -119,7 +119,7 @@ public class Cleave : Ability
                 {
                     // try to cast a ray from the enemy to the player
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << enemyMask));
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range + source.GetComponent<MovementFSM>().Radius, ~(1 << enemyMask));
 
 
                     if (!rayCastHit)
@@ -144,7 +144,7 @@ public class Cleave : Ability
                 {
                     // try to cast a ray from the player to the enemy
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << playerMask));
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range + source.GetComponent<MovementFSM>().Radius, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
@@ -176,22 +176,19 @@ public class Cleave : Ability
 
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
-
     {
-        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
-
-        //Debug.Log("damage: " + damageAmt);
-        
+        float damageAmt;
+        if (isPlayer == true)
+        {
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
+        }
+        else
+        {
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, 0);
+        }
 
         defender.ModifyHealth(-damageAmt);
 
-        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
-
-        if (isPlayer == true)
-        {
-
-            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
-        }
     }
 
 
@@ -215,7 +212,8 @@ public class Cleave : Ability
 
         else
         {
-            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
+            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position + source.transform.forward * source.GetComponent<MovementFSM>().Radius * 1.5F, source.transform.rotation);
+
         }
 
         //particles.transform.parent = source.transform;

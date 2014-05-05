@@ -10,23 +10,18 @@ public class AbilityManager : MonoBehaviour
 
     public List<float> activeCoolDowns;
 
-   
-
 	// Use this for initialization
     public void Awake()
     {
         abilities = new List<Ability>(40);
          
-
         activeCoolDowns = new List<float>(40);
-
         for (int i = 0; i < abilities.Capacity; i++)
         {
             abilities.Add(null);
             activeCoolDowns.Add(0.0f);
         }
     }
-
 
 	void Start () 
     {
@@ -45,6 +40,7 @@ public class AbilityManager : MonoBehaviour
         if (abilities.Count <= 40)
         {
             abilities[index] = ab;
+            activeCoolDowns[index] = 0;
             PlayerPrefs.SetString("ability" + (index).ToString(), ab.ID);
 
         }
@@ -62,7 +58,5 @@ public class AbilityManager : MonoBehaviour
             PlayerPrefs.DeleteKey("ability" + (index).ToString());
             abilities[index] = null;
         }
-
     }
-  
 }

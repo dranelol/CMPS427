@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class Deathgrip : Ability
 {
-    public Deathgrip(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
+    public Deathgrip(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
        
     }
@@ -24,7 +24,8 @@ public class Deathgrip : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
-                    DoPhysics(source, enemy);
+                    //DoPhysics(source, enemy);
+                    DoBlink(source, enemy);
 
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
@@ -32,6 +33,8 @@ public class Deathgrip : Ability
                     }
 
                 }
+
+                GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, enemy));
 
             }
         }
@@ -42,9 +45,13 @@ public class Deathgrip : Ability
             {
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
-                DoPhysics(source, enemy);
+                //DoPhysics(source, enemy);
+                DoBlink(source, enemy);
+                GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, enemy));
             }
         }
+
+
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -102,7 +109,7 @@ public class Deathgrip : Ability
                 if (isPlayer == true)
                 {
                     // try to cast a ray from the enemy to the player
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, ~(1 << enemyMask));
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, ~(1 << enemyMask));
 
                     if (!rayCastHit)
                     {
@@ -123,7 +130,7 @@ public class Deathgrip : Ability
                 else
                 {
                     // try to cast a ray from the player to the enemy
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, ~(1 << playerMask));
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
@@ -148,18 +155,18 @@ public class Deathgrip : Ability
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
-
-        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
-        Debug.Log("damage: " + damageAmt);
-
-        defender.ModifyHealth(-damageAmt);
-
-        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
-
+        float damageAmt;
         if (isPlayer == true)
         {
-            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
         }
+        else
+        {
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, 0);
+        }
+       // Debug.Log("damage: " + damageAmt);
+
+        defender.ModifyHealth(-damageAmt);
     }
 
     public override void DoPhysics(GameObject source, GameObject target)
@@ -167,7 +174,43 @@ public class Deathgrip : Ability
         Vector3 relativeVector = (source.transform.position - target.transform.position).normalized;
         float normalizedMagnitude = Vector3.Distance(target.transform.position, source.transform.position);
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
-        target.GetComponent<MovementFSM>().AddForce(relativeVector * force * 2, 0.1f, ForceMode.Impulse);
+        target.GetComponent<MovementFSM>().AddForce(relativeVector * force * 2, 0.1f);
+    }
+
+    private void DoBlink(GameObject source, GameObject target)
+    {
+        // warp target to source
+        target.GetComponent<NavMeshAgent>().Warp(source.transform.position);
+        
+    }
+
+    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target)
+    {
+        GameObject particles;
+
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position, target.transform.rotation);
+
+        GameObject secondaryParticles = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DeathgripTrailParticles, source.transform.position, source.transform.rotation);
+        BounceBetween bounce = secondaryParticles.GetComponent<BounceBetween>();
+
+        bounce.origin = source;
+        bounce.target = target;
+
+        yield return new WaitForSeconds(time);
+
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem item in particleSystems)
+        {
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            //item.enableEmission = false;
+
+        }
+
+        GameObject.Destroy(particles);
+
+        yield return null;
     }
 
 }

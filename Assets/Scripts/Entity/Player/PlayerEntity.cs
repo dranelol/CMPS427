@@ -6,6 +6,27 @@ public class PlayerEntity : Entity
 {
     public float power, defense, attackSpeed, movementSpeed, minDamage, maxDamage;
 
+    private int nextLevelExperience;
+    public int NextLevelExperience
+    {
+        get
+        {
+            return nextLevelExperience;
+        }
+
+        set
+        {
+            nextLevelExperience = value;
+        }
+    }
+
+    private int attributePoints;
+    public int AttributePoints
+    {
+        get { return attributePoints; }
+        set { attributePoints = value; }
+    }
+
     public Mesh mesh { get { return GetComponent<MeshFilter>().mesh; } }
 
     GameManager gameManager;
@@ -16,13 +37,17 @@ public class PlayerEntity : Entity
         base.Awake();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
-        
-    }
 
+        Experience = 0;
+        Level = 1;
+        nextLevelExperience = 100;
+
+    }
 
 	public void Start() 
     {
         base.Start();
+
 
         if (gameManager.loadSaveTest == true)
         {
@@ -34,9 +59,9 @@ public class PlayerEntity : Entity
                     abilityIndexDict[PlayerPrefs.GetString("ability"+i)] = i;
                 }
             }
+
             for( int i=0;i<6;i++)
             {
-                
                 if(PlayerPrefs.HasKey(i+"name") == true)
                 {
                     equipment tempequip = gameManager.EquipmentFactory.loadequipment(i+"");
@@ -44,6 +69,7 @@ public class PlayerEntity : Entity
                     {
                         Debug.Log("EQUIPPING " + tempequip.equipmentName + " FROM LOAD");
                     }
+
                     else
                     {
                         Debug.Log("CAN'T EQUIP THE "+tempequip.equipmentName+" FOR SOME REASON");
@@ -57,15 +83,17 @@ public class PlayerEntity : Entity
 
         else
         {
-            abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
-            abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 3);
-            abilityManager.AddAbility(GameManager.Abilities["bloodbolt"], 4);
-            abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
+            abilityManager.AddAbility(GameManager.Abilities["fireball"], 1);
+            abilityManager.AddAbility(GameManager.Abilities["flamestrike"], 2);
+            abilityManager.AddAbility(GameManager.Abilities["fireballturret"], 3);
+            abilityManager.AddAbility(GameManager.Abilities["infernalfireball"], 4);
+            abilityManager.AddAbility(GameManager.Abilities["fireballbarrage"], 5);
 
-            abilityIndexDict["cleave"] = 2;
-            abilityIndexDict["aoefreeze"] = 3;
-            abilityIndexDict["bloodbolt"] = 4;
-            abilityIndexDict["bladewaltz"] = 5;
+            abilityIndexDict["fireball"] = 1;
+            abilityIndexDict["flamestrike"] = 2;
+            abilityIndexDict["fireballturret"] = 3;
+            abilityIndexDict["infernalfireball"] = 4;
+            abilityIndexDict["fireballbarrage"] = 5;
         }
 
 	}
@@ -95,6 +123,9 @@ public class PlayerEntity : Entity
         maxDamage = currentAtt.MaxDamage;
 
         //Debug.Log(abilities.Count);
+
+
+        ModifyResource(0.5f);
 	}
 
     public void OnApplicationQuit()
@@ -105,5 +136,19 @@ public class PlayerEntity : Entity
     public Attributes GetAttributes()
     {
         return currentAtt;
+    }
+
+    /// <summary>
+    /// Give the specified amount of experience to the player.
+    /// </summary>
+    /// <param name="expToAdd">Experience to add to the player.</param>
+    public void GiveExperience(int expToAdd)
+    {
+        Experience += expToAdd;
+    }
+
+    public void GiveAttributePoints(int attrPointsToAdd)
+    {
+        attributePoints += attrPointsToAdd;
     }
 }

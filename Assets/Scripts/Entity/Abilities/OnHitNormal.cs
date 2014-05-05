@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class OnHitNormal : Ability
 {
-    public OnHitNormal(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
+    public OnHitNormal(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
 
     }
@@ -46,13 +46,6 @@ public class OnHitNormal : Ability
         Debug.Log("damage: " + damageAmt);
 
         defender.ModifyHealth(-damageAmt);
-
-        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
-
-        if (isPlayer == true)
-        {
-            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
-        }
     }
 
     public override void DoPhysics(GameObject source, GameObject target)

@@ -57,6 +57,7 @@ public class OrbSpawn : MonoBehaviour
             newOrb.GetComponent<OrbRotate>().clockwiseRotate = clockwiseRotate;
             newOrb.GetComponent<OrbRotate>().movingOrbit = movingOrbit;
             newOrb.GetComponent<OrbRotate>().infiniteRotation = infiniteRotation;
+            newOrb.GetComponent<OrbRotate>().orbitObject = orbitObject;
 
             if (movingOrbit == true)
             {

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class IceBolt : Ability
 {
-    public IceBolt(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
+    public IceBolt(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
 
     }
@@ -15,11 +15,22 @@ public class IceBolt : Ability
     {
 
         int segments = 1;
+        Vector3 launchpos;
+
+        if (source.tag == "Projectile")
+        {
+            launchpos = source.transform.position;
+            launchpos.y = launchpos.y - 1;
+        }
+        else
+        {
+            launchpos = source.transform.position;
+        }
 
         for (int i = 0; i < segments; i++)
         {
 
-            GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().IceBoltProjectile, source.transform.position /*+ Rotations.RotateAboutY(forward, (360 / segments) * i) * 2*/, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
+            GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().IceBoltProjectile, launchpos /*+ Rotations.RotateAboutY(forward, (360 / segments) * i) * 2*/, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
 
             projectile.GetComponent<ProjectileBehaviour>().owner = owner;
             projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
@@ -80,22 +91,21 @@ public class IceBolt : Ability
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
-
-        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
-
+        float damageAmt;
+        if (isPlayer == true)
+        {
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
+        }
+        else
+        {
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, 0);
+        }
         if (isPlayer == true)
         {
             Debug.Log("damage: " + damageAmt);
         }
 
         defender.ModifyHealth(-damageAmt);
-
-        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
-
-        if (isPlayer == true)
-        {
-            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
-        }
     }
 
 

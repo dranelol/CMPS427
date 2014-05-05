@@ -20,7 +20,9 @@ public class MenuUI : UIState {
 
     public override void Exit()
     {
+        base.Exit();
         Debug.Log("Exiting Menu state.");
+
     }
 
     public override void Update()
@@ -35,6 +37,23 @@ public class MenuUI : UIState {
 
     void OnWindow(int windowId)
     {
+        #region Mouse in GUI check
+
+        Vector2 mPos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
+        if (mPos.x > windowDimensions.x
+            && mPos.x < windowDimensions.width + windowDimensions.x
+            && mPos.y > windowDimensions.y
+            && mPos.y < windowDimensions.height + windowDimensions.y)
+        {
+            Controller.PlayerController.MouseOverGUI = true;
+        }
+        else
+        {
+            Controller.PlayerController.MouseOverGUI = false;
+        }
+
+        #endregion
+        
         if (GUI.Button(new Rect(WINDOW_WIDTH / 2 - 40, 40, 80, 45), "Resume")) 
         {
             Controller.GuiState = UIController.States.INGAME;

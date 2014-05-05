@@ -1,9 +1,13 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+guid: 19bcb4f83564cfe4ca1f4f4437309c97
+=======
+<<<<<<< HEAD
 guid: a86af4b37c7fc294da7c119771bbd3c1
 =======
 guid: 2f1abde06ba8d734491b0a2358752599
 >>>>>>> a5580f528579d30e27fab60fade91a69412e55e4
+>>>>>>> upstream/master
 folderAsset: yes
 DefaultImporter:
   userData: 

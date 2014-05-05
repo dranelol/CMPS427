@@ -1,0 +1,20 @@
+Order for fields in the input file for the buffcreator script (all separated by a |):
+
+1 - Class Name
+2 - Buff Name
+3 - Flavor Text
+4 - "Buff" or "Debuff" 
+5* - One of the Functional Modules defined in Aura.cs
+6* - The ModType, DamageType, or attribute needed by the buff
+7 - Magnitude
+8 - Icon Texture File Name (without file type)
+9 - Particle Effect Name
+10 - Maximum Buff Count
+11 - Initial Buff Count
+12 - Buff Duration
+
+*Valid values are based on values present on 4-8-14. If any have been added, they can be added to the appropriate list at the top of buffcreator.py. If a problem persists, contact Augie for information.
+
+For some modules, only a magnitude needs to be passed to the constructor. However, for this script to function, there must be 12 fields present for each entry in the input file. For unneeded fields, leave them blank.
+
+If an exception is thrown, the script will stop creating the buff files at the line where the error is located. To continue from where you left off, just delete the lines before the error in your input file.
