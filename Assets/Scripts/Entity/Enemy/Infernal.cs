@@ -4,17 +4,19 @@ using System.Collections;
 public class Infernal : MonoBehaviour 
 {
     private AnimationController _animationController;
-    private SkinnedMeshRenderer _meshRenderer;
-    private GameObject _golem;
-    private GameObject _golemPieces;
-    public GameObject _source;
+    private SkinnedMeshRenderer[] _meshRenderer;
+
+    public GameObject _pieces;
+    public GameObject _main;
+    public string _deathAnimation;
+
+    private GameObject _source;
 
     void Awake()
     {
         _animationController = GetComponent<AnimationController>();
-        _meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        _golem = transform.FindChild("GOLEM_").gameObject;
-        _golemPieces = transform.FindChild("GOLEM_SPLIT_INTO_PIECES").gameObject;
+        _meshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>();
+        _pieces.animation[_deathAnimation].wrapMode = WrapMode.ClampForever;
     }
 
     public void Initialize(GameObject source)
@@ -24,12 +26,11 @@ public class Infernal : MonoBehaviour
         GetComponent<CapsuleCollider>().enabled = false;
         name = _source.name + "'s Summoned Inferno";
 
-        _golemPieces.animation["gatherIntoGolem"].wrapMode = WrapMode.ClampForever;
-        _golemPieces.animation["gatherIntoGolem"].speed = 2f;
-        _golemPieces.animation["fallIntoPieces"].wrapMode = WrapMode.ClampForever;
-        _golemPieces.animation.Play("gatherIntoGolem");
+        _pieces.animation["gatherIntoGolem"].wrapMode = WrapMode.ClampForever;
+        _pieces.animation["gatherIntoGolem"].speed = 2f;
+        _pieces.animation.Play("gatherIntoGolem");
 
-        StartCoroutine(StartCombat(_golemPieces.animation["gatherIntoGolem"].length / _golemPieces.animation["gatherIntoGolem"].speed));
+        StartCoroutine(StartCombat(_pieces.animation["gatherIntoGolem"].length / _pieces.animation["gatherIntoGolem"].speed));
     }
 
     private IEnumerator StartCombat(float time)
@@ -51,8 +52,8 @@ public class Infernal : MonoBehaviour
 
         GameObject _target = _source.GetComponent<AIController>().Target;
         GetComponent<CapsuleCollider>().enabled = true;
-        _meshRenderer.enabled = true;
-        _golemPieces.SetActive(false);
+        _meshRenderer[0].enabled = true;
+        _pieces.SetActive(false);
 
         yield return new WaitForSeconds(0.5f);
 
@@ -62,8 +63,12 @@ public class Infernal : MonoBehaviour
 
     public void Death()
     {
-        _meshRenderer.enabled = false;
-        _golemPieces.SetActive(true);
-        _golemPieces.animation.Play("fallIntoPieces");
+        for (int i = 0; i < _meshRenderer.Length; i++)
+        {
+            _meshRenderer[i].enabled = false;
+        }
+        _main.SetActive(false);
+        _pieces.SetActive(true);
+        _pieces.animation.Play(_deathAnimation);
     }
 }
