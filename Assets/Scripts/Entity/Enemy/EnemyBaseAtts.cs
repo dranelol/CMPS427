@@ -55,14 +55,9 @@ public class EnemyBaseAtts : MonoBehaviour {
     {
         List<string> actualAblities = new List<string>();
 
-        actualAblities.Add(possibleAbilities[0]);
-        gameObject.GetComponent<Entity>().abilityManager.AddAbility(GameManager.Abilities[possibleAbilities[0]], 0);
-        gameObject.GetComponent<Entity>().abilityIndexDict[actualAblities[0]] = 0;
-
-        for(int i = 1;i<maxAbilities;i++)
+        for(int i = 0; i < possibleAbilities.Count; i++)
         {
-            int diceroll = UnityEngine.Random.Range((int)0,(int)possibleAbilities.Count);
-            string abilityname = possibleAbilities[diceroll];
+            string abilityname = possibleAbilities[i];
 
             if(actualAblities.Contains(abilityname) == false)
             {

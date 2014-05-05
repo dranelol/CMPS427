@@ -79,7 +79,11 @@ public class AnimationController : MonoBehaviour
 
     public void StopMoving()
     {
-        animation.CrossFade("Idle", 0.3f);
+        try
+        {
+            animation.CrossFade("Idle", 0.3f);
+        }
+        catch { }
     }
 
     public void StartMoving()

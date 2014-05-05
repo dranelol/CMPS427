@@ -152,7 +152,6 @@ public class EnemyAttributeFactory : MonoBehaviour
     public int _ogreCost = 10;
     public int _ghostCost = 6;
     public int _trollCost = 8;
-    public int _demonCost = 20;
     public int _treeEntCost = 12;
     public int _orcCost = 9;
 
