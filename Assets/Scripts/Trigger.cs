@@ -9,7 +9,7 @@ public class Trigger : MonoBehaviour {
     public bool clickTrigger;
     
 	public bool isActive = false;
-	bool inRange = false;
+	protected bool inRange = false;
 	void Start () 
     {
 		if(isActive) 
@@ -56,7 +56,7 @@ public class Trigger : MonoBehaviour {
         }
 	}
 
-	void OnTriggerEnter(Collider other)
+	public virtual void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.tag == "Player") 
 		{
@@ -65,11 +65,12 @@ public class Trigger : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerExit(Collider other)
+	public virtual void OnTriggerExit(Collider other)
 	{
         if (other.gameObject.tag == "Player") 
         {
             inRange = false;
+            Debug.Log("nocollided");
         }
     }
 
