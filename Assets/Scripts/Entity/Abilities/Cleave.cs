@@ -119,7 +119,7 @@ public class Cleave : Ability
                 {
                     // try to cast a ray from the enemy to the player
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << enemyMask));
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range + source.GetComponent<MovementFSM>().Radius, ~(1 << enemyMask));
 
 
                     if (!rayCastHit)
@@ -144,7 +144,7 @@ public class Cleave : Ability
                 {
                     // try to cast a ray from the player to the enemy
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << playerMask));
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range + source.GetComponent<MovementFSM>().Radius, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
@@ -212,7 +212,8 @@ public class Cleave : Ability
 
         else
         {
-            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
+            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position + source.transform.forward * source.GetComponent<MovementFSM>().Radius * 1.5F, source.transform.rotation);
+
         }
 
         //particles.transform.parent = source.transform;

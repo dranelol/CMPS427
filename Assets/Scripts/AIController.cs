@@ -71,6 +71,8 @@ public class AIController : StateMachine
     private Vector3 nodePosition; //Position of the EnemyNode
     public bool doesWander;
 
+    public float aggroRadius;
+
     void Awake()
     {
         Group = transform.parent.GetComponent<AIGroupController>();

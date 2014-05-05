@@ -27,6 +27,7 @@ public class EnemyBaseAtts : MonoBehaviour {
 
     public bool flees;
     public bool wanders;
+    public float _aggroRadius;
 
     public void InitializeStats()
     {
@@ -45,6 +46,7 @@ public class EnemyBaseAtts : MonoBehaviour {
         gameObject.GetComponent<Entity>().baseAtt = tempatts;
 
         GetComponent<AIController>().doesWander = wanders;
+        GetComponent<AIController>().aggroRadius = _aggroRadius;
         GetComponent<AIPursuit>().doesFlee= flees;
     }
 
