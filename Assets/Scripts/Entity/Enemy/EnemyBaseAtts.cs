@@ -29,6 +29,10 @@ public class EnemyBaseAtts : MonoBehaviour {
     public bool wanders;
     public float _aggroRadius;
 
+    public float LootDropChance;
+    public int MinLootDrops;
+    public int MaxLootDrops;
+
     public void InitializeStats()
     {
         Attributes tempatts = new Attributes();
