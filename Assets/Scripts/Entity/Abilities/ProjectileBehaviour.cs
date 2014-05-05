@@ -50,6 +50,11 @@ public class ProjectileBehaviour : MonoBehaviour
     public bool CollidesWithTerrain = true;
 
     /// <summary>
+    /// For projectiles that have an AoE attack on explode
+    /// </summary>
+    public bool AOEOnExplode = false;
+
+    /// <summary>
     /// flag for if the projectile does it's attack when it times out
     /// </summary>
     public bool ExplodesOnTimeout = false;
@@ -242,17 +247,34 @@ public class ProjectileBehaviour : MonoBehaviour
 
             // else, normal explosion
 
-            else if (EnvironmentProjectile == true)
+            else if (EnvironmentProjectile == true && other.gameObject.tag == "Terrain")
             {
-                if (other.gameObject.tag == "Terrain")
+                Debug.Log("environment hit!");
+                if (DiesOnHit == true)
                 {
-                    Debug.Log("environment hit!");
-                    if (DiesOnHit == true)
-                    {
-                        hasCollided = true;
-                        DetachParticleSystem();
-                        Destroy(gameObject);
-                    }
+                    hasCollided = true;
+                    DetachParticleSystem();
+                    Destroy(gameObject);
+                }
+                
+            }
+
+            else if (CollidesWithTerrain == true && other.gameObject.tag == "Terrain")
+            {
+                // if this is a pbaoe attack, do the attack handler at point of collision
+                if (AOEOnExplode == true)
+                {
+                    Entity ownerEntity = owner.GetComponent<Entity>();
+                    int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
+                    ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(gameObject, other.gameObject, owner.GetComponent<Entity>(), true);
+
+                }
+
+                if (DiesOnHit == true)
+                {
+                    hasCollided = true;
+                    DetachParticleSystem();
+                    Destroy(gameObject);
                 }
             }
 
@@ -291,6 +313,7 @@ public class ProjectileBehaviour : MonoBehaviour
                     {
                         Debug.Log("attacked a player");
                         HasCollidedWith.Add(other.gameObject);
+
                         if (EnvironmentProjectile == false)
                         {
                             Entity ownerEntity = owner.GetComponent<Entity>();
@@ -299,6 +322,7 @@ public class ProjectileBehaviour : MonoBehaviour
 
                             ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), false);
                         }
+
                         if (DiesOnHit == true)
                         {
 
@@ -311,12 +335,7 @@ public class ProjectileBehaviour : MonoBehaviour
 
                 
 
-                if (homing == true && other.gameObject.tag == "Terrain" && CollidesWithTerrain == true)
-                {
-                    hasCollided = true;
-                    DetachParticleSystem();
-                    Destroy(gameObject);
-                }
+                
                 if (other.gameObject == owner.gameObject && DiesOnOwnerHit == true)
                 {
                     Debug.Log("hit owner");
