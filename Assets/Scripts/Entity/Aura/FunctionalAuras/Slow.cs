@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-sealed public class Root : Aura
+sealed public class Slow : Aura
 {
     #region Template Constants
 
@@ -15,7 +15,7 @@ sealed public class Root : Aura
     private const string TEMPLATE_AURA_DESCRIPTION = "This unit is rooted in place"; // Description of the status effect (should be non-empty)
     private const string TEMPLATE_AURA_FLAVOR_TEXT = "..."; // Flavor text for the status effect (optional)
     private const string TEMPLATE_AURA_ICON_TEXTURE_NAME = "default_aura_texture"; // The name of the texture for this aura to be displayed on the GUI.
-    private const string TEMPLATE_AURA_PARTICLE_EFFECT_NAME = "RootDebuff"; // The name of the particle effect to be used by this aura.
+    private const string TEMPLATE_AURA_PARTICLE_EFFECT_NAME = "snowdrop"; // The name of the particle effect to be used by this aura.
     private const AuraType TEMPLATE_AURA_AURATYPE = AuraType.Buff; // The type of aura, buff or debuff.
     private const int TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS = 1; // The number of times this effect can stack. Must be between 1 and 99 (inclusive)
     private const int TEMPLATE_AURA_INITIAL_NUMBER_OF_STACKS = 1; // The number of stacks this aura starts with.
@@ -33,7 +33,7 @@ sealed public class Root : Aura
     /// </summary>
     /// <param name="id">The unique integer ID.</param>
     #region Complete
-    public Root(string name)
+    public Slow(string name)
         : base(name, TEMPLATE_AURA_DESCRIPTION, TEMPLATE_AURA_FLAVOR_TEXT, TEMPLATE_AURA_ICON_TEXTURE_NAME, TEMPLATE_AURA_PARTICLE_EFFECT_NAME,
         TEMPLATE_AURA_AURATYPE, TEMPLATE_AURA_DURATION, TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS, TEMPLATE_AURA_INITIAL_NUMBER_OF_STACKS
     #endregion
@@ -78,14 +78,14 @@ sealed public class Root : Aura
     /// <returns></returns>
     public override Aura Clone(Entity target, Entity caster, Aura prototpe)
     {
-        return new Root(target, caster, prototpe);
+        return new Slow(target, caster, prototpe);
     }
 
     #endregion
 
     #region Private Constructor
 
-    private Root(Entity target, Entity caster, Aura prototype) : base(target, caster, prototype) { }
+    private Slow(Entity target, Entity caster, Aura prototype) : base(target, caster, prototype) { }
 
     #endregion
 }

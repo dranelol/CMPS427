@@ -109,6 +109,7 @@ public class GameManager : MonoBehaviour
 
         Abilities["chaosbarrage"] = new ChaosBarrageAbility(AttackType.STATUS, DamageType.NONE, 10.0f, 0.0f, 30.0f, 0.0f, 100f, "chaosbarrage", "Chaos Barrage", ChaosBarrageParticles);
         Abilities["fireballbarrage"] = new FireballBarrageAbility(AttackType.STATUS, DamageType.NONE, 10.0f, 0.0f, 30.0f, 0.0f, 100f, "fireballbarrage", "Fireball Barrage", FireballBarrageParticles);
+        Abilities["rootability"] = new RootAbility(AttackType.STATUS, DamageType.NONE, 10.0f, 360.0f, 15.0f, 0.0f, 0f, "rootability", "Root Ability", null);
 
         #endregion
 
