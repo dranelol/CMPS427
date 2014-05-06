@@ -38,7 +38,9 @@ sealed public class Heal : Aura
 
         /* ----------------------------------------MODIFY THE REST HERE------------------------------------------------- *
          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-        , new HoT(ModType.Percentage, 0.01f), new FortifyAttribute(Attributes.Stats.MOVEMENT_SPEED, 0.2f))
+        , new HoT(ModType.Percentage, 0.01f)
+        /*new FortifyAttribute(Attributes.Stats.MOVEMENT_SPEED, 0.2f)*/
+        )
     { }
 
     #endregion

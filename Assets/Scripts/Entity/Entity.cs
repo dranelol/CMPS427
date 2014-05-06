@@ -16,6 +16,21 @@ public class Entity : MonoBehaviour
         get { return currentResource; }
     }
 
+
+    private int experience;
+    public int Experience
+    {
+        get { return experience; }
+        set { experience = value; }
+    }
+
+    private int level;
+    public int Level
+    {
+        get { return level; }
+        set { level = value; }
+	}
+
     public Attributes currentAtt; // The entity's current total attributes
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
@@ -23,21 +38,29 @@ public class Entity : MonoBehaviour
 
     public float minMovementSpeed = 0;
     public float maxMovementSpeed = 3;
-    public float minAttackSpeed = 0.1f;
-    public float maxAttackSpeed = 3f;
+    public float minAttackSpeed = 0.5f;
+    public float maxAttackSpeed = 2f;
 
     public AbilityManager abilityManager;
 
-    private Dictionary<equipSlots.slots, equipment> equippedEquip = new Dictionary<equipSlots.slots, equipment>();
     public Dictionary<string, int> abilityIndexDict = new Dictionary<string, int>();
+    private Dictionary<equipSlots.slots, equipment> equippedEquip;
+    public Dictionary<equipSlots.slots, equipment> EquippedEquip
+    {
+        get { return equippedEquip; }
+        set { equippedEquip = value; }
+    }
 
     protected Inventory inventory;
     public Inventory Inventory { get { return inventory; } }
+
+    private Mesh _weaponMesh;
 
     public void Awake()
     {
         LoadInventory();
         abilityManager = gameObject.GetComponent<AbilityManager>();
+        equippedEquip = new Dictionary<equipSlots.slots, equipment>();
 
         equipAtt = new Attributes();
         buffAtt = new Attributes();
@@ -47,8 +70,10 @@ public class Entity : MonoBehaviour
         baseAtt.Resource = currentResource = 100;
         baseAtt.Power = 10;
         baseAtt.Defense = 10;
-        baseAtt.AttackSpeed = 1.0f;
+        baseAtt.AttackSpeed = 0f;
         baseAtt.MovementSpeed = 1.0f;
+        level = 1;
+        experience = 0;
     }
 
 
@@ -60,9 +85,11 @@ public class Entity : MonoBehaviour
     public void Start()
     {
         UpdateCurrentAttributes();
+
+        // fix for "activated" cooldowns on start
     }
 
-    private void UpdateCurrentAttributes()
+    public void UpdateCurrentAttributes()
     {
         currentAtt = new Attributes();
         currentAtt.Add(baseAtt);
@@ -84,9 +111,29 @@ public class Entity : MonoBehaviour
         currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); 
     }
 
+    public void ModifyHealthPercentage(float deltaPercent)
+    {
+        currentHP = Mathf.Clamp(currentHP + (currentAtt.Health / deltaPercent), 0, currentAtt.Health);
+    }
+
     public void ModifyResource(float delta)
     {
-        currentResource = Mathf.Clamp(currentResource + delta, 0, currentAtt.Power);
+        currentResource = Mathf.Clamp(currentResource + delta, 0, currentAtt.Resource);
+    }
+
+    public void SetLevel(int newlevel)
+    {
+        ModifyLevel(newlevel - level);
+    }
+
+    public void ModifyLevel(int delta)
+    {
+        level = Mathf.Clamp(level + delta, 1, 20);
+    }
+
+    public void ModifyXP(int delta)
+    {
+        experience = Mathf.Clamp(experience + delta, 0, 1000);
     }
 
     /// <summary>
@@ -138,14 +185,18 @@ public class Entity : MonoBehaviour
                 abilityManager.AddAbility(GameManager.Abilities[item.onhit], 6);
                 abilityIndexDict[item.onhit] = 6;
             }
+            if (tag == "Player" && item.validSlot == equipSlots.slots.Main)
+            {
+                //GameObejct weaponModel = (Resources.Load(equipment.FILEPATH + item.modelname, typeof(GameObject)) as GameObject).GetComponent<MeshFilter>().mesh;          
+            }
 
-            Inventory.EquipItem(item);
+            inventory.RemoveItem(item);
             return true;
         }
     }
 
     /// <summary>
-    /// Remove an item from an equipment slot, clearing that slot. Returns false if that slot is already empty.
+    /// Removing the attributes of an equipment item from the character.
     /// </summary>
     /// <param name="slot"></param>
     /// <returns></returns>
@@ -165,8 +216,7 @@ public class Entity : MonoBehaviour
                 abilityManager.RemoveAbility(6);
          
             }
-
-            Inventory.UnequipItem((int)slot);
+            inventory.AddItem(removed);
             return true;
         }
         else

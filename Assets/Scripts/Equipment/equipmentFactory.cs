@@ -5,7 +5,8 @@ using System.Collections;
 /// <summary>
 /// equipment factory! use this to generate equipment!
 /// </summary>
-public class equipmentFactory {
+public class equipmentFactory 
+{
 
 
     /*
@@ -1607,7 +1608,9 @@ public class equipmentFactory {
                                             Convert.ToBoolean(PlayerPrefs.GetInt(i + "istwohand")),
                                             Convert.ToBoolean(PlayerPrefs.GetInt(i + "isranged")),
                                             PlayerPrefs.GetString(i + "onhitability"),
-                                            PlayerPrefs.GetString(i+ "modelname"));
+                                            PlayerPrefs.GetString(i+ "modelname"),
+                                            PlayerPrefs.GetString(i+"prefixname"),
+                                            PlayerPrefs.GetString(i+"suffixname"));
                    
      
         return tempequip;
@@ -1655,6 +1658,8 @@ public class equipmentFactory {
         }
         PlayerPrefs.SetString(i + "onhitability", item.onhit);
         PlayerPrefs.SetString(i + "modelname", item.modelname);
+        PlayerPrefs.SetString(i + "prefixname", item.prefixname);
+        PlayerPrefs.SetString(i + "suffixname", item.suffixname);
 
     }
 
@@ -1684,6 +1689,8 @@ public class equipmentFactory {
         PlayerPrefs.DeleteKey(i + "isranged");
         PlayerPrefs.DeleteKey(i + "onhitability");
         PlayerPrefs.DeleteKey(i + "modelname");
+        PlayerPrefs.DeleteKey(i + "prefixname");
+        PlayerPrefs.DeleteKey(i + "suffixname");
 
     }
 
@@ -2046,10 +2053,12 @@ public class equipmentFactory {
             if (tempaffix.affixType == equipSlots.affixtype.Suffix)
             {
                 randEquipment.equipmentName = randEquipment.equipmentName + " " + tempaffix.affixName;
+                randEquipment.suffixname = tempaffix.affixName;
             }
             else if (tempaffix.affixType == equipSlots.affixtype.Prefix)
             {
                 randEquipment.equipmentName = tempaffix.affixName + " " + randEquipment.equipmentName;
+                randEquipment.prefixname = tempaffix.affixName;
             }
 
             //add its attributes to the equipment
@@ -2068,6 +2077,7 @@ public class equipmentFactory {
             //add it to the equipment
             randEquipment.equipmentName = tempaffix.affixName + " " + randEquipment.equipmentName;
             randEquipment.equipmentAttributes.Add(tempaffix.affixAttributes);
+            randEquipment.prefixname = tempaffix.affixName;
 
             //roll for a suffix
             tempaffix = getrandaffix(randEquipment.validSlot, equipSlots.affixtype.Suffix);
@@ -2075,6 +2085,7 @@ public class equipmentFactory {
             //add it on
             randEquipment.equipmentName = randEquipment.equipmentName + " " + tempaffix.affixName;
             randEquipment.equipmentAttributes.Add(tempaffix.affixAttributes);
+            randEquipment.suffixname = tempaffix.affixName;
 
         }
     }

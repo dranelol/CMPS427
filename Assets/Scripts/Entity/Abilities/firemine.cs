@@ -2,10 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class firemine : Ability
+public class FireMine : Ability
 {
-    public firemine(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
+
+    public FireMine(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
 
     }
@@ -41,7 +42,10 @@ public class firemine : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
-                    DoPhysics(target, enemy);
+                    if (defender.CurrentHP > 0f)
+                    {
+                        DoPhysics(target, enemy);
+                    }
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
                         enemy.GetComponent<AIController>().BeenAttacked(source);
@@ -56,7 +60,10 @@ public class firemine : Ability
             {
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
-                DoPhysics(target, enemy);
+                if (defender.CurrentHP > 0f)
+                {
+                    DoPhysics(target, enemy);
+                }
 
             }
         }
@@ -64,22 +71,16 @@ public class firemine : Ability
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
-
-        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
-
+        float damageAmt;
         if (isPlayer == true)
         {
-            Debug.Log("damage: " + damageAmt);
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
         }
-
+        else
+        {
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, 0);
+        }
         defender.ModifyHealth(-damageAmt);
-
-        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
-
-        if (isPlayer == true)
-        {
-            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
-        }
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -139,7 +140,7 @@ public class firemine : Ability
                 if (isPlayer == true)
                 {
                     // try to cast a ray from the enemy to the player
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, ~(1<<enemyMask));
 
                     if (!rayCastHit)
                     {
@@ -160,7 +161,7 @@ public class firemine : Ability
                 else
                 {
                     // try to cast a ray from the player to the enemy
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
@@ -189,7 +190,7 @@ public class firemine : Ability
         float normalizedMagnitude = 5f - Vector3.Distance(target.transform.position, source.transform.position + new Vector3(.01f, 0f, 0f));
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
 
-        target.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force, 0.2f, ForceMode.Impulse);
+        target.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force, 0.2f);
     }
 
 }

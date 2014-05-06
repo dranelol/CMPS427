@@ -6,26 +6,49 @@ public class PlayerEntity : Entity
 {
     public float power, defense, attackSpeed, movementSpeed, minDamage, maxDamage;
 
+    private int nextLevelExperience;
+    public int NextLevelExperience
+    {
+        get
+        {
+            return nextLevelExperience;
+        }
+
+        set
+        {
+            nextLevelExperience = value;
+        }
+    }
+
+    private int attributePoints;
+    public int AttributePoints
+    {
+        get { return attributePoints; }
+        set { attributePoints = value; }
+    }
+
     public Mesh mesh { get { return GetComponent<MeshFilter>().mesh; } }
 
-    GameManager gamemanager;
+    GameManager gameManager;
 
 	// Use this for initialization
     public void Awake()
     {
         base.Awake();
-        gamemanager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
-        // Load saved items, if any.
-        inventory.LoadItems();
+        Experience = 0;
+        Level = 1;
+        nextLevelExperience = 100;
+
     }
-
 
 	public void Start() 
     {
         base.Start();
 
-        if (gamemanager.loadsavetest == true)
+
+        if (gameManager.loadSaveTest == true)
         {
             for (int i = 2; i < 6; i++)
             {
@@ -35,16 +58,17 @@ public class PlayerEntity : Entity
                     abilityIndexDict[PlayerPrefs.GetString("ability"+i)] = i;
                 }
             }
+
             for( int i=0;i<6;i++)
             {
-                
                 if(PlayerPrefs.HasKey(i+"name") == true)
                 {
-                    equipment tempequip = gamemanager.EquipmentFactory.loadequipment(i+"");
+                    equipment tempequip = gameManager.EquipmentFactory.loadequipment(i+"");
                     if (addEquipment(tempequip))
                     {
                         Debug.Log("EQUIPPING " + tempequip.equipmentName + " FROM LOAD");
                     }
+
                     else
                     {
                         Debug.Log("CAN'T EQUIP THE "+tempequip.equipmentName+" FOR SOME REASON");
@@ -56,15 +80,17 @@ public class PlayerEntity : Entity
 
         else
         {
-            abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
-            abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
-            abilityManager.AddAbility(GameManager.Abilities["chaosbolt"], 4);
-            abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
+            abilityManager.AddAbility(GameManager.Abilities["fireball"], 1);
+            abilityManager.AddAbility(GameManager.Abilities["flamestrike"], 2);
+            abilityManager.AddAbility(GameManager.Abilities["fireballturret"], 3);
+            abilityManager.AddAbility(GameManager.Abilities["whirlwind"], 4);
+            abilityManager.AddAbility(GameManager.Abilities["fireballbarrage"], 5);
 
-            abilityIndexDict["shadowbolt"] = 2;
-            abilityIndexDict["poisonbolt"] = 3;
-            abilityIndexDict["chaosbolt"] = 4;
-            abilityIndexDict["bladewaltz"] = 5;
+            abilityIndexDict["fireball"] = 1;
+            abilityIndexDict["flamestrike"] = 2;
+            abilityIndexDict["fireballturret"] = 3;
+            abilityIndexDict["whirlwind"] = 4;
+            abilityIndexDict["fireballbarrage"] = 5;
         }
 
 	}
@@ -94,6 +120,9 @@ public class PlayerEntity : Entity
         maxDamage = currentAtt.MaxDamage;
 
         //Debug.Log(abilities.Count);
+
+
+        ModifyResource(0.5f);
 	}
 
     public void OnApplicationQuit()
@@ -105,5 +134,19 @@ public class PlayerEntity : Entity
     public Attributes GetAttributes()
     {
         return currentAtt;
+    }
+
+    /// <summary>
+    /// Give the specified amount of experience to the player.
+    /// </summary>
+    /// <param name="expToAdd">Experience to add to the player.</param>
+    public void GiveExperience(int expToAdd)
+    {
+        Experience += expToAdd;
+    }
+
+    public void GiveAttributePoints(int attrPointsToAdd)
+    {
+        attributePoints += attrPointsToAdd;
     }
 }

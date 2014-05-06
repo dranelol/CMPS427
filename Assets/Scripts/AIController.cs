@@ -56,19 +56,22 @@ public class AIController : StateMachine
     private MovementFSM MoveFSM; // The Movement FSM the enemy uses
     private AIPursuit PursuitFSM; // The script that managers AI behavior when pursuing a target
     private Entity EntityObject; // our entity object
+    private AnimationController _animationController;
     // Reset variables
     public Vector3 localHomePosition; // The position around the home position this unit returns to upon reset
 
-    // Target variabels
+    // Target variables
     private Dictionary<GameObject, Hostile> ThreatTable; // A dictionary of all threat targets
     private GameObject target; // The Target object that holds information about the current target
-
 
     private float wanderInterval; //Time between wanders in seconds
     private float wanderDistance; //Radius around the wanderer that it will travel
     private float nextWander;    //Time the next wander will take place.
     private float wanderDistanceFromNode; //Max distance the enemy will wander away from the node.
     private Vector3 nodePosition; //Position of the EnemyNode
+    public bool doesWander;
+
+    public float aggroRadius;
 
     void Awake()
     {
@@ -76,23 +79,7 @@ public class AIController : StateMachine
         Aggro = GetComponentInChildren<AggroRadius>();
         MoveFSM = GetComponent<MovementFSM>();
         EntityObject = GetComponent<Entity>();
-    }
-
-	void Start() 
-    {
-        PursuitFSM = GetComponent<AIPursuit>();
-        localHomePosition = transform.position;
-
-        wanderDistance = 5.0f;
-        wanderInterval = 5.0f;
-        wanderDistanceFromNode = 7.0f;
-
-        nodePosition = new Vector3(transform.parent.position.x, transform.position.y, transform.parent.position.z);
-
-        nextWander = Time.time + wanderInterval;
-
-        ThreatTable = new Dictionary<GameObject, Hostile>();
-        target = null;
+        _animationController = GetComponent<AnimationController>();
 
         SetupMachine(AIStates.idle);
 
@@ -115,9 +102,24 @@ public class AIController : StateMachine
         AddTransitionsFrom(AIStates.reset, resetTransitions);
         AddTransitionsFrom(AIStates.wander, wanderTransitions);
 
-        StartMachine(AIStates.idle);
+        StartMachine(AIStates.idle);     
+    }
 
-        
+	void Start() 
+    {
+        PursuitFSM = GetComponent<AIPursuit>();
+        localHomePosition = transform.position;
+
+        wanderDistance = 5.0f;
+        wanderInterval = 5.0f;
+        wanderDistanceFromNode = 7.0f;
+
+        nodePosition = new Vector3(transform.parent.position.x, transform.position.y, transform.parent.position.z);
+
+        nextWander = Time.time + wanderInterval;
+
+        ThreatTable = new Dictionary<GameObject, Hostile>();
+        target = null;
     }
 
     #region public functions
@@ -130,7 +132,7 @@ public class AIController : StateMachine
     /// <param name="magnitude">The amount of threat to apply.</param>
     public void Threat(GameObject source, float magnitude = 0)
     {
-        if ((AIStates)CurrentState != AIStates.dead && (AIStates)CurrentState != AIStates.reset)
+        if ((AIStates)CurrentState != AIStates.dead && (AIStates)CurrentState != AIStates.reset && source != null)
         {
             if (source.tag == "Player")
             {
@@ -155,6 +157,7 @@ public class AIController : StateMachine
                     target = source;
                     PursuitFSM.Pursue(target);
                 }
+                
             }
 
             else
@@ -172,6 +175,11 @@ public class AIController : StateMachine
     public void BeenAttacked(GameObject attacker)
     {
         Group.Threat(attacker, 1);
+    }
+
+    public Vector3 homeNodePosition
+    {
+        get { return Group.HomePosition; }
     }
 
     /// <summary>
@@ -196,6 +204,7 @@ public class AIController : StateMachine
     {
         return (AIStates)CurrentState == AIStates.pursuit;
     }
+
 
     #endregion
 
@@ -277,7 +286,7 @@ public class AIController : StateMachine
             targetPosition += currentPosition;
         }
 
-        MoveFSM.SetPath(targetPosition);
+        MoveFSM.WalkPath(targetPosition);
     }
 
     private void Reset()
@@ -296,21 +305,30 @@ public class AIController : StateMachine
 
     IEnumerator idle_EnterState()
     {
+        _animationController.WalkToMove();
         Aggro.Trigger.enabled = true;
         yield break;
     }
 
     void idle_Update()
     {
-        if (Time.time >= nextWander)
+        if (doesWander)
         {
-            Wander(transform.position, nodePosition, wanderDistance, wanderDistanceFromNode);            
-            nextWander = Time.time + wanderInterval;
+            if (Time.time >= nextWander)
+            {
+                Wander(transform.position, nodePosition, wanderDistance, wanderDistanceFromNode);
+                nextWander = Time.time + wanderInterval;
+            }
+
+            else if (Vector3.Distance(transform.position, GetComponent<NavMeshAgent>().destination) < GetComponent<NavMeshAgent>().stoppingDistance)
+            {
+                MoveFSM.Stop();
+            }
         }
 
-        else if (Vector3.Distance(transform.position, GetComponent<NavMeshAgent>().destination) < GetComponent<NavMeshAgent>().stoppingDistance)
+        else
         {
-            MoveFSM.Stop();
+            _animationController.Sleep();
         }
     }
 
@@ -326,6 +344,7 @@ public class AIController : StateMachine
 
     IEnumerator pursuit_EnterState()
     {
+        _animationController.RunToMove();
         PursuitFSM.Pursue(target);
         yield break;
     }
@@ -334,6 +353,11 @@ public class AIController : StateMachine
     {
         if (EntityObject.CurrentHP <=0.0f) // Check health for death || if (health <= 0)
         {
+            if (target != null)
+            {
+                target.GetComponent<PlayerEntity>().GiveExperience(EntityObject.Experience);
+            }
+
             Transition(AIStates.dead);
         }
 
@@ -372,7 +396,7 @@ public class AIController : StateMachine
 
     void reset_Update()
     {
-        if (Vector3.Distance(transform.position, localHomePosition) < 1)
+        if (Vector3.Distance(transform.position, localHomePosition) < MoveFSM.Radius)
         {
             MoveFSM.Stop();
             Transition(AIStates.idle);
@@ -392,14 +416,67 @@ public class AIController : StateMachine
     {
         // Destroy(this.gameObject);
 
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>().Experience += 25;
+
         PursuitFSM.StopPursuit();
-        MoveFSM.LockMovement();
+        MoveFSM.LockMovement(MovementFSM.LockType.ShiftLock);
         GetComponent<CapsuleCollider>().enabled = false;
         GetComponent<NavMeshAgent>().enabled = false;
         Aggro.gameObject.SetActive(false);
-        Destroy(rigidbody);
 
-        GetComponent<AnimationController>().Death();
+        try
+        {
+            GetComponent<Infernal>().Death();
+        }
+
+        catch
+        {
+            _animationController.Death();
+        }
+
+        #region heal orb spawning
+        GameObject healOrb = (GameObject)Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnvironmentHealOrbProjectile, new Vector3(transform.position.x, transform.position.y + 2, transform.position.z), Quaternion.identity);
+
+        ProjectileBehaviour healOrbProjectile = healOrb.GetComponent<ProjectileBehaviour>();
+
+        healOrbProjectile.EnvironmentProjectile = true;
+        healOrbProjectile.homing = true;
+        healOrbProjectile.speed = 10.0f;
+        healOrbProjectile.timeToActivate = 5.0f;
+        
+
+        Vector3 randPosition = transform.position + UnityEngine.Random.onUnitSphere*3;
+        Vector3 randDirection = (randPosition - transform.position).normalized;
+        randPosition.Set(randPosition.x, 0, randPosition.z);
+        healOrbProjectile.target = randPosition;
+
+        healOrbProjectile.transform.rotation = Quaternion.LookRotation(randDirection);
+        #endregion
+
+        yield return new WaitForSeconds(5.0f);
+
+        #region loot spawning
+
+        #endregion
+
+        #region chest spawning
+
+        #endregion
+
+        #region fading
+
+
+        #endregion
+
+        
+
+        #region cleanup and destroy
+
+
+
+        Destroy(gameObject);
+
+        #endregion
         yield return null;
     }
 
@@ -440,9 +517,6 @@ public class AIController : StateMachine
     }*/
 
     #endregion 
-
-
-    
 
     #endregion
 }

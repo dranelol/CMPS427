@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class AOEfreeze : Ability
 {
-    public AOEfreeze(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
+    public AOEfreeze(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
 
     }
@@ -16,7 +16,6 @@ public class AOEfreeze : Ability
 
         if (isPlayer == true)
         {
-            Debug.Log(attacked.Count);
             foreach (GameObject enemy in attacked)
             {
                 if (enemy.GetComponent<AIController>().IsResetting() == false
@@ -46,7 +45,7 @@ public class AOEfreeze : Ability
 
             }
         }
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.5f, isPlayer));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.5f, isPlayer));
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -83,7 +82,6 @@ public class AOEfreeze : Ability
         foreach (Collider collider in colliders)
         {
 
-
             // create a vector from the possible enemy to the attacker
             Vector3 normalizedAttackPosition = new Vector3(source.transform.position.x, 1, source.transform.position.z);
             Vector3 normalizedDefenderPosition = new Vector3(collider.transform.position.x, 1, collider.transform.position.z);
@@ -106,7 +104,7 @@ public class AOEfreeze : Ability
                 {
                     // try to cast a ray from the enemy to the player
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << enemyMask));
 
 
                     if (!rayCastHit)
@@ -131,7 +129,7 @@ public class AOEfreeze : Ability
                 {
                     // try to cast a ray from the player to the enemy
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
@@ -169,23 +167,25 @@ public class AOEfreeze : Ability
     /// <param name="source">the entity that is applying the buff/debuff</param>
     public void DoBuff(GameObject target, Entity source)
     {
-        target.GetComponent<EntityAuraManager>().Add("root", source);
+        target.GetComponent<EntityAuraManager>().Add("slow", source);
 
     }
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
-        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
+        float damageAmt;
+        if (isPlayer == true)
+        {
+             damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
+        }
+        else
+        {
+             damageAmt = DamageCalc.DamageCalculation(attacker, defender, 0);
+        }
         Debug.Log("damage: " + damageAmt);
 
         defender.ModifyHealth(-damageAmt);
 
-        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
-
-        if (isPlayer == true)
-        {
-            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
-        }
     }
 
     public override void DoPhysics(GameObject source, GameObject target)
@@ -196,8 +196,6 @@ public class AOEfreeze : Ability
     public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
     {
         GameObject particles;
-
-
 
         particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, Quaternion.Euler(90,90,0));
         
@@ -210,7 +208,6 @@ public class AOEfreeze : Ability
 
         foreach (ParticleSystem item in particleSystems)
         {
-            Debug.Log("asd");
             item.transform.parent = null;
             item.emissionRate = 0;
             item.enableEmission = false;

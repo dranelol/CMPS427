@@ -1,28 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour 
 {
-    public GameObject enemyPrefab;
+    private SphereCollider trigger;
 
-    public SphereCollider trigger;
-
-    public int enemyCount;
+    public float triggerRadius;
     public float spawnRadius;
     public int level;
-    public string enemytype;
 
-    // Continuous generation
-    public bool isStatic; // This determines if the spawner should generate 1 group or continuously spawn enemies over time.
+    public int _resources;
+    public int _maxCount;
+    public int _maxCost;
+    public int _minCost;
 
-    // Only visible if continuous generation is selected
-    public bool isTrigger;
-    public float triggerRadius; // The radius in which a player must be before to trigger generation
-    public int spawnInterval; // The time in between spawns while a player is within the radius
-
-    private float spawnCounter = 0;
-
+    //If we're spawning a group of enemies only once, this'll stop it from happening again.
+    private bool HasSpawned = false;
 
     void Awake()
     {
@@ -44,77 +39,37 @@ public class EnemySpawner : MonoBehaviour
         level = 1;
     }
 
-    void Start()
+    void OnTriggerEnter(Collider other)
     {
-        //man = GameObject.Find("GameManager");
-
-        if (!isStatic || !isTrigger)
+        if (!HasSpawned)
         {
-            trigger.enabled = false;
-            spawnCounter = spawnInterval;
-
-            for (int i = 0; i < enemyCount; i++)
+            if (other.tag == "Player")
             {
-                GenerateEnemy();
-            }
+                level = other.GetComponent<PlayerEntity>().Level;
 
-            if (!isStatic)
-            {
-                this.enabled = false;
-            }
-        }
-    }
+                List<GameObject> enemies = EnemyAttributeFactory.GetEnemies(_resources, _maxCount, _maxCost, _minCost);//enemyattributefacory get enemies stuff
 
-    void Update()
-    {
-        /*
-        if (transform.childCount < enemyCount)
-        {
-            if (spawnCounter > 0)
-            {
-                spawnCounter -= Time.deltaTime;
-
-                if (spawnCounter <= 0)
+                for (int i = 0; i < enemies.Count; i++)
                 {
-                    if (!isTrigger)
-                    {
-                        GenerateEnemy();
-                        spawnCounter = spawnInterval;
-                    }
-
-                    else
-                    {
-                        spawnCounter = 0;
-                    }
+                    GenerateEnemy(enemies[i]);
                 }
+
+                HasSpawned = true;
             }
         }
-         */
     }
 
-    void OnTriggerStay()
-    {
-        if (spawnCounter <= 0)
-        {
-            GenerateEnemy();
-            spawnCounter = spawnInterval;
-        }
-    }
 
-    private void GenerateEnemy()
+    private void GenerateEnemy(GameObject enemydude)
     {
-
-        
-        
         Vector3 newPosition = transform.position + new Vector3(UnityEngine.Random.Range(-spawnRadius, spawnRadius), 0, UnityEngine.Random.Range(-spawnRadius, spawnRadius));
 
         NavMeshHit meshLocation;
 
         if (NavMesh.SamplePosition(newPosition, out meshLocation, SPAWN_RADIUS_MAX, 1 << LayerMask.NameToLayer("Default")))
         {
-            
-            GameObject newEnemy = Instantiate(enemyPrefab, meshLocation.position, Quaternion.identity) as GameObject;
-            newEnemy.rigidbody.Sleep();
+
+            GameObject newEnemy = Instantiate(enemydude, meshLocation.position, Quaternion.identity) as GameObject;
             newEnemy.name = "Enemy(" + newEnemy.GetInstanceID() + ")";
             newEnemy.transform.parent = transform;
             newEnemy.transform.Find("EnemyAggroCollider").gameObject.AddComponent<AggroRadius>();
@@ -124,17 +79,24 @@ public class EnemySpawner : MonoBehaviour
 
 
             # region giving enemies stats and abilities
-            /*
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.MakeEnemyAttributes(level, enemytype);
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.GiveEnemyAbilities(enemyEntity, enemytype);
-            */
-            
-            enemyEntity.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
-            enemyEntity.abilityManager.abilities[1] = GameManager.Abilities["hadouken"];
 
-            enemyEntity.abilityIndexDict["cleave"] = 0;
-            enemyEntity.abilityIndexDict["hadouken"] = 1;
+            enemyEntity.SetLevel(level);
+            enemyEntity.GetComponent<EnemyBaseAtts>().InitializeStats();
+            enemyEntity.GetComponent<EnemyBaseAtts>().SetAbilities();  
             
+            enemyEntity.UpdateCurrentAttributes();
+            //GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnemyStatFactory.GiveEnemyAbilities(enemyEntity, enemytype);
+
+            //enemyEntity.SetLevel(level);
+
+
+            //enemyEntity.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
+            //enemyEntity.abilityManager.abilities[1] = GameManager.Abilities["hadouken"];
+
+
+            //enemyEntity.abilityIndexDict["cleave"] = 0;
+            //enemyEntity.abilityIndexDict["hadouken"] = 1;
+
 
             #endregion
 

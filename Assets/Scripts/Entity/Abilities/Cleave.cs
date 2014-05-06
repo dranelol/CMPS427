@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class Cleave : Ability
 {
-    public Cleave(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
+    public Cleave(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
        
     }
@@ -14,7 +14,7 @@ public class Cleave : Ability
     {
         List<GameObject> attacked = OnAttack(source, isPlayer);
 
-
+        Debug.Log("cleave attacked: " + attacked.Count);
         if (isPlayer == true)
         {
             // this is player -> enemy
@@ -54,6 +54,8 @@ public class Cleave : Ability
                 
             }
         }
+
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer));
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -117,7 +119,7 @@ public class Cleave : Ability
                 {
                     // try to cast a ray from the enemy to the player
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range + source.GetComponent<MovementFSM>().Radius, ~(1 << enemyMask));
 
 
                     if (!rayCastHit)
@@ -142,7 +144,7 @@ public class Cleave : Ability
                 {
                     // try to cast a ray from the player to the enemy
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range);
+                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range + source.GetComponent<MovementFSM>().Radius, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
@@ -153,8 +155,8 @@ public class Cleave : Ability
                     {
                         if (hit.collider.gameObject.tag == "Enemy")
                         {
-                            Debug.DrawRay(normalizedDefenderPosition, enemyVector, Color.green, 0.5f);
-                            Debug.DrawRay(normalizedDefenderPosition, enemyVector2, Color.red, 0.5f);
+                            //Debug.DrawRay(normalizedDefenderPosition, enemyVector, Color.green, 0.5f);
+                            //Debug.DrawRay(normalizedDefenderPosition, enemyVector2, Color.red, 0.5f);
 
                             enemiesToAttack.Add(collider.gameObject);
                         }
@@ -174,23 +176,63 @@ public class Cleave : Ability
 
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
-
     {
-        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
-
-        Debug.Log("damage: " + damageAmt);
-        
+        float damageAmt;
+        if (isPlayer == true)
+        {
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
+        }
+        else
+        {
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, 0);
+        }
 
         defender.ModifyHealth(-damageAmt);
 
-        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
-
-        if (isPlayer == true)
-        {
-
-            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
-        }
     }
 
-    
+
+    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
+    {
+        GameObject particles;
+
+        // if the player is casting the ability, we need to activate it based on the position of the cursor, not the transform's forward
+        if (isPlayer == true)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit targetRay;
+            Physics.Raycast(ray, out targetRay, Mathf.Infinity);
+            Vector3 vectorToMouse = targetRay.point - source.transform.position;
+            Vector3 cursorForward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
+
+
+            Quaternion rotation = Quaternion.LookRotation(cursorForward);
+            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, rotation);
+        }
+
+        else
+        {
+            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position + source.transform.forward * source.GetComponent<MovementFSM>().Radius * 0.5f, source.transform.rotation);
+
+        }
+
+        //particles.transform.parent = source.transform;
+
+        yield return new WaitForSeconds(time);
+
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem item in particleSystems)
+        {
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
+
+        }
+
+        GameObject.Destroy(particles);
+
+        yield return null;
+    }
+
 }

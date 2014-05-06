@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class BlinkStrike : Ability
 {
-    public BlinkStrike(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, id, readable, particles)
+    public BlinkStrike(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
 
     }
@@ -73,14 +73,20 @@ public class BlinkStrike : Ability
             DoDamage(source, target, attacker, defender, isPlayer);
         }
 
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunParticleSystem(DoAnimation(source, particleSystem, 0.2f, isPlayer, target));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, target));
     }
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
-
-        float damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
-
+        float damageAmt;
+        if (isPlayer == true)
+        {
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
+        }
+        else
+        {
+            damageAmt = DamageCalc.DamageCalculation(attacker, defender, 0);
+        }
         if (isPlayer == true)
         {
             Debug.Log("damage: " + damageAmt);
@@ -88,12 +94,6 @@ public class BlinkStrike : Ability
 
         defender.ModifyHealth(-damageAmt);
 
-        float ratio = (defender.CurrentHP / defender.currentAtt.Health);
-
-        if (isPlayer == true)
-        {
-            //target.renderer.material.color = new Color(1.0f, ratio, ratio);
-        }
     }
 
 
@@ -102,12 +102,15 @@ public class BlinkStrike : Ability
 
         float portradius = 1.0f;
         Vector3 portpos = (target.transform.position - owner.transform.position);
-        
-        Vector3 offset = Vector3.Normalize(portpos)*portradius;
+
+        Vector3 offset = Vector3.Normalize(portpos) * portradius;
 
         portpos = portpos + offset + owner.transform.position;
 
         owner.GetComponent<NavMeshAgent>().Warp(portpos);
+        Vector3 tempforward = target.transform.position - portpos;
+        tempforward.y = 0;
+        owner.transform.forward = Vector3.Normalize(tempforward);
 
     }
 

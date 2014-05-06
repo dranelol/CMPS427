@@ -10,30 +10,18 @@ public class AbilityManager : MonoBehaviour
 
     public List<float> activeCoolDowns;
 
-   
-
 	// Use this for initialization
     public void Awake()
     {
-        abilities = new List<Ability>(7);
+        abilities = new List<Ability>(40);
          
-
-        activeCoolDowns = new List<float>(7);
-
-        tempabilities = new List<Ability>(7);
-
+        activeCoolDowns = new List<float>(40);
         for (int i = 0; i < abilities.Capacity; i++)
         {
             abilities.Add(null);
             activeCoolDowns.Add(0.0f);
         }
-        for (int i = 0; i < tempabilities.Capacity; i++)
-        {
-            tempabilities.Add(null);
-        }
-     
     }
-
 
 	void Start () 
     {
@@ -49,9 +37,10 @@ public class AbilityManager : MonoBehaviour
     public void AddAbility(Ability ab, int index)
     {
         Debug.Log(ab.Name);
-        if (abilities.Count <= 7)
+        if (abilities.Count <= 40)
         {
             abilities[index] = ab;
+            activeCoolDowns[index] = 0.0f;
             PlayerPrefs.SetString("ability" + (index).ToString(), ab.ID);
 
         }
@@ -69,36 +58,5 @@ public class AbilityManager : MonoBehaviour
             PlayerPrefs.DeleteKey("ability" + (index).ToString());
             abilities[index] = null;
         }
-
     }
-
-
-    public void AddTempAbility(Ability ab, int index)
-    {
-        Debug.Log(ab.Name);
-        if (tempabilities.Count <= 7)
-        {
-            tempabilities[index] = ab;
-            PlayerPrefs.SetString("ability" + (index).ToString(), ab.ID);
-
-        }
-        else
-        {
-            throw new Exception("Tried to add too many abilities.");
-        }
-    }
-
-    public void RemoveTempAbility(int index)
-    {
-        if (tempabilities[index] != null)
-        {
-            Debug.Log("removing " + tempabilities[index].Name);
-            PlayerPrefs.DeleteKey("ability" + (index).ToString());
-            tempabilities[index] = null;
-        }
-
-    }
-
-
-  
 }

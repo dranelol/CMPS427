@@ -30,7 +30,7 @@ public class EntityAuraManager : MonoBehaviour
 
     public bool Add(string name, Entity caster, int count = 0)
     {
-        Debug.LogWarning("asda");
+
         if (MasterAuraManager.Contains(name)) // Check if the name exists in the master list
         {
             if (_auraDictionary.ContainsKey(name)) // Check if an aura of this name already exists.
@@ -52,7 +52,6 @@ public class EntityAuraManager : MonoBehaviour
                     {
                         // If this is a new caster, instantiate it, activate it, and return true.
                         Aura newAura = MasterAuraManager.GetInstance(name, _entity, caster);
-
                         _auraDictionary[name].Add(caster, newAura);
                         TrackAura(newAura);
                         StartCoroutine(newAura.Activate());
@@ -71,7 +70,6 @@ public class EntityAuraManager : MonoBehaviour
                 _auraDictionary[name].Add(caster, newAura);
                 TrackAura(newAura);
                 StartCoroutine(newAura.Activate());
-
                 GameObject newAuraParticle = Instantiate(newAura.ParticleEffect, _entity.transform.position, Quaternion.identity) as GameObject;
                 _particleDictionary.Add(name, newAuraParticle);
                 newAuraParticle.transform.parent = _entity.transform;
@@ -229,14 +227,18 @@ public class EntityAuraManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            Debug.Log(Add("test", _entity));
-        }
 
         if (Input.GetKeyDown(KeyCode.U))
         {
-            Debug.Log(Add("heal", _entity));
+            if (_entity.tag == "Player")
+            {
+                Add("heal", _entity);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Debug.Log(Add("Corruption", _entity));
         }
     }
 }

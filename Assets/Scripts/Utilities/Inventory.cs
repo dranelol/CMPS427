@@ -5,14 +5,20 @@ using System.Collections.Generic;
 /// <summary>
 /// WE GOT DE BAG AND WE PUT DE STUF IN DE BAG
 /// </summary>
-public class Inventory {
-    private const int MAX = 50;
+public class Inventory
+{
+    private const int MAX = 64;
+    public int Max
+    {
+        get { return MAX; }
+    }
 
     private equipmentFactory factory;
     private List<equipment> items;
     private Dictionary<int, equipment> equippedItems;
     public List<equipment> Items { get { return items; } }
     
+
     public Inventory()
     {
         items = new List<equipment>();
@@ -31,6 +37,11 @@ public class Inventory {
     public void RemoveItem(equipment item)
     {
         items.Remove(item);
+    }
+
+    public bool IsEmpty()
+    {
+        return (items.Count <= 0);
     }
 
     /// <summary>
@@ -67,6 +78,7 @@ public class Inventory {
     {
         for (int i = 0; i < MAX; i++)
         {
+            /*
             equipment item = factory.loadequipment(i + "inventory");
             if (item == null)
             {
@@ -74,6 +86,7 @@ public class Inventory {
             }
 
             items.Add(item);
+             * */
         }
 
         for (int i = 0; i < CharacterUI.EQUIPMENT_SLOTS; i++)

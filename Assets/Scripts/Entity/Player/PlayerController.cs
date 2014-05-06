@@ -13,27 +13,61 @@ public class PlayerController : MonoBehaviour {
 	public float RotationSpeed = 10f;
     public NavMeshAgent agent;
 
-    private bool hadouken = false;
-
     public PlayerEntity entity;
     public MovementFSM moveFSM;
     public CombatFSM combatFSM;
+    private AnimationController _animationController;
+
+    private HashSet<Ability> spellBook;
+    public HashSet<Ability> SpellBook
+    {
+        get { return spellBook; }
+
+    }
 
     private GameManager gameManager;
+    public GameManager GameManager
+    {
+        get { return gameManager; }
+    }
+
+    private TalentManager talentManager;
+    public TalentManager TalentManager
+    {
+        get { return talentManager; }
+    }
+
+    private bool mouseOverGUI;
+    public bool MouseOverGUI
+    {
+        get { return mouseOverGUI; }
+        set { mouseOverGUI = value; }
+    }
 
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+
+        talentManager = transform.GetComponent<TalentManager>();
+        spellBook = new HashSet<Ability>();
+
+        DontDestroyOnLoad(transform.gameObject);
+
+        Instantiate(gameManager.SpawnInParticles, transform.position, Quaternion.identity);
+        mouseOverGUI = false;
+        _animationController = GetComponent<AnimationController>();
     }
 
 	// Use this for initialization
 	void Start () {
 		targetPosition = Vector3.zero;
         agent = GetComponent<NavMeshAgent>();
-		agent.acceleration = 100f;
         //agent.updateRotation = false;
 
         agent.avoidancePriority = 1;
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+
+        
 
         entity = GetComponent<PlayerEntity>();
         moveFSM = GetComponent<MovementFSM>();
@@ -55,8 +89,7 @@ public class PlayerController : MonoBehaviour {
 	void Update () 
     {
         
-        if (GameObject.FindWithTag("UI Controller").GetComponent<UIController>().GuiState != UIController.States.INGAME)
-            return;
+      
 
         Debug.DrawRay(transform.position, transform.forward);
         //Debug.DrawRay(transform.position, Rotations.RotateAboutY(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f), -22.5f));
@@ -106,10 +139,51 @@ public class PlayerController : MonoBehaviour {
                 moveFSM.SetPath(targetPosition);
             }
         }
+        #region moving and turning
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            if (mouseOverGUI == true)
+            {
+                return;
+            }
+
+            moveFSM.LockMovement(MovementFSM.LockType.ShiftLock);
+        }
+
+        if(Input.GetKey(KeyCode.LeftShift))
+        {
+            int terrainMask = LayerMask.NameToLayer("Terrain");
+
+            int enemyMask = LayerMask.NameToLayer("Enemy");
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            RaycastHit target;
+
+            if (Physics.Raycast(ray, out target, Mathf.Infinity, 1 << terrainMask))
+            {
+                moveFSM.Turn(target.point);
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            if (mouseOverGUI == true)
+            {
+                return;
+            }
+
+            moveFSM.UnlockMovement(MovementFSM.LockType.ShiftLock);
+        }
 
         // If the move/attack key was pressed...
         if (Input.GetAxis("Move/Attack") != 0) 
         {
+            if (mouseOverGUI == true)
+            {
+                return;
+            }
+            
             int terrainMask = LayerMask.NameToLayer("Terrain");
 
             int enemyMask = LayerMask.NameToLayer("Enemy");
@@ -154,31 +228,51 @@ public class PlayerController : MonoBehaviour {
 
         }
 
-        #region abilities
+        
+        #endregion
 
+        #region abilities
 
         #region ability 1
 
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetMouseButton(1))
         {
 
-
-            if (entity.abilityManager.abilities[2] != null)
+            if (mouseOverGUI == true)
             {
-                if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[2] <= Time.time)
+                return;
+            }
+            
+            if (entity.abilityManager.abilities[1] != null)
+            {
+                if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[1] <= Time.time)
                 {
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit rayCastTarget;
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                    Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
-                    Debug.Log("Attack Speed: " + entity.currentAtt.AttackSpeed.ToString());
+                    moveFSM.Turn(transform.position + forward, 5f);
 
+                    try
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[1], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
+                    }
 
-                    if (entity.abilityManager.abilities[2].AttackType == AttackType.MELEE)
+                    catch
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[1], equipSlots.equipmentType.Sword);
+                    }
+
+                    if (entity.abilityManager.abilities[1].AttackType == AttackType.MELEE)
                     {
                         combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
-                        entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
+                        entity.abilityManager.abilities[1].AttackHandler(gameObject, entity, true);
 
                     }
 
-                    else if (entity.abilityManager.abilities[2].AttackType == AttackType.PROJECTILE)
+                    else if (entity.abilityManager.abilities[1].AttackType == AttackType.PROJECTILE)
                     {
                         //combatFSM.Attack(0.0f);
 
@@ -188,18 +282,10 @@ public class PlayerController : MonoBehaviour {
                         // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
 
 
-
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit rayCastTarget;
-                        Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
-                        Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                        Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
-
-
-                        entity.abilityManager.abilities[2].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[2].ID, true);
+                        entity.abilityManager.abilities[1].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[1].ID, true);
                     }
 
-                    else if (entity.abilityManager.abilities[2].AttackType == AttackType.HONINGPROJECTILE)
+                    else if (entity.abilityManager.abilities[1].AttackType == AttackType.HONINGPROJECTILE)
                     {
                         //combatFSM.Attack(0.0f);
 
@@ -212,34 +298,110 @@ public class PlayerController : MonoBehaviour {
 
                         int enemyMask = LayerMask.NameToLayer("Enemy");
 
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit rayCastTarget;
-                        Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << (terrainMask | enemyMask));
-                        Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                        Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
-
-
-                        entity.abilityManager.abilities[2].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[2].ID, true);
+                        entity.abilityManager.abilities[1].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[1].ID, true);
                     }
                     else
                     {
                         combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                        entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
+                        entity.abilityManager.abilities[1].AttackHandler(gameObject, entity, true);
 
 
                     }
 
 
-                    entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
+                    entity.abilityManager.activeCoolDowns[1] = Time.time + entity.abilityManager.abilities[1].Cooldown;
 
 
+                }
+            }
+        }
+        #endregion
+
+        #region ability 2
+        if (Input.GetKey(KeyCode.Q))
+        {
+            if (entity.abilityManager.abilities[2] != null)
+            {
+                if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[2] <= Time.time)
+                {
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit rayCastTarget;
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                    Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
+
+                    moveFSM.Turn(transform.position + forward, 5f);
+
+                    try
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[2], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
+                    }
+
+                    catch
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[2], equipSlots.equipmentType.Sword);
+                    }
+
+                    if (entity.CurrentResource >= entity.abilityManager.abilities[2].ResourceCost)
+                    {
+                        entity.ModifyResource(entity.abilityManager.abilities[2].ResourceCost * -1);
+                        Debug.Log("Attack Speed: " + entity.currentAtt.AttackSpeed.ToString());
+
+
+                        if (entity.abilityManager.abilities[2].AttackType == AttackType.MELEE)
+                        {
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                            entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
+
+                        }
+
+                        else if (entity.abilityManager.abilities[2].AttackType == AttackType.PROJECTILE)
+                        {
+                            //combatFSM.Attack(0.0f);
+
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                            // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                            // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+
+                            entity.abilityManager.abilities[2].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[2].ID, true);
+                        }
+
+                        else if (entity.abilityManager.abilities[2].AttackType == AttackType.HONINGPROJECTILE)
+                        {
+                            //combatFSM.Attack(0.0f);
+
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                            // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                            // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+                            int terrainMask = LayerMask.NameToLayer("Terrain");
+
+                            int enemyMask = LayerMask.NameToLayer("Enemy");
+
+
+                            entity.abilityManager.abilities[2].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[2].ID, true);
+                        }
+                        else
+                        {
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
+
+
+                        }
+
+                        entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
+
+                    }
                 }
             }
         }
 
         #endregion
 
-        #region ability 2
+        #region ability 3
 
         
 
@@ -249,142 +411,79 @@ public class PlayerController : MonoBehaviour {
             {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[3] <= Time.time)
                 {
-                    if (entity.abilityManager.abilities[3].AttackType == AttackType.MELEE)
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit rayCastTarget;
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                    Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
+
+                    moveFSM.Turn(transform.position + forward, 5f);
+
+                    try
                     {
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
-                        entity.abilityManager.abilities[3].AttackHandler(gameObject, entity, true);
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[3], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
                     }
 
-
-                    else if (entity.abilityManager.abilities[3].AttackType == AttackType.PROJECTILE)
+                    catch
                     {
-                        //combatFSM.Attack(0.0f);
-
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-
-                        // if this is a projectile, attackhandler is only called when the projectile scores a hit.
-                        // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
-                        int terrainMask = LayerMask.NameToLayer("Terrain");
-
-                        int enemyMask = LayerMask.NameToLayer("Enemy");
-
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit rayCastTarget;
-                        Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
-                        Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                        Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
-
-                        entity.abilityManager.abilities[3].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[3].ID, true);
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[3], equipSlots.equipmentType.Sword);
                     }
 
-                    else if (entity.abilityManager.abilities[3].AttackType == AttackType.HONINGPROJECTILE)
+                    if (entity.CurrentResource >= entity.abilityManager.abilities[3].ResourceCost)
                     {
-                        //combatFSM.Attack(0.0f);
+                        entity.ModifyResource(entity.abilityManager.abilities[3].ResourceCost * -1);
 
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-
-                        // if this is a projectile, attackhandler is only called when the projectile scores a hit.
-                        // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
-
-                        int terrainMask = LayerMask.NameToLayer("Terrain");
-
-                        int enemyMask = LayerMask.NameToLayer("Enemy");
-
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit rayCastTarget;
-                        Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << (terrainMask | enemyMask));
-                        Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                        Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
+                        if (entity.abilityManager.abilities[3].AttackType == AttackType.MELEE)
+                        {
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                            entity.abilityManager.abilities[3].AttackHandler(gameObject, entity, true);
+                        }
 
 
-                        entity.abilityManager.abilities[3].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[3].ID, true);
+                        else if (entity.abilityManager.abilities[3].AttackType == AttackType.PROJECTILE)
+                        {
+                            //combatFSM.Attack(0.0f);
+
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                            // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                            // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+                            int terrainMask = LayerMask.NameToLayer("Terrain");
+
+                            int enemyMask = LayerMask.NameToLayer("Enemy");
+
+                            entity.abilityManager.abilities[3].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[3].ID, true);
+                        }
+
+                        else if (entity.abilityManager.abilities[3].AttackType == AttackType.HONINGPROJECTILE)
+                        {
+                            //combatFSM.Attack(0.0f);
+
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                            // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                            // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+                            int terrainMask = LayerMask.NameToLayer("Terrain");
+
+                            int enemyMask = LayerMask.NameToLayer("Enemy");
+
+
+                            entity.abilityManager.abilities[3].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[3].ID, true);
+                        }
+
+
+                        else
+                        {
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            entity.abilityManager.abilities[3].AttackHandler(gameObject, entity, true);
+
+
+                        }
+
+
+                        entity.abilityManager.activeCoolDowns[3] = Time.time + entity.abilityManager.abilities[3].Cooldown;
                     }
-
-
-                    else
-                    {
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                        entity.abilityManager.abilities[3].AttackHandler(gameObject, entity, true);
-
-
-                    }
-
-
-                    entity.abilityManager.activeCoolDowns[3] = Time.time + entity.abilityManager.abilities[3].Cooldown;
-                }
-            }
-        }
-        #endregion
-
-        #region ability 3
-        
-        if (Input.GetKey(KeyCode.E))
-        {
-            if (entity.abilityManager.abilities[4] != null)
-            {
-                if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[4] <= Time.time)
-                {
-                    if (entity.abilityManager.abilities[4].AttackType == AttackType.MELEE)
-                    {
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
-                        entity.abilityManager.abilities[4].AttackHandler(gameObject, entity, true);
-                    }
-
-
-                    else if (entity.abilityManager.abilities[4].AttackType == AttackType.PROJECTILE)
-                    {
-                        //combatFSM.Attack(0.0f);
-
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-
-                        // if this is a projectile, attackhandler is only called when the projectile scores a hit.
-                        // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
-
-
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit rayCastTarget;
-                        Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
-                        Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                        Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
-
-                        entity.abilityManager.abilities[4].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[4].ID, true);
-                    }
-
-                    else if (entity.abilityManager.abilities[4].AttackType == AttackType.HONINGPROJECTILE)
-                    {
-                        //combatFSM.Attack(0.0f);
-
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-
-                        // if this is a projectile, attackhandler is only called when the projectile scores a hit.
-                        // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
-
-
-                        int terrainMask = LayerMask.NameToLayer("Terrain");
-
-                        int enemyMask = LayerMask.NameToLayer("Enemy");
-
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit rayCastTarget;
-                        Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << (terrainMask | enemyMask));
-                        Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                        Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
-
-
-                        entity.abilityManager.abilities[4].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[4].ID, true);
-                    }
-
-
-                    else
-                    {
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                        entity.abilityManager.abilities[4].AttackHandler(gameObject, entity, true);
-
-
-                    }
-
-
-                    entity.abilityManager.activeCoolDowns[4] = Time.time + entity.abilityManager.abilities[4].Cooldown;
                 }
             }
         }
@@ -392,84 +491,184 @@ public class PlayerController : MonoBehaviour {
 
         #region ability 4
         
+        if (Input.GetKey(KeyCode.E))
+        {
+            if (entity.abilityManager.abilities[4] != null)
+            {
+                if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[4] <= Time.time)
+                {
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit rayCastTarget;
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                    Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
+
+                    moveFSM.Turn(transform.position + forward, 5f);
+                    try
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[4], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
+                    }
+
+                    catch
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[4], equipSlots.equipmentType.Sword);
+                    }
+                    if (entity.CurrentResource >= entity.abilityManager.abilities[4].ResourceCost)
+                    {
+                        entity.ModifyResource(entity.abilityManager.abilities[4].ResourceCost * -1);
+
+                        if (entity.abilityManager.abilities[4].AttackType == AttackType.MELEE)
+                        {
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                            entity.abilityManager.abilities[4].AttackHandler(gameObject, entity, true);
+                        }
+
+
+                        else if (entity.abilityManager.abilities[4].AttackType == AttackType.PROJECTILE)
+                        {
+                            //combatFSM.Attack(0.0f);
+
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                            // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                            // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+                            entity.abilityManager.abilities[4].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[4].ID, true);
+                        }
+
+                        else if (entity.abilityManager.abilities[4].AttackType == AttackType.HONINGPROJECTILE)
+                        {
+                            //combatFSM.Attack(0.0f);
+
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                            // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                            // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+
+                            int terrainMask = LayerMask.NameToLayer("Terrain");
+
+                            int enemyMask = LayerMask.NameToLayer("Enemy");
+
+
+                            entity.abilityManager.abilities[4].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[4].ID, true);
+                        }
+                        else if (entity.abilityManager.abilities[4].AttackType == AttackType.GROUNDTARGET)
+                        {
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+
+                            entity.abilityManager.abilities[4].AttackHandler(gameObject, entity, true, 3, 0.25f);
+
+                        }
+                        else
+                        {
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            entity.abilityManager.abilities[4].AttackHandler(gameObject, entity, true);
+
+
+                        }
+
+
+                        entity.abilityManager.activeCoolDowns[4] = Time.time + entity.abilityManager.abilities[4].Cooldown;
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region ability 5
+        
         if (Input.GetKey(KeyCode.R))
         {
             if (entity.abilityManager.abilities[5] != null)
             {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[5] <= Time.time)
                 {
-                    if (entity.abilityManager.abilities[5].AttackType == AttackType.MELEE)
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit rayCastTarget;
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                    Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
+
+                    moveFSM.Turn(transform.position + forward, 5f);
+
+                    try
                     {
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
-                        entity.abilityManager.abilities[5].AttackHandler(gameObject, entity, true);
-                    }
-                    else if (entity.abilityManager.abilities[5].AttackType == AttackType.PROJECTILE)
-                    {
-                        //combatFSM.Attack(0.0f);
-
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-
-                        // if this is a projectile, attackhandler is only called when the projectile scores a hit.
-                        // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
-
-
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit rayCastTarget;
-                        Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
-                        Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                        Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
-
-                        entity.abilityManager.abilities[5].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[5].ID, true);
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[5], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
                     }
 
-                    else if (entity.abilityManager.abilities[5].AttackType == AttackType.HONINGPROJECTILE)
+                    catch
                     {
-                        //combatFSM.Attack(0.0f);
-
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-
-                        // if this is a projectile, attackhandler is only called when the projectile scores a hit.
-                        // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
-
-
-                        int terrainMask = LayerMask.NameToLayer("Terrain");
-
-                        int enemyMask = LayerMask.NameToLayer("Enemy");
-
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit rayCastTarget;
-                        Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << (terrainMask | enemyMask));
-                        Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                        Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
-
-
-                        entity.abilityManager.abilities[5].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[5].ID, true);
-                    }
-                    else
-                    {
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                        entity.abilityManager.abilities[5].AttackHandler(gameObject, entity, true);
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[5], equipSlots.equipmentType.Sword);
                     }
 
+                    if (entity.CurrentResource >= entity.abilityManager.abilities[5].ResourceCost)
+                    {
+                        entity.ModifyResource(entity.abilityManager.abilities[5].ResourceCost * -1);
 
-                    entity.abilityManager.activeCoolDowns[5] = Time.time + entity.abilityManager.abilities[5].Cooldown;
+                        if (entity.abilityManager.abilities[5].AttackType == AttackType.MELEE)
+                        {
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                            entity.abilityManager.abilities[5].AttackHandler(gameObject, entity, true);
+                        }
+                        else if (entity.abilityManager.abilities[5].AttackType == AttackType.PROJECTILE)
+                        {
+                            //combatFSM.Attack(0.0f);
+
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                            // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                            // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+
+                            entity.abilityManager.abilities[5].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[5].ID, true);
+                        }
+
+                        else if (entity.abilityManager.abilities[5].AttackType == AttackType.HONINGPROJECTILE)
+                        {
+                            //combatFSM.Attack(0.0f);
+
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                            // if this is a projectile, attackhandler is only called when the projectile scores a hit.
+                            // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
+
+
+                            int terrainMask = LayerMask.NameToLayer("Terrain");
+
+                            int enemyMask = LayerMask.NameToLayer("Enemy");
+
+                            entity.abilityManager.abilities[5].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[5].ID, true);
+                        }
+                        else
+                        {
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            entity.abilityManager.abilities[5].AttackHandler(gameObject, entity, true);
+                        }
+
+
+                        entity.abilityManager.activeCoolDowns[5] = Time.time + entity.abilityManager.abilities[5].Cooldown;
+                    }
                 }
             }
         }
         #endregion
 
+        #endregion
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            entity.abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
-            entity.abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
-            entity.abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 4);
-            entity.abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 5);
 
-            entity.abilityIndexDict["shadowbolt"] = 2;
-            entity.abilityIndexDict["poisonbolt"] = 3;
-            entity.abilityIndexDict["bladewaltz"] = 4;
-            entity.abilityIndexDict["aoefreeze"] = 5;
+            entity.abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
+            entity.abilityManager.AddAbility(GameManager.Abilities["frozenorb"], 3);
+            entity.abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 4);
+            entity.abilityManager.AddAbility(GameManager.Abilities["boomerangblade"], 5);
+
+            entity.abilityIndexDict["cleave"] = 2;
+            entity.abilityIndexDict["frozenorb"] = 3;
+            entity.abilityIndexDict["aoefreeze"] = 4;
+            entity.abilityIndexDict["boomerangblade"] = 5;
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
@@ -479,6 +678,13 @@ public class PlayerController : MonoBehaviour {
                 entity.removeEquipment((equipSlots.slots)i);
                 entity.addEquipment(gameManager.EquipmentFactory.randomEquipment(0, 1, (equipSlots.slots)i));
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+
+            entity.SetLevel(15);
+            Debug.Log(entity.Level + " is your new level!");
         }
 
         if(Input.GetKeyDown(KeyCode.M))
@@ -520,11 +726,44 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.N))
         {
             entity.ModifyHealth(entity.currentAtt.Health-entity.CurrentHP);
+            entity.ModifyResource(entity.currentAtt.Resource - entity.CurrentResource);
         }
 
         #region ABILITY TESTS
 
+        if (Input.GetKeyDown(KeyCode.O))
+        {
 
+            GameObject rotationEffect = (GameObject)Instantiate(gameManager.CleaveParticles, transform.position, Quaternion.identity);
+
+            //rotationEffect.transform.parent = transform;
+
+            OrbSpawnSingle orbSpawn = rotationEffect.GetComponent<OrbSpawnSingle>();
+
+            orbSpawn.orbitObject = gameObject;
+            orbSpawn.initialAngleFromForward = Rotations.AngleSigned(transform.forward, Vector3.forward, Vector3.up) + 25.0f;
+            //orbSpawn.rotations = 0.25f;
+            //orbSpawn.angularSpeed = 360.0f;
+            //orbSpawn.oscillationSpeed = 0.5f;
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+
+            GameObject rotationEffect = (GameObject)Instantiate(gameManager.WhirlwindParticles, transform.position, Quaternion.identity);
+
+            //rotationEffect.transform.parent = transform;
+
+            OrbSpawnSingle orbSpawn = rotationEffect.GetComponent<OrbSpawnSingle>();
+
+            orbSpawn.orbitObject = gameObject;
+            orbSpawn.initialAngleFromForward = Rotations.AngleSigned(transform.forward, Vector3.forward, Vector3.up) + 25.0f;
+            //orbSpawn.rotations = 0.25f;
+            //orbSpawn.angularSpeed = 360.0f;
+            //orbSpawn.oscillationSpeed = 0.5f;
+
+        }
         #endregion
 
         #region equipment stuff
@@ -570,7 +809,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         // Equipping helmet.
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(KeyCode.Keypad0))
         {
             equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Head);
 
@@ -578,7 +817,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         // Equipping offhand.
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.Keypad1))
         {
             equipment tempEquip = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipment(2, equipSlots.slots.Off);
 
@@ -586,11 +825,31 @@ public class PlayerController : MonoBehaviour {
         }
 
 
-
-
-        #endregion
+        
 
         #endregion
+
+        
+
+        //Check for level up
+        if (entity.Experience >= entity.NextLevelExperience)
+        {
+            LevelUp();
+            entity.Experience = entity.NextLevelExperience - entity.Experience;
+            entity.NextLevelExperience *= 2;
+        }
+
+    }
+
+    void LevelUp()
+    {
+        entity.Level++;
+        
+        //Play animation
+
+        talentManager.GiveTalentPoints(1);
+        entity.GiveAttributePoints(5);
+
 
     }
 

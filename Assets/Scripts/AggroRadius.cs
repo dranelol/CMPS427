@@ -3,9 +3,9 @@ using System.Collections;
 
 public class AggroRadius : MonoBehaviour 
 {
-    private const float aggroRadius = 5;
     private AIGroupController group;
     private SphereCollider trigger;
+    public bool active = true;
 
 	void Awake() 
     {
@@ -15,16 +15,27 @@ public class AggroRadius : MonoBehaviour
 
     void Start()
     {
-        trigger.radius = transform.parent.GetComponent<NavMeshAgent>().radius * 10;
+        trigger.radius = transform.parent.GetComponent<AIController>().aggroRadius;
         
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (active)
         {
-            group.Threat(other.gameObject, 1);
-            trigger.enabled = false;
+            if (other.tag == "Player")
+            {
+                group.Threat(other.gameObject, 1);
+                trigger.enabled = false;
+            }
+            else if (other.tag == "Enemy"
+                && transform.parent.GetComponent<AIController>().homeNodePosition != other.GetComponent<AIController>().homeNodePosition)
+            {
+                if (other.GetComponent<AIController>().Target != null)
+                {
+                    group.Threat(other.GetComponent<AIController>().Target, 1);
+                }
+            }
         }
     }
 
