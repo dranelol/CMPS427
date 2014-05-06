@@ -472,6 +472,13 @@ public class PlayerController : MonoBehaviour {
                             entity.abilityManager.abilities[3].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[3].ID, true);
                         }
 
+                        else if (entity.abilityManager.abilities[3].AttackType == AttackType.GROUNDTARGET)
+                        {
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                            entity.abilityManager.abilities[3].AttackHandler(gameObject, rayCastTarget.point, entity, true);
+
+                        }
 
                         else
                         {
@@ -553,12 +560,13 @@ public class PlayerController : MonoBehaviour {
 
                             entity.abilityManager.abilities[4].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[4].ID, true);
                         }
+
                         else if (entity.abilityManager.abilities[4].AttackType == AttackType.GROUNDTARGET)
                         {
                             combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
 
-                            entity.abilityManager.abilities[4].AttackHandler(gameObject, entity, true, 3, 0.25f);
+                            entity.abilityManager.abilities[4].AttackHandler(gameObject, rayCastTarget.point, entity, true);
 
                         }
                         else

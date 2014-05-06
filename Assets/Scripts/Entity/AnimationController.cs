@@ -181,7 +181,7 @@ public class AnimationController : MonoBehaviour
 
         if (ability.ID == "whirlwind")
         {
-            name = "attack 5";
+            name = "attack 4";
             animation[name].speed = animation[name].clip.length / (GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
             _movementFSM.LockMovement(MovementFSM.LockType.MovementLock, GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
 

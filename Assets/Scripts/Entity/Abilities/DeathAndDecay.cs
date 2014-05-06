@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Whirlwind : Ability
+public class DeathAndDecay : Ability
 {
-    public Whirlwind(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+    public DeathAndDecay(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
         : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
 
@@ -12,11 +12,18 @@ public class Whirlwind : Ability
 
     public override void AttackHandler(GameObject source, Vector3 AoEPoint, Entity attacker, bool isPlayer)
     {
+        // spawn in the parent for this aoe attack
+        GameObject parent = new GameObject("ShadowAoeParent");
+        parent.transform.position = AoEPoint;
+
         // do attack "repetition" times with "timeDelta" waiting between each
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().WhirlwindSpawn, 1.0f, isPlayer, 1.8f));
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().WhirlwindSpawn, 1.0f, isPlayer, 2.0f));
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().WhirlwindSpawn, 1.0f, isPlayer, 2.2f));
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAttackRepeating(source, attacker, isPlayer, 3, 0.25f));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(parent, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DeathAndDecaySpawn, 10.0f, isPlayer));
+
+        parent.transform.position += new Vector3(0, 1, 0);
+
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAttackRepeating(parent, attacker, isPlayer, 20, 0.5f));
+
+        GameObject.Destroy(parent, 11.0f);
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -50,7 +57,7 @@ public class Whirlwind : Ability
             colliders = Physics.OverlapSphere(source.transform.position, range, 1 << playerMask);
         }
 
-
+        Debug.Log("colliders gained: " + colliders.Length);
         foreach (Collider collider in colliders)
         {
             //Debug.Log(collider.ToString());
@@ -69,50 +76,18 @@ public class Whirlwind : Ability
             // if the angle between the forward vector of the attacker and the enemy vector is less than the angle of attack, the enemy is within the attack angle
             if (Vector3.Angle(forward, enemyVector) < angle)
             {
-                RaycastHit hit = new RaycastHit();
-
-
 
                 if (isPlayer == true)
                 {
-                    // try to cast a ray from the enemy to the player
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, ~(1 << enemyMask));
-
-                    if (!rayCastHit)
-                    {
-
-                    }
-                    // if the ray hits, the enemy is in line of sight of the player, this is a successful attack hit
-                    else
-                    {
-                        if (hit.collider.gameObject.tag == "Player")
-                        {
-                            Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                            Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
-                            enemiesToAttack.Add(collider.gameObject);
-                        }
-                    }
+                    Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                    Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+                    enemiesToAttack.Add(collider.gameObject);
                 }
 
                 else
                 {
-                    // try to cast a ray from the player to the enemy
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, ~(1 << playerMask));
-
-                    if (!rayCastHit)
-                    {
-
-                    }
-                    // if the ray hits, the player is in line of sight of the enemy, this is a successful attack hit
-                    else
-                    {
-                        if (hit.collider.gameObject.tag == "Enemy")
-                        {
-                            //Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                            //Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
-                            enemiesToAttack.Add(collider.gameObject);
-                        }
-                    }
+                    enemiesToAttack.Add(collider.gameObject);
+                    
                 }
             }
         }
@@ -166,9 +141,9 @@ public class Whirlwind : Ability
                         {
                             enemy.GetComponent<AIController>().BeenAttacked(source);
                         }
-
-                        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, defender.gameObject));
                     }
+
+
                 }
             }
 
@@ -178,9 +153,6 @@ public class Whirlwind : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
-
-                    GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, defender.gameObject));
-
                 }
             }
 
@@ -213,16 +185,23 @@ public class Whirlwind : Ability
         yield return null;
     }
 
-    public IEnumerator DoSpawnAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, float orbitScale, GameObject target = null)
+    public IEnumerator DoSpawnAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
     {
         GameObject particles;
 
         particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
 
-        particles.GetComponent<OrbSpawnSingle>().orbitObject = source;
-        particles.GetComponent<OrbSpawnSingle>().orbitScale = orbitScale;
-
         yield return new WaitForSeconds(time);
+
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem item in particleSystems)
+        {
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
+
+        }
 
         GameObject.Destroy(particles);
 

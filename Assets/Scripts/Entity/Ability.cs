@@ -148,7 +148,7 @@ public abstract class Ability
     }
 
     // groundtargets
-    public virtual void AttackHandler(GameObject source, Entity attacker, bool isPlayer, int repetitions, float waitDelta)
+    public virtual void AttackHandler(GameObject source, Vector3 AoEPoint, Entity attacker, bool isPlayer)
     {
 
     }
