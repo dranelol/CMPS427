@@ -63,6 +63,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject InfernalSpawn;
 
+    public GameObject WhirlwindSpawn;
+
     public equipmentFactory EquipmentFactory;
 
     public static Dictionary<string, Ability> Abilities;
@@ -139,6 +141,7 @@ public class GameManager : MonoBehaviour
         Abilities["axethrow"] = new AxeThrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 0.0f, 2.0f, 0.0f, 3f, "axethrow", "Axe Throw", AxeThrowExplosion);
 
         Abilities["infernalfireball"] = new InfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 30.0f, 0f, "infernalfireball", "Infernal Fireball", InfernalFireballExplosion);
+        Abilities["whirlwind"] = new Whirlwind(AttackType.GROUNDTARGET, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 10.0f, 0f, "whirlwind", "Whirlwind", OnHitNormalParticles);
 
         //Abilities["healorb"] = new HealOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 0.0f, 0.0f, "healorb", "Heal Orb", HealOrbExplosion);
 
