@@ -419,7 +419,7 @@ public class AIController : StateMachine
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>().Experience += 25;
 
         PursuitFSM.StopPursuit();
-        MoveFSM.LockMovement();
+        MoveFSM.LockMovement(MovementFSM.LockType.ShiftLock);
         GetComponent<CapsuleCollider>().enabled = false;
         GetComponent<NavMeshAgent>().enabled = false;
         Aggro.gameObject.SetActive(false);
@@ -443,6 +443,7 @@ public class AIController : StateMachine
         healOrbProjectile.homing = true;
         healOrbProjectile.speed = 10.0f;
         healOrbProjectile.timeToActivate = 5.0f;
+        healOrbProjectile.owner = gameObject;
         
 
         Vector3 randPosition = transform.position + UnityEngine.Random.onUnitSphere*3;
