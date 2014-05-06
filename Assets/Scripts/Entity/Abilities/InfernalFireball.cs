@@ -15,7 +15,7 @@ public class InfernalFireball : Ability
     {
 
         GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().FireballProjectile, source.transform.position + new Vector3(0,10.0f,0), Quaternion.LookRotation(forward));
-
+        Debug.Log("shootin dat infernal");
         projectile.GetComponent<ProjectileBehaviour>().owner = owner;
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 10.0f;
         projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
@@ -61,6 +61,14 @@ public class InfernalFireball : Ability
                 DoDamage(source, enemy, attacker, defender, isPlayer);
 
             }
+        }
+
+        NavMeshHit navMeshHit;
+
+        if (NavMesh.SamplePosition(source.transform.position, out navMeshHit, range, 1 << LayerMask.NameToLayer("Default")))
+        {
+            GameObject infernoSpawn = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().InfernalSpawn, navMeshHit.position, Quaternion.identity);
+            infernoSpawn.GetComponent<Infernal>().Initialize(attacker.gameObject);
         }
 
         GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer));
