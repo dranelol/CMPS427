@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour {
     public PlayerEntity entity;
     public MovementFSM moveFSM;
     public CombatFSM combatFSM;
+    private AnimationController _animationController;
 
     private HashSet<Ability> spellBook;
     public HashSet<Ability> SpellBook
@@ -54,6 +55,7 @@ public class PlayerController : MonoBehaviour {
 
         Instantiate(gameManager.SpawnInParticles, transform.position, Quaternion.identity);
         mouseOverGUI = false;
+        _animationController = GetComponent<AnimationController>();
     }
 
 	// Use this for initialization
@@ -145,7 +147,7 @@ public class PlayerController : MonoBehaviour {
                 return;
             }
 
-            moveFSM.LockMovement();
+            moveFSM.LockMovement(MovementFSM.LockType.ShiftLock);
         }
 
         if(Input.GetKey(KeyCode.LeftShift))
@@ -171,7 +173,7 @@ public class PlayerController : MonoBehaviour {
                 return;
             }
 
-            moveFSM.UnlockMovement();
+            moveFSM.UnlockMovement(MovementFSM.LockType.ShiftLock);
         }
 
         // If the move/attack key was pressed...
@@ -245,9 +247,23 @@ public class PlayerController : MonoBehaviour {
             {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[1] <= Time.time)
                 {
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit rayCastTarget;
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                    Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
-                    Debug.Log("Attack Speed: " + entity.currentAtt.AttackSpeed.ToString());
+                    moveFSM.Turn(transform.position + forward, 5f);
 
+                    try
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[1], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
+                    }
+
+                    catch
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[1], equipSlots.equipmentType.Sword);
+                    }
 
                     if (entity.abilityManager.abilities[1].AttackType == AttackType.MELEE)
                     {
@@ -266,14 +282,6 @@ public class PlayerController : MonoBehaviour {
                         // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
 
 
-
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit rayCastTarget;
-                        Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
-                        Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                        Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
-
-
                         entity.abilityManager.abilities[1].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[1].ID, true);
                     }
 
@@ -289,13 +297,6 @@ public class PlayerController : MonoBehaviour {
                         int terrainMask = LayerMask.NameToLayer("Terrain");
 
                         int enemyMask = LayerMask.NameToLayer("Enemy");
-
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit rayCastTarget;
-                        Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << (terrainMask | enemyMask));
-                        Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                        Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
-
 
                         entity.abilityManager.abilities[1].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[1].ID, true);
                     }
@@ -323,6 +324,23 @@ public class PlayerController : MonoBehaviour {
             {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[2] <= Time.time)
                 {
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit rayCastTarget;
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                    Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
+
+                    moveFSM.Turn(transform.position + forward, 5f);
+
+                    try
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[2], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
+                    }
+
+                    catch
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[2], equipSlots.equipmentType.Sword);
+                    }
 
                     if (entity.CurrentResource >= entity.abilityManager.abilities[2].ResourceCost)
                     {
@@ -347,14 +365,6 @@ public class PlayerController : MonoBehaviour {
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
 
 
-
-                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                            RaycastHit rayCastTarget;
-                            Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
-                            Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                            Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
-
-
                             entity.abilityManager.abilities[2].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[2].ID, true);
                         }
 
@@ -370,12 +380,6 @@ public class PlayerController : MonoBehaviour {
                             int terrainMask = LayerMask.NameToLayer("Terrain");
 
                             int enemyMask = LayerMask.NameToLayer("Enemy");
-
-                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                            RaycastHit rayCastTarget;
-                            Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << (terrainMask | enemyMask));
-                            Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                            Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
 
                             entity.abilityManager.abilities[2].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[2].ID, true);
@@ -407,6 +411,24 @@ public class PlayerController : MonoBehaviour {
             {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[3] <= Time.time)
                 {
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit rayCastTarget;
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                    Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
+
+                    moveFSM.Turn(transform.position + forward, 5f);
+
+                    try
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[3], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
+                    }
+
+                    catch
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[3], equipSlots.equipmentType.Sword);
+                    }
+
                     if (entity.CurrentResource >= entity.abilityManager.abilities[3].ResourceCost)
                     {
                         entity.ModifyResource(entity.abilityManager.abilities[3].ResourceCost * -1);
@@ -430,12 +452,6 @@ public class PlayerController : MonoBehaviour {
 
                             int enemyMask = LayerMask.NameToLayer("Enemy");
 
-                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                            RaycastHit rayCastTarget;
-                            Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
-                            Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                            Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
-
                             entity.abilityManager.abilities[3].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[3].ID, true);
                         }
 
@@ -451,12 +467,6 @@ public class PlayerController : MonoBehaviour {
                             int terrainMask = LayerMask.NameToLayer("Terrain");
 
                             int enemyMask = LayerMask.NameToLayer("Enemy");
-
-                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                            RaycastHit rayCastTarget;
-                            Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << (terrainMask | enemyMask));
-                            Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                            Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
 
                             entity.abilityManager.abilities[3].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[3].ID, true);
@@ -487,6 +497,22 @@ public class PlayerController : MonoBehaviour {
             {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[4] <= Time.time)
                 {
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit rayCastTarget;
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                    Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
+
+                    moveFSM.Turn(transform.position + forward, 5f);
+                    try
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[4], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
+                    }
+
+                    catch
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[4], equipSlots.equipmentType.Sword);
+                    }
                     if (entity.CurrentResource >= entity.abilityManager.abilities[4].ResourceCost)
                     {
                         entity.ModifyResource(entity.abilityManager.abilities[4].ResourceCost * -1);
@@ -507,13 +533,6 @@ public class PlayerController : MonoBehaviour {
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
 
-
-                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                            RaycastHit rayCastTarget;
-                            Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
-                            Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                            Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
-
                             entity.abilityManager.abilities[4].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[4].ID, true);
                         }
 
@@ -531,17 +550,17 @@ public class PlayerController : MonoBehaviour {
 
                             int enemyMask = LayerMask.NameToLayer("Enemy");
 
-                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                            RaycastHit rayCastTarget;
-                            Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << (terrainMask | enemyMask));
-                            Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                            Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
-
 
                             entity.abilityManager.abilities[4].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[4].ID, true);
                         }
+                        else if (entity.abilityManager.abilities[4].AttackType == AttackType.GROUNDTARGET)
+                        {
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
 
+                            entity.abilityManager.abilities[4].AttackHandler(gameObject, entity, true, 3, 0.25f);
+
+                        }
                         else
                         {
                             combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
@@ -566,6 +585,24 @@ public class PlayerController : MonoBehaviour {
             {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[5] <= Time.time)
                 {
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit rayCastTarget;
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Vector3 vectorToMouse = rayCastTarget.point - transform.position;
+                    Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
+
+                    moveFSM.Turn(transform.position + forward, 5f);
+
+                    try
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[5], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
+                    }
+
+                    catch
+                    {
+                        _animationController.PlayerAttack(entity.abilityManager.abilities[5], equipSlots.equipmentType.Sword);
+                    }
+
                     if (entity.CurrentResource >= entity.abilityManager.abilities[5].ResourceCost)
                     {
                         entity.ModifyResource(entity.abilityManager.abilities[5].ResourceCost * -1);
@@ -585,12 +622,6 @@ public class PlayerController : MonoBehaviour {
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
 
 
-                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                            RaycastHit rayCastTarget;
-                            Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
-                            Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                            Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
-
                             entity.abilityManager.abilities[5].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[5].ID, true);
                         }
 
@@ -607,13 +638,6 @@ public class PlayerController : MonoBehaviour {
                             int terrainMask = LayerMask.NameToLayer("Terrain");
 
                             int enemyMask = LayerMask.NameToLayer("Enemy");
-
-                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                            RaycastHit rayCastTarget;
-                            Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << (terrainMask | enemyMask));
-                            Vector3 vectorToMouse = rayCastTarget.point - transform.position;
-                            Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
-
 
                             entity.abilityManager.abilities[5].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[5].ID, true);
                         }
@@ -636,12 +660,12 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
 
-            entity.abilityManager.AddAbility(GameManager.Abilities["icebolt"], 2);
+            entity.abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
             entity.abilityManager.AddAbility(GameManager.Abilities["frozenorb"], 3);
             entity.abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 4);
             entity.abilityManager.AddAbility(GameManager.Abilities["boomerangblade"], 5);
 
-            entity.abilityIndexDict["icebolt"] = 2;
+            entity.abilityIndexDict["cleave"] = 2;
             entity.abilityIndexDict["frozenorb"] = 3;
             entity.abilityIndexDict["aoefreeze"] = 4;
             entity.abilityIndexDict["boomerangblade"] = 5;

@@ -80,23 +80,6 @@ public class AIController : StateMachine
         MoveFSM = GetComponent<MovementFSM>();
         EntityObject = GetComponent<Entity>();
         _animationController = GetComponent<AnimationController>();
-    }
-
-	void Start() 
-    {
-        PursuitFSM = GetComponent<AIPursuit>();
-        localHomePosition = transform.position;
-
-        wanderDistance = 5.0f;
-        wanderInterval = 5.0f;
-        wanderDistanceFromNode = 7.0f;
-
-        nodePosition = new Vector3(transform.parent.position.x, transform.position.y, transform.parent.position.z);
-
-        nextWander = Time.time + wanderInterval;
-
-        ThreatTable = new Dictionary<GameObject, Hostile>();
-        target = null;
 
         SetupMachine(AIStates.idle);
 
@@ -122,6 +105,23 @@ public class AIController : StateMachine
         StartMachine(AIStates.idle);     
     }
 
+	void Start() 
+    {
+        PursuitFSM = GetComponent<AIPursuit>();
+        localHomePosition = transform.position;
+
+        wanderDistance = 5.0f;
+        wanderInterval = 5.0f;
+        wanderDistanceFromNode = 7.0f;
+
+        nodePosition = new Vector3(transform.parent.position.x, transform.position.y, transform.parent.position.z);
+
+        nextWander = Time.time + wanderInterval;
+
+        ThreatTable = new Dictionary<GameObject, Hostile>();
+        target = null;
+    }
+
     #region public functions
 
     /// <summary>
@@ -132,7 +132,7 @@ public class AIController : StateMachine
     /// <param name="magnitude">The amount of threat to apply.</param>
     public void Threat(GameObject source, float magnitude = 0)
     {
-        if ((AIStates)CurrentState != AIStates.dead && (AIStates)CurrentState != AIStates.reset)
+        if ((AIStates)CurrentState != AIStates.dead && (AIStates)CurrentState != AIStates.reset && source != null)
         {
             if (source.tag == "Player")
             {
@@ -357,6 +357,7 @@ public class AIController : StateMachine
             {
                 target.GetComponent<PlayerEntity>().GiveExperience(EntityObject.Experience);
             }
+
             Transition(AIStates.dead);
         }
 
@@ -418,13 +419,20 @@ public class AIController : StateMachine
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>().Experience += 25;
 
         PursuitFSM.StopPursuit();
-        MoveFSM.LockMovement();
+        MoveFSM.LockMovement(MovementFSM.LockType.ShiftLock);
         GetComponent<CapsuleCollider>().enabled = false;
         GetComponent<NavMeshAgent>().enabled = false;
         Aggro.gameObject.SetActive(false);
-        Destroy(rigidbody);
 
-        GetComponent<AnimationController>().Death();
+        try
+        {
+            GetComponent<Infernal>().Death();
+        }
+
+        catch
+        {
+            _animationController.Death();
+        }
 
         #region heal orb spawning
         GameObject healOrb = (GameObject)Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnvironmentHealOrbProjectile, new Vector3(transform.position.x, transform.position.y + 2, transform.position.z), Quaternion.identity);
@@ -461,7 +469,6 @@ public class AIController : StateMachine
         #endregion
 
         
-
 
         #region cleanup and destroy
 

@@ -212,7 +212,7 @@ public class Cleave : Ability
 
         else
         {
-            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position + source.transform.forward * source.GetComponent<MovementFSM>().Radius * 1.5F, source.transform.rotation);
+            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position + source.transform.forward * source.GetComponent<MovementFSM>().Radius * 0.5f, source.transform.rotation);
 
         }
 

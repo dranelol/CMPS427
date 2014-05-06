@@ -24,6 +24,7 @@ public class AIPursuit : StateMachine
     private List<int> _abilityIndices;
     private AbilityManager _abilityManager;
     private float _adjustedRange;
+    private AnimationController _animationController;
 
     public bool doesFlee;
     public float fleeDistance; //Max distance to travel from the position the enemy starts fleeing from.
@@ -31,6 +32,9 @@ public class AIPursuit : StateMachine
 
     private float fleeEnd; //Future time the enemy will stop fleeing.
     private bool hasFled;
+    private bool swinging;
+
+    private float swingSpeed;
 
     private GameObject debugNSD;
     
@@ -63,6 +67,10 @@ public class AIPursuit : StateMachine
 
         hasFled = false;
         doesFlee = true;
+        swinging = false;
+
+        swingSpeed = GetComponent<EnemyBaseAtts>()._swingSpeed;
+        _animationController = GetComponent<AnimationController>();
     }
 
     void Start()
@@ -177,9 +185,32 @@ public class AIPursuit : StateMachine
         MoveFSM.SetPath(targetPosition);
     }
 
-    private void CalculateAbilityRange()
+    private void UpdateAbilities()
     {
-        _adjustedRange = _abilityManager.abilities[_nextAbilityIndex].Range + MoveFSM.Radius + currentTarget.GetComponent<MovementFSM>().Radius;
+        int next = 0;
+
+        for (int i = 0; i < 4; i++)
+        {
+            try
+            {
+                if (_abilityManager.abilities[i].Cooldown > _abilityManager.abilities[next].Cooldown
+                    && _abilityManager.activeCoolDowns[i] <= Time.time)
+                {
+                    next = i;
+                }
+            }
+
+            catch
+            {
+                break;
+            }
+        }
+
+        if (next != _nextAbilityIndex)
+        {
+            _nextAbilityIndex = next;
+            _adjustedRange = _abilityManager.abilities[_nextAbilityIndex].Range + MoveFSM.Radius + currentTarget.GetComponent<MovementFSM>().Radius;
+        }
     }
 
     #endregion
@@ -214,7 +245,9 @@ public class AIPursuit : StateMachine
         {
             if (currentTarget != null)
             {
-                if (combatFSM.IsIdle())// && _abilityManager.activeCoolDowns[_nextAbilityIndex] <= Time.time) // check resource as well
+                UpdateAbilities();
+
+                if (combatFSM.IsIdle() && _abilityManager.activeCoolDowns[_nextAbilityIndex] <= Time.time) // check resource as well
                 {
                     Vector3 directionToTarget = currentTarget.transform.position - transform.position;
 
@@ -258,12 +291,46 @@ public class AIPursuit : StateMachine
 
     #region attack functions
 
+    private void SwingTimer()
+    {
+        swinging = false;
+    }
+
+    IEnumerator attack_EnterState()
+    {
+        swinging = true;
+        float offset = 0;
+
+        if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.MELEE)
+        {
+            _animationController.Attack(AnimationType.Melee, 0);
+        }
+
+        else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.PROJECTILE)
+        {
+            _animationController.Attack(AnimationType.Melee, 1);
+        }
+
+        else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.HONINGPROJECTILE)
+        {
+            _animationController.Attack(AnimationType.Melee, 1);
+        }
+
+        else
+        {
+            _animationController.Attack(AnimationType.Melee, 2);
+            offset = 0.3f;
+        }
+
+        Invoke("SwingTimer", swingSpeed + offset);
+        yield break;
+    }
+
     void attack_Update()
     {
         if (currentTarget != null)
         {
-            //check resource, combat fsm, and cooldowns
-            if (_abilityManager.activeCoolDowns[_nextAbilityIndex] <= Time.time)
+            if (!swinging)
             {
                 Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
 
@@ -278,9 +345,10 @@ public class AIPursuit : StateMachine
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                     _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
                 }
-            
+
                 else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.HONINGPROJECTILE)
                 {
+                    Debug.Log("homing");
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                     _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, currentTarget.transform.position, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
                 }
@@ -292,21 +360,17 @@ public class AIPursuit : StateMachine
                 }
 
                 _abilityManager.activeCoolDowns[_nextAbilityIndex] = Time.time + _abilityManager.abilities[_nextAbilityIndex].Cooldown;
+
+                UpdateAbilities();
+
+                Transition(PursuitStates.seek);
             }
-
-            
-            // Incurr resource cost
-            // play animation
-            GetComponent<AnimationController>().Attack(AnimationType.Melee, 0); // DELETE THIS
-
-            CalculateAbilityRange();
-
-            Transition(PursuitStates.seek);
         }
 
-        else if (_abilityManager.activeCoolDowns[_nextAbilityIndex] > Time.time)
+        else
         {
-            Transition(PursuitStates.seek);
+            Transition(PursuitStates.inactive);
+
         }
     }
 
@@ -335,9 +399,6 @@ public class AIPursuit : StateMachine
         {
             StopPursuit();
         }
-
-
-
     }
 
 

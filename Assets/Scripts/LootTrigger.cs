@@ -33,6 +33,7 @@ public class LootTrigger : Trigger
 
         defaultShader = Shader.Find("Diffuse");
 		highlight = Shader.Find("Outlined/Silhouetted Diffuse");
+
 		if(isActive) 
         {
             Activate();
@@ -84,8 +85,9 @@ public class LootTrigger : Trigger
 		base.SetOff();
 	}
 
-    void OnTriggerExit(Collider other)
+    public override void OnTriggerExit(Collider other)
     {
+        base.OnTriggerExit(other);
         if (other.gameObject.tag == "Player")
         {
             if (inventoryOpened == true)
@@ -100,11 +102,18 @@ public class LootTrigger : Trigger
 
     void OnMouseEnter()
     {
+        Debug.Log("entering");
         triggerObject.renderer.material.shader = highlight;
+    }
+
+    void OnMouseOver()
+    {
+        Debug.Log("asd");
     }
 
     void OnMouseExit()
     {
+        Debug.Log("exiting");
         triggerObject.renderer.material.shader = defaultShader;
     }
 
