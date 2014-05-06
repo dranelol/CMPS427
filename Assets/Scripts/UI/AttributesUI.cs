@@ -503,12 +503,12 @@ public class AttributesUI : UIState
 
     private void ApplyChanges()
     {
-        Controller.Player.currentAtt.Health = health;
-        Controller.Player.currentAtt.Resource = resource;
-        Controller.Player.currentAtt.Power = power;
-        Controller.Player.currentAtt.Defense = defense;
-        Controller.Player.currentAtt.AttackSpeed = attackSpeed;
-        Controller.Player.currentAtt.MovementSpeed = movementSpeed;
+        Controller.Player.baseAtt.Health = health;
+        Controller.Player.baseAtt.Resource = resource;
+        Controller.Player.baseAtt.Power = power;
+        Controller.Player.baseAtt.Defense = defense;
+        Controller.Player.baseAtt.AttackSpeed = attackSpeed;
+        Controller.Player.baseAtt.MovementSpeed = movementSpeed;
 
         Controller.Player.AttributePoints = attrPoints;
 
@@ -516,6 +516,8 @@ public class AttributesUI : UIState
         {
             applied = true;
         }
+
+        Controller.Player.UpdateCurrentAttributes();
     }
 
     
