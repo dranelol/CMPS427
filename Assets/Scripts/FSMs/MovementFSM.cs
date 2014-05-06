@@ -60,7 +60,7 @@ public class MovementFSM : StateMachine
         {
             _navMeshAgent.radius = Mathf.Clamp(value, MINIMUM_RADIUS, MAXIMUM_RADIUS);
             _collider.radius = _navMeshAgent.stoppingDistance = Radius;
-            _navMeshAgent.stoppingDistance = Radius * 1.1f;
+            _navMeshAgent.stoppingDistance = Radius;
         }
     }
 
@@ -91,6 +91,15 @@ public class MovementFSM : StateMachine
         moving,
         moveLocked,
     }
+
+    public enum LockType
+    {
+        ShiftLock,
+        MovementLock,
+    }
+
+    private bool _shiftLocked = false;
+    private float _lockTime = 0f;
 
     #endregion
 
@@ -134,36 +143,39 @@ public class MovementFSM : StateMachine
         {
             _navMeshAgent.speed = _movementSpeed;
 
-            NavMeshHit navMeshHit;
-
-            if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
+            if (Vector3.Distance(targetPosition, transform.position) > 1)
             {
-                if (tag == "Player")
-                {
-                    NavMeshHit playerNavMeshHit;
+                NavMeshHit navMeshHit;
 
-                    if (_navMeshAgent.Raycast(targetPosition, out playerNavMeshHit))
+                if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
+                {
+                    if (tag == "Player")
                     {
-                        _navMeshAgent.Move((playerNavMeshHit.position - transform.position).normalized / 50f);
-                        _navMeshAgent.SetDestination(playerNavMeshHit.position);
+                        NavMeshHit playerNavMeshHit;
+
+                        if (_navMeshAgent.Raycast(targetPosition, out playerNavMeshHit))
+                        {
+                            _navMeshAgent.Move((playerNavMeshHit.position - transform.position).normalized / 50f);
+                            _navMeshAgent.SetDestination(playerNavMeshHit.position);
+                        }
+
+                        else
+                        {
+                            _navMeshAgent.SetDestination(navMeshHit.position);
+                        }
+
+                        Transition(MoveStates.moving);
                     }
 
                     else
                     {
-                        _navMeshAgent.SetDestination(navMeshHit.position);
+                        if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
+                        {
+                            _navMeshAgent.SetDestination(navMeshHit.position);
+                        }
+
+                        Transition(MoveStates.moving);
                     }
-
-                    Transition(MoveStates.moving);
-                }
-
-                else
-                {
-                    if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
-                    {
-                        _navMeshAgent.SetDestination(navMeshHit.position);
-                    }
-
-                    Transition(MoveStates.moving);
                 }
             }
         }
@@ -195,34 +207,51 @@ public class MovementFSM : StateMachine
         }
     }
 
-    public void LockMovement()
+    public void LockMovement(LockType type, float duration = 0)
     {
+        if (type == LockType.ShiftLock)
+        {
+            _shiftLocked = true;
+        }
+
+        else
+        {
+            _lockTime = Mathf.Max(_lockTime, Time.time + duration);
+        }
+
         if ((MoveStates)CurrentState != MoveStates.moveLocked)
         {
             Transition(MoveStates.moveLocked);
         }
     }
 
-    public void UnlockMovement()
+    public void UnlockMovement(LockType type)
     {
         if ((MoveStates)CurrentState == MoveStates.moveLocked)
         {
-            Transition(MoveStates.idle);
+            if (type == LockType.MovementLock)
+            {
+                _lockTime = Time.time;
+            }
+
+            else
+            {
+                _shiftLocked = false;
+            }
         }
     }
 
-    public void Turn(Vector3 steeringTarget)
+    public void Turn(Vector3 steeringTarget, float amount = 1)
     {
         Vector3 direction = steeringTarget - transform.position;
-        transform.forward = Vector3.Slerp(transform.forward, new Vector3(direction.x, 0, direction.z).normalized, 0.2f);
+        transform.forward = Vector3.Slerp(transform.forward, new Vector3(direction.x, 0, direction.z).normalized, 0.2f * amount);
     }
 
     public void AddForce(Vector3 force, float duration)
     {
         if (force.magnitude > 0)
         {
-            LockMovement();
-            Invoke("UnlockMovement", duration);
+            LockMovement(LockType.MovementLock, duration);
             _navMeshAgent.Move(force / 50f);
         }
     }
@@ -232,8 +261,8 @@ public class MovementFSM : StateMachine
         if ((MoveStates)CurrentState != MoveStates.moveLocked)
         {
             Transition(MoveStates.idle);
-            _navMeshAgent.Warp(targetLocation);
         }
+        _navMeshAgent.Warp(targetLocation);
     }
 
     #endregion
@@ -278,7 +307,16 @@ public class MovementFSM : StateMachine
     private IEnumerator moveLocked_EnterState()
     {
         _navMeshAgent.ResetPath();
+        _animationController.StopMoving();
         yield return null;
+    }
+
+    void moveLocked_Update()
+    {
+        if (!_shiftLocked && _lockTime <= Time.time)
+        {
+            Transition(MoveStates.idle);
+        }
     }
 
     private IEnumerator moveLocked_ExitState()
