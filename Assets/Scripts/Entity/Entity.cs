@@ -38,8 +38,8 @@ public class Entity : MonoBehaviour
 
     public float minMovementSpeed = 0;
     public float maxMovementSpeed = 3;
-    public float minAttackSpeed = 0.1f;
-    public float maxAttackSpeed = 3f;
+    public float minAttackSpeed = 0.5f;
+    public float maxAttackSpeed = 2f;
 
     public AbilityManager abilityManager;
 
@@ -71,7 +71,7 @@ public class Entity : MonoBehaviour
         baseAtt.Resource = currentResource = 100;
         baseAtt.Power = 10;
         baseAtt.Defense = 10;
-        baseAtt.AttackSpeed = 0.5f;
+        baseAtt.AttackSpeed = 0f;
         baseAtt.MovementSpeed = 1.0f;
         level = 1;
         experience = 0;

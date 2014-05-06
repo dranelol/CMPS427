@@ -192,7 +192,6 @@ public class AnimationController : MonoBehaviour
             {
                 attackAnimations.Add("attack 2");
                 attackAnimations.Add("attack 1");
-                attackAnimations.Add("attack 6");
             }
 
             else
