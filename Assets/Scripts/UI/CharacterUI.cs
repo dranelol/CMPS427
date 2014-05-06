@@ -55,7 +55,7 @@ public class CharacterUI : UIState
 
         Controller.DraggedEquip = null;
 
-        health, resource, power, defense, damage, attackSpeed, movementSpeed = "";
+        health= resource= power= defense= damage= attackSpeed= movementSpeed = "";
     }
 
     public override void Exit()
