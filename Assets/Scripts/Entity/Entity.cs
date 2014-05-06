@@ -101,6 +101,9 @@ public class Entity : MonoBehaviour
         currentAtt.AttackSpeed = Mathf.Clamp(currentAtt.AttackSpeed, minAttackSpeed, maxAttackSpeed);
 
         GetComponent<MovementFSM>().UpdateMovementSpeed(currentAtt.MovementSpeed);
+
+        currentHP = Mathf.Clamp(currentHP, 0, currentAtt.Health);
+        currentResource = Mathf.Clamp(currentResource, 0, currentAtt.Resource);
     }
     /// <summary>
     /// Modifies the current health of the entity, clamped by the maximum health.

@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
     public GameObject BoomerangBladeExplosion;
     public GameObject AxeThrowProjectile;
     public GameObject AxeThrowExplosion;
+    public GameObject ShieldBreakerParticles;
     public GameObject RotationEffect;
 
     public GameObject EnvironmentHealOrbProjectile;
@@ -136,6 +137,8 @@ public class GameManager : MonoBehaviour
         Abilities["boomerangblade"] = new BoomerangBlade(AttackType.PROJECTILE, DamageType.PHYSICAL, 5f, 0f, 4.0f, 0f, 20f, "boomerangblade", "Boomerang Blade", BoomerangBladeExplosion);
         Abilities["boomerangbladereturn"] = new BoomerangBladeReturn(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL,0.0f, 0.0f, 0.0f, 0.0f, 0f, "boomerangbladereturn", "Boomerang Blade(returning)", BoomerangBladeExplosion);
         Abilities["axethrow"] = new AxeThrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 0.0f, 2.0f, 0.0f, 3f, "axethrow", "Axe Throw", AxeThrowExplosion);
+        Abilities["frostnova"] = new FrostNova(AttackType.PBAOE, DamageType.WATER, 7f, 360f, 20f, 0f, 60f, "frostnova", "Frost Nova", IceBoltParticles);
+        Abilities["shieldbreaker"] = new ShieldBreaker(AttackType.PBAOE, DamageType.PHYSICAL, 10f, 8f, 5f, 5f, 20f, "shieldbreaker", "Shieldbreaker", ShieldBreakerParticles);
 
         Abilities["infernalfireball"] = new InfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 360.0f, 0.0f, 5000.0f, 0f, "infernalfireball", "Infernal Fireball", InfernalFireballExplosion);
 
