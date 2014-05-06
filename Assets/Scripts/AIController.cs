@@ -419,7 +419,7 @@ public class AIController : StateMachine
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>().Experience += 25;
 
         PursuitFSM.StopPursuit();
-        MoveFSM.LockMovement();
+        MoveFSM.LockMovement(MovementFSM.LockType.ShiftLock);
         GetComponent<CapsuleCollider>().enabled = false;
         GetComponent<NavMeshAgent>().enabled = false;
         Aggro.gameObject.SetActive(false);

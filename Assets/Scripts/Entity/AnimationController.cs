@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class AnimationController : MonoBehaviour
 {
@@ -22,6 +22,8 @@ public class AnimationController : MonoBehaviour
 
     private float _baseAnimationSpeed;
     private string _movementAnimation;
+    private MovementFSM _movementFSM;
+    private Entity _entity;
 
     #endregion
 
@@ -68,6 +70,20 @@ public class AnimationController : MonoBehaviour
         ProcessCombatAnimations(_miscAnimations);
 
         _movementAnimation = "Run";
+
+        if (tag == "Player")
+        {
+            animation["cast spell"].speed = 3f;
+            animation["attack 1"].speed = 2f;
+            animation["attack 2"].speed = 2f;
+            animation["attack 3"].speed = 2f;
+            animation["attack 4"].speed = 2f;
+            animation["attack 5"].speed = 2f;
+            animation["attack 6"].speed = 2f;
+        }
+
+        _movementFSM = GetComponent<MovementFSM>();
+        _entity = GetComponent<Entity>();
     }
 
     void Start()
@@ -155,6 +171,52 @@ public class AnimationController : MonoBehaviour
         {
             Debug.LogWarning("There is no animation named " + animationName + ".");
         }
+    }
+
+    public void PlayerAttack(AttackType attackType, equipSlots.equipmentType weaponType)
+    {
+        string name;
+
+        if ((AttackType)attackType == AttackType.MELEE)
+        {
+            List<string> attackAnimations = new List<string>();
+
+            if ((equipSlots.equipmentType)weaponType == equipSlots.equipmentType.Dagger)
+            {
+                attackAnimations.Add("attack 1");
+                attackAnimations.Add("attack 3");
+                attackAnimations.Add("attack 5");
+            }
+
+            else if ((equipSlots.equipmentType)weaponType == equipSlots.equipmentType.Axe)
+            {
+                attackAnimations.Add("attack 2");
+                attackAnimations.Add("attack 1");
+                attackAnimations.Add("attack 6");
+            }
+
+            else
+            {
+                attackAnimations.Add("attack 1");
+                attackAnimations.Add("attack 3");
+                attackAnimations.Add("attack 4");
+            }
+
+            name = attackAnimations[UnityEngine.Random.Range((int)0, (int)attackAnimations.Count)];
+            animation[name].speed = animation[name].clip.length / (GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
+            _movementFSM.LockMovement(MovementFSM.LockType.MovementLock, GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
+
+            Debug.Log(animation[name].clip.length);
+            Debug.Log(animation[name].length);
+        }
+
+        else
+        {
+            name = "cast spell";
+            _movementFSM.LockMovement(MovementFSM.LockType.MovementLock, animation[name].length / 3f);
+        }
+
+        Attack(name);
     }
 
     public void WalkToMove()
