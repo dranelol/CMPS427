@@ -55,6 +55,8 @@ public class Entity : MonoBehaviour
     public Inventory Inventory { get { return inventory; } }
     public Dictionary<string, int> abilityIndexDict = new Dictionary<string, int>();
 
+    private Mesh _weaponMesh;
+
     public void Awake()
     {
         LoadInventory();
@@ -69,7 +71,7 @@ public class Entity : MonoBehaviour
         baseAtt.Resource = currentResource = 100;
         baseAtt.Power = 10;
         baseAtt.Defense = 10;
-        baseAtt.AttackSpeed = 1.0f;
+        baseAtt.AttackSpeed = 0.5f;
         baseAtt.MovementSpeed = 1.0f;
         level = 1;
         experience = 0;
@@ -86,8 +88,6 @@ public class Entity : MonoBehaviour
         UpdateCurrentAttributes();
 
         // fix for "activated" cooldowns on start
-
-        
     }
 
     public void UpdateCurrentAttributes()
@@ -185,6 +185,11 @@ public class Entity : MonoBehaviour
                 abilityManager.RemoveAbility(6);
                 abilityManager.AddAbility(GameManager.Abilities[item.onhit], 6);
                 abilityIndexDict[item.onhit] = 6;
+            }
+
+            if (tag == "Player" && item.validSlot == equipSlots.slots.Main)
+            {
+                //GameObejct weaponModel = (Resources.Load(equipment.FILEPATH + item.modelname, typeof(GameObject)) as GameObject).GetComponent<MeshFilter>().mesh;          
             }
 
             inventory.RemoveItem(item);

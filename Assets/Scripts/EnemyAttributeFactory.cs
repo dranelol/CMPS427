@@ -155,6 +155,7 @@ public class EnemyAttributeFactory : MonoBehaviour
     public int _treeEntCost = 12;
     public int _orcCost = 9;
     public int _undeadCost = 4;
+    public int _goblinCost = 2;
 
     #endregion
 
@@ -168,6 +169,7 @@ public class EnemyAttributeFactory : MonoBehaviour
         EnemyList.Add(new EnemyType("TreeEntEnemy", _treeEntCost));
         EnemyList.Add(new EnemyType("OrcEnemy", _orcCost));
         EnemyList.Add(new EnemyType("UndeadEnemy", _undeadCost));
+        EnemyList.Add(new EnemyType("GoblinEnemy", _goblinCost));
         // EnemyList.Add(new EnemyType("DemonEnemy", _demonCost));
     }
 
