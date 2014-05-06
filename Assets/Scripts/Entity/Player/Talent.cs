@@ -38,6 +38,12 @@ public class Talent
         get { return name; }
     }
 
+    private string bonus;
+    public string Bonus
+    {
+        get { return bonus; }
+    }
+
     /// <summary>
     /// Talent Constructor
     /// </summary>
@@ -52,6 +58,17 @@ public class Talent
         this.talentAbility = ability;
         this.depth = depth;
         this.name = name;
+        this.bonus = "";
+    }
+
+    public Talent(string name, int maxPoints, string bonus, int depth)
+    {
+        currentPoints = 0;
+        this.maxPoints = maxPoints;
+        this.bonus = bonus;
+        this.depth = depth;
+        this.name = name;
+        this.talentAbility = null;
     }
 
     

@@ -42,6 +42,13 @@ public class TalentManager : MonoBehaviour
         get { return magicTree; }
     }
 
+    private Dictionary<string, bool> bonuses;
+    public Dictionary<string, bool> Bonuses
+    {
+        get { return bonuses; }
+    }
+
+
     private PlayerController playerController;
 
     GameManager gameManager;
@@ -59,6 +66,15 @@ public class TalentManager : MonoBehaviour
 
         mightTreePoints = 0;
         magicTreePoints = 0;
+
+        bonuses = new Dictionary<string, bool>();
+
+        bonuses.Add("attackDamage", false);
+        bonuses.Add("attackSpeed", false);
+        bonuses.Add("fire", false);
+        bonuses.Add("ice", false);
+        bonuses.Add("shadow", false);
+
     }
     
     
@@ -74,6 +90,10 @@ public class TalentManager : MonoBehaviour
         magicTree.Add(new Talent("Frozen orb", 1, GameManager.Abilities["frozenorb"], 1));
         magicTree.Add(new Talent("Death Grip", 1, GameManager.Abilities["deathgrip"], 1));
         magicTree.Add(new Talent("Chaos Barrage", 1, GameManager.Abilities["chaosbarrage"], 2));
+
+
+
+
 	}
 	
 	// Update is called once per frame
@@ -107,7 +127,15 @@ public class TalentManager : MonoBehaviour
                 magicTreePoints++;
             }
 
-            AddAbility(talent);
+
+            if (talent.TalentAbility != null)
+            {
+                AddAbility(talent);
+            }
+            else if(talent.Bonus != "")
+            {
+                AddPassive(talent);
+            }
         }
     }
 
@@ -164,7 +192,14 @@ public class TalentManager : MonoBehaviour
 
             if (talent.CurrentPoints == 0)
             {
-                RemoveAbility(talent);
+                if (talent.TalentAbility != null)
+                {
+                    RemoveAbility(talent);
+                }
+                else if (talent.Bonus != "")
+                {
+                    RemovePassive(talent);
+                }
             }
         }
     }
@@ -281,5 +316,16 @@ public class TalentManager : MonoBehaviour
     {
         totalTalentPoints += points;
         talentPointPool += points;
+    }
+
+
+    public void AddPassive(Talent talent)
+    {
+        bonuses[talent.Bonus] = true;
+    }
+
+    public void RemovePassive(Talent talent)
+    {
+        bonuses[talent.Bonus] = false;
     }
 }
