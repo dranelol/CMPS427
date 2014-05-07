@@ -443,6 +443,7 @@ public class AIController : StateMachine
         healOrbProjectile.homing = true;
         healOrbProjectile.speed = 10.0f;
         healOrbProjectile.timeToActivate = 5.0f;
+        healOrbProjectile.owner = gameObject;
         
 
         Vector3 randPosition = transform.position + UnityEngine.Random.onUnitSphere*3;
@@ -453,11 +454,42 @@ public class AIController : StateMachine
         healOrbProjectile.transform.rotation = Quaternion.LookRotation(randDirection);
         #endregion
 
-        yield return new WaitForSeconds(5.0f);
-
         #region loot spawning
 
+        //roll to see if a chest spawns
+        
+        float chestroll = UnityEngine.Random.Range(0f, 1f);
+        Debug.Log("doing loot: Rolled a " + chestroll);
+        if (chestroll <= gameObject.GetComponent<EnemyBaseAtts>().LootDropChance)
+        {
+
+            //find a valid point on the navmesh for the chest
+            Vector3 newPosition = transform.position + new Vector3(UnityEngine.Random.Range(-1, 1), 0, UnityEngine.Random.Range(-1, 1));
+
+            NavMeshHit meshLocation;
+
+            if (NavMesh.SamplePosition(newPosition, out meshLocation, 1, 1 << LayerMask.NameToLayer("Default")))
+            {
+
+                GameObject chest = Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().LootChestPrefab, meshLocation.position, Quaternion.identity) as GameObject;
+
+                int diceroll = UnityEngine.Random.Range(gameObject.GetComponent<EnemyBaseAtts>().MinLootDrops, gameObject.GetComponent<EnemyBaseAtts>().MaxLootDrops + 1);
+
+                for (int i = 0; i < diceroll; i++)
+                {
+                    chest.GetComponentInChildren<LootTrigger>().Inventory.AddItem(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipmentByLevel(EntityObject.Level));
+                    //chest.GetComponentInChildren<LootTrigger>().Inventory.AddItem(new equipment());
+                }
+            }
+        }
+
+
+
         #endregion
+
+
+        yield return new WaitForSeconds(5.0f);
+
 
         #region chest spawning
 
@@ -477,6 +509,9 @@ public class AIController : StateMachine
         Destroy(gameObject);
 
         #endregion
+
+
+
         yield return null;
     }
 

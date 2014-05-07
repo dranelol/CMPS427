@@ -66,7 +66,8 @@ public class Entity : MonoBehaviour
         buffAtt = new Attributes();
         baseAtt = new Attributes();
 
-        baseAtt.Health = currentHP = 500;
+        baseAtt.Health = currentHP = 100;
+
         baseAtt.Resource = currentResource = 100;
         baseAtt.Power = 10;
         baseAtt.Defense = 10;
@@ -100,6 +101,9 @@ public class Entity : MonoBehaviour
         currentAtt.AttackSpeed = Mathf.Clamp(currentAtt.AttackSpeed, minAttackSpeed, maxAttackSpeed);
 
         GetComponent<MovementFSM>().UpdateMovementSpeed(currentAtt.MovementSpeed);
+
+        currentHP = Mathf.Clamp(currentHP, 0, currentAtt.Health);
+        currentResource = Mathf.Clamp(currentResource, 0, currentAtt.Resource);
     }
     /// <summary>
     /// Modifies the current health of the entity, clamped by the maximum health.

@@ -39,7 +39,7 @@ public class PlayerEntity : Entity
         base.Awake();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         spawnPoint = transform.position;
-
+        baseAtt.Health = 1000;
         Experience = 0;
         Level = 1;
         nextLevelExperience = 100;
@@ -83,19 +83,18 @@ public class PlayerEntity : Entity
 
         else
         {
-            abilityManager.AddAbility(GameManager.Abilities["fireball"], 1);
-            abilityManager.AddAbility(GameManager.Abilities["flamestrike"], 2);
-            abilityManager.AddAbility(GameManager.Abilities["fireballturret"], 3);
+            abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 1);
+            abilityManager.AddAbility(GameManager.Abilities["improvedshadowbolt"], 2);
+            abilityManager.AddAbility(GameManager.Abilities["deathanddecay"], 3);
             abilityManager.AddAbility(GameManager.Abilities["whirlwind"], 4);
-            abilityManager.AddAbility(GameManager.Abilities["fireballbarrage"], 5);
+            abilityManager.AddAbility(GameManager.Abilities["shadowfury"], 5);
 
-            abilityIndexDict["fireball"] = 1;
-            abilityIndexDict["flamestrike"] = 2;
-            abilityIndexDict["fireballturret"] = 3;
+            abilityIndexDict["shadowbolt"] = 1;
+            abilityIndexDict["improvedshadowbolt"] = 2;
+            abilityIndexDict["deathanddecay"] = 3;
             abilityIndexDict["whirlwind"] = 4;
-            abilityIndexDict["fireballbarrage"] = 5;
+            abilityIndexDict["shadowfury"] = 5;
         }
-
 	}
 	
 	// Update is called once per frame

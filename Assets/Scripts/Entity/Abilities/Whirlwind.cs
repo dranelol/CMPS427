@@ -10,11 +10,13 @@ public class Whirlwind : Ability
 
     }
 
-    public override void AttackHandler(GameObject source, Entity attacker, bool isPlayer, int repetitions, float waitDelta)
+    public override void AttackHandler(GameObject source, Vector3 AoEPoint, Entity attacker, bool isPlayer)
     {
         // do attack "repetition" times with "timeDelta" waiting between each
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().WhirlwindSpawn, 1.0f, isPlayer));
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAttackRepeating(source, attacker, isPlayer, repetitions, waitDelta));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().WhirlwindSpawn, 1.0f, isPlayer, 1.8f));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().WhirlwindSpawn, 1.0f, isPlayer, 2.0f));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().WhirlwindSpawn, 1.0f, isPlayer, 2.2f));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAttackRepeating(source, attacker, isPlayer, 3, 0.25f));
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -167,8 +169,6 @@ public class Whirlwind : Ability
 
                         GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, defender.gameObject));
                     }
-
-                    
                 }
             }
 
@@ -213,13 +213,14 @@ public class Whirlwind : Ability
         yield return null;
     }
 
-    public IEnumerator DoSpawnAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
+    public IEnumerator DoSpawnAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, float orbitScale, GameObject target = null)
     {
         GameObject particles;
 
         particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
 
         particles.GetComponent<OrbSpawnSingle>().orbitObject = source;
+        particles.GetComponent<OrbSpawnSingle>().orbitScale = orbitScale;
 
         yield return new WaitForSeconds(time);
 

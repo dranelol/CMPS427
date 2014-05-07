@@ -16,7 +16,9 @@ public class MasterAuraManager : MonoBehaviour
         Auras["Corruption"] = new Corruption("Corruption");
         Auras["BlessingOfMight"] = new BlessingOfMight("Blessing of Might");
 
+        Auras["shadowStun"] = new Shadowstun("shadowStun");
         Auras["root"] = new Root("root");
+        Auras["slow"] = new Slow("slow");
         Auras["chaosbarrage"] = new chaosbarrage("chaosbarrage");
         Auras["fireballbarrage"] = new fireballbarrage("fireballbarrage");
 
