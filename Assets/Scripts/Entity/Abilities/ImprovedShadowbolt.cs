@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Shadowbolt : Ability
+public class ImprovedShadowbolt : Ability
 {
-    public Shadowbolt(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+    public ImprovedShadowbolt(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
         : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
 
@@ -14,7 +14,7 @@ public class Shadowbolt : Ability
     public override void SpawnProjectile(GameObject source, Vector3 target, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
 
-        GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().ShadowboltProjectile, source.transform.position + forward + new Vector3(0,2,0), Quaternion.LookRotation(forward));
+        GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().ShadowboltProjectile, source.transform.position + forward + new Vector3(0, 2, 0), Quaternion.LookRotation(forward));
 
         projectile.GetComponent<ProjectileBehaviour>().owner = owner;
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
@@ -22,7 +22,7 @@ public class Shadowbolt : Ability
         projectile.GetComponent<ProjectileBehaviour>().target = target + forward;
         projectile.GetComponent<ProjectileBehaviour>().homing = true;
         projectile.GetComponent<ProjectileBehaviour>().speed = 20f;
-        
+
 
         Vector3 randPos = source.transform.position + forward + Random.onUnitSphere;
 
@@ -33,7 +33,7 @@ public class Shadowbolt : Ability
         projectile.transform.rotation = Quaternion.LookRotation(direction);
 
         //projectile.rigidbody.velocity = direction * 20.0f;
-        
+
     }
 
     public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
@@ -45,6 +45,7 @@ public class Shadowbolt : Ability
             {
                 Entity defender = target.GetComponent<Entity>();
                 DoDamage(source, target, attacker, defender, isPlayer);
+                DoBuff(target, attacker);
                 if (target.GetComponent<AIController>().IsInCombat() == false)
                 {
                     target.GetComponent<AIController>().BeenAttacked(source);
@@ -57,6 +58,7 @@ public class Shadowbolt : Ability
         {
             Entity defender = target.GetComponent<Entity>();
             DoDamage(source, target, attacker, defender, isPlayer);
+            DoBuff(target, attacker);
         }
 
         GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, target));
@@ -81,13 +83,17 @@ public class Shadowbolt : Ability
         defender.ModifyHealth(-damageAmt);
     }
 
+    public void DoBuff(GameObject target, Entity source)
+    {
+        target.GetComponent<EntityAuraManager>().Add("Corruption", source);
 
+    }
 
     public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target)
     {
         GameObject particles;
 
-        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position + new Vector3(0,1,0), source.transform.rotation);
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position + new Vector3(0, 1, 0), source.transform.rotation);
 
         yield return new WaitForSeconds(time);
 
