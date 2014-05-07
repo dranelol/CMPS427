@@ -59,7 +59,6 @@ public class AIController : StateMachine
     private AnimationController _animationController;
     // Reset variables
     public Vector3 localHomePosition; // The position around the home position this unit returns to upon reset
-    private EntitySoundManager _soundManager;
 
     // Target variables
     private Dictionary<GameObject, Hostile> ThreatTable; // A dictionary of all threat targets
@@ -103,9 +102,7 @@ public class AIController : StateMachine
         AddTransitionsFrom(AIStates.reset, resetTransitions);
         AddTransitionsFrom(AIStates.wander, wanderTransitions);
 
-        StartMachine(AIStates.idle);
-
-        _soundManager = GetComponent<EntitySoundManager>();
+        StartMachine(AIStates.idle);     
     }
 
 	void Start() 
@@ -135,7 +132,7 @@ public class AIController : StateMachine
     /// <param name="magnitude">The amount of threat to apply.</param>
     public void Threat(GameObject source, float magnitude = 0)
     {
-        if ((AIStates)CurrentState != AIStates.dead && (AIStates)CurrentState != AIStates.reset && source != null && !source.GetComponent<Entity>().IsDead())
+        if ((AIStates)CurrentState != AIStates.dead && (AIStates)CurrentState != AIStates.reset && source != null)
         {
             if (source.tag == "Player")
             {
@@ -349,7 +346,6 @@ public class AIController : StateMachine
     {
         _animationController.RunToMove();
         PursuitFSM.Pursue(target);
-        _soundManager.Aggro();
         yield break;
     }
 
@@ -363,15 +359,12 @@ public class AIController : StateMachine
             }
 
             Transition(AIStates.dead);
-
-            _soundManager.Death();
         }
 
         else
         {
             if (!TargetInRange() || target.GetComponent<Entity>().IsDead())
             {
-                _soundManager.Victor();
                 Group.RemoveTarget(target);
             }
 

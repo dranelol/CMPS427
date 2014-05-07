@@ -83,7 +83,7 @@ public class EnemyAttributeFactory : MonoBehaviour
     public const int MAX_ENEMY_COST = 20;
 
     public const int MIN_NODE_RESOURCES = 1;
-    public const int MAX_NODE_RESOURCES = 50;
+    public const int MAX_NODE_RESOURCES = 40;
 
     public const int MIN_NODE_COUNT = 1;
     public const int MAX_NODE_COUNT = 10;

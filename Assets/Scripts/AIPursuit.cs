@@ -17,7 +17,6 @@ public class AIPursuit : StateMachine
     private MovementFSM MoveFSM;
     private Entity entity;
     private CombatFSM combatFSM;
-    private EntitySoundManager _soundManager;
 
     private GameObject currentTarget = null;
 
@@ -72,7 +71,6 @@ public class AIPursuit : StateMachine
 
         swingSpeed = GetComponent<EnemyBaseAtts>()._swingSpeed;
         _animationController = GetComponent<AnimationController>();
-        _soundManager = GetComponent<EntitySoundManager>();
     }
 
     void Start()
@@ -227,11 +225,6 @@ public class AIPursuit : StateMachine
         yield break;
     }
 
-    IEnumerator inactive_ExitState()
-    {
-        yield break;
-    }
-
     #endregion
 
     #region seek functions
@@ -340,7 +333,7 @@ public class AIPursuit : StateMachine
             if (!swinging)
             {
                 Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
-                _soundManager.Attack();
+
                 if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.MELEE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);

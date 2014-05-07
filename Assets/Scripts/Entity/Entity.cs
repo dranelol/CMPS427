@@ -42,7 +42,6 @@ public class Entity : MonoBehaviour
     public float maxAttackSpeed = 2f;
 
     public AbilityManager abilityManager;
-    private EntitySoundManager _soundManager;
 
     private Dictionary<equipSlots.slots, equipment> equippedEquip;
     public Dictionary<equipSlots.slots, equipment> EquippedEquip
@@ -63,7 +62,6 @@ public class Entity : MonoBehaviour
         LoadInventory();
         abilityManager = gameObject.GetComponent<AbilityManager>();
         equippedEquip = new Dictionary<equipSlots.slots, equipment>();
-        _soundManager = GetComponent<EntitySoundManager>();
 
         equipAtt = new Attributes();
         buffAtt = new Attributes();
@@ -114,12 +112,7 @@ public class Entity : MonoBehaviour
     /// </summary>
     /// <param name="value">Delta value to modify current health.</param>
     public void ModifyHealth(float delta) 
-    {
-        if (delta < 0 && delta > -0.2f * currentAtt.Health )
-        {
-            _soundManager.GetHit();
-        }
-
+    { 
         currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); 
     }
 

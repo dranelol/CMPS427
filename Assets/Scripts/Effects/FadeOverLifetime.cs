@@ -28,7 +28,7 @@ public class FadeOverLifetime : MonoBehaviour {
         catch (Exception e)
         {
             // normal color materials
-
+            Debug.Log(e.ToString());
             if (renderer.material.GetColor("_Color").a > 0)
             {
                 Color newColor = renderer.material.GetColor("_Color");
