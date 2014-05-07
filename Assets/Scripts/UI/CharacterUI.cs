@@ -20,7 +20,6 @@ public class CharacterUI : UIState
 
     private Vector2 scrollViewVector;
     private Camera characterCamera;
-    private GUITexture titsMcGee;
 
     private equipment toBeUsed;
 
@@ -47,7 +46,6 @@ public class CharacterUI : UIState
     public override void Enter()
     {
         Controller.Camera.enabled = true;
-        titsMcGee = null;
         toBeUsed = null;
         hoverEquip = null;
         hoverEquipped = null;
@@ -63,7 +61,6 @@ public class CharacterUI : UIState
         base.Exit();
 
         Controller.Camera.enabled = false;
-        titsMcGee = Controller.Camera.guiTexture;
     }
 
     public override void Update()
