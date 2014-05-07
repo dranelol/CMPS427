@@ -6,6 +6,8 @@ public class PlayerEntity : Entity
 {
     public float power, defense, attackSpeed, movementSpeed, minDamage, maxDamage;
 
+    private Vector3 spawnPoint;
+
     private int nextLevelExperience;
     public int NextLevelExperience
     {
@@ -36,6 +38,7 @@ public class PlayerEntity : Entity
     {
         base.Awake();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        spawnPoint = transform.position;
 
         Experience = 0;
         Level = 1;
@@ -148,5 +151,14 @@ public class PlayerEntity : Entity
     public void GiveAttributePoints(int attrPointsToAdd)
     {
         attributePoints += attrPointsToAdd;
+    }
+
+    /// <summary>
+    /// Respawns the player at the initial position with max health.
+    /// </summary>
+    public void Respawn()
+    {
+        currentHP = 500.0f;
+        transform.position = spawnPoint;
     }
 }
