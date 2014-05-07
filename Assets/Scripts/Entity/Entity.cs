@@ -35,6 +35,7 @@ public class Entity : MonoBehaviour
     public Attributes buffAtt; // Attribute changes that are added on from buffs/debuffs
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes baseAtt; // Base attributes without any status effects or gear
+    private EntitySoundManager _soundManager;
 
     public float minMovementSpeed = 0;
     public float maxMovementSpeed = 3;
@@ -61,6 +62,7 @@ public class Entity : MonoBehaviour
         LoadInventory();
         abilityManager = gameObject.GetComponent<AbilityManager>();
         equippedEquip = new Dictionary<equipSlots.slots, equipment>();
+        _soundManager = GetComponent<EntitySoundManager>();
 
         equipAtt = new Attributes();
         buffAtt = new Attributes();
@@ -111,7 +113,12 @@ public class Entity : MonoBehaviour
     /// </summary>
     /// <param name="value">Delta value to modify current health.</param>
     public void ModifyHealth(float delta) 
-    { 
+    {
+        if (delta < 0 && delta < -0.2f * currentAtt.Health)
+        {
+            _soundManager.GetHit();
+        }
+
         currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); 
     }
 
