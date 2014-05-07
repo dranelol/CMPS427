@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     public GameObject BladeWaltzParticles;
 
     public GameObject OnHitNormalParticles;
+    public GameObject OnHitSwordDropObject;
 
     public GameObject AOEFreezeParticles;
 
@@ -53,19 +54,21 @@ public class GameManager : MonoBehaviour
     public GameObject BoomerangBladeExplosion;
     public GameObject AxeThrowProjectile;
     public GameObject AxeThrowExplosion;
+    public GameObject ShieldBreakerParticles;
+    public GameObject dropdasteelparticles;
     public GameObject RotationEffect;
 
     public GameObject EnvironmentHealOrbProjectile;
     public GameObject EnvironmentHealOrbParticles;
     public GameObject EnvironmentHealOrbExplosion;
 
+    public GameObject LootChestPrefab;
+
     public GameObject SpawnInParticles;
-
     public GameObject InfernalSpawn;
-
     public GameObject WhirlwindSpawn;
-
     public GameObject DeathAndDecaySpawn;
+    public GameObject ShadowfurySpawn;
 
     public equipmentFactory EquipmentFactory;
 
@@ -134,6 +137,7 @@ public class GameManager : MonoBehaviour
         Abilities["blink"] = new Blink(AttackType.GROUNDTARGET, DamageType.NONE, 5.0f, 0.0f, 7.0f, 0.0f, 25f, "blink", "Blink", BlinkParticles);Abilities["shockmine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 30.0f, 5f, "shockmine", "Shock Mine", ShockMineProjectile);
         Abilities["aoefreeze"] = new AOEfreeze(AttackType.PBAOE, DamageType.WATER, 5.0f, 360f, 15f, 1f, 30f, "aoefreeze", "Flashfreeze", AOEFreezeParticles);
         Abilities["onhitnormal"] = new OnHitNormal(AttackType.MELEE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, 0f, "onhitnormal", "On Hit Normal", OnHitNormalParticles);
+        Abilities["onhitsworddrop"] = new OnHitSwordDrop(AttackType.MELEE, DamageType.PHYSICAL, 0f, 0f, 0f, 0f, 0f, "onhitsworddrop", "Sword Drop OnHit", OnHitSwordDropObject); 
         Abilities["fireballturret"] = new FireballTurret(AttackType.PROJECTILE, DamageType.NONE, 10.0f, 360.0f, 2.0f, 0.0f, 40f, "fireballturret", "Fireball Turret", FireballTurretParticles);
         Abilities["fireballturretfireball"] = new FireballTurretFireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.0f, 5.0f, 0f, "fireballturretfireball", "Fireball Turret Fireball", FireballExplosion);
         Abilities["frozenorb"] = new FrozenOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 8.0f, 0.0f, 30f, "frozenorb", "Frozen Orb", FrozenOrbParticles);
@@ -141,6 +145,9 @@ public class GameManager : MonoBehaviour
         Abilities["boomerangblade"] = new BoomerangBlade(AttackType.PROJECTILE, DamageType.PHYSICAL, 5f, 0f, 4.0f, 0f, 20f, "boomerangblade", "Boomerang Blade", BoomerangBladeExplosion);
         Abilities["boomerangbladereturn"] = new BoomerangBladeReturn(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, 0f, "boomerangbladereturn", "Boomerang Blade(returning)", BoomerangBladeExplosion);
         Abilities["axethrow"] = new AxeThrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 0.0f, 2.0f, 0.0f, 3f, "axethrow", "Axe Throw", AxeThrowExplosion);
+        Abilities["frostnova"] = new FrostNova(AttackType.PBAOE, DamageType.WATER, 7f, 360f, 20f, 0f, 60f, "frostnova", "Frost Nova", IceBoltParticles);
+        Abilities["shieldbreaker"] = new ShieldBreaker(AttackType.PBAOE, DamageType.PHYSICAL, 10f, 8f, 5f, 5f, 20f, "shieldbreaker", "Shieldbreaker", ShieldBreakerParticles);
+        Abilities["dropdasteel"] = new DropDaSteel(AttackType.STATUS, DamageType.NONE, 0f, 0f, 32f, 0f, 0f, "dropdasteel", "Drop Da Steel", dropdasteelparticles);
 
         Abilities["infernalfireball"] = new InfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 30.0f, 0f, "infernalfireball", "Infernal Fireball", InfernalFireballExplosion);
         Abilities["whirlwind"] = new Whirlwind(AttackType.GROUNDTARGET, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 10.0f, 0f, "whirlwind", "Whirlwind", OnHitNormalParticles);
@@ -148,6 +155,7 @@ public class GameManager : MonoBehaviour
         //Abilities["healorb"] = new HealOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 0.0f, 0.0f, "healorb", "Heal Orb", HealOrbExplosion);
 
         Abilities["deathanddecay"] = new DeathAndDecay(AttackType.GROUNDTARGET, DamageType.SHADOW, 5.0f, 360.0f, 0.0f, 1.0f, 0f, "deathanddecay", "Death and Decay", DeathAndDecaySpawn);
+        Abilities["shadowfury"] = new Shadowfury(AttackType.GROUNDTARGET, DamageType.SHADOW, 3.0f, 360.0f, 0.0f, 1.0f, 0f, "shadowfury", "Shadowfury", ShadowfurySpawn);
 
 
         #endregion

@@ -13,7 +13,10 @@ public class FireballTurret : Ability
 
     public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
-        GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position, source.transform.rotation);
+
+
+        int segments = 1;
+        GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position + forward, source.transform.rotation);
 
 
         projectile.GetComponent<ProjectileBehaviour>().owner = owner;
@@ -23,7 +26,7 @@ public class FireballTurret : Ability
         projectile.GetComponent<ProjectileBehaviour>().hasCollided = true;
         
 
-        projectile.rigidbody.velocity = Vector3.zero;
+        //projectile.rigidbody.velocity = Vector3.zero;
 
 
         int tempindex = 10;
@@ -35,7 +38,7 @@ public class FireballTurret : Ability
         {
             owner.GetComponent<Entity>().abilityManager.AddAbility(GameManager.Abilities["fireball"], tempindex);
             owner.GetComponent<Entity>().abilityIndexDict["fireball"] = tempindex;
-
+            Debug.Log("fireball added to " + tempindex);
         }
         /*
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

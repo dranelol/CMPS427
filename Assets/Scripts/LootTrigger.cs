@@ -20,19 +20,28 @@ public class LootTrigger : Trigger
 
     bool inventoryOpened = false;
 
-	void Start() 
+    void Awake()
     {
         inventory = new Inventory();
 
-        ef = new equipmentFactory();
-
-        inventory.AddItem(ef.randomEquipment(1, 1, equipSlots.slots.Head));
-        inventory.AddItem(ef.randomEquipment(1, 1, equipSlots.slots.Head));
+        ef = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
 
         uiController = GameObject.FindWithTag("UI Controller").GetComponent<UIController>();
 
         defaultShader = Shader.Find("Diffuse");
-		highlight = Shader.Find("Outlined/Silhouetted Diffuse");
+        highlight = Shader.Find("Outlined/Silhouetted Diffuse");
+    }
+
+	void Start() 
+    {
+       
+        if (inventory.Items.Count == 0)
+        {
+            Debug.Log("chest getting default items");
+            inventory.AddItem(ef.randomEquipment(1, 1, equipSlots.slots.Head));
+            inventory.AddItem(ef.randomEquipment(1, 1, equipSlots.slots.Head));
+        }
+
 
 		if(isActive) 
         {

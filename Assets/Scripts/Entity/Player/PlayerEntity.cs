@@ -86,16 +86,15 @@ public class PlayerEntity : Entity
             abilityManager.AddAbility(GameManager.Abilities["fireball"], 1);
             abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 2);
             abilityManager.AddAbility(GameManager.Abilities["deathanddecay"], 3);
-            abilityManager.AddAbility(GameManager.Abilities["whirlwind"], 4);
-            abilityManager.AddAbility(GameManager.Abilities["fireballbarrage"], 5);
+            abilityManager.AddAbility(GameManager.Abilities["shadowfury"], 4);
+            abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
 
             abilityIndexDict["fireball"] = 1;
             abilityIndexDict["aoefreeze"] = 2;
             abilityIndexDict["deathanddecay"] = 3;
-            abilityIndexDict["whirlwind"] = 4;
-            abilityIndexDict["fireballbarrage"] = 5;
+            abilityIndexDict["shadowfury"] = 4;
+            abilityIndexDict["bladewaltz"] = 5;
         }
-
 	}
 	
 	// Update is called once per frame
