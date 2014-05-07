@@ -69,6 +69,7 @@ public class GameManager : MonoBehaviour
     public GameObject InfernalSpawn;
 
     public GameObject WhirlwindSpawn;
+    public GameObject DervishSpawn;
 
     public GameObject DeathAndDecaySpawn;
 
@@ -151,8 +152,10 @@ public class GameManager : MonoBehaviour
         Abilities["shieldbreaker"] = new ShieldBreaker(AttackType.PBAOE, DamageType.PHYSICAL, 10f, 8f, 5f, 5f, 20f, "shieldbreaker", "Shieldbreaker", ShieldBreakerParticles);
         Abilities["dropdasteel"] = new DropDaSteel(AttackType.STATUS, DamageType.NONE, 0f, 0f, 32f, 0f, 0f, "dropdasteel", "Drop Da Steel", dropdasteelparticles);
 
+        Abilities["dervishdeathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.NONE, 3f, 360f, 0f, 0f, 0f, "dervishdeathgrip", "Dervish Deathgrip", DeathgripParticles);
         Abilities["infernalfireball"] = new InfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 30.0f, 0f, "infernalfireball", "Infernal Fireball", InfernalFireballExplosion);
-        Abilities["whirlwind"] = new Whirlwind(AttackType.GROUNDTARGET, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 10.0f, 0f, "whirlwind", "Whirlwind", OnHitNormalParticles);
+        Abilities["whirlwind"] = new Whirlwind(AttackType.GROUNDTARGET, DamageType.PHYSICAL, 3.0f, 360.0f, 0.0f, 10.0f, 0f, "whirlwind", "Whirlwind", OnHitNormalParticles);
+        Abilities["dervish"] = new Dervish(AttackType.GROUNDTARGET, DamageType.PHYSICAL, 5f, 360f, 10f, 10f, 100f, "dervish", "Dervish", BladeWaltzParticles);
 
         //Abilities["healorb"] = new HealOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 0.0f, 0.0f, "healorb", "Heal Orb", HealOrbExplosion);
 
