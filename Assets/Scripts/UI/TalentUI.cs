@@ -26,6 +26,12 @@ public class TalentUI : UIState
     private int tempMightTreePoints;
     private int tempMagicTreePoints;
 
+    private Talent hoverTalentMight;
+    private Talent hoverTalentMagic;
+
+    private Dictionary<Rect, Talent> mightRects;
+    private Dictionary<Rect, Talent> magicRects;
+
     public TalentUI(int id, UIController controller)
         : base(id, controller)
     {
@@ -80,7 +86,85 @@ public class TalentUI : UIState
 
     public override void OnGui()
     {
+        GUI.depth = 0;
+
+        
+
         GUI.Window(0, windowDimensions, OnWindow, "Talents");
+
+        string info = "";
+        int tooltipHeight = 0;
+        int tooltipWidth = 0;
+
+        if (hoverTalentMight != null)
+        {
+
+            
+
+            if (hoverTalentMight.TalentAbility != null)
+            {
+                
+
+                info = hoverTalentMight.TalentAbility.Name + "\n"
+                     + "Damage: " + hoverTalentMight.TalentAbility.DamageMod.ToString() + "\n"
+                     + "Cost: " + hoverTalentMight.TalentAbility.ResourceCost.ToString() + "\n"
+                     + "Range: " + hoverTalentMight.TalentAbility.Range.ToString() + "\n"
+                     + "Cooldown: " + hoverTalentMight.TalentAbility.Cooldown.ToString();
+
+                tooltipHeight = 83;
+                tooltipWidth = 100;
+
+            }
+            else
+            {
+                info = hoverTalentMight.Name + "\n" + hoverTalentMight.ReadableBonus();
+
+                tooltipHeight = 40;
+                tooltipWidth = 150;
+            }
+
+
+            GUIContent thisContent = new GUIContent(info);
+
+            GUIStyle thisStyle = new GUIStyle("box");
+            thisStyle.alignment = TextAnchor.UpperLeft;
+            thisStyle.normal.textColor = Color.white;
+
+            GUI.Box(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, tooltipWidth, tooltipHeight), thisContent, thisStyle);
+        }
+        else if (hoverTalentMagic != null)
+        {
+
+            if (hoverTalentMagic.TalentAbility != null)
+            {
+
+
+                info = hoverTalentMagic.TalentAbility.Name + "\n"
+                     + "Damage: " + hoverTalentMagic.TalentAbility.DamageMod.ToString() + "\n"
+                     + "Cost: " + hoverTalentMagic.TalentAbility.ResourceCost.ToString() + "\n"
+                     + "Range: " + hoverTalentMagic.TalentAbility.Range.ToString() + "\n"
+                     + "Cooldown: " + hoverTalentMagic.TalentAbility.Cooldown.ToString();
+
+                tooltipHeight = 83;
+                tooltipWidth = 100;
+            }
+            else
+            {
+                info = hoverTalentMagic.Name + "\n" + hoverTalentMagic.ReadableBonus();
+
+                tooltipHeight = 40;
+                tooltipWidth = 150;
+            }
+
+
+            GUIContent thisContent = new GUIContent(info);
+
+            GUIStyle thisStyle = new GUIStyle("box");
+            thisStyle.alignment = TextAnchor.UpperLeft;
+            thisStyle.normal.textColor = Color.white;
+
+            GUI.Box(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, tooltipWidth, tooltipHeight), thisContent, thisStyle);
+        }
     }
 
     void OnWindow(int windowID)
@@ -108,17 +192,22 @@ public class TalentUI : UIState
         int count = 0;
         float iconWidth = 0f;
         float iconHeight = 50f;
+        Rect thisRect = new Rect();
+        mightRects = new Dictionary<Rect, Talent>();
+        magicRects = new Dictionary<Rect, Talent>();
 
         GUILayout.BeginArea(new Rect(5,20,WIDTH, 20));
 
-        GUILayout.BeginHorizontal();
+        
 
-        GUILayout.Label("Unused Talent Points: " + thisPool.ToString(), GUILayout.Width((WIDTH / 6)+20), GUILayout.Height(20));
+        GUI.Label(new Rect(0,0,(WIDTH / 6)+20,20), "Unused Talent Points: " + thisPool.ToString());
+
+        //GUILayout.Label("Unused Talent Points: " + thisPool.ToString(), GUILayout.Width((WIDTH / 6)+20), GUILayout.Height(20));
 
 
         if (applied == false)
         {
-            if (GUILayout.Button("Apply", GUILayout.Width(80), GUILayout.Height(20)))
+            if (GUI.Button(new Rect((WIDTH / 6)+20,0,80,20),"Apply"))
             {
                 ApplyChanges();
             }
@@ -126,32 +215,34 @@ public class TalentUI : UIState
         else
         {
             GUI.enabled = false;
-            GUILayout.Button("Apply", GUILayout.Width(80), GUILayout.Height(20));
+            GUI.Button(new Rect((WIDTH / 6) + 20, 0, 80, 20), "Apply");
             GUI.enabled = true;
         }
 
-        GUILayout.EndHorizontal();
+        
 
         GUILayout.EndArea();
 
         #region Might Tree GUI
 
-        GUILayout.BeginArea(new Rect(0, 40, (WIDTH / 2), HEIGHT));
+        //GUI.BeginGroup(new Rect(0, 53, (WIDTH / 2), HEIGHT));
 
-        GUILayout.BeginVertical();
 
-        GUILayout.Space(10);
-        GUILayout.BeginHorizontal();
-        GUILayout.Label(mightLabel, titleStyle, GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
 
-        GUILayout.Label(new GUIContent(tempMightTreePoints.ToString() + " points"), titleStyle, GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
+        GUI.Label(new Rect(0,53,(WIDTH / 6) - bufferSpace,25), mightLabel, titleStyle);
+
+        
+
+        GUI.Label(new Rect((WIDTH / 6) - bufferSpace,53,(WIDTH / 6) - bufferSpace,25), new GUIContent(tempMightTreePoints.ToString() + " points"), titleStyle);       
+        
+        
 
 
 
         if (Controller.PlayerController.TalentManager.MightTreePoints > 0)
         {
 
-            if (GUILayout.Button("RESPEC", GUILayout.Width((WIDTH / 6)-bufferSpace), GUILayout.Height(25)))
+            if (GUI.Button(new Rect(((WIDTH / 6) - bufferSpace) * 2, 53, (WIDTH / 6) - bufferSpace, 25), "RESPEC"))
             {
                 Respec("might");
             }
@@ -159,40 +250,43 @@ public class TalentUI : UIState
         else
         {
             GUI.enabled = false;
-            GUILayout.Button("RESPEC", GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
+            GUI.Button(new Rect(((WIDTH / 6) - bufferSpace) * 2, 53, (WIDTH / 6) - bufferSpace, 25), "RESPEC");
             GUI.enabled = true;
         }
 
 
-
-
-        GUILayout.EndHorizontal();
-
-        GUILayout.Space(10);
+        
 
         
+
 
         tempTalents = mightTree.FindAll(delegate(Talent tal) { return tal.Depth == count; });
 
-        
+        float xOffset = bufferSpace;
+        float yOffset = 105;
+
         while(tempTalents.Count != 0)
         {
-            GUILayout.Space(20);
+            
             
             iconWidth = (((WIDTH/2)) / tempTalents.Count) - (bufferSpace * 2);
 
-            GUILayout.BeginHorizontal();
+            
+
 
             foreach (Talent t in tempTalents)
             {
                 tempTalentLabel.text = (t.CurrentPoints + talentAllocation[t]).ToString() + "/" + t.MaxPoints.ToString();
                 
-                GUILayout.Space(bufferSpace);
-                GUILayout.BeginVertical();
+                
+
+                thisRect = new Rect(xOffset, yOffset, iconWidth, iconHeight);
+
+                
 
                 if (IsTalentActive(t) == true)
                 {
-                    if (GUILayout.Button(t.Name, GUILayout.Width(iconWidth), GUILayout.Height(iconHeight)))
+                    if (GUI.Button(thisRect, t.Name))
                     {
                         if (Event.current.button == 0)
                         {
@@ -203,54 +297,82 @@ public class TalentUI : UIState
                             RemovePoint(t);
                         }
                     }
+                    
+                    
                 }
                 else
                 {
                     GUI.enabled = false;
-                    GUILayout.Button(t.Name, GUILayout.Width(iconWidth), GUILayout.Height(iconHeight));
+                    GUI.Button(thisRect, t.Name);
                     GUI.enabled = true;
                 }
 
+                mightRects.Add(thisRect, t);
+
+                GUI.Label(new Rect(xOffset, yOffset + iconHeight, iconWidth, 10), tempTalentLabel, labelStyle);
                 
-                
-                GUILayout.Label(tempTalentLabel, labelStyle, GUILayout.Width(iconWidth), GUILayout.Height(10));
-                GUILayout.EndVertical();
-                
+
+                xOffset += iconWidth + bufferSpace;
+
             }
-            GUILayout.Space(bufferSpace);
-            GUILayout.EndHorizontal();
+
+            
+            
 
             count++;
             tempTalents = mightTree.FindAll(delegate(Talent tal) { return tal.Depth == count; });
+
+            xOffset = bufferSpace;
+            yOffset += iconHeight + 22;
         }
 
+        /*
+
+        Vector2 mps = GUIUtility.ScreenToGUIPoint(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y));
+
+        Debug.Log("mps: "+ mps.ToString());
+        */
         
 
-        GUILayout.EndVertical();
-
-        GUILayout.EndArea();
+        //GUI.EndGroup();
 
         #endregion
+
+        /*
+        
+        int k = 0;
+
+        foreach (var pair in mightRects)
+        {
+            Debug.Log("Rect: " + k.ToString() + ": " + pair.Key.ToString());
+            Debug.Log("Talent: " + k.ToString() + ": " + pair.Value.Name.ToString());
+
+            k++;
+        }
+        */
+        SetHoverTalentMight(mightRects);
+
 
         #region Magic Tree GUI
 
         count = 0;
 
-        GUILayout.BeginArea(new Rect((WIDTH / 2), 40, WIDTH / 2, HEIGHT));
+        //GUILayout.BeginArea(new Rect((WIDTH / 2), 54, WIDTH / 2, HEIGHT));
 
-        GUILayout.BeginVertical();
-
-        GUILayout.Space(10);
-        GUILayout.BeginHorizontal();
-        GUILayout.Label(magicLabel, titleStyle, GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
-
-        GUILayout.Label(new GUIContent(tempMagicTreePoints.ToString() + " points"), titleStyle, GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
+        GUI.Label(new Rect((WIDTH / 2), 54, (WIDTH / 6) - bufferSpace, 25), magicLabel, titleStyle);
 
 
-        if (Controller.PlayerController.TalentManager.MagicTreePoints > 0)
+
+        GUI.Label(new Rect((WIDTH / 2) + (WIDTH / 6) - bufferSpace, 54, (WIDTH / 6) - bufferSpace, 25), new GUIContent(tempMagicTreePoints.ToString() + " points"), titleStyle);
+
+        
+
+
+
+        if (Controller.PlayerController.TalentManager.MightTreePoints > 0)
         {
 
-            if (GUILayout.Button("RESPEC", GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25)))
+            if (GUI.Button(new Rect((WIDTH / 2)+(((WIDTH / 6) - bufferSpace) * 2), 54, (WIDTH / 6) - bufferSpace, 25), "RESPEC"))
             {
                 Respec("magic");
             }
@@ -258,35 +380,46 @@ public class TalentUI : UIState
         else
         {
             GUI.enabled = false;
-            GUILayout.Button("RESPEC", GUILayout.Width((WIDTH / 6) - bufferSpace), GUILayout.Height(25));
+            GUI.Button(new Rect((WIDTH / 2) + (((WIDTH / 6) - bufferSpace) * 2), 54, (WIDTH / 6) - bufferSpace, 25), "RESPEC");
             GUI.enabled = true;
         }
 
-        GUILayout.EndHorizontal();
 
-        GUILayout.Space(10);
+
+
+
+
 
         tempTalents = magicTree.FindAll(delegate(Talent tal) { return tal.Depth == count; });
 
+        xOffset = (WIDTH / 2)+ bufferSpace;
+        yOffset = 106;
+
         while (tempTalents.Count != 0)
         {
-            GUILayout.Space(20);
+            
 
             iconWidth = (((WIDTH / 2)) / tempTalents.Count) - (bufferSpace * 2);
 
-            GUILayout.BeginHorizontal();
+           
+
+
+
 
             foreach (Talent t in tempTalents)
             {
-                tempTalentLabel.text = (t.CurrentPoints+ talentAllocation[t] ).ToString() + "/" + t.MaxPoints.ToString();
+                tempTalentLabel.text = (t.CurrentPoints + talentAllocation[t]).ToString() + "/" + t.MaxPoints.ToString();
 
-                GUILayout.Space(bufferSpace);
-                GUILayout.BeginVertical();
+                
+
+                thisRect = new Rect(xOffset, yOffset, iconWidth, iconHeight);
+
 
 
                 if (IsTalentActive(t) == true)
                 {
-                    if (GUILayout.Button(t.Name, GUILayout.Width(iconWidth), GUILayout.Height(iconHeight)))
+
+                    if (GUI.Button(thisRect, t.Name))
                     {
                         if (Event.current.button == 0)
                         {
@@ -297,36 +430,39 @@ public class TalentUI : UIState
                             RemovePoint(t);
                         }
                     }
+
                 }
                 else
                 {
                     GUI.enabled = false;
-                    GUILayout.Button(t.Name, GUILayout.Width(iconWidth), GUILayout.Height(iconHeight));
+                    GUI.Button(thisRect, t.Name);
                     GUI.enabled = true;
                 }
 
 
+                magicRects.Add(thisRect, t);
 
-                GUILayout.Label(tempTalentLabel, labelStyle, GUILayout.Width(iconWidth), GUILayout.Height(10));
-                GUILayout.EndVertical();
+                GUI.Label(new Rect(xOffset, yOffset + iconHeight, iconWidth, 10), tempTalentLabel, labelStyle);
                 
 
+                xOffset += iconWidth + bufferSpace;
+
             }
-            GUILayout.Space(bufferSpace);
-            GUILayout.EndHorizontal();
 
             count++;
             tempTalents = magicTree.FindAll(delegate(Talent tal) { return tal.Depth == count; });
+
+            xOffset = (WIDTH / 2) + bufferSpace;
+            yOffset += iconHeight + 22;
         }
 
-        
+        //GUILayout.EndVertical();
 
-        GUILayout.EndVertical();
-
-        GUILayout.EndArea();
+        //GUILayout.EndArea();
 
         #endregion
 
+        SetHoverTalentMagic(magicRects);
 
     }
 
@@ -490,5 +626,85 @@ public class TalentUI : UIState
         Controller.PlayerController.TalentManager.Respec(tree);
 
         InitTalentAllocation();
+    }
+
+
+    private void SetHoverTalentMight(Dictionary<Rect, Talent> hoverRects)
+    {
+
+        
+        Vector2 mPos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
+
+        
+        
+        foreach (var pair in hoverRects)
+        {
+
+            if (ButtonContains(pair.Key, GUIUtility.ScreenToGUIPoint(mPos)))
+            {
+
+                
+                hoverTalentMight = pair.Value;
+                
+                return;
+            }
+            else
+            {
+                
+                hoverTalentMight = null;
+            }
+        }
+        
+
+    }
+
+    private void SetHoverTalentMagic(Dictionary<Rect, Talent> hoverRects)
+    {
+
+
+        Vector2 mPos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
+
+        foreach (var pair in hoverRects)
+        {
+
+            if (ButtonContains(pair.Key,GUIUtility.ScreenToGUIPoint(mPos)))
+            {
+                hoverTalentMagic = pair.Value;
+                return;
+            }
+            else
+            {
+                hoverTalentMagic = null;
+            }
+        }
+
+
+    }
+
+    private bool ButtonContains(Rect r, Vector2 mPos)
+    {
+        if (mPos.x > r.x
+            && mPos.y > r.y
+            && mPos.x < r.x + r.width
+            && mPos.y < r.y + r.height)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private void Press(Talent t)
+    {
+        if (Event.current.button == 0 && Event.current.type == EventType.MouseUp)
+        {
+            SpendPoint(t);
+        }
+        else if (Event.current.button == 1 && Event.current.type == EventType.MouseUp)
+        {
+            RemovePoint(t);
+        }
     }
 }

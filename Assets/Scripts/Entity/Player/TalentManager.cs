@@ -43,7 +43,7 @@ public class TalentManager : MonoBehaviour
     }
 
     private Dictionary<string, bool> bonuses;
-    public Dictionary<string, bool> Bonuses
+    public  Dictionary<string, bool> Bonuses
     {
         get { return bonuses; }
     }
@@ -82,7 +82,7 @@ public class TalentManager : MonoBehaviour
 	void Start () 
     {
         mightTree.Add(new Talent("Fus Ro Dah", 1, GameManager.Abilities["fusrodah"], 0));
-        mightTree.Add(new Talent("Hadouken", 1, GameManager.Abilities["hadouken"], 1));
+        mightTree.Add(new Talent("Hadouken", 1, "fire", 0.1f, 1));
         mightTree.Add(new Talent("Fireball Turret", 1, GameManager.Abilities["fireballturret"], 1));
         mightTree.Add(new Talent("Blink Strike", 1, GameManager.Abilities["blinkstrike"], 2));
 
