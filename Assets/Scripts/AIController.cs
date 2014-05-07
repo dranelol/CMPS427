@@ -135,7 +135,7 @@ public class AIController : StateMachine
     /// <param name="magnitude">The amount of threat to apply.</param>
     public void Threat(GameObject source, float magnitude = 0)
     {
-        if ((AIStates)CurrentState != AIStates.dead && (AIStates)CurrentState != AIStates.reset && source != null)
+        if ((AIStates)CurrentState != AIStates.dead && (AIStates)CurrentState != AIStates.reset && source != null && !source.GetComponent<Entity>().IsDead())
         {
             if (source.tag == "Player")
             {
