@@ -23,7 +23,7 @@ public class AggroRadius : MonoBehaviour
     {
         if (active)
         {
-            if (other.tag == "Player")
+            if (other.tag == "Player" && !other.GetComponent<Entity>().IsDead())
             {
                 group.Threat(other.gameObject, 1);
                 trigger.enabled = false;
