@@ -226,6 +226,8 @@ public abstract class Aura
             }
         }
 
+        Debug.Log("length of tickmodules: " + _tickModules.Count);
+
         _timeRemaining = 0;
         _stackCount = 0;
 
