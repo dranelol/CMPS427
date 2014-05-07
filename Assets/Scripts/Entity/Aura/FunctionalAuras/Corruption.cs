@@ -14,7 +14,7 @@ sealed public class Corruption : Aura
 
     private const string TEMPLATE_AURA_DESCRIPTION = "Corruption"; // Description of the status effect (should be non-empty)
     private const string TEMPLATE_AURA_FLAVOR_TEXT = "..."; // Flavor text for the status effect (optional)
-    private const string TEMPLATE_AURA_ICON_TEXTURE_NAME = "default_aura_texture.png"; // The name of the texture for this aura to be displayed on the GUI.
+    private const string TEMPLATE_AURA_ICON_TEXTURE_NAME = "default_aura_texture"; // The name of the texture for this aura to be displayed on the GUI.
     private const string TEMPLATE_AURA_PARTICLE_EFFECT_NAME = "Corruption"; // The name of the particle effect to be used by this aura.
     private const AuraType TEMPLATE_AURA_AURATYPE = AuraType.Debuff; // The type of aura, buff or debuff.
     private const int TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS = 50; // The number of times this effect can stack. Must be between 1 and 99 (inclusive)
