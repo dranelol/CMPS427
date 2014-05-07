@@ -61,6 +61,12 @@ public class GameManager : MonoBehaviour
 
     public GameObject SpawnInParticles;
 
+    public GameObject InfernalSpawn;
+
+    public GameObject WhirlwindSpawn;
+
+    public GameObject DeathAndDecaySpawn;
+
     public equipmentFactory EquipmentFactory;
 
     public static Dictionary<string, Ability> Abilities;
@@ -84,6 +90,7 @@ public class GameManager : MonoBehaviour
             Application.LoadLevel(1);
         }
 
+        InfernalSpawn = (GameObject)Resources.Load("Enemy Prefabs/InfernalEnemy", typeof(GameObject));
         
         EquipmentFactory = new equipmentFactory();
         
@@ -132,12 +139,15 @@ public class GameManager : MonoBehaviour
         Abilities["frozenorb"] = new FrozenOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 8.0f, 0.0f, 30f, "frozenorb", "Frozen Orb", FrozenOrbParticles);
         Abilities["frozenorbicebolt"] = new IceBolt(AttackType.PROJECTILE, DamageType.WATER, 8f, 0f, 0.0f, 0f, 0f, "frozenorbicebolt", "Frozen Orb Ice Bolt", IceBoltParticles);
         Abilities["boomerangblade"] = new BoomerangBlade(AttackType.PROJECTILE, DamageType.PHYSICAL, 5f, 0f, 4.0f, 0f, 20f, "boomerangblade", "Boomerang Blade", BoomerangBladeExplosion);
-        Abilities["boomerangbladereturn"] = new BoomerangBladeReturn(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL,0.0f, 0.0f, 0.0f, 0.0f, 0f, "boomerangbladereturn", "Boomerang Blade(returning)", BoomerangBladeExplosion);
+        Abilities["boomerangbladereturn"] = new BoomerangBladeReturn(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, 0f, "boomerangbladereturn", "Boomerang Blade(returning)", BoomerangBladeExplosion);
         Abilities["axethrow"] = new AxeThrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 0.0f, 2.0f, 0.0f, 3f, "axethrow", "Axe Throw", AxeThrowExplosion);
 
-        Abilities["infernalfireball"] = new InfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 360.0f, 0.0f, 5000.0f, 0f, "infernalfireball", "Infernal Fireball", InfernalFireballExplosion);
+        Abilities["infernalfireball"] = new InfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 30.0f, 0f, "infernalfireball", "Infernal Fireball", InfernalFireballExplosion);
+        Abilities["whirlwind"] = new Whirlwind(AttackType.GROUNDTARGET, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 10.0f, 0f, "whirlwind", "Whirlwind", OnHitNormalParticles);
 
         //Abilities["healorb"] = new HealOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 0.0f, 0.0f, "healorb", "Heal Orb", HealOrbExplosion);
+
+        Abilities["deathanddecay"] = new DeathAndDecay(AttackType.GROUNDTARGET, DamageType.SHADOW, 5.0f, 360.0f, 0.0f, 1.0f, 0f, "deathanddecay", "Death and Decay", DeathAndDecaySpawn);
 
 
         #endregion

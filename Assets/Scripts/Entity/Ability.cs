@@ -9,11 +9,11 @@ public enum AttackType
 {
     PROJECTILE,
     HONINGPROJECTILE,
-    GROUNDTARGET, // needs a point on the ground; either a selected target's position, or a cursor position
+    GROUNDTARGET, 
     SINGLETARGET, // needs a selected target
     PBAOE,      // Point Blank Area of Effect
     MELEE,
-    STATUS     // Maybe an attack type that just inflicts conditions?
+    STATUS     
 };
 
 /// <summary>
@@ -143,6 +143,12 @@ public abstract class Ability
 
     // Projectiles
     public virtual void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
+    {
+        
+    }
+
+    // groundtargets
+    public virtual void AttackHandler(GameObject source, Vector3 AoEPoint, Entity attacker, bool isPlayer)
     {
 
     }

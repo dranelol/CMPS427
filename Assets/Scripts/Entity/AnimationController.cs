@@ -173,11 +173,21 @@ public class AnimationController : MonoBehaviour
         }
     }
 
-    public void PlayerAttack(AttackType attackType, equipSlots.equipmentType weaponType)
+    public void PlayerAttack(Ability ability, equipSlots.equipmentType weaponType)
     {
+        AttackType attackType = ability.AttackType;
+
         string name;
 
-        if ((AttackType)attackType == AttackType.MELEE)
+        if (ability.ID == "whirlwind")
+        {
+            name = "attack 4";
+            animation[name].speed = animation[name].clip.length / (GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
+            _movementFSM.LockMovement(MovementFSM.LockType.MovementLock, GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
+
+        }
+
+        else if ((AttackType)attackType == AttackType.MELEE)
         {
             List<string> attackAnimations = new List<string>();
 

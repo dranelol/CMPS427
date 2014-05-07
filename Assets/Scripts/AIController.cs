@@ -450,6 +450,7 @@ public class AIController : StateMachine
         healOrbProjectile.homing = true;
         healOrbProjectile.speed = 10.0f;
         healOrbProjectile.timeToActivate = 5.0f;
+        healOrbProjectile.owner = gameObject;
         
 
         Vector3 randPosition = transform.position + UnityEngine.Random.onUnitSphere*3;

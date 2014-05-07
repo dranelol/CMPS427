@@ -355,6 +355,7 @@ public class AIPursuit : StateMachine
 
                 else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.HONINGPROJECTILE)
                 {
+                    Debug.Log("homing");
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                     _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, currentTarget.transform.position, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
                 }

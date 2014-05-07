@@ -84,15 +84,15 @@ public class PlayerEntity : Entity
         else
         {
             abilityManager.AddAbility(GameManager.Abilities["fireball"], 1);
-            abilityManager.AddAbility(GameManager.Abilities["flamestrike"], 2);
-            abilityManager.AddAbility(GameManager.Abilities["fireballturret"], 3);
-            abilityManager.AddAbility(GameManager.Abilities["infernalfireball"], 4);
+            abilityManager.AddAbility(GameManager.Abilities["aoefreeze"], 2);
+            abilityManager.AddAbility(GameManager.Abilities["deathanddecay"], 3);
+            abilityManager.AddAbility(GameManager.Abilities["whirlwind"], 4);
             abilityManager.AddAbility(GameManager.Abilities["fireballbarrage"], 5);
 
             abilityIndexDict["fireball"] = 1;
-            abilityIndexDict["flamestrike"] = 2;
-            abilityIndexDict["fireballturret"] = 3;
-            abilityIndexDict["infernalfireball"] = 4;
+            abilityIndexDict["aoefreeze"] = 2;
+            abilityIndexDict["deathanddecay"] = 3;
+            abilityIndexDict["whirlwind"] = 4;
             abilityIndexDict["fireballbarrage"] = 5;
         }
 
