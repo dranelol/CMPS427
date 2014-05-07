@@ -111,10 +111,11 @@ public class Entity : MonoBehaviour
     /// <param name="value">Delta value to modify current health.</param>
     public void ModifyHealth(float delta) 
     {
-        if (delta < 0 && delta > 0.2 * currentHP)
+        if (delta < 0 && delta > -0.2f * currentAtt.Health )
         {
             _soundManager.GetHit();
         }
+
         currentHP = Mathf.Clamp(currentHP + delta, 0, currentAtt.Health); 
     }
 
