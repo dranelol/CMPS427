@@ -220,11 +220,13 @@ public abstract class Aura
         {
             _allModules.Add(module);
 
-            if (Inherits(module, typeof(Tick)))
+            if (module.GetType().BaseType.BaseType == typeof(Tick))
             {
                 _tickModules.Add((Tick)module);
             }
         }
+
+        Debug.Log("length of tickmodules: " + _tickModules.Count);
 
         _timeRemaining = 0;
         _stackCount = 0;
@@ -266,7 +268,7 @@ public abstract class Aura
         {
             Module modCopy = mod.Copy();
 
-            if (Inherits(modCopy, typeof(Tick)))
+            if (modCopy.GetType().BaseType.BaseType == typeof(Tick))
             {
                 _tickModules.Add((Tick)modCopy);
             }
@@ -425,30 +427,6 @@ public abstract class Aura
         {
             module.OnEnd();
         }
-    }
-
-    #endregion
-
-    #region Private Methods
-
-    private bool Inherits(Module mod, Type type)
-    {
-        Type _type = mod.GetType();
-
-        while(_type != typeof(Module))
-        {
-            if (_type != type)
-            {
-                _type = _type.BaseType;
-            }
-
-            else
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     #endregion
