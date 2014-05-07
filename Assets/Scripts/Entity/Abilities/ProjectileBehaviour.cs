@@ -280,6 +280,7 @@ public class ProjectileBehaviour : MonoBehaviour
 
             else
             {
+                Debug.Log(other.gameObject.tag + " and " + owner.gameObject.tag);
                 if (other.gameObject.tag == "Enemy" && owner.gameObject.tag == "Player")
                 {
                     if (HasCollidedWith.Contains(other.gameObject) == false)
