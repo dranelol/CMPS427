@@ -10,15 +10,18 @@ public class HealthMonitor : MonoBehaviour {
     private int CENTER_WIDTH = (Screen.width - WIDTH) / 2;
     private int CENTER_HEIGHT = (Screen.height - HEIGHT) / 2;
     private bool playerDead = false;
+    private PlayerEntity player;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
+
+    void Awake()
+    {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>();
+    }
 	
 	// Update is called once per frame
-	void Update () {
-        playerDead = GetComponent<PlayerEntity>().CurrentHP <= 0;
+	void Update () 
+    {
+        playerDead = player.CurrentHP <= 0;
 	}
 
     void OnGUI()
@@ -33,7 +36,13 @@ public class HealthMonitor : MonoBehaviour {
 
             if (GUI.Button(new Rect(CENTER_WIDTH + 20, CENTER_HEIGHT + 60, WIDTH - 40, 40), "BULLSHIT GIVE ME A RETRY"))
             {
-                GetComponent<PlayerEntity>().Respawn();
+                player.Respawn();
+            }
+
+            if (GUI.Button(new Rect(CENTER_WIDTH + 20, CENTER_HEIGHT + HEIGHT - 60, WIDTH - 40, 40),
+                "FUCK IT I GIVE UP"))
+            {
+                Application.Quit();
             }
         }
     }
