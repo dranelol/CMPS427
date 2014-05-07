@@ -43,6 +43,7 @@ public class Entity : MonoBehaviour
 
     public AbilityManager abilityManager;
 
+    public Dictionary<string, int> abilityIndexDict = new Dictionary<string, int>();
     private Dictionary<equipSlots.slots, equipment> equippedEquip;
     public Dictionary<equipSlots.slots, equipment> EquippedEquip
     {
@@ -50,10 +51,8 @@ public class Entity : MonoBehaviour
         set { equippedEquip = value; }
     }
 
-    private Inventory inventory;
-
+    protected Inventory inventory;
     public Inventory Inventory { get { return inventory; } }
-    public Dictionary<string, int> abilityIndexDict = new Dictionary<string, int>();
 
     private Mesh _weaponMesh;
 
@@ -190,7 +189,6 @@ public class Entity : MonoBehaviour
                 abilityManager.AddAbility(GameManager.Abilities[item.onhit], 6);
                 abilityIndexDict[item.onhit] = 6;
             }
-
             if (tag == "Player" && item.validSlot == equipSlots.slots.Main)
             {
                 //GameObejct weaponModel = (Resources.Load(equipment.FILEPATH + item.modelname, typeof(GameObject)) as GameObject).GetComponent<MeshFilter>().mesh;          
@@ -222,7 +220,6 @@ public class Entity : MonoBehaviour
                 abilityManager.RemoveAbility(6);
          
             }
-
             inventory.AddItem(removed);
             return true;
         }
@@ -236,6 +233,7 @@ public class Entity : MonoBehaviour
     private void LoadInventory()
     {
         inventory = new Inventory();
+        Inventory.LoadItems();
     }
 
     /// <summary>

@@ -7,7 +7,7 @@ public class CharacterUI : UIState
 {
     private const float WIDTH = 400;
     private const float HEIGHT = 500;
-    private const int EQUIPMENT_SLOTS = 6;
+    public const int EQUIPMENT_SLOTS = 6;
     private string[] HEADERS = { "Stats", "Inventory", "Skills" };
 
     private Rect windowDimensions;
@@ -216,7 +216,6 @@ public class CharacterUI : UIState
             DropToEquip(thisRect, i + 1);
 
             yOffset += 100;
-            
         }
 
         if (equipItem != null)
@@ -237,7 +236,6 @@ public class CharacterUI : UIState
 
         TooltipEquipment(slotRects);
         GUILayout.EndArea();
-
         //selection = GUI.Toolbar(new Rect(10, 300, WIDTH - 20, 50), selection, HEADERS);
 
         #region Inventory Area
@@ -326,10 +324,82 @@ public class CharacterUI : UIState
         GUI.EndScrollView();
         #endregion
 
+    }
 
+    /// <summary>
+    /// In order to properly use tooltips each equipment slot needs to be created individually.
+    /// </summary>
+    void DrawEquipSlots()
+    {
+        GUILayout.BeginArea(new Rect(5, 20, WIDTH, 300));
+        GUILayout.BeginVertical();
+        GUILayout.Space(10);
 
+        GUILayout.BeginHorizontal();
+        // Drawing head slot.
+        if (GUILayout.Button(new GUIContent("",
+            Controller.Player.Inventory.EquippedItem((int)equipSlots.slots.Head)),
+            GUILayout.Width(50), GUILayout.Height(50)))
+        {
+            Controller.Player.removeEquipment((equipSlots.slots.Head));
+        }
+        GUILayout.Label(GUI.tooltip, GUILayout.Width(50), GUILayout.Height(50));
 
+        // Drawing chest slot.
+        if (GUILayout.Button(new GUIContent("",
+            Controller.Player.Inventory.EquippedItem((int)equipSlots.slots.Chest)),
+            GUILayout.Width(50), GUILayout.Height(50)))
+        {
+            Controller.Player.removeEquipment((equipSlots.slots.Chest));
+        }
+        GUILayout.Label(GUI.tooltip, GUILayout.Width(50), GUILayout.Height(50));
+        GUILayout.EndHorizontal();
+        GUILayout.Space(50);
 
+        GUILayout.BeginHorizontal();
+        // Drawing main hand slot.
+        if (GUILayout.Button(new GUIContent("",
+            Controller.Player.Inventory.EquippedItem((int)equipSlots.slots.Main)),
+            GUILayout.Width(50), GUILayout.Height(50)))
+        {
+            Controller.Player.removeEquipment((equipSlots.slots.Main));
+        }
+        GUILayout.Label(GUI.tooltip, GUILayout.Width(50), GUILayout.Height(50));
+
+        // Drawing off hand slot.
+        if (GUILayout.Button(new GUIContent("",
+            Controller.Player.Inventory.EquippedItem((int)equipSlots.slots.Off)),
+            GUILayout.Width(50), GUILayout.Height(50)))
+        {
+            Controller.Player.removeEquipment((equipSlots.slots.Off));
+        }
+        GUILayout.Label(GUI.tooltip, GUILayout.Width(50), GUILayout.Height(50));
+        GUILayout.EndHorizontal();
+        GUILayout.Space(50);
+
+        GUILayout.BeginHorizontal();
+        // Drawing legs slot.
+        if (GUILayout.Button(new GUIContent("",
+            Controller.Player.Inventory.EquippedItem((int)equipSlots.slots.Legs)),
+            GUILayout.Width(50), GUILayout.Height(50)))
+        {
+            Controller.Player.removeEquipment((equipSlots.slots.Legs));
+        }
+        GUILayout.Label(GUI.tooltip, GUILayout.Width(50), GUILayout.Height(50));
+
+        // Drawing feet slot.
+        if (GUILayout.Button(new GUIContent("",
+            Controller.Player.Inventory.EquippedItem((int)equipSlots.slots.Feet)),
+            GUILayout.Width(50), GUILayout.Height(50)))
+        {
+            Controller.Player.removeEquipment((equipSlots.slots.Feet));
+        }
+        GUILayout.Label(GUI.tooltip, GUILayout.Width(50), GUILayout.Height(50));
+        GUILayout.EndHorizontal();
+        GUILayout.Space(50);
+
+        GUILayout.EndVertical();
+        GUILayout.EndArea();
     }
 
     void DrawStats()
@@ -363,7 +433,6 @@ public class CharacterUI : UIState
         }
 
     }
-
     
     void DropToEquip(Rect overRect, int slotIndex)
     {
