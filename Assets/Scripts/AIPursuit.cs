@@ -25,6 +25,7 @@ public class AIPursuit : StateMachine
     private AbilityManager _abilityManager;
     private float _adjustedRange;
     private AnimationController _animationController;
+    private EntitySoundManager _soundManager;
 
     public bool doesFlee;
     public float fleeDistance; //Max distance to travel from the position the enemy starts fleeing from.
@@ -71,6 +72,7 @@ public class AIPursuit : StateMachine
 
         swingSpeed = GetComponent<EnemyBaseAtts>()._swingSpeed;
         _animationController = GetComponent<AnimationController>();
+        _soundManager = GetComponent<EntitySoundManager>();
     }
 
     void Start()
@@ -333,6 +335,7 @@ public class AIPursuit : StateMachine
             if (!swinging)
             {
                 Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
+                _soundManager.Attack();
 
                 if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.MELEE)
                 {
