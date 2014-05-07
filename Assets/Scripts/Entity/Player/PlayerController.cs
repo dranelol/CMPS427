@@ -300,6 +300,15 @@ public class PlayerController : MonoBehaviour {
 
                         entity.abilityManager.abilities[1].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[1].ID, true);
                     }
+
+                    else if (entity.abilityManager.abilities[1].AttackType == AttackType.GROUNDTARGET)
+                    {
+                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                        entity.abilityManager.abilities[1].AttackHandler(gameObject, rayCastTarget.point, entity, true);
+
+                    }
+
                     else
                     {
                         combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
@@ -384,6 +393,15 @@ public class PlayerController : MonoBehaviour {
 
                             entity.abilityManager.abilities[2].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[2].ID, true);
                         }
+
+                        else if (entity.abilityManager.abilities[2].AttackType == AttackType.GROUNDTARGET)
+                        {
+                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+
+                            entity.abilityManager.abilities[2].AttackHandler(gameObject, rayCastTarget.point, entity, true);
+
+                        }
+
                         else
                         {
                             combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
@@ -649,6 +667,7 @@ public class PlayerController : MonoBehaviour {
 
                             entity.abilityManager.abilities[5].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[5].ID, true);
                         }
+
                         else if (entity.abilityManager.abilities[5].AttackType == AttackType.GROUNDTARGET)
                         {
                             combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
@@ -657,6 +676,7 @@ public class PlayerController : MonoBehaviour {
                             entity.abilityManager.abilities[5].AttackHandler(gameObject, rayCastTarget.point, entity, true);
 
                         }
+
                         else
                         {
                             combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);

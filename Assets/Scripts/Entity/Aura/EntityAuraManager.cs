@@ -70,7 +70,7 @@ public class EntityAuraManager : MonoBehaviour
                 _auraDictionary[name].Add(caster, newAura);
                 TrackAura(newAura);
                 StartCoroutine(newAura.Activate());
-                GameObject newAuraParticle = Instantiate(newAura.ParticleEffect, _entity.transform.position, Quaternion.identity) as GameObject;
+                GameObject newAuraParticle = Instantiate(newAura.ParticleEffect, _entity.transform.position + new Vector3(0,1,0), Quaternion.identity) as GameObject;
                 _particleDictionary.Add(name, newAuraParticle);
                 newAuraParticle.transform.parent = _entity.transform;
 

@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviour
     public GameObject FireballExplosion;
     public GameObject InfernalFireballExplosion;
     public GameObject ChaosboltExplosion;
+    public GameObject ShadowboltExplosion;
+
 
     public GameObject FlamestrikeParticles;
 
@@ -65,13 +67,14 @@ public class GameManager : MonoBehaviour
     public GameObject LootChestPrefab;
 
     public GameObject SpawnInParticles;
-
     public GameObject InfernalSpawn;
-
     public GameObject WhirlwindSpawn;
-    public GameObject DervishSpawn;
 
+    public GameObject DervishSpawn;
+	
     public GameObject DeathAndDecaySpawn;
+    public GameObject ShadowfurySpawn;
+    public GameObject ShadowtrapSpawn;
 
     public equipmentFactory EquipmentFactory;
 
@@ -110,7 +113,8 @@ public class GameManager : MonoBehaviour
         #region spammed abilities
 
         Abilities["fireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.0f, 10.0f, 0f, "fireball", "Fireball", FireballExplosion);
-        Abilities["shadowbolt"] = new Shadowbolt(AttackType.HONINGPROJECTILE, DamageType.SHADOW, 10.0f, 0.0f, 0.0f, 10.0f, 0f, "shadowbolt", "shadowbolt", FireballExplosion);
+        Abilities["shadowbolt"] = new Shadowbolt(AttackType.HONINGPROJECTILE, DamageType.SHADOW, 10.0f, 0.0f, 0.0f, 1.0f, 0f, "shadowbolt", "Shadowbolt", ShadowboltExplosion);
+        Abilities["improvedshadowbolt"] = new ImprovedShadowbolt(AttackType.HONINGPROJECTILE, DamageType.SHADOW, 10.0f, 0.0f, 0.0f, 1.0f, 0f, "improvedshadowbolt", "Improved Shadowbolt", ShadowboltExplosion);
         Abilities["poisonbolt"] = new Poisonbolt(AttackType.HONINGPROJECTILE, DamageType.POISON, 10.0f, 0.0f, 0.0f, 10.0f, 0f, "poisonbolt", "poisonbolt", FireballExplosion);
         Abilities["bloodbolt"] = new Bloodbolt(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL, 10.0f, 0.0f, 0.0f, 10.0f, 0f, "bloodbolt", "bloodbolt", FireballExplosion);
         Abilities["chaosbolt"] = new Chaosbolt(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.0f, 10.0f, 0f, "chaosbolt", "chaosbolt", ChaosboltExplosion);
@@ -160,7 +164,9 @@ public class GameManager : MonoBehaviour
         //Abilities["healorb"] = new HealOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 0.0f, 0.0f, "healorb", "Heal Orb", HealOrbExplosion);
 
         Abilities["deathanddecay"] = new DeathAndDecay(AttackType.GROUNDTARGET, DamageType.SHADOW, 5.0f, 360.0f, 0.0f, 1.0f, 0f, "deathanddecay", "Death and Decay", DeathAndDecaySpawn);
-
+        Abilities["shadowfury"] = new Shadowfury(AttackType.GROUNDTARGET, DamageType.SHADOW, 3.0f, 360.0f, 0.0f, 1.0f, 0f, "shadowfury", "Shadowfury", ShadowfurySpawn);
+        Abilities["shadowtrap"] = new Shadowtrap(AttackType.GROUNDTARGET, DamageType.SHADOW, 3.0f, 360.0f, 0.0f, 0.0f, 0f, "shadowtrap", "Shadowtrap", ShadowtrapSpawn);
+        
 
         #endregion
 

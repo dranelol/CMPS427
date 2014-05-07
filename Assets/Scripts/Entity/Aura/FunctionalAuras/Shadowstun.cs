@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-sealed public class Corruption : Aura
+sealed public class Shadowstun : Aura
 {
     #region Template Constants
 
@@ -12,16 +12,15 @@ sealed public class Corruption : Aura
      * be used for anything other than outlining status effect information in one place. The base class stores properties to use
      * when referencing status effect information. Use those instead. */
 
-    private const string TEMPLATE_AURA_DESCRIPTION = "Corruption"; // Description of the status effect (should be non-empty)
+    private const string TEMPLATE_AURA_DESCRIPTION = "This unit is rooted in place"; // Description of the status effect (should be non-empty)
     private const string TEMPLATE_AURA_FLAVOR_TEXT = "..."; // Flavor text for the status effect (optional)
-    private const string TEMPLATE_AURA_ICON_TEXTURE_NAME = "default_aura_texture.png"; // The name of the texture for this aura to be displayed on the GUI.
-    private const string TEMPLATE_AURA_PARTICLE_EFFECT_NAME = "Corruption"; // The name of the particle effect to be used by this aura.
-    private const AuraType TEMPLATE_AURA_AURATYPE = AuraType.Debuff; // The type of aura, buff or debuff.
-    private const int TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS = 50; // The number of times this effect can stack. Must be between 1 and 99 (inclusive)
+    private const string TEMPLATE_AURA_ICON_TEXTURE_NAME = "default_aura_texture"; // The name of the texture for this aura to be displayed on the GUI.
+    private const string TEMPLATE_AURA_PARTICLE_EFFECT_NAME = "ShadowStunDebuff"; // The name of the particle effect to be used by this aura.
+    private const AuraType TEMPLATE_AURA_AURATYPE = AuraType.Buff; // The type of aura, buff or debuff.
+    private const int TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS = 1; // The number of times this effect can stack. Must be between 1 and 99 (inclusive)
     private const int TEMPLATE_AURA_INITIAL_NUMBER_OF_STACKS = 1; // The number of stacks this aura starts with.
-    private const int TEMPLATE_AURA_DURATION = 12; // The number of seconds this aura will remain on a target. The duration is an INTEGER because 
+    private const int TEMPLATE_AURA_DURATION = 3; // The number of seconds this aura will remain on a target. The duration is an INTEGER because 
     // status effects should have a finite number of seconds for the duration for simplicity.
-
     #endregion
 
     #region Constructors
@@ -33,18 +32,38 @@ sealed public class Corruption : Aura
     /// given name is unique.
     /// </summary>
     /// <param name="id">The unique integer ID.</param>
-    public Corruption(string name)
+    #region Complete
+    public Shadowstun(string name)
         : base(name, TEMPLATE_AURA_DESCRIPTION, TEMPLATE_AURA_FLAVOR_TEXT, TEMPLATE_AURA_ICON_TEXTURE_NAME, TEMPLATE_AURA_PARTICLE_EFFECT_NAME,
         TEMPLATE_AURA_AURATYPE, TEMPLATE_AURA_DURATION, TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS, TEMPLATE_AURA_INITIAL_NUMBER_OF_STACKS
+    #endregion
 
-        /* ----------------------------------------MODIFY THE REST HERE------------------------------------------------- *
-         * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-        , new DoT(DamageType.SHADOW, 5f))
+            /* ----------------------------------------MODIFY THE REST HERE------------------------------------------------- *
+         * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+         * You can define your own modules or use the predefined modules to describe how the aura affects the entity. 
+         * After you define your module, pass it as a paramater below before the ')' ie. ', new CustomModule())'         */
+        , new DamageAttribute(Attributes.Stats.MOVEMENT_SPEED,1)
+        )
     { }
 
     #endregion
 
-    #region Events
+    #region Custom Modules
+
+    protected class talk : Tick
+    {
+        protected talk()
+            : base()
+        {
+
+        }
+
+        public override void OnTick()
+        {
+            base.OnTick();
+        }
+
+    }
 
     #endregion
 
@@ -59,16 +78,14 @@ sealed public class Corruption : Aura
     /// <returns></returns>
     public override Aura Clone(Entity target, Entity caster, Aura prototpe)
     {
-        return new Corruption(target, caster, prototpe);
+        return new Shadowstun(target, caster, prototpe);
     }
 
     #endregion
 
-  
-
     #region Private Constructor
 
-    private Corruption(Entity target, Entity caster, Aura prototype) : base(target, caster, prototype) { }
+    private Shadowstun(Entity target, Entity caster, Aura prototype) : base(target, caster, prototype) { }
 
     #endregion
 }
