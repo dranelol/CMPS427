@@ -667,17 +667,17 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            entity.abilityManager.AddAbility(GameManager.Abilities["axethrow"], 1);
+            entity.abilityManager.AddAbility(GameManager.Abilities["cleave"], 1);
             entity.abilityManager.AddAbility(GameManager.Abilities["icebolt"], 2);
-            entity.abilityManager.AddAbility(GameManager.Abilities["frozenorb"], 3);
+            entity.abilityManager.AddAbility(GameManager.Abilities["dropdasteel"], 3);
             entity.abilityManager.AddAbility(GameManager.Abilities["shieldbreaker"], 4);
-            entity.abilityManager.AddAbility(GameManager.Abilities["frostnova"], 5);
+            entity.abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
 
-            entity.abilityIndexDict["axethrow"] = 1;
+            entity.abilityIndexDict["cleave"] = 1;
             entity.abilityIndexDict["icebolt"] = 2;
-            entity.abilityIndexDict["frozenorb"] = 3;
+            entity.abilityIndexDict["dropdasteel"] = 3;
             entity.abilityIndexDict["shieldbreaker"] = 4;
-            entity.abilityIndexDict["frostnova"] = 5;
+            entity.abilityIndexDict["bladewaltz"] = 5;
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
