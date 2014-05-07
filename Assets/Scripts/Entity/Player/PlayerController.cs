@@ -679,13 +679,13 @@ public class PlayerController : MonoBehaviour {
             entity.abilityManager.AddAbility(GameManager.Abilities["icebolt"], 2);
             entity.abilityManager.AddAbility(GameManager.Abilities["dropdasteel"], 3);
             entity.abilityManager.AddAbility(GameManager.Abilities["whirlwind"], 4);
-            entity.abilityManager.AddAbility(GameManager.Abilities["dervish"], 5);
+            entity.abilityManager.AddAbility(GameManager.Abilities["deathanddecay"], 5);
 
             entity.abilityIndexDict["cleave"] = 1;
             entity.abilityIndexDict["icebolt"] = 2;
             entity.abilityIndexDict["dropdasteel"] = 3;
             entity.abilityIndexDict["whirlwind"] = 4;
-            entity.abilityIndexDict["dervish"] = 5;
+            entity.abilityIndexDict["deathanddecay"] = 5;
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
