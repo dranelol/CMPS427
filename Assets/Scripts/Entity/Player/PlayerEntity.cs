@@ -157,7 +157,7 @@ public class PlayerEntity : Entity
     /// </summary>
     public void Respawn()
     {
-        currentHP = 500.0f;
+        currentHP = baseAtt.Health;
         transform.position = spawnPoint;
     }
 }
