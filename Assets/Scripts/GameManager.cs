@@ -60,12 +60,10 @@ public class GameManager : MonoBehaviour
     public GameObject EnvironmentHealOrbExplosion;
 
     public GameObject SpawnInParticles;
-
     public GameObject InfernalSpawn;
-
     public GameObject WhirlwindSpawn;
-
     public GameObject DeathAndDecaySpawn;
+    public GameObject ShadowfurySpawn;
 
     public equipmentFactory EquipmentFactory;
 
@@ -148,6 +146,7 @@ public class GameManager : MonoBehaviour
         //Abilities["healorb"] = new HealOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 0.0f, 0.0f, "healorb", "Heal Orb", HealOrbExplosion);
 
         Abilities["deathanddecay"] = new DeathAndDecay(AttackType.GROUNDTARGET, DamageType.SHADOW, 5.0f, 360.0f, 0.0f, 1.0f, 0f, "deathanddecay", "Death and Decay", DeathAndDecaySpawn);
+        Abilities["shadowfury"] = new Shadowfury(AttackType.GROUNDTARGET, DamageType.SHADOW, 3.0f, 360.0f, 0.0f, 1.0f, 0f, "shadowfury", "Shadowfury", ShadowfurySpawn);
 
 
         #endregion
