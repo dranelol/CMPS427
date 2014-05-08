@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class EnemyBaseAtts : MonoBehaviour {
 
+    public const int maxAbilityCount = 4;
+    public List<string> potentialAbilities;
+
     public float baseHP;
     public float baseResource;
     public float basePower;
@@ -22,9 +25,6 @@ public class EnemyBaseAtts : MonoBehaviour {
     public float scalingAttackSpd;
     public float scalingMoveSpd;
 
-    public List<string> possibleAbilities;
-    public int maxAbilities = 3;
-
     public bool flees;
     public bool wanders;
     public float _aggroRadius;
@@ -34,21 +34,25 @@ public class EnemyBaseAtts : MonoBehaviour {
     public int MinLootDrops;
     public int MaxLootDrops;
 
-    public void InitializeStats()
+    private Entity _entity;
+
+    public void InitializeStats(int level)
     {
         Attributes tempatts = new Attributes();
-        int templvl = gameObject.GetComponent<Entity>().Level;
+        _entity = GetComponent<Entity>();
 
-        tempatts.Health = baseHP + scalingHP * (templvl - 1);
-        tempatts.Resource = baseResource + scalingResource * (templvl - 1);
-        tempatts.Power = basePower + scalingPower * (templvl - 1);
-        tempatts.Defense = baseDefense + scalingDefense * (templvl - 1);
-        tempatts.MinDamage = baseMinDmg + scalingMinDmg * (templvl - 1);
-        tempatts.MaxDamage = baseMaxDmg + scalingMaxDmg * (templvl - 1);
-        tempatts.MovementSpeed = baseMoveSpd + scalingMoveSpd * (templvl - 1);
-        tempatts.AttackSpeed = baseAttackSpd + scalingAttackSpd * (templvl - 1);
+        tempatts.Health = baseHP + scalingHP * (level - 1);
+        tempatts.Resource = baseResource + scalingResource * (level - 1);
+        tempatts.Power = basePower + scalingPower * (level - 1);
+        tempatts.Defense = baseDefense + scalingDefense * (level - 1);
+        tempatts.MinDamage = baseMinDmg + scalingMinDmg * (level - 1);
+        tempatts.MaxDamage = baseMaxDmg + scalingMaxDmg * (level - 1);
+        tempatts.MovementSpeed = baseMoveSpd + scalingMoveSpd * (level - 1);
+        tempatts.AttackSpeed = baseAttackSpd + scalingAttackSpd * (level - 1);
 
-        gameObject.GetComponent<Entity>().baseAtt = tempatts;
+        _entity.baseAtt = tempatts;
+
+        GetComponent<Entity>().UpdateCurrentAttributes();
 
         GetComponent<AIController>().doesWander = wanders;
         GetComponent<AIController>().aggroRadius = _aggroRadius;
@@ -57,30 +61,20 @@ public class EnemyBaseAtts : MonoBehaviour {
 
     public void SetAbilities()
     {
-        List<string> actualAblities = new List<string>();
+        List<string> abilities = new List<string>();
 
-        for(int i = 0; i < possibleAbilities.Count; i++)
+        for (int i = 0; i < potentialAbilities.Count; i++)
         {
-            string abilityname = possibleAbilities[i];
+            string abilityName = potentialAbilities[i];
 
-            if(actualAblities.Contains(abilityname) == false)
+            if(abilities.Count <= maxAbilityCount && !abilities.Contains(abilityName))
             {
-                actualAblities.Add(abilityname);
-                gameObject.GetComponent<Entity>().abilityManager.AddAbility(GameManager.Abilities[abilityname], i);
-                gameObject.GetComponent<Entity>().abilityIndexDict[abilityname] = i;
+                abilities.Add(abilityName);
+                _entity.abilityManager.AddAbility(GameManager.Abilities[abilityName], i);
+                _entity.abilityIndexDict[abilityName] = i;
             }
         }
+
+        GetComponent<AIPursuit>()._abilityCount = abilities.Count;
     }
-
-
-    // Use this for initialization
-    void Start()
-    {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

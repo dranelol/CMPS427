@@ -69,27 +69,23 @@ public class Entity : MonoBehaviour
         baseAtt = new Attributes();
 
         baseAtt.Health = currentHP = 100;
-
         baseAtt.Resource = currentResource = 100;
+
         baseAtt.Power = 10;
         baseAtt.Defense = 10;
-        baseAtt.AttackSpeed = 1f;
+
+        baseAtt.AttackSpeed = 0;
         baseAtt.MovementSpeed = 1.0f;
+
         level = 1;
         experience = 0;
     }
 
-
     public void OnApplicationQuit() { }
 
-    /// <summary>
-    /// Creates the entity with a given set of base attributes,
-    /// </summary>
     public void Start()
     {
         UpdateCurrentAttributes();
-
-        // fix for "activated" cooldowns on start
     }
 
     public void UpdateCurrentAttributes()

@@ -138,9 +138,10 @@ public class MovementFSM : StateMachine
     {
         _navMeshAgent.stoppingDistance = Radius * 1.1f;
 
-        if (tag == "Enemy")
+        if (tag == "Player")
         {
-
+            _navMeshAgent.avoidancePriority = 1;
+            _navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
         }
 
         _navMeshAgent.acceleration = 1000f;
@@ -159,7 +160,7 @@ public class MovementFSM : StateMachine
         {
             _navMeshAgent.speed = _movementSpeed;
 
-            if (Vector3.Distance(targetPosition, transform.position) > 1)
+            if (CombatMath.DistanceGreaterThan(targetPosition, transform.position, 1))
             {
                 NavMeshHit navMeshHit;
 
