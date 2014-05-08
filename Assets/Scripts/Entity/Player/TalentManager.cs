@@ -218,7 +218,16 @@ public class TalentManager : MonoBehaviour
             foreach (Talent t in mightTree)
             {
                 t.CurrentPoints = 0;
-                RemoveAbility(t);
+
+                if (t.TalentAbility != null)
+                {
+                    RemoveAbility(t);
+                }
+                else if(t.Bonus != "")
+                {
+                    RemovePassive(t);
+                }
+                
             }
 
             talentPointPool += mightTreePoints;
@@ -229,7 +238,14 @@ public class TalentManager : MonoBehaviour
             foreach (Talent t in magicTree)
             {
                 t.CurrentPoints = 0;
-                RemoveAbility(t);
+                if (t.TalentAbility != null)
+                {
+                    RemoveAbility(t);
+                }
+                else if (t.Bonus != "")
+                {
+                    RemovePassive(t);
+                }
             }
 
             talentPointPool += magicTreePoints;
@@ -263,8 +279,6 @@ public class TalentManager : MonoBehaviour
         }
         else if (playerController.entity.abilityManager.abilities.Contains(talent.TalentAbility))
         {
-           
-            
             playerController.entity.abilityManager.RemoveAbility(playerController.entity.abilityIndexDict[talent.TalentAbility.ID]);
         }
 

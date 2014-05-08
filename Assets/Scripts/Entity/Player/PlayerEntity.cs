@@ -130,8 +130,8 @@ public class PlayerEntity : Entity
 
     public void OnApplicationQuit()
     {
-       Inventory.UnSaveShit();
-       Inventory.SaveItems();
+       //Inventory.UnSaveShit();
+       //Inventory.SaveItems();
     }
 
     public Attributes GetAttributes()
