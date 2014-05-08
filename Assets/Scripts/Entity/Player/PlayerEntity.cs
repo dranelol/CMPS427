@@ -39,6 +39,7 @@ public class PlayerEntity : Entity
         base.Awake();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         spawnPoint = transform.position;
+        currentHP = 1000;
         baseAtt.Health = 1000;
         Experience = 0;
         Level = 1;

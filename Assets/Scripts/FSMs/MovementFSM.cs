@@ -43,6 +43,16 @@ public class MovementFSM : StateMachine
         get { return _navMeshAgent.destination; }
     }
 
+    public bool HasPath
+    {
+        get { return _navMeshAgent.hasPath; }
+    }
+
+    public bool PathPending
+    {
+        get { return _navMeshAgent.pathPending; }
+    }
+
     public float Height
     {
         get { return _navMeshAgent.height; }
@@ -127,6 +137,12 @@ public class MovementFSM : StateMachine
     void Start()
     {
         _navMeshAgent.stoppingDistance = Radius * 1.1f;
+
+        if (tag == "Enemy")
+        {
+
+        }
+
         _navMeshAgent.acceleration = 1000f;
         _navMeshAgent.autoBraking = true;
         _navMeshAgent.autoRepath = true;

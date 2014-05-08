@@ -59,7 +59,7 @@ public class Entity : MonoBehaviour
 
     public void Awake()
     {
-        LoadInventory();
+        // LoadInventory();
         abilityManager = gameObject.GetComponent<AbilityManager>();
         equippedEquip = new Dictionary<equipSlots.slots, equipment>();
         _soundManager = GetComponent<EntitySoundManager>();
@@ -73,7 +73,7 @@ public class Entity : MonoBehaviour
         baseAtt.Resource = currentResource = 100;
         baseAtt.Power = 10;
         baseAtt.Defense = 10;
-        baseAtt.AttackSpeed = 0f;
+        baseAtt.AttackSpeed = 1f;
         baseAtt.MovementSpeed = 1.0f;
         level = 1;
         experience = 0;
