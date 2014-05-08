@@ -15,15 +15,14 @@ public class AggroRadius : MonoBehaviour
 
     void Start()
     {
-        trigger.radius = transform.parent.GetComponent<AIController>().aggroRadius;
-        
+        trigger.radius = transform.parent.GetComponent<AIController>().aggroRadius;   
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (active)
         {
-            if (other.tag == "Player")
+            if (other.tag == "Player" && !other.GetComponent<Entity>().IsDead())
             {
                 group.Threat(other.gameObject, 1);
                 trigger.enabled = false;

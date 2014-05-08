@@ -94,9 +94,9 @@ public class GameManager : MonoBehaviour
     {
         DontDestroyOnLoad(transform.gameObject);
 
-        if (Application.loadedLevel == 0)
+        if (Application.loadedLevelName == "setup")
         {
-            Application.LoadLevel(1);
+            Application.LoadLevel("TestScene");
         }
 
         InfernalSpawn = (GameObject)Resources.Load("Enemy Prefabs/InfernalEnemy", typeof(GameObject));
@@ -181,9 +181,6 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void Update()
-    {
-    }
     public void RemovePhysics(Rigidbody toRemove, float time = 0.0f)
     {
         StartCoroutine(removePhysics(toRemove, time));

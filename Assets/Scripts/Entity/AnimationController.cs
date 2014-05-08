@@ -184,7 +184,6 @@ public class AnimationController : MonoBehaviour
             name = "attack 4";
             animation[name].speed = animation[name].clip.length / (GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
             _movementFSM.LockMovement(MovementFSM.LockType.MovementLock, GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
-
         }
 
         else if ((AttackType)attackType == AttackType.MELEE)
