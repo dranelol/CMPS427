@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class AnimationController : MonoBehaviour
 {
@@ -22,6 +22,8 @@ public class AnimationController : MonoBehaviour
 
     private float _baseAnimationSpeed;
     private string _movementAnimation;
+    private MovementFSM _movementFSM;
+    private Entity _entity;
 
     #endregion
 
@@ -41,12 +43,15 @@ public class AnimationController : MonoBehaviour
 
         animation.AddClip(_walk, "Walk");
         animation["Walk"].layer = 1;
+        animation["Walk"].wrapMode = WrapMode.Loop;
 
         animation.AddClip(_run, "Run");
         animation["Run"].layer = 1;
+        animation["Run"].wrapMode = WrapMode.Loop;
 
         animation.AddClip(_death, "Death");
         animation["Death"].layer = 1;
+        animation["Death"].wrapMode = WrapMode.Once;
 
         if (_sleep != null)
         {
@@ -65,6 +70,20 @@ public class AnimationController : MonoBehaviour
         ProcessCombatAnimations(_miscAnimations);
 
         _movementAnimation = "Run";
+
+        if (tag == "Player")
+        {
+            animation["cast spell"].speed = 3f;
+            animation["attack 1"].speed = 2f;
+            animation["attack 2"].speed = 2f;
+            animation["attack 3"].speed = 2f;
+            animation["attack 4"].speed = 2f;
+            animation["attack 5"].speed = 2f;
+            animation["attack 6"].speed = 2f;
+        }
+
+        _movementFSM = GetComponent<MovementFSM>();
+        _entity = GetComponent<Entity>();
     }
 
     void Start()
@@ -78,7 +97,11 @@ public class AnimationController : MonoBehaviour
 
     public void StopMoving()
     {
-        animation.CrossFade("Idle", 0.3f);
+        try
+        {
+            animation.CrossFade("Idle", 0.3f);
+        }
+        catch { }
     }
 
     public void StartMoving()
@@ -150,6 +173,60 @@ public class AnimationController : MonoBehaviour
         }
     }
 
+    public void PlayerAttack(Ability ability, equipSlots.equipmentType weaponType)
+    {
+        AttackType attackType = ability.AttackType;
+
+        string name;
+
+        if (ability.ID == "whirlwind")
+        {
+            name = "attack 4";
+            animation[name].speed = animation[name].clip.length / (GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
+            _movementFSM.LockMovement(MovementFSM.LockType.MovementLock, GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
+        }
+
+        else if ((AttackType)attackType == AttackType.MELEE)
+        {
+            List<string> attackAnimations = new List<string>();
+
+            if ((equipSlots.equipmentType)weaponType == equipSlots.equipmentType.Dagger)
+            {
+                attackAnimations.Add("attack 1");
+                attackAnimations.Add("attack 3");
+                attackAnimations.Add("attack 5");
+            }
+
+            else if ((equipSlots.equipmentType)weaponType == equipSlots.equipmentType.Axe)
+            {
+                attackAnimations.Add("attack 2");
+                attackAnimations.Add("attack 1");
+            }
+
+            else
+            {
+                attackAnimations.Add("attack 1");
+                attackAnimations.Add("attack 3");
+                attackAnimations.Add("attack 4");
+            }
+
+            name = attackAnimations[UnityEngine.Random.Range((int)0, (int)attackAnimations.Count)];
+            animation[name].speed = animation[name].clip.length / (GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
+            _movementFSM.LockMovement(MovementFSM.LockType.MovementLock, GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
+
+            Debug.Log(animation[name].clip.length);
+            Debug.Log(animation[name].length);
+        }
+
+        else
+        {
+            name = "cast spell";
+            _movementFSM.LockMovement(MovementFSM.LockType.MovementLock, animation[name].length / 3f);
+        }
+
+        Attack(name);
+    }
+
     public void WalkToMove()
     {
         _movementAnimation = "Walk";
@@ -174,7 +251,7 @@ public class AnimationController : MonoBehaviour
         for (int i = 0; i < animations.Length; i++)
         {
             string name = animations[i].name;
-            animation.AddClip(animations[0], name);
+            animation.AddClip(animations[i], name);
             animation[name].layer = 2;
             animation[name].wrapMode = WrapMode.Once;
 

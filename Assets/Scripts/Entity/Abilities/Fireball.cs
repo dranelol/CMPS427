@@ -24,6 +24,7 @@ public class Fireball : Ability
             projectile.GetComponent<ProjectileBehaviour>().owner = owner;
             projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 3.0f;
             projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
+            projectile.GetComponent<ProjectileBehaviour>().CollidesWithTerrain = false;
 
             projectile.rigidbody.velocity = Rotations.RotateAboutY(forward, (360 / segments) * i) * 20.0f;
         }

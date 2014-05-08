@@ -20,19 +20,29 @@ public class LootTrigger : Trigger
 
     bool inventoryOpened = false;
 
-	void Start() 
+    void Awake()
     {
         inventory = new Inventory();
 
-        ef = new equipmentFactory();
-
-        inventory.AddItem(ef.randomEquipment(1, 1, equipSlots.slots.Head));
-        inventory.AddItem(ef.randomEquipment(1, 1, equipSlots.slots.Head));
+        ef = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
 
         uiController = GameObject.FindWithTag("UI Controller").GetComponent<UIController>();
 
         defaultShader = Shader.Find("Diffuse");
-		highlight = Shader.Find("Outlined/Silhouetted Diffuse");
+        highlight = Shader.Find("Outlined/Silhouetted Diffuse");
+    }
+
+	void Start() 
+    {
+       
+        if (inventory.Items.Count == 0)
+        {
+            Debug.Log("chest getting default items");
+            inventory.AddItem(ef.randomEquipment(1, 1, equipSlots.slots.Head));
+            inventory.AddItem(ef.randomEquipment(1, 1, equipSlots.slots.Head));
+        }
+
+
 		if(isActive) 
         {
             Activate();
@@ -84,8 +94,9 @@ public class LootTrigger : Trigger
 		base.SetOff();
 	}
 
-    void OnTriggerExit(Collider other)
+    public override void OnTriggerExit(Collider other)
     {
+        base.OnTriggerExit(other);
         if (other.gameObject.tag == "Player")
         {
             if (inventoryOpened == true)
@@ -100,11 +111,18 @@ public class LootTrigger : Trigger
 
     void OnMouseEnter()
     {
+        Debug.Log("entering");
         triggerObject.renderer.material.shader = highlight;
+    }
+
+    void OnMouseOver()
+    {
+        Debug.Log("asd");
     }
 
     void OnMouseExit()
     {
+        Debug.Log("exiting");
         triggerObject.renderer.material.shader = defaultShader;
     }
 

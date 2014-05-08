@@ -23,7 +23,7 @@ public class OnHitNormal : Ability
                     && defender.GetComponent<AIController>().IsDead() == false)
             {
                 DoDamage(attacker, defender, attacker.GetComponent<Entity>(), defender.GetComponent<Entity>(), isPlayer);
-                DoPhysics(attacker, defender);
+                //DoPhysics(attacker, defender);
                 if (defender.GetComponent<AIController>().IsInCombat() == false)
                 {
                     defender.GetComponent<AIController>().BeenAttacked(attacker);
@@ -34,7 +34,7 @@ public class OnHitNormal : Ability
         {
             
             DoDamage(attacker, defender, attacker.GetComponent<Entity>(), defender.GetComponent<Entity>(), isPlayer);
-            DoPhysics(attacker, defender);
+            //DoPhysics(attacker, defender);
 
             
         }

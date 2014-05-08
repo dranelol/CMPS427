@@ -63,6 +63,7 @@ public class AIController : StateMachine
     // Target variables
     private Dictionary<GameObject, Hostile> ThreatTable; // A dictionary of all threat targets
     private GameObject target; // The Target object that holds information about the current target
+    private EntitySoundManager _soundManager;
 
     private float wanderInterval; //Time between wanders in seconds
     private float wanderDistance; //Radius around the wanderer that it will travel
@@ -80,23 +81,6 @@ public class AIController : StateMachine
         MoveFSM = GetComponent<MovementFSM>();
         EntityObject = GetComponent<Entity>();
         _animationController = GetComponent<AnimationController>();
-    }
-
-	void Start() 
-    {
-        PursuitFSM = GetComponent<AIPursuit>();
-        localHomePosition = transform.position;
-
-        wanderDistance = 5.0f;
-        wanderInterval = 5.0f;
-        wanderDistanceFromNode = 7.0f;
-
-        nodePosition = new Vector3(transform.parent.position.x, transform.position.y, transform.parent.position.z);
-
-        nextWander = Time.time + wanderInterval;
-
-        ThreatTable = new Dictionary<GameObject, Hostile>();
-        target = null;
 
         SetupMachine(AIStates.idle);
 
@@ -119,7 +103,25 @@ public class AIController : StateMachine
         AddTransitionsFrom(AIStates.reset, resetTransitions);
         AddTransitionsFrom(AIStates.wander, wanderTransitions);
 
-        StartMachine(AIStates.idle);     
+        StartMachine(AIStates.idle);
+        _soundManager = GetComponent<EntitySoundManager>();
+    }
+
+	void Start() 
+    {
+        PursuitFSM = GetComponent<AIPursuit>();
+        localHomePosition = transform.position;
+
+        wanderDistance = 5.0f;
+        wanderInterval = 5.0f;
+        wanderDistanceFromNode = 7.0f;
+
+        nodePosition = new Vector3(transform.parent.position.x, transform.position.y, transform.parent.position.z);
+
+        nextWander = Time.time + wanderInterval;
+
+        ThreatTable = new Dictionary<GameObject, Hostile>();
+        target = null;
     }
 
     #region public functions
@@ -132,7 +134,7 @@ public class AIController : StateMachine
     /// <param name="magnitude">The amount of threat to apply.</param>
     public void Threat(GameObject source, float magnitude = 0)
     {
-        if ((AIStates)CurrentState != AIStates.dead && (AIStates)CurrentState != AIStates.reset)
+        if ((AIStates)CurrentState != AIStates.dead && (AIStates)CurrentState != AIStates.reset && source != null)
         {
             if (source.tag == "Player")
             {
@@ -345,6 +347,7 @@ public class AIController : StateMachine
     IEnumerator pursuit_EnterState()
     {
         _animationController.RunToMove();
+        _soundManager.Aggro();
         PursuitFSM.Pursue(target);
         yield break;
     }
@@ -357,6 +360,7 @@ public class AIController : StateMachine
             {
                 target.GetComponent<PlayerEntity>().GiveExperience(EntityObject.Experience);
             }
+
             Transition(AIStates.dead);
         }
 
@@ -389,7 +393,9 @@ public class AIController : StateMachine
     IEnumerator reset_EnterState()
     {
         PursuitFSM.StopPursuit();
+        _soundManager.Victor();
         MoveFSM.SetPath(localHomePosition);
+        
         yield break;
     }
 
@@ -414,17 +420,24 @@ public class AIController : StateMachine
     IEnumerator dead_EnterState()
     {
         // Destroy(this.gameObject);
-
+        _soundManager.Death();
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>().Experience += 25;
 
         PursuitFSM.StopPursuit();
-        MoveFSM.LockMovement();
+        MoveFSM.LockMovement(MovementFSM.LockType.ShiftLock);
         GetComponent<CapsuleCollider>().enabled = false;
         GetComponent<NavMeshAgent>().enabled = false;
         Aggro.gameObject.SetActive(false);
-        Destroy(rigidbody);
 
-        GetComponent<AnimationController>().Death();
+        try
+        {
+            GetComponent<Infernal>().Death();
+        }
+
+        catch
+        {
+            _animationController.Death();
+        }
 
         #region heal orb spawning
         GameObject healOrb = (GameObject)Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnvironmentHealOrbProjectile, new Vector3(transform.position.x, transform.position.y + 2, transform.position.z), Quaternion.identity);
@@ -435,6 +448,7 @@ public class AIController : StateMachine
         healOrbProjectile.homing = true;
         healOrbProjectile.speed = 10.0f;
         healOrbProjectile.timeToActivate = 5.0f;
+        healOrbProjectile.owner = gameObject;
         
 
         Vector3 randPosition = transform.position + UnityEngine.Random.onUnitSphere*3;
@@ -445,11 +459,42 @@ public class AIController : StateMachine
         healOrbProjectile.transform.rotation = Quaternion.LookRotation(randDirection);
         #endregion
 
-        yield return new WaitForSeconds(5.0f);
-
         #region loot spawning
 
+        //roll to see if a chest spawns
+        
+        float chestroll = UnityEngine.Random.Range(0f, 1f);
+        Debug.Log("doing loot: Rolled a " + chestroll);
+        if (chestroll <= gameObject.GetComponent<EnemyBaseAtts>().LootDropChance)
+        {
+
+            //find a valid point on the navmesh for the chest
+            Vector3 newPosition = transform.position + new Vector3(UnityEngine.Random.Range(-1, 1), 0, UnityEngine.Random.Range(-1, 1));
+
+            NavMeshHit meshLocation;
+
+            if (NavMesh.SamplePosition(newPosition, out meshLocation, 1, 1 << LayerMask.NameToLayer("Default")))
+            {
+
+                GameObject chest = Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().LootChestPrefab, meshLocation.position, Quaternion.identity) as GameObject;
+
+                int diceroll = UnityEngine.Random.Range(gameObject.GetComponent<EnemyBaseAtts>().MinLootDrops, gameObject.GetComponent<EnemyBaseAtts>().MaxLootDrops + 1);
+
+                for (int i = 0; i < diceroll; i++)
+                {
+                    chest.GetComponentInChildren<LootTrigger>().Inventory.AddItem(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory.randomEquipmentByLevel(EntityObject.Level));
+                    //chest.GetComponentInChildren<LootTrigger>().Inventory.AddItem(new equipment());
+                }
+            }
+        }
+
+
+
         #endregion
+
+
+        yield return new WaitForSeconds(5.0f);
+
 
         #region chest spawning
 
@@ -462,7 +507,6 @@ public class AIController : StateMachine
 
         
 
-
         #region cleanup and destroy
 
 
@@ -470,6 +514,9 @@ public class AIController : StateMachine
         Destroy(gameObject);
 
         #endregion
+
+
+
         yield return null;
     }
 

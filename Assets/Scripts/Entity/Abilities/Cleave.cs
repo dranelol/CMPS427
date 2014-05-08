@@ -14,7 +14,6 @@ public class Cleave : Ability
     {
         List<GameObject> attacked = OnAttack(source, isPlayer);
 
-        Debug.Log("cleave attacked: " + attacked.Count);
         if (isPlayer == true)
         {
             // this is player -> enemy
@@ -212,7 +211,7 @@ public class Cleave : Ability
 
         else
         {
-            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position + source.transform.forward * source.GetComponent<MovementFSM>().Radius * 1.5F, source.transform.rotation);
+            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position + source.transform.forward * source.GetComponent<MovementFSM>().Radius * 0.5f, source.transform.rotation);
 
         }
 

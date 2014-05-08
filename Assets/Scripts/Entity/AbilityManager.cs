@@ -40,7 +40,7 @@ public class AbilityManager : MonoBehaviour
         if (abilities.Count <= 40)
         {
             abilities[index] = ab;
-            activeCoolDowns[index] = 0;
+            activeCoolDowns[index] = 0.0f;
             PlayerPrefs.SetString("ability" + (index).ToString(), ab.ID);
 
         }

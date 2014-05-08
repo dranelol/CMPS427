@@ -14,19 +14,19 @@ public class Shadowbolt : Ability
     public override void SpawnProjectile(GameObject source, Vector3 target, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
 
-        GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().ShadowboltProjectile, source.transform.position + forward, Quaternion.LookRotation(forward));
+        GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().ShadowboltProjectile, source.transform.position + forward + new Vector3(0,2,0), Quaternion.LookRotation(forward));
 
         projectile.GetComponent<ProjectileBehaviour>().owner = owner;
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
         projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
-        projectile.GetComponent<ProjectileBehaviour>().target = target;
+        projectile.GetComponent<ProjectileBehaviour>().target = target + forward;
         projectile.GetComponent<ProjectileBehaviour>().homing = true;
         projectile.GetComponent<ProjectileBehaviour>().speed = 20f;
         
 
-        Vector3 randPos = source.transform.position + forward + Random.onUnitSphere*2;
+        Vector3 randPos = source.transform.position + forward + Random.onUnitSphere;
 
-        randPos.Set(randPos.x, randPos.y + 2, randPos.z);
+        //randPos.Set(randPos.x, randPos.y + 1, randPos.z);
 
         Vector3 direction = (randPos - source.transform.position).normalized;
 
@@ -87,7 +87,7 @@ public class Shadowbolt : Ability
     {
         GameObject particles;
 
-        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position, source.transform.rotation);
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position + new Vector3(0,1,0), source.transform.rotation);
 
         yield return new WaitForSeconds(time);
 
