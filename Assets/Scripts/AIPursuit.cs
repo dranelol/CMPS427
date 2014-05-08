@@ -27,6 +27,7 @@ public class AIPursuit : StateMachine
 
     private GameObject currentTarget = null;
     private int _nextAbilityIndex = -1;
+    public int _abilityCount;
     private float _adjustedRange;
     public float AdjustedRange
     {
@@ -183,7 +184,7 @@ public class AIPursuit : StateMachine
     {
         int next = 0;
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < _abilityCount; i++)
         {
             try
             {
@@ -204,14 +205,23 @@ public class AIPursuit : StateMachine
         {
             _nextAbilityIndex = next;
 
-            if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.MELEE || _abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.PBAOE)
+            try
             {
-                _adjustedRange = (_abilityManager.abilities[_nextAbilityIndex].Range + MoveFSM.Radius) * _rangeAccuracy;
+                if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.MELEE || _abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.PBAOE)
+                {
+                    _adjustedRange = (_abilityManager.abilities[_nextAbilityIndex].Range + MoveFSM.Radius) * _rangeAccuracy;
+                }
+
+                else
+                {
+                    _adjustedRange = _abilityManager.abilities[_nextAbilityIndex].Range * _rangeAccuracy;
+                }
             }
 
-            else
+            catch
             {
-                _adjustedRange = _abilityManager.abilities[_nextAbilityIndex].Range * _rangeAccuracy;
+                _nextAbilityIndex = 0;
+                _adjustedRange = (_abilityManager.abilities[_nextAbilityIndex].Range + MoveFSM.Radius) * _rangeAccuracy;
             }
         }
     }
@@ -302,8 +312,8 @@ public class AIPursuit : StateMachine
 
             if (combatFSM.IsIdle())
             {
-                Vector3 entityCenterPosition = CombatFSM.GetCenter(transform);
-                Vector3 targetCenterPosition = CombatFSM.GetCenter(currentTarget.transform);
+                Vector3 entityCenterPosition = CombatMath.GetCenter(transform);
+                Vector3 targetCenterPosition = CombatMath.GetCenter(currentTarget.transform);
 
                 RaycastHit hit;
 

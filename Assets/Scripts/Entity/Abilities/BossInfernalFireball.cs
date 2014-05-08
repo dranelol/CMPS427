@@ -2,18 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class InfernalFireball : Ability
+public class BossInfernalFireball : Ability
 {
-    public InfernalFireball(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+    public BossInfernalFireball(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
         : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
 
     }
 
+
     public override void SpawnProjectile(GameObject source, Vector3 target, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
 
-        GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().InfernalFireballProjectile, source.transform.position + new Vector3(0,10.0f,0), Quaternion.LookRotation(forward));
+        GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().BossInfernalFireballProjectile, source.transform.position + new Vector3(0,10.0f,0), Quaternion.LookRotation(forward));
         Debug.Log("shootin dat infernal");
         projectile.GetComponent<ProjectileBehaviour>().owner = owner;
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 10.0f;

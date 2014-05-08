@@ -35,27 +35,6 @@ public class FireballTurretFireball : Ability
     public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
     {
 
-        /*
-        Vector3 forward = Vector3.zero;
-
-        // if its a player, attack based on mouse
-        if (isPlayer == true)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit rayCastTarget;
-            Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
-            Vector3 vectorToMouse = rayCastTarget.point - source.transform.position;
-            forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
-        }
-
-        // if its an enemy, attack based on forward vector
-        else
-        {
-            forward = source.transform.forward;
-        }
-         */
-
-
         if (isPlayer == true)
         {
             if (target.GetComponent<AIController>().IsResetting() == false

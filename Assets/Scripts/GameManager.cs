@@ -76,6 +76,9 @@ public class GameManager : MonoBehaviour
     public GameObject ShadowfurySpawn;
     public GameObject ShadowtrapSpawn;
 
+    public GameObject BossInfernalFireballProjectile;
+    public GameObject BossInfernalFireballExplosion;
+
     public equipmentFactory EquipmentFactory;
 
     public static Dictionary<string, Ability> Abilities;
@@ -158,8 +161,12 @@ public class GameManager : MonoBehaviour
 
         Abilities["dervishdeathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.NONE, 3f, 360f, 0f, 0f, 0f, "dervishdeathgrip", "Dervish Deathgrip", DeathgripParticles);
         Abilities["infernalfireball"] = new InfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 30.0f, 0f, "infernalfireball", "Infernal Fireball", InfernalFireballExplosion);
+
         Abilities["whirlwind"] = new Whirlwind(AttackType.GROUNDTARGET, DamageType.PHYSICAL, 3.0f, 360.0f, 0.0f, 10.0f, 0f, "whirlwind", "Whirlwind", OnHitNormalParticles);
         Abilities["dervish"] = new Dervish(AttackType.GROUNDTARGET, DamageType.PHYSICAL, 5f, 360f, 10f, 10f, 100f, "dervish", "Dervish", BladeWaltzParticles);
+
+        Abilities["bossinfernalfireball"] = new BossInfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 30.0f, 0f, "bossinfernalfireball", "Boss Infernal Fireball", BossInfernalFireballExplosion);
+
 
         //Abilities["healorb"] = new HealOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 0.0f, 0.0f, "healorb", "Heal Orb", HealOrbExplosion);
 
@@ -216,4 +223,6 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(coroutine);
     }
+
+    
 }

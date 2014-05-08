@@ -7,13 +7,11 @@ public class Fireball : Ability
     public Fireball(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
         : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
-
+        
     }
-
 
     public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
-        
         int segments = 1;
         
         for(int i = 0; i < segments; i++)
