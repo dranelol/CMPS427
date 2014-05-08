@@ -130,24 +130,21 @@ public class MovementFSM : StateMachine
         AddTransitionsFrom(MoveStates.moveLocked, moveLockedTransitions);
 
         StartMachine(MoveStates.idle);
-
-        _navMeshAgent.updateRotation = false;
     }
 
     void Start()
     {
         _navMeshAgent.stoppingDistance = Radius * 1.1f;
+        _navMeshAgent.updateRotation = false;
 
-        if (tag == "Enemy")
+        if (tag == "Player")
         {
-
+            _navMeshAgent.avoidancePriority = 1;
+            _navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+            _navMeshAgent.autoRepath = false;
         }
 
-        _navMeshAgent.acceleration = 1000f;
-        _navMeshAgent.autoBraking = true;
-        _navMeshAgent.autoRepath = true;
         _baseMovementSpeed = Mathf.Lerp(MAXIMUM_BASE_MOVEMENT_SPEED, MINIMUM_BASE_MOVEMENT_SPEED, Radius / MAXIMUM_RADIUS);
-
         UpdateMovementSpeed(1f);
     }
 
@@ -159,7 +156,7 @@ public class MovementFSM : StateMachine
         {
             _navMeshAgent.speed = _movementSpeed;
 
-            if (Vector3.Distance(targetPosition, transform.position) > 1)
+            if (CombatMath.DistanceGreaterThan(targetPosition, transform.position, 1))
             {
                 NavMeshHit navMeshHit;
 

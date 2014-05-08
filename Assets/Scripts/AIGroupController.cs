@@ -44,7 +44,7 @@ public class AIGroupController : MonoBehaviour {
 
     private bool TargetInRange(GameObject source)
     {
-        if (source != null && Vector3.Distance(transform.position, source.transform.position) < resetDistance)
+        if (source != null && CombatMath.DistanceLessThan(transform.position, source.transform.position, resetDistance))
         {
             return true;
         }

@@ -51,7 +51,6 @@ public class PlayerEntity : Entity
     {
         base.Start();
 
-
         if (gameManager.loadSaveTest == true)
         {
             for (int i = 2; i < 6; i++)
