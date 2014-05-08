@@ -73,6 +73,9 @@ public class GameManager : MonoBehaviour
     public GameObject ShadowfurySpawn;
     public GameObject ShadowtrapSpawn;
 
+    public GameObject BossInfernalFireballProjectile;
+    public GameObject BossInfernalFireballExplosion;
+
     public equipmentFactory EquipmentFactory;
 
     public static Dictionary<string, Ability> Abilities;
@@ -154,6 +157,7 @@ public class GameManager : MonoBehaviour
         Abilities["dropdasteel"] = new DropDaSteel(AttackType.STATUS, DamageType.NONE, 0f, 0f, 32f, 0f, 0f, "dropdasteel", "Drop Da Steel", dropdasteelparticles);
 
         Abilities["infernalfireball"] = new InfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 30.0f, 0f, "infernalfireball", "Infernal Fireball", InfernalFireballExplosion);
+        Abilities["bossinfernalfireball"] = new BossInfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 30.0f, 0f, "bossinfernalfireball", "Boss Infernal Fireball", BossInfernalFireballExplosion);
         Abilities["whirlwind"] = new Whirlwind(AttackType.GROUNDTARGET, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 10.0f, 0f, "whirlwind", "Whirlwind", OnHitNormalParticles);
 
         //Abilities["healorb"] = new HealOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 0.0f, 0.0f, "healorb", "Heal Orb", HealOrbExplosion);

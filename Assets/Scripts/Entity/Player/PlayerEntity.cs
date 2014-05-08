@@ -84,13 +84,13 @@ public class PlayerEntity : Entity
 
         else
         {
-            abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 1);
+            abilityManager.AddAbility(GameManager.Abilities["cleave"], 1);
             abilityManager.AddAbility(GameManager.Abilities["improvedshadowbolt"], 2);
             abilityManager.AddAbility(GameManager.Abilities["deathanddecay"], 3);
             abilityManager.AddAbility(GameManager.Abilities["whirlwind"], 4);
             abilityManager.AddAbility(GameManager.Abilities["shadowfury"], 5);
 
-            abilityIndexDict["shadowbolt"] = 1;
+            abilityIndexDict["cleave"] = 1;
             abilityIndexDict["improvedshadowbolt"] = 2;
             abilityIndexDict["deathanddecay"] = 3;
             abilityIndexDict["whirlwind"] = 4;
@@ -130,8 +130,8 @@ public class PlayerEntity : Entity
 
     public void OnApplicationQuit()
     {
-       Inventory.UnSaveShit();
-       Inventory.SaveItems();
+       //Inventory.UnSaveShit();
+       //Inventory.SaveItems();
     }
 
     public Attributes GetAttributes()
