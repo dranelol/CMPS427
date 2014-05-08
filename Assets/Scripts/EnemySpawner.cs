@@ -45,10 +45,13 @@ public class EnemySpawner : MonoBehaviour
         {
             if (other.tag == "Player")
             {
+
                 level = other.GetComponent<PlayerEntity>().Level;
 
                 List<GameObject> enemies = EnemyAttributeFactory.GetEnemies(_resources, _maxCount, _maxCost, _minCost);//enemyattributefacory get enemies stuff
 
+
+                Debug.Log("doing thing" + enemies.Count.ToString());
                 for (int i = 0; i < enemies.Count; i++)
                 {
                     GenerateEnemy(enemies[i]);
@@ -65,7 +68,7 @@ public class EnemySpawner : MonoBehaviour
         Vector3 newPosition = transform.position + new Vector3(UnityEngine.Random.Range(-spawnRadius, spawnRadius), 0, UnityEngine.Random.Range(-spawnRadius, spawnRadius));
 
         NavMeshHit meshLocation;
-
+        Debug.Log("making dude");
         if (NavMesh.SamplePosition(newPosition, out meshLocation, SPAWN_RADIUS_MAX, 1 << LayerMask.NameToLayer("Default")))
         {
 

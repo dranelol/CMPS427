@@ -19,9 +19,12 @@ public class LootTrigger : Trigger
     private equipmentFactory ef;
 
     bool inventoryOpened = false;
+    
 
     void Awake()
     {
+
+        Debug.Log("awake");
         inventory = new Inventory();
 
         ef = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
@@ -34,12 +37,28 @@ public class LootTrigger : Trigger
 
 	void Start() 
     {
-       
+        if (ef == null)
+        {
+            Debug.Log("calling awake from start");
+            Awake();
+        }
+
+        //Debug.Log(ef.ToString());
         if (inventory.Items.Count == 0)
         {
             Debug.Log("chest getting default items");
-            inventory.AddItem(ef.randomEquipment(1, 1, equipSlots.slots.Head));
-            inventory.AddItem(ef.randomEquipment(1, 1, equipSlots.slots.Head));
+            int diceroll = Random.Range(1, 5);
+            if (diceroll <= 3)
+            {
+                for (int i = 0; i < diceroll; i++)
+                {
+                    inventory.AddItem(ef.randomEquipment(2));
+                }
+            }
+            else if (diceroll == 4)
+            {
+                inventory.AddItem(ef.randomEquipment(3));
+            }
         }
 
 
@@ -56,6 +75,8 @@ public class LootTrigger : Trigger
         if (inventory.IsEmpty() == true)
         {
             inventoryOpened = false;
+            GameObject.Destroy(gameObject);
+            
         }
 
         if (inventoryOpened == false)
