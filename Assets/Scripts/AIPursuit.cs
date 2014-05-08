@@ -4,83 +4,89 @@ using System.Collections;
 using System;
 using System.Linq;
 
-public class AIPursuit : StateMachine 
+public class AIPursuit : StateMachine
 {
     private enum PursuitStates
     {
         inactive,
+        approach,
         seek,
         attack,
         flee
     }
 
-    private MovementFSM MoveFSM;
+    public const float _rangeAccuracy = 0.9f;
+
     private Entity entity;
+    private MovementFSM MoveFSM;
     private CombatFSM combatFSM;
-
-    private GameObject currentTarget = null;
-
-    private int _nextAbilityIndex;
-    private List<int> _abilityIndices;
     private AbilityManager _abilityManager;
-    private float _adjustedRange;
     private AnimationController _animationController;
     private EntitySoundManager _soundManager;
+    private CapsuleCollider _collider;
+
+    private GameObject currentTarget = null;
+    private int _nextAbilityIndex = -1;
+    private float _adjustedRange;
+    public float AdjustedRange
+    {
+        get { return _adjustedRange; }
+    }
 
     public bool doesFlee;
     public float fleeDistance; //Max distance to travel from the position the enemy starts fleeing from.
     public float fleeTime; //Time the enemy will flee before returning to attack
-
     private float fleeEnd; //Future time the enemy will stop fleeing.
     private bool hasFled;
-    private bool swinging;
 
-    private float swingSpeed;
+    private bool _swinging;
+    private float _swingSpeed;
 
-    private GameObject debugNSD;
-    
     void Awake()
     {
         SetupMachine(PursuitStates.inactive);
 
         HashSet<Enum> inactiveTransitions = new HashSet<Enum>();
-        inactiveTransitions.Add(PursuitStates.seek);
+        inactiveTransitions.Add(PursuitStates.approach);
         AddTransitionsFrom(PursuitStates.inactive, inactiveTransitions);
+        AddAllTransitionsTo(PursuitStates.inactive);
+
+        HashSet<Enum> approachTransitions = new HashSet<Enum>();
+        approachTransitions.Add(PursuitStates.seek);
+        approachTransitions.Add(PursuitStates.flee);
+        AddTransitionsFrom(PursuitStates.approach, approachTransitions);
+
+        AddAllTransitionsFrom(PursuitStates.seek);
+
+        HashSet<Enum> attackTransitions = new HashSet<Enum>();
+        attackTransitions.Add(PursuitStates.seek);
+        attackTransitions.Add(PursuitStates.flee);
+        AddTransitionsFrom(PursuitStates.attack, attackTransitions);
 
         HashSet<Enum> fleeTransitions = new HashSet<Enum>();
-        fleeTransitions.Add(PursuitStates.seek);
+        fleeTransitions.Add(PursuitStates.approach);
         fleeTransitions.Add(PursuitStates.inactive);
         AddTransitionsFrom(PursuitStates.flee, fleeTransitions);
 
-        HashSet<Enum> attackTransitions = new HashSet<Enum>();
-        attackTransitions.Add(PursuitStates.flee);
-        AddTransitionsFrom(PursuitStates.attack, attackTransitions);
-        
-        AddAllTransitionsFrom(PursuitStates.seek);
-        AddAllTransitionsTo(PursuitStates.seek);
-        AddAllTransitionsTo(PursuitStates.inactive);
-
         StartMachine(PursuitStates.inactive);
-
-        MoveFSM = GetComponent<MovementFSM>();
-        entity = GetComponent<Entity>();
-        combatFSM = GetComponent<CombatFSM>();
 
         hasFled = false;
         doesFlee = true;
-        swinging = false;
+        _swinging = false;
 
-        swingSpeed = GetComponent<EnemyBaseAtts>()._swingSpeed;
+        entity = GetComponent<Entity>();
+        MoveFSM = GetComponent<MovementFSM>();
+        combatFSM = GetComponent<CombatFSM>();
+        _abilityManager = GetComponent<AbilityManager>();
         _animationController = GetComponent<AnimationController>();
         _soundManager = GetComponent<EntitySoundManager>();
+        _collider = GetComponent<CapsuleCollider>();
     }
 
     void Start()
     {
-        _abilityManager = GetComponent<AbilityManager>();
-        _nextAbilityIndex = 0;
-        _adjustedRange = 5f;
-
+        UpdateAbilities();
+        _swingSpeed = GetComponent<EnemyBaseAtts>()._swingSpeed;
     }
 
     #region public functions
@@ -90,15 +96,15 @@ public class AIPursuit : StateMachine
         if (target != null)
         {
             currentTarget = target;
-            Transition(PursuitStates.seek);
+            Transition(PursuitStates.approach);
         }
     }
 
     public void StopPursuit()
     {
+        currentTarget = null;
         Transition(PursuitStates.inactive);
     }
-
 
     public bool IsFleeing()
     {
@@ -109,13 +115,6 @@ public class AIPursuit : StateMachine
 
     #region private functions
 
-    /// <summary>
-    /// Initiates the fear behaviour
-    /// </summary>
-    /// <param name="currentPosition">Current location of the enemy</param>
-    /// <param name="centerPosition">Position the path needs to be around</param>
-    /// <param name="distance">How far to travel each wander.</param>
-    /// <param name="distanceFromCenter">Max distance to travel from the center</param>
     private void Fear(Vector3 currentPosition, Vector3 centerPosition, float distance, float distanceFromCenter)
     {
         Vector2 randomDirection = UnityEngine.Random.insideUnitCircle.normalized * distance; // Pick a random point on the edge of the circle
@@ -127,8 +126,6 @@ public class AIPursuit : StateMachine
 
         if (Vector3.Distance(centerPosition, targetPosition) > distanceFromCenter)
         {
-
-
             Vector3 newDirection = (centerPosition - currentPosition).normalized * distance;
 
             targetPosition = new Vector3(newDirection.x, 0, newDirection.y);
@@ -142,31 +139,28 @@ public class AIPursuit : StateMachine
     private void Flee()
     {
 
-        GameObject nodeOfSmallestDistance  = null;
+        GameObject nodeOfSmallestDistance = null;
         Vector3 newdirection = Vector3.zero;
         Vector3 targetPosition = Vector3.zero;
-        
+
         GameObject[] enemyNodes = GameObject.FindGameObjectsWithTag("EnemyNode");
 
         foreach (GameObject node in enemyNodes)
         {
-            if (nodeOfSmallestDistance == null 
+            if (nodeOfSmallestDistance == null
                 && node.transform.position != GetComponent<AIController>().homeNodePosition)
             {
                 nodeOfSmallestDistance = node;
             }
             else
             {
-                if ( node.transform.position != GetComponent<AIController>().homeNodePosition
+                if (node.transform.position != GetComponent<AIController>().homeNodePosition
                     && Vector3.Distance(transform.position, node.transform.position) < Vector3.Distance(transform.position, nodeOfSmallestDistance.transform.position))
                 {
                     nodeOfSmallestDistance = node;
                 }
-
             }
         }
-
-        debugNSD = nodeOfSmallestDistance;
 
         if (nodeOfSmallestDistance == null)
         {
@@ -182,8 +176,6 @@ public class AIPursuit : StateMachine
         targetPosition += transform.position;
         targetPosition.y = transform.position.y;
 
-
-
         MoveFSM.SetPath(targetPosition);
     }
 
@@ -191,7 +183,7 @@ public class AIPursuit : StateMachine
     {
         int next = 0;
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 5; i++)
         {
             try
             {
@@ -211,7 +203,16 @@ public class AIPursuit : StateMachine
         if (next != _nextAbilityIndex)
         {
             _nextAbilityIndex = next;
-            _adjustedRange = _abilityManager.abilities[_nextAbilityIndex].Range + MoveFSM.Radius + currentTarget.GetComponent<MovementFSM>().Radius;
+
+            if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.MELEE || _abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.PBAOE)
+            {
+                _adjustedRange = (_abilityManager.abilities[_nextAbilityIndex].Range + MoveFSM.Radius) * _rangeAccuracy;
+            }
+
+            else
+            {
+                _adjustedRange = _abilityManager.abilities[_nextAbilityIndex].Range * _rangeAccuracy;
+            }
         }
     }
 
@@ -229,63 +230,113 @@ public class AIPursuit : StateMachine
 
     #endregion
 
-    #region seek functions
+    #region approach functions
 
-    void seek_Update()
+    IEnumerator approach_EnterState()
     {
-        if ((MovementFSM.MoveStates)MoveFSM.CurrentState == MovementFSM.MoveStates.idle)
-        {
-            MoveFSM.Turn(currentTarget.transform.position);
-        }
+        MoveFSM.SetPath(currentTarget.transform.position);
+        yield break;
+    }
 
-        if (doesFlee && (entity.CurrentHP < (entity.currentAtt.Health * 0.2f)) && hasFled == false)
+    void approach_Update()
+    {
+        if (currentTarget != null)
         {
-            Transition(PursuitStates.flee);
+            if (doesFlee && (entity.CurrentHP < (entity.currentAtt.Health * 0.2f)) && hasFled == false)
+            {
+                Transition(PursuitStates.flee);
+            }
+
+            else if (!MoveFSM.HasPath)
+            {
+                if (!MoveFSM.PathPending)
+                {
+                    MoveFSM.SetPath(currentTarget.transform.position);
+                }
+
+                else
+                {
+                    MoveFSM.Turn(currentTarget.transform.position);
+                }
+            }
+
+            else if ((currentTarget.transform.position - MoveFSM.Destination).sqrMagnitude > Mathf.Pow(_adjustedRange, 2f))
+            {
+                MoveFSM.SetPath(currentTarget.transform.position);
+            }
+
+            else if ((currentTarget.transform.position - transform.position).sqrMagnitude <= Mathf.Pow(_adjustedRange, 2f))
+            {
+                Transition(PursuitStates.seek);
+            }
+
+            else
+            {
+                UpdateAbilities();
+            }
         }
 
         else
         {
-            if (currentTarget != null)
+            Transition(PursuitStates.inactive);
+        }
+    }
+
+    #endregion
+
+    #region seek functions
+
+    void seek_Update()
+    {
+        if (currentTarget != null)
+        {
+            if (doesFlee && (entity.CurrentHP < (entity.currentAtt.Health * 0.2f)) && hasFled == false)
             {
-                UpdateAbilities();
+                Transition(PursuitStates.flee);
+            }
 
-                if (combatFSM.IsIdle() && _abilityManager.activeCoolDowns[_nextAbilityIndex] <= Time.time) // check resource as well
+            if ((MovementFSM.MoveStates)MoveFSM.CurrentState == MovementFSM.MoveStates.idle)
+            {
+                MoveFSM.Turn(currentTarget.transform.position);
+            }
+
+            if (combatFSM.IsIdle())
+            {
+                Vector3 entityCenterPosition = CombatFSM.GetCenter(transform);
+                Vector3 targetCenterPosition = CombatFSM.GetCenter(currentTarget.transform);
+
+                RaycastHit hit;
+
+                if (Physics.Raycast(entityCenterPosition, targetCenterPosition - entityCenterPosition, out hit, _adjustedRange, ~(1 << LayerMask.NameToLayer("Enemy"))))
                 {
-                    Vector3 directionToTarget = currentTarget.transform.position - transform.position;
-
-                    // If the enemy is within range of its next attack, transition to attack.
-                    if (directionToTarget.magnitude < _adjustedRange)
+                    if (hit.collider.tag == "Player" && _abilityManager.activeCoolDowns[_nextAbilityIndex] <= Time.time)
                     {
-                        RaycastHit hit;
-
-                        // Cast a ray from the enemy to the player, ignoring other enemy colliders.
-                        bool raycastSuccess = Physics.Raycast(transform.position, directionToTarget, out hit, _adjustedRange, ~(1 << LayerMask.NameToLayer("Enemy")));
-
-                        // if we succeeded our raycast, and we hit the player first: we're in attack range and LoS
-                        if (raycastSuccess == true && hit.transform.tag == "Player")
-                        {
-                            Transition(PursuitStates.attack);
-                        }
+                        MoveFSM.Turn(currentTarget.transform.position, 5);
+                        MoveFSM.Stop();
+                        Transition(PursuitStates.attack);
                     }
 
-                    // Otherwise, get closer
-                    else
+                    else if (!MoveFSM.PathPending)
                     {
                         MoveFSM.SetPath(currentTarget.transform.position);
                     }
+
+                    else
+                    {
+                        UpdateAbilities();
+                    }
                 }
 
-                else if (Vector3.Distance(transform.position, currentTarget.transform.position) <= _adjustedRange)
+                else
                 {
-                    MoveFSM.Stop();
+                    Transition(PursuitStates.approach);
                 }
-            }
+            }       
+        }
 
-            // Go idle if target does not exist
-            else
-            {
-                Transition(PursuitStates.inactive);
-            }
+        else
+        {
+            Transition(PursuitStates.inactive);
         }
     }
 
@@ -295,12 +346,12 @@ public class AIPursuit : StateMachine
 
     private void SwingTimer()
     {
-        swinging = false;
+        _swinging = false;
     }
 
     IEnumerator attack_EnterState()
     {
-        swinging = true;
+        _swinging = true;
         float offset = 0;
 
         if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.MELEE)
@@ -324,7 +375,7 @@ public class AIPursuit : StateMachine
             offset = 0.3f;
         }
 
-        Invoke("SwingTimer", swingSpeed + offset);
+        Invoke("SwingTimer", _swingSpeed + offset);
         yield break;
     }
 
@@ -332,11 +383,8 @@ public class AIPursuit : StateMachine
     {
         if (currentTarget != null)
         {
-            if (!swinging)
+            if (!_swinging)
             {
-                Debug.DrawRay(transform.position, currentTarget.transform.position - transform.position, Color.blue, 0.1f);
-                _soundManager.Attack();
-
                 if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.MELEE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
@@ -351,7 +399,6 @@ public class AIPursuit : StateMachine
 
                 else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.HONINGPROJECTILE)
                 {
-                    Debug.Log("homing");
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                     _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, currentTarget.transform.position, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
                 }
@@ -363,8 +410,8 @@ public class AIPursuit : StateMachine
                 }
 
                 _abilityManager.activeCoolDowns[_nextAbilityIndex] = Time.time + _abilityManager.abilities[_nextAbilityIndex].Cooldown;
-
                 UpdateAbilities();
+                _soundManager.Attack();
 
                 Transition(PursuitStates.seek);
             }
@@ -373,7 +420,6 @@ public class AIPursuit : StateMachine
         else
         {
             Transition(PursuitStates.inactive);
-
         }
     }
 
@@ -388,22 +434,19 @@ public class AIPursuit : StateMachine
         Flee();
         yield break;
     }
-    
+
     void flee_Update()
     {
-
-        //Debug.DrawRay(transform.position, debugNSD.transform.position - transform.position, Color.blue);
-        
         if (fleeEnd < Time.time)
         {
-            Transition(PursuitStates.seek);
+            Transition(PursuitStates.approach);
         }
-        else if(entity.CurrentHP <= 0)
+
+        else if (entity.CurrentHP <= 0)
         {
             StopPursuit();
         }
     }
-
 
     #endregion
 

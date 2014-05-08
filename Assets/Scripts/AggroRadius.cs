@@ -15,8 +15,7 @@ public class AggroRadius : MonoBehaviour
 
     void Start()
     {
-        trigger.radius = transform.parent.GetComponent<AIController>().aggroRadius;
-        
+        trigger.radius = transform.parent.GetComponent<AIController>().aggroRadius;   
     }
 
     void OnTriggerEnter(Collider other)
