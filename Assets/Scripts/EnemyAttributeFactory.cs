@@ -27,52 +27,7 @@ public class EnemyAttributeFactory : MonoBehaviour
     public float smallscalingmindmg = .75f;
     public float smallscalingmaxdmg = .75f;
 	
-	  public void GiveEnemyAbilities(Entity enemy, string type)
-    {
-        /*
-        abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 2);
-        abilityManager.AddAbility(GameManager.Abilities["poisonbolt"], 3);
-        abilityManager.AddAbility(GameManager.Abilities["ShockMine"], 4);
-        abilityManager.AddAbility(GameManager.Abilities["bladewaltz"], 5);
-
-        abilityIndexDict["shadowbolt"] = 2;
-        abilityIndexDict["poisonbolt"] = 3;
-        abilityIndexDict["ShockMine"] = 4;
-        abilityIndexDict["bladewaltz"] = 5;
-         * *
-        if (type == "critter")
-        {
-            //enemy.abilityManager.abilities[0]=GameManager.Abilities["cleave"];
-            enemy.abilityManager.AddAbility(GameManager.Abilities["cleave"], 0);
-            enemy.abilityIndexDict["cleave"] = 0;
-            enemy.abilityManager.AddAbility(GameManager.Abilities["cleave"], 1);
-            enemy.abilityIndexDict["cleave"] = 1;
-        }
-        else if (type == "small")
-        {
-            // enemy.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
-            enemy.abilityManager.AddAbility(GameManager.Abilities["fireball"], 0);
-            enemy.abilityIndexDict["fireball"] = 0;
-            enemy.abilityManager.AddAbility(GameManager.Abilities["fireball"], 1);
-            enemy.abilityIndexDict["fireball"] = 1;
-        }
-        else if (type == "med")
-        {
-            // enemy.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
-            enemy.abilityManager.AddAbility(GameManager.Abilities["icebolt"], 0);
-            enemy.abilityIndexDict["icebolt"] = 0;
-            enemy.abilityManager.AddAbility(GameManager.Abilities["icebolt"], 1);
-            enemy.abilityIndexDict["icebolt"] = 1;
-        }
-        else if (type == "large")
-        {
-            // enemy.abilityManager.abilities[0] = GameManager.Abilities["cleave"];
-            enemy.abilityManager.AddAbility(GameManager.Abilities["axethrow"], 0);
-            enemy.abilityIndexDict["axethrow"] = 0;
-            enemy.abilityManager.AddAbility(GameManager.Abilities["axethrow"], 1);
-            enemy.abilityIndexDict["axethrow"] = 1;
-        }
-		*/
+     */
 		
 	
     #endregion

@@ -76,7 +76,7 @@ public class Whirlwind : Ability
                 if (isPlayer == true)
                 {
                     // try to cast a ray from the enemy to the player
-                    bool rayCastHit = CombatFSM.RayCast(collider.transform, source.transform, out hit, range, ~(1 << enemyMask));
+                    bool rayCastHit = CombatMath.RayCast(collider.transform, source.transform, out hit, range, ~(1 << enemyMask));
 
                     if (!rayCastHit)
                     {
@@ -97,7 +97,7 @@ public class Whirlwind : Ability
                 else
                 {
                     // try to cast a ray from the player to the enemy
-                    bool rayCastHit = CombatFSM.RayCast(collider.transform, source.transform, out hit, range, ~(1 << playerMask));
+                    bool rayCastHit = CombatMath.RayCast(collider.transform, source.transform, out hit, range, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
