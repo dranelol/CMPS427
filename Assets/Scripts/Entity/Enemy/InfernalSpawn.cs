@@ -3,33 +3,56 @@ using System.Collections;
 
 public class InfernalSpawn : MonoBehaviour 
 {
+    public GameObject target;
+    public GameObject prefab;
+
     void OnTriggerEnter(Collider other)
-    {/*
+    {
         if (other.tag == "Player")
         {
-            NavMeshHit navMeshHit;
+            GetComponent<SphereCollider>().enabled = false;
+            target = other.gameObject;
 
-            if (NavMesh.SamplePosition(other.transform.position, out navMeshHit, 20, 1 << LayerMask.NameToLayer("Default")))
-            {
-                GameObject infernoSpawn = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().InfernalSpawn, navMeshHit.position, Quaternion.identity);
-                infernoSpawn.GetComponent<Infernal>().Initialize(other.gameObject, true);
-            }
+            GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().BossInfernalFireballProjectile, transform.position + new Vector3(0, 10.0f, 0), Quaternion.LookRotation((new Vector3(0, -10f, 0)).normalized));
 
-            GameObject particles;
+            projectile.GetComponent<ProjectileBehaviour>().owner = gameObject;
+            projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 10.0f;
+            projectile.GetComponent<ProjectileBehaviour>().target = transform.position;
+            projectile.GetComponent<ProjectileBehaviour>().CollidesWithTerrain = true;
+            projectile.GetComponent<ProjectileBehaviour>().AOEOnExplode = true;
+            projectile.GetComponent<ProjectileBehaviour>().EnvironmentProjectile = true;
+            projectile.GetComponent<ProjectileBehaviour>().speed = 5f;
 
-            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
+            Vector3 direction = (transform.position - projectile.transform.position).normalized;
 
-            ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+            projectile.transform.rotation = Quaternion.LookRotation(direction);
 
-            foreach (ParticleSystem item in particleSystems)
-            {
-                item.transform.parent = null;
-                item.emissionRate = 0;
-                item.enableEmission = false;
+            Invoke("DoItBro", 2f);
+        }
+    }
 
-            }
+    private void DoItBro()
+    {
+        GameObject particles = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().BossInfernalFireballExplosion, transform.position, Quaternion.identity);
 
-            GameObject.Destroy(particles);
-        }*/
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem item in particleSystems)
+        {
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
+        }
+
+        GameObject.Destroy(particles);
+
+        NavMeshHit navMeshHit;
+
+        if (NavMesh.SamplePosition(transform.position, out navMeshHit, 20, 1 << LayerMask.NameToLayer("Default")))
+        {
+            GameObject infernoSpawn = (GameObject)GameObject.Instantiate(prefab, navMeshHit.position, Quaternion.identity);
+            infernoSpawn.transform.parent = transform;
+            infernoSpawn.GetComponent<BossInfernal>().Initialize(target);
+        }  
     }
 }
