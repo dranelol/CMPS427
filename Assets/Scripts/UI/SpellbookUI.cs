@@ -167,6 +167,7 @@ public class SpellbookUI : UIState
 
             if (i < Controller.PlayerController.SpellBook.Count)
             {
+                
                 GUI.Box(thisRect, Controller.PlayerController.SpellBook[i].Name);
                 Drag(Controller.PlayerController.SpellBook[i], thisRect);
                 inactiveRects.Add(new Rect(thisRect.x, thisRect.y+25, thisRect.width, thisRect.height), Controller.PlayerController.SpellBook[i]);
