@@ -1,4 +1,4 @@
-@CustomEditor (TriPlanarTerrainScript)
+/*@CustomEditor (TriPlanarTerrainScript)
 
 class TriPlanarTerrainScriptEditor extends Editor {
 
@@ -49,4 +49,4 @@ class TriPlanarTerrainScriptEditor extends Editor {
 		
 		terScript.setTerrainValues ();
 	}
-}
+}*/
