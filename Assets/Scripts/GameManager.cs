@@ -87,6 +87,8 @@ public class GameManager : MonoBehaviour
     public static Dictionary<int, Aura> Auras;
     public static Dictionary<string, int> AuraStringToIntMap;
 
+    public string previousScene;
+
     public static float GLOBAL_COOLDOWN = 0.5f;
 
     public AudioClip YEAAAAA;
@@ -101,9 +103,11 @@ public class GameManager : MonoBehaviour
 
         EquipmentFactory = new equipmentFactory();
 
+        
         if (Application.loadedLevelName == "setup")
         {
-            Application.LoadLevel("TestScene");
+            previousScene = "setup";
+            Application.LoadLevel("OverworldBaseCamp");
         }
 
         InfernalSpawn = (GameObject)Resources.Load("Enemy Prefabs/InfernalEnemy", typeof(GameObject));

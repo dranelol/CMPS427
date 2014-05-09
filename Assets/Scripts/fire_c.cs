@@ -16,7 +16,7 @@ public class fire_c : MonoBehaviour {
 		if (t>=1f){
 			t=0f;
 			
-				rnd=Random.Range(.55f,.65f);
+				rnd=Random.Range(1.55f,2.05f);
 		}
 		this.light.intensity+=(rnd-this.light.intensity)/5f;
 	}
