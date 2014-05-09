@@ -15,7 +15,7 @@ public class BoomerangBladeReturn : Ability
     public override void SpawnProjectile(GameObject source, Vector3 target, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
 
-        GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().BoomerangBladeProjectile, source.transform.position, Quaternion.LookRotation(forward));
+        GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().BoomerangBladeProjectile, CombatMath.GetCenter(source.transform), Quaternion.LookRotation(forward));
 
         projectile.GetComponent<ProjectileBehaviour>().owner = owner;
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 1.5f;
@@ -28,18 +28,6 @@ public class BoomerangBladeReturn : Ability
         projectile.GetComponent<ProjectileBehaviour>().DiesOnHit = false;
         projectile.GetComponent<ProjectileBehaviour>().targetObject = owner;
         projectile.GetComponent<ProjectileBehaviour>().DiesOnOwnerHit = true;
-
-        /*
-        Vector3 randPos = source.transform.position + forward + Random.onUnitSphere * 2;
-
-        randPos.Set(randPos.x, randPos.y + 2, randPos.z);
-
-        Vector3 direction = (randPos - source.transform.position).normalized;
-
-        projectile.transform.rotation = Quaternion.LookRotation(direction);
-
-        //projectile.rigidbody.velocity = direction * 20.0f;
-         * */
 
     }
 
@@ -117,7 +105,7 @@ public class BoomerangBladeReturn : Ability
     {
         GameObject particles;
 
-        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position, source.transform.rotation);
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(target.transform), source.transform.rotation);
 
         yield return new WaitForSeconds(time);
 

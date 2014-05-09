@@ -45,7 +45,7 @@ public class Infernal : MonoBehaviour
 
         gameObject.AddComponent<AIController>();
         gameObject.GetComponent<Entity>().SetLevel(_source.GetComponent<Entity>().Level);
-        gameObject.GetComponent<EnemyBaseAtts>().InitializeStats();
+        gameObject.GetComponent<EnemyBaseAtts>().InitializeStats(_source.GetComponent<Entity>().Level);
         gameObject.GetComponent<EnemyBaseAtts>().SetAbilities();
         gameObject.GetComponent<Entity>().UpdateCurrentAttributes();
         gameObject.GetComponent<NavMeshAgent>().enabled = true;

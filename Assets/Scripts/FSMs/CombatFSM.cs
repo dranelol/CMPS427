@@ -43,25 +43,6 @@ public class CombatFSM : StateMachine
 
     #region public functions
 
-    public static Vector3 GetCenter(Transform entityTransform)
-    {
-        return entityTransform.transform.TransformPoint(entityTransform.GetComponent<CapsuleCollider>().center);
-    }
-
-    public static bool RayCast(Transform source, Transform target, out RaycastHit hitInfo, float range = Mathf.Infinity, int layerMask = Physics.DefaultRaycastLayers)
-    {
-        Vector3 originPoint = GetCenter(source);
-        Vector3 targetPoint = GetCenter(target);
-        Vector3 direction = targetPoint - originPoint;
-
-        if (range != Mathf.Infinity)
-        {
-            range += target.GetComponent<MovementFSM>().Radius;
-        }
-
-        return Physics.Raycast(originPoint, direction, out hitInfo, range, layerMask);
-    }
-
     public void Attack(float time)
     {
         attack = true;

@@ -216,7 +216,7 @@ public class AIController : StateMachine
     {
         if (target != null)
         {
-            return Vector3.Distance(Group.transform.position, target.transform.position) < Group.ResetDistance;
+            return CombatMath.DistanceLessThan(Group.transform.position, target.transform.position, Group.ResetDistance);
         }
 
         else
@@ -401,7 +401,7 @@ public class AIController : StateMachine
 
     void reset_Update()
     {
-        if (Vector3.Distance(transform.position, localHomePosition) < MoveFSM.Radius)
+        if (CombatMath.DistanceLessThan(transform.position, localHomePosition, MoveFSM.Radius))
         {
             MoveFSM.Stop();
             Transition(AIStates.idle);

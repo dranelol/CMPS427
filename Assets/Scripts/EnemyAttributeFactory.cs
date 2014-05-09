@@ -80,10 +80,10 @@ public class EnemyAttributeFactory : MonoBehaviour
     #region Constants
 	
     public const int MIN_ENEMY_COST = 1;
-    public const int MAX_ENEMY_COST = 20;
+    public const int MAX_ENEMY_COST = 15;
 
     public const int MIN_NODE_RESOURCES = 1;
-    public const int MAX_NODE_RESOURCES = 40;
+    public const int MAX_NODE_RESOURCES = 60;
 
     public const int MIN_NODE_COUNT = 1;
     public const int MAX_NODE_COUNT = 10;
@@ -149,11 +149,11 @@ public class EnemyAttributeFactory : MonoBehaviour
     private static List<EnemyType> EnemyList;
 
     // The costs for each type of enemy.
-    public int _ogreCost = 10;
-    public int _ghostCost = 6;
-    public int _trollCost = 8;
-    public int _treeEntCost = 12;
-    public int _orcCost = 9;
+    public int _ogreCost = 12;
+    public int _ghostCost = 15;
+    public int _trollCost = 9;
+    public int _treeEntCost = 10;
+    public int _orcCost = 6;
     public int _undeadCost = 4;
     public int _goblinCost = 2;
 
@@ -170,7 +170,6 @@ public class EnemyAttributeFactory : MonoBehaviour
         EnemyList.Add(new EnemyType("OrcEnemy", _orcCost));
         EnemyList.Add(new EnemyType("UndeadEnemy", _undeadCost));
         EnemyList.Add(new EnemyType("GoblinEnemy", _goblinCost));
-        // EnemyList.Add(new EnemyType("DemonEnemy", _demonCost));
     }
 
     public static List<GameObject> GetEnemies(int resources, int maxCount, int maxCost, int minCost)

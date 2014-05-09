@@ -21,7 +21,7 @@ public class FireballTurretFireball : Ability
         for (int i = 0; i < segments; i++)
         {
 
-            GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().FireballTurretFireballProjectile, source.transform.position /*+ Rotations.RotateAboutY(forward, (360 / segments) * i) * 2*/, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
+            GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().FireballTurretFireballProjectile, CombatMath.GetCenter(source.transform) /*+ Rotations.RotateAboutY(forward, (360 / segments) * i) * 2*/, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
 
             projectile.GetComponent<ProjectileBehaviour>().owner = owner;
             projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 3.0f;
@@ -34,27 +34,6 @@ public class FireballTurretFireball : Ability
 
     public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
     {
-
-        /*
-        Vector3 forward = Vector3.zero;
-
-        // if its a player, attack based on mouse
-        if (isPlayer == true)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit rayCastTarget;
-            Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
-            Vector3 vectorToMouse = rayCastTarget.point - source.transform.position;
-            forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
-        }
-
-        // if its an enemy, attack based on forward vector
-        else
-        {
-            forward = source.transform.forward;
-        }
-         */
-
 
         if (isPlayer == true)
         {
@@ -105,7 +84,7 @@ public class FireballTurretFireball : Ability
     {
         GameObject particles;
 
-        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position, source.transform.rotation);
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(target.transform), source.transform.rotation);
 
         yield return new WaitForSeconds(time);
 
