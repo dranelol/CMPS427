@@ -12,7 +12,9 @@ public class InfernalFireball : Ability
 
     public override void SpawnProjectile(GameObject source, Vector3 target, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
-
+        AudioSource.PlayClipAtPoint(GameManagerAudio.GetClip("ConjureInferno"), source.transform.position);
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(PlayExplosion(1.45f));
+ 
         GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().InfernalFireballProjectile, source.transform.position + new Vector3(0,10.0f,0), Quaternion.LookRotation(forward));
         Debug.Log("shootin dat infernal");
         projectile.GetComponent<ProjectileBehaviour>().owner = owner;
@@ -66,4 +68,9 @@ public class InfernalFireball : Ability
         yield return null;
     }
 
+    IEnumerator PlayExplosion(float d)
+    {
+        yield return new WaitForSeconds(d);
+        AudioSource.PlayClipAtPoint(GameManagerAudio.GetClip("InfernoHit"), Vector3.zero);
+    }
 }

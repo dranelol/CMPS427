@@ -87,7 +87,6 @@ public class AIPursuit : StateMachine
 
     void Start()
     {
-        UpdateAbilities();
         _swingSpeed = GetComponent<EnemyBaseAtts>()._swingSpeed;
     }
 
