@@ -13,10 +13,11 @@ public class Whirlwind : Ability
     public override void AttackHandler(GameObject source, Vector3 AoEPoint, Entity attacker, bool isPlayer)
     {
         // do attack "repetition" times with "timeDelta" waiting between each
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().WhirlwindSpawn, 1.0f, isPlayer, 1.8f));
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().WhirlwindSpawn, 1.0f, isPlayer, 2.0f));
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().WhirlwindSpawn, 1.0f, isPlayer, 2.2f));
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAttackRepeating(source, attacker, isPlayer, 3, 0.25f));
+        GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        gameManager.RunCoroutine(DoSpawnAnimation(source, gameManager.WhirlwindSpawn, 1.0f, isPlayer, 1.8f));
+        gameManager.RunCoroutine(DoSpawnAnimation(source, gameManager.WhirlwindSpawn, 1.0f, isPlayer, 2.0f));
+        gameManager.RunCoroutine(DoSpawnAnimation(source, gameManager.WhirlwindSpawn, 1.0f, isPlayer, 2.2f));
+        gameManager.RunCoroutine(DoAttackRepeating(source, attacker, isPlayer, 3, 0.25f));
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)

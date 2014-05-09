@@ -19,7 +19,7 @@ sealed public class DervishSlow : Aura
     private const AuraType TEMPLATE_AURA_AURATYPE = AuraType.Buff; // The type of aura, buff or debuff.
     private const int TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS = 1; // The number of times this effect can stack. Must be between 1 and 99 (inclusive)
     private const int TEMPLATE_AURA_INITIAL_NUMBER_OF_STACKS = 1; // The number of stacks this aura starts with.
-    private const int TEMPLATE_AURA_DURATION = 3; // The number of seconds this aura will remain on a target. The duration is an INTEGER because 
+    private const int TEMPLATE_AURA_DURATION = 6; // The number of seconds this aura will remain on a target. The duration is an INTEGER because 
     // status effects should have a finite number of seconds for the duration for simplicity.
     #endregion
 
