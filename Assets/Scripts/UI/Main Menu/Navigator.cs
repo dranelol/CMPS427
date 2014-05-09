@@ -70,7 +70,7 @@ public class Navigator : MonoBehaviour {
 	{
 		GUI.Box (new Rect (INFO_LEFT, CRED_TOP, INFO_WIDTH, HEIGHT), "GAME INFO");
 
-		string infoString = "FALL 2014 CMPS427 \n Over the Top \n A dungeon-crawler RPG featuring randomly generated items, enemies, and dungeons.";
+		string infoString = "SPRING 2014 CMPS427 \n Over the Top \n A dungeon-crawler RPG featuring randomly generated items, enemies, and dungeons.";
 		
 		GUI.Label (new Rect (INFO_LEFT + 20, CRED_TOP + 30, INFO_WIDTH - 40, HEIGHT - 80), infoString, centerText);
 
