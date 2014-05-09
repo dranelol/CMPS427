@@ -251,9 +251,9 @@ public class AIPursuit : StateMachine
 
     void approach_Update()
     {
-        Debug.Log(Vector3.Distance(transform.position, currentTarget.transform.position));
+        //Debug.Log(Vector3.Distance(transform.position, currentTarget.transform.position));
         Debug.Log("DKFSJDF");
-        Debug.Log((CombatMath.GetCenter(currentTarget.transform) - CombatMath.GetCenter(transform)).sqrMagnitude);
+        //Debug.Log((CombatMath.GetCenter(currentTarget.transform) - CombatMath.GetCenter(transform)).sqrMagnitude);
 
         if (currentTarget != null)
         {
