@@ -19,6 +19,7 @@ public class MasterAuraManager : MonoBehaviour
         Auras["shadowStun"] = new Shadowstun("shadowStun");
         Auras["root"] = new Root("root");
         Auras["slow"] = new Slow("slow");
+        Auras["dervishslow"] = new DervishSlow("dervishslow");
         Auras["chaosbarrage"] = new chaosbarrage("chaosbarrage");
         Auras["fireballbarrage"] = new fireballbarrage("fireballbarrage");
 

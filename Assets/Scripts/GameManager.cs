@@ -69,6 +69,9 @@ public class GameManager : MonoBehaviour
     public GameObject SpawnInParticles;
     public GameObject InfernalSpawn;
     public GameObject WhirlwindSpawn;
+
+    public GameObject DervishSpawn;
+	
     public GameObject DeathAndDecaySpawn;
     public GameObject ShadowfurySpawn;
     public GameObject ShadowtrapSpawn;
@@ -118,6 +121,7 @@ public class GameManager : MonoBehaviour
         Abilities["poisonbolt"] = new Poisonbolt(AttackType.HONINGPROJECTILE, DamageType.POISON, 10.0f, 0.0f, 0.0f, 10.0f, 0f, "poisonbolt", "poisonbolt", FireballExplosion);
         Abilities["bloodbolt"] = new Bloodbolt(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL, 10.0f, 0.0f, 0.0f, 10.0f, 0f, "bloodbolt", "bloodbolt", FireballExplosion);
         Abilities["chaosbolt"] = new Chaosbolt(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.0f, 10.0f, 0f, "chaosbolt", "chaosbolt", ChaosboltExplosion);
+        Abilities["chaosbarragebolt"] = new ChaosBarrageBolt(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.0f, 10.0f, 0f, "chaosbarragebolt", "chaosbarragebolt", ChaosboltExplosion);
         Abilities["icebolt"] = new IceBolt(AttackType.PROJECTILE, DamageType.WATER, 8f, 0f, 0.0f, 10.0f, 0f, "icebolt", "Ice Bolt", IceBoltParticles);
         Abilities["cleave"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 0.0f, 5.0f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["arrow"] = new Arrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 8.0f, 0.0f, 0.0f, 5.0f, 0f, "arrow", "Arrow", ArrowParticles);
@@ -126,7 +130,7 @@ public class GameManager : MonoBehaviour
 
         #region buff abilities
 
-        Abilities["chaosbarrage"] = new ChaosBarrageAbility(AttackType.STATUS, DamageType.NONE, 10.0f, 0.0f, 30.0f, 0.0f, 100f, "chaosbarrage", "Chaos Barrage", ChaosBarrageParticles);
+        Abilities["chaosbarrage"] = new ChaosBarrageAbility(AttackType.STATUS, DamageType.NONE, 10.0f, 0.0f, 0.0f, 0.0f, 0, "chaosbarrage", "Chaos Barrage", ChaosBarrageParticles);
         Abilities["fireballbarrage"] = new FireballBarrageAbility(AttackType.STATUS, DamageType.NONE, 10.0f, 0.0f, 30.0f, 0.0f, 100f, "fireballbarrage", "Fireball Barrage", FireballBarrageParticles);
         Abilities["rootability"] = new RootAbility(AttackType.STATUS, DamageType.NONE, 10.0f, 360.0f, 15.0f, 0.0f, 0f, "rootability", "Root Ability", null);
 
@@ -137,7 +141,8 @@ public class GameManager : MonoBehaviour
         Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 5.0f, 45.0f, 5.0f, 10.0f, 20.0f, "fusrodah", "Fus Roh Dah", FusRoDahParticles);
 		Abilities["flamestrike"] = new Flamestrike(AttackType.PBAOE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 1000.0f, 25.0f, "flamestrike", "Flamestrike", FlamestrikeParticles);
         Abilities["bladewaltz"] = new BladeWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 30.0f, 0f, 50.0f, "bladewaltz", "Blade Waltz", BladeWaltzParticles);
-        Abilities["erenwaltz"] = new ErenWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 5.0f, 0f, "erenwaltz", "Eren Waltz", BladeWaltzParticles);Abilities["firemine"] = new FireMine(AttackType.PROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 4.0f, 200.0f, 10f, "firemine", "Fire Mine", FiremineParticles);
+        Abilities["erenwaltz"] = new ErenWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 5.0f, 0f, "erenwaltz", "Eren Waltz", BladeWaltzParticles);
+        Abilities["firemine"] = new FireMine(AttackType.PROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 4.0f, 200.0f, 10f, "firemine", "Fire Mine", FiremineParticles);
         Abilities["GETOVERHERE"] = new GETOVERHERE(AttackType.PROJECTILE, DamageType.SHADOW, 4.0f, 0.0f, 5.0f, 0.1f, 10f, "GETOVERHERE", "Shadow Pull", GETOVERHEREParticles);
         Abilities["normalmine"] = new NormalMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 360.0f, 4.0f, 1.0f, 10f, "normalmine", "Mine", MineParticles);
         Abilities["blinkstrike"] = new BlinkStrike(AttackType.PROJECTILE, DamageType.SHADOW, 4.0f, 1.0f, 7.0f, 5.0f, 10f, "blinkstrike", "Blink Strike", BlinkStrikeProjectile);
@@ -156,9 +161,14 @@ public class GameManager : MonoBehaviour
         Abilities["shieldbreaker"] = new ShieldBreaker(AttackType.PBAOE, DamageType.PHYSICAL, 10f, 8f, 5f, 5f, 20f, "shieldbreaker", "Shieldbreaker", ShieldBreakerParticles);
         Abilities["dropdasteel"] = new DropDaSteel(AttackType.STATUS, DamageType.NONE, 0f, 0f, 32f, 0f, 0f, "dropdasteel", "Drop Da Steel", dropdasteelparticles);
 
+        Abilities["dervishdeathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.NONE, 3f, 360f, 0f, 0f, 0f, "dervishdeathgrip", "Dervish Deathgrip", DeathgripParticles);
         Abilities["infernalfireball"] = new InfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 30.0f, 0f, "infernalfireball", "Infernal Fireball", InfernalFireballExplosion);
+
+        Abilities["whirlwind"] = new Whirlwind(AttackType.GROUNDTARGET, DamageType.PHYSICAL, 3.0f, 360.0f, 0.0f, 10.0f, 0f, "whirlwind", "Whirlwind", OnHitNormalParticles);
+        Abilities["dervish"] = new Dervish(AttackType.GROUNDTARGET, DamageType.PHYSICAL, 5f, 360f, 10f, 10f, 100f, "dervish", "Dervish", BladeWaltzParticles);
+
         Abilities["bossinfernalfireball"] = new BossInfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 30.0f, 0f, "bossinfernalfireball", "Boss Infernal Fireball", BossInfernalFireballExplosion);
-        Abilities["whirlwind"] = new Whirlwind(AttackType.GROUNDTARGET, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 10.0f, 0f, "whirlwind", "Whirlwind", OnHitNormalParticles);
+
 
         //Abilities["healorb"] = new HealOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 0.0f, 0.0f, "healorb", "Heal Orb", HealOrbExplosion);
 
@@ -170,6 +180,7 @@ public class GameManager : MonoBehaviour
         #endregion
 
         #region enemy abilities
+
         Abilities["enemyfireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 2.5f, 10.0f, 0f, "enemyfireball", "Enemy Fireball", FireballExplosion);
         Abilities["enemycleaveslow"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 3.0f, 5.0f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemycleavenormal"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 2f, 2.5f, 0f, "cleave", "Cleave", CleaveParticles);

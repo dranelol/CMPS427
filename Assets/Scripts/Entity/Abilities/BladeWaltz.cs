@@ -78,7 +78,7 @@ public class BladeWaltz : Ability
                 {
                     // try to cast a ray from the enemy to the player
 
-                    bool rayCastHit = CombatMath.RayCast(collider.transform, source.transform, out hit, range, ~(1 << enemyMask));
+                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << enemyMask));
 
 
                     if (!rayCastHit)
@@ -103,7 +103,7 @@ public class BladeWaltz : Ability
                 {
                     // try to cast a ray from the player to the enemy
 
-                    bool rayCastHit = CombatMath.RayCast(collider.transform, source.transform, out hit, range, ~(1 << playerMask));
+                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
