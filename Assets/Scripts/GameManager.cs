@@ -171,8 +171,8 @@ public class GameManager : MonoBehaviour
 
         #region enemy abilities
         Abilities["enemyfireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 2.5f, 10.0f, 0f, "enemyfireball", "Enemy Fireball", FireballExplosion);
-        Abilities["enemycleaveslow"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 5.0f, 5.0f, 0f, "cleave", "Cleave", CleaveParticles);
-        Abilities["enemycleavenormal"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 2.5f, 2.5f, 0f, "cleave", "Cleave", CleaveParticles);
+        Abilities["enemycleaveslow"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 3.0f, 5.0f, 0f, "cleave", "Cleave", CleaveParticles);
+        Abilities["enemycleavenormal"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 2f, 2.5f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemycleavefast"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 1.0f, 1.0f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemydeathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 10.0f, 360.0f, 2.0f, 0.0f, 0.0f, "deathgrip", "Enemy Deathgrip", DeathgripParticles);
         #endregion

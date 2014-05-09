@@ -95,7 +95,7 @@ public class AIPursuit : StateMachine
 
     public void Pursue(GameObject target)
     {
-        if (target != null)
+        if (target != null && (PursuitStates)CurrentState == PursuitStates.inactive)
         {
             currentTarget = target;
             Transition(PursuitStates.approach);
@@ -251,8 +251,9 @@ public class AIPursuit : StateMachine
 
     void approach_Update()
     {
-        Debug.Log("DKFSJDF");
         Debug.Log(Vector3.Distance(transform.position, currentTarget.transform.position));
+        Debug.Log("DKFSJDF");
+        Debug.Log((CombatMath.GetCenter(currentTarget.transform) - CombatMath.GetCenter(transform)).sqrMagnitude);
 
         if (currentTarget != null)
         {
@@ -261,25 +262,27 @@ public class AIPursuit : StateMachine
                 Transition(PursuitStates.flee);
             }
 
-            else if ((currentTarget.transform.position - transform.position).sqrMagnitude <= _adjustedRange * _adjustedRange)
-            {
-                Transition(PursuitStates.seek);
-            }
-
-            else if ((currentTarget.transform.position - MoveFSM.Destination).sqrMagnitude > _adjustedRange * _adjustedRange)
-            {
-                Debug.LogError((currentTarget.transform.position - MoveFSM.Destination).sqrMagnitude + ", " + _adjustedRange * _adjustedRange);
-                MoveFSM.SetPath(currentTarget.transform.position);
-            }
-
             else if (!MoveFSM.HasPath && ! MoveFSM.PathPending)
             {
                 MoveFSM.SetPath(currentTarget.transform.position);
             }
 
+            else if ((CombatMath.GetCenter(currentTarget.transform) - CombatMath.GetCenter(transform)).sqrMagnitude <= _adjustedRange * _adjustedRange)
+            {
+                Transition(PursuitStates.seek);
+            }
+
             else
             {
-                UpdateAbilities();
+                if ((CombatMath.GetCenter(currentTarget.transform) - MoveFSM.Destination).sqrMagnitude <= _adjustedRange * _adjustedRange)
+                {
+                    MoveFSM.SetPath(currentTarget.transform.position);
+                }
+
+                else
+                {
+                    UpdateAbilities();
+                }
             }
         }
 
@@ -295,6 +298,7 @@ public class AIPursuit : StateMachine
 
     void seek_Update()
     {
+        Debug.DrawRay(CombatMath.GetCenter(transform), CombatMath.GetCenter(currentTarget.transform) - CombatMath.GetCenter(transform));
         if (currentTarget != null)
         {
             if (doesFlee && (entity.CurrentHP < (entity.currentAtt.Health * 0.2f)) && hasFled == false)
@@ -302,40 +306,49 @@ public class AIPursuit : StateMachine
                 Transition(PursuitStates.flee);
             }
 
-            else if ((MovementFSM.MoveStates)MoveFSM.CurrentState == MovementFSM.MoveStates.idle)
+            else
             {
-                MoveFSM.Turn(currentTarget.transform.position);
-            }
-
-            if (combatFSM.IsIdle())
-            {
-                RaycastHit hit;
-
-                if (CombatMath.RayCast(transform, currentTarget.transform, out hit, _adjustedRange, ~(1 << LayerMask.NameToLayer("Enemy"))))
+                if ((MovementFSM.MoveStates)MoveFSM.CurrentState == MovementFSM.MoveStates.idle)
                 {
-                    if (hit.collider.tag == "Player" && _abilityManager.activeCoolDowns[_nextAbilityIndex] <= Time.time)
-                    {
-                        MoveFSM.Turn(currentTarget.transform.position, 5);
-                        MoveFSM.Stop();
-                        Transition(PursuitStates.attack);
-                    }
+                    MoveFSM.Turn(currentTarget.transform.position);
+                }
 
-                    else if (!MoveFSM.PathPending)
+                if (combatFSM.IsIdle())
+                {
+                    RaycastHit hit;
+                    Vector3 enemyPosition = CombatMath.GetCenter(transform);
+                    Vector3 playerPosition = CombatMath.GetCenter(currentTarget.transform);
+
+                    if (Physics.Raycast(enemyPosition, playerPosition - enemyPosition, out hit, _adjustedRange, ~(1 << LayerMask.NameToLayer("Enemy"))))
                     {
-                        MoveFSM.SetPath(currentTarget.transform.position);
+                        if (hit.collider.tag == "Player")
+                        {
+                            if (_abilityManager.activeCoolDowns[_nextAbilityIndex] <= Time.time)
+                            {
+                                MoveFSM.Turn(currentTarget.transform.position, 5f);
+                                MoveFSM.Stop();
+                                Transition(PursuitStates.attack);
+                            }
+                        }
+
+                        else
+                        {
+                            UpdateAbilities();
+                            MoveFSM.SetPath(currentTarget.transform.position);
+                        }
                     }
 
                     else
                     {
-                        UpdateAbilities();
+                        Transition(PursuitStates.approach);
                     }
                 }
 
-                else
+                else if ((CombatMath.GetCenter(currentTarget.transform) - CombatMath.GetCenter(transform)).sqrMagnitude <= _adjustedRange * _adjustedRange)
                 {
-                    Transition(PursuitStates.approach);
+                    MoveFSM.Stop();
                 }
-            }       
+            }
         }
 
         else
