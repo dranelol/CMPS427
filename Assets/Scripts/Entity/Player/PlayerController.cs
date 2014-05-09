@@ -878,9 +878,11 @@ public class PlayerController : MonoBehaviour {
             LevelUp();
 
             
-            entity.Experience = entity.NextLevelExperience - entity.Experience;
+            entity.Experience -= entity.NextLevelExperience;
+
+            
+
             entity.NextLevelExperience *= 2;
-            entity.Experience = 0;
         }
         else if (entity.Experience >= entity.NextLevelExperience && entity.Level < 19)
         {
