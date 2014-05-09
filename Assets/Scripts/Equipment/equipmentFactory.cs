@@ -580,6 +580,14 @@ public class equipmentFactory
         tempequip = new equipment("ONHITTEST", equipSlots.equipmentType.Sword, equipSlots.slots.Main, 3, 1, 20, 0, 0, 0, 0, 5, 5, 0, 1, "testing onhits", false, false, "onhitnormal");
         uniqueslist.Add(tempequip);
 
+        tempequip = new equipment("Sword of the 37th King", equipSlots.equipmentType.Sword, equipSlots.slots.Main, 3, 15, 20, 0f, 0, 0f, 0f, 60f, 90f, 0.2f, 1.7f, "The ██████████ it █████ for ████████, but ██████████ as ███████████.");
+        uniqueslist.Add(tempequip);
+
+        tempequip = new equipment("Tailored Suit of the 37th King", equipSlots.equipmentType.ClothArmor, equipSlots.slots.Chest, 3, 15, 20, 40f, 60f, 0f, 0f, 0f, 0f, 0.2f, 0.0f, "You ██████, ████████████ ██████, all the █████████ █████████ ██████.");
+        uniqueslist.Add(tempequip);
+
+
+
         #endregion
 
 
@@ -1804,7 +1812,7 @@ public class equipmentFactory
         //roll the dice to see if we get affixes
         int randint = UnityEngine.Random.Range(0, 100);
 
-        if (randint >= 97)
+        if (randint >= 95)
         {
             ArrayList templist = new ArrayList();
             foreach (equipment e in uniqueslist)
@@ -1844,9 +1852,9 @@ public class equipmentFactory
         randEquipment.equipmentAttributes.Add(tempEquipment.equipmentAttributes);
 
         int tier = 0;
-        if (randint > 60 && randint <= 85)
+        if (randint > 50 && randint <= 80)
             tier = 1;
-        if (randint > 85 && randint < 97)
+        if (randint > 80 && randint < 95)
             tier = 2;
 
         doaffixes(randEquipment, tier);
