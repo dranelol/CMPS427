@@ -404,13 +404,13 @@ public class AIPursuit : StateMachine
                 else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.PROJECTILE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                    _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
+                    _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, gameObject, (CombatMath.GetCenter(currentTarget.transform) - CombatMath.GetCenter(transform)).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
                 }
 
                 else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.HONINGPROJECTILE)
                 {
                     combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
-                    _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, currentTarget.transform.position, gameObject, (currentTarget.transform.position - transform.position).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
+                    _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, CombatMath.GetCenter(currentTarget.transform), gameObject, (CombatMath.GetCenter(currentTarget.transform) - CombatMath.GetCenter(transform)).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
                 }
 
                 else

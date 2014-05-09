@@ -104,7 +104,7 @@ public class AOEfreeze : Ability
                 {
                     // try to cast a ray from the enemy to the player
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << enemyMask));
+                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << enemyMask));
 
 
                     if (!rayCastHit)
@@ -129,7 +129,7 @@ public class AOEfreeze : Ability
                 {
                     // try to cast a ray from the player to the enemy
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << playerMask));
+                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
@@ -186,11 +186,6 @@ public class AOEfreeze : Ability
 
         defender.ModifyHealth(-damageAmt);
 
-    }
-
-    public override void DoPhysics(GameObject source, GameObject target)
-    {
-        
     }
 
     public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)

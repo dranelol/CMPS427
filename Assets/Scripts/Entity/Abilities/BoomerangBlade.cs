@@ -32,7 +32,7 @@ public class BoomerangBlade : Ability
         for (int i = 0; i < segments; i++)
         {
 
-            GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().BoomerangBladeProjectile, source.transform.position + Rotations.RotateAboutY(forward, (360 / segments) * i) * 2, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
+            GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().BoomerangBladeProjectile, CombatMath.GetCenter(source.transform) + Rotations.RotateAboutY(forward, (360 / segments) * i) * 2, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
 
             projectile.GetComponent<ProjectileBehaviour>().owner = owner;
             projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 0.5f;
@@ -110,33 +110,7 @@ public class BoomerangBlade : Ability
         {
             Vector3 forward = (source.transform.position-owner.transform.position).normalized;
 
-        //source.transform.forward *= -1f;
-        //source.GetComponent<ProjectileBehaviour>().transform.forward *= -1f;
-        /*
-        source.GetComponent<ProjectileBehaviour>().targetobject = owner;
-        source.GetComponent<ProjectileBehaviour>().target = owner.transform.position;
-        source.GetComponent<ProjectileBehaviour>().homing = true;
-
-        source.GetComponent<ProjectileBehaviour>().accelerationConstant = 40.0f;
-        source.GetComponent<ProjectileBehaviour>().velocity = Vector3.zero;
-
-        //source.GetComponent<ProjectileBehaviour>().transform.forward = Vector3.Normalize(owner.transform.position - source.transform.position);
-        //source.transform.forward = Vector3.Normalize(owner.transform.position - source.transform.position);
-
-        source.GetComponent<ProjectileBehaviour>().speed = 0f;
-      
-
-        source.GetComponent<ProjectileBehaviour>().DiesOnOwnerHit = true;
-        source.GetComponent<ProjectileBehaviour>().CollidesWithTerrain = false;
-        source.GetComponent<ProjectileBehaviour>().DiesOnOwnerHit = true;
-        source.GetComponent<ProjectileBehaviour>().HasCollidedWith.Clear();
-
-        */
-
-        //forward.y = 1f;
-        //owner.GetComponent<Entity>().abilityManager.abilities[tempindex].SpawnProjectile(source, owner, forward, owner.GetComponent<Entity>().abilityManager.abilities[tempindex].ID, isplayer);
-        
-            owner.GetComponent<Entity>().abilityManager.abilities[tempindex].SpawnProjectile(source, owner.transform.position, owner, forward * -1f, owner.GetComponent<Entity>().abilityManager.abilities[tempindex].ID, isplayer);
+            owner.GetComponent<Entity>().abilityManager.abilities[tempindex].SpawnProjectile(source, CombatMath.GetCenter(owner.transform), owner, forward * -1f, owner.GetComponent<Entity>().abilityManager.abilities[tempindex].ID, isplayer);
         }
         yield return null;
     }
@@ -169,7 +143,7 @@ public class BoomerangBlade : Ability
     {
         GameObject particles;
 
-        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position, source.transform.rotation);
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(target.transform), source.transform.rotation);
 
         yield return new WaitForSeconds(time);
 

@@ -13,7 +13,7 @@ public class FireballTurret : Ability
     public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
         int segments = 1;
-        GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position + forward, source.transform.rotation);
+        GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position + new Vector3(0,1,0), source.transform.rotation);
 
 
         projectile.GetComponent<ProjectileBehaviour>().owner = owner;
@@ -31,12 +31,14 @@ public class FireballTurret : Ability
         {
             tempindex++;
         }
+
         if (owner.GetComponent<Entity>().abilityManager.abilities[tempindex] == null)
         {
             owner.GetComponent<Entity>().abilityManager.AddAbility(GameManager.Abilities["fireball"], tempindex);
             owner.GetComponent<Entity>().abilityIndexDict["fireball"] = tempindex;
             Debug.Log("fireball added to " + tempindex);
         }
+
         /*
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
@@ -74,5 +76,125 @@ public class FireballTurret : Ability
 
 
         yield return null;
+    }
+
+    public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
+    {
+        List<GameObject> enemiesToAttack = new List<GameObject>();
+
+        Vector3 forward = new Vector3();
+
+        // this is a player attack, forward attack vector will be based on cursor position
+        if (isPlayer == true)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit target;
+            Physics.Raycast(ray, out target, Mathf.Infinity);
+            Vector3 vectorToMouse = target.point - source.transform.position;
+            forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
+        }
+
+        int enemyMask = LayerMask.NameToLayer("Enemy");
+        int playerMask = LayerMask.NameToLayer("Player");
+
+        Collider[] colliders;
+
+        if (isPlayer == true)
+        {
+            colliders = Physics.OverlapSphere(source.transform.position, range, 1 << enemyMask);
+        }
+
+        else
+        {
+            colliders = Physics.OverlapSphere(source.transform.position, range, 1 << playerMask);
+        }
+
+
+        foreach (Collider collider in colliders)
+        {
+
+            // create a vector from the possible enemy to the attacker
+            Vector3 normalizedAttackPosition = new Vector3(source.transform.position.x, 1, source.transform.position.z);
+            Vector3 normalizedDefenderPosition = new Vector3(collider.transform.position.x, 1, collider.transform.position.z);
+
+            Vector3 enemyVector = normalizedDefenderPosition - normalizedAttackPosition;
+            Vector3 enemyVector2 = normalizedAttackPosition - normalizedDefenderPosition;
+
+            // this is an enemy attack, forward attack vector will be based on target position
+            if (isPlayer == false)
+            {
+                forward = enemyVector;
+            }
+
+            // if the angle between the forward vector of the attacker and the enemy vector is less than the angle of attack, the enemy is within the attack angle
+            if (Vector3.Angle(forward, enemyVector) < angle)
+            {
+
+                RaycastHit hit = new RaycastHit();
+
+                if (isPlayer == true)
+                {
+                    // try to cast a ray from the enemy to the turret
+
+                    bool rayCastHit = CombatMath.RayCast(collider.transform, source.transform, out hit, range, ~(1 << enemyMask));
+                    Debug.DrawRay(normalizedDefenderPosition, enemyVector2, Color.red, 0.5f);
+                    if (!rayCastHit)
+                    {
+
+                    }
+                    // if the ray hits, the enemy is in line of sight of the player, this is a successful attack hit
+                    else
+                    {
+                        Debug.Log("hit: " + hit.collider.gameObject.name.ToString());
+                        if (hit.collider.gameObject.tag == "Turret")
+                        {
+                            Debug.DrawRay(normalizedDefenderPosition, enemyVector, Color.green, 0.5f);
+                            Debug.DrawRay(normalizedDefenderPosition, enemyVector2, Color.red, 0.5f);
+
+                            enemiesToAttack.Add(collider.gameObject);
+                        }
+                    }
+                }
+
+                else
+                {
+                    // try to cast a ray from the player to the turret
+
+                    bool rayCastHit = CombatMath.RayCast(collider.transform, source.transform, out hit, range, ~(1 << playerMask));
+
+                    if (!rayCastHit)
+                    {
+                        Debug.Log("fail");
+                    }
+                    // if the ray hits, the player is in line of sight of the enemy, this is a successful attack hit
+                    else
+                    {
+                        if (hit.collider.gameObject.tag == "Turret")
+                        {
+                            Debug.DrawRay(normalizedDefenderPosition, enemyVector, Color.green, 0.5f);
+                            Debug.DrawRay(normalizedDefenderPosition, enemyVector2, Color.red, 0.5f);
+
+                            enemiesToAttack.Add(collider.gameObject);
+                        }
+
+                        else
+                        {
+                            Debug.Log("not something that we didn't hit");
+                            Debug.Log(hit.collider.name);
+                        }
+                    }
+                }
+            }
+        }
+        List<GameObject> enemytoAttack = new List<GameObject>();
+
+        if (enemiesToAttack.Count > 0)
+        {
+            enemytoAttack.Add(enemiesToAttack[Random.Range(0, enemiesToAttack.Count)]);
+        }
+
+        Debug.Log("enemies found: " + enemiesToAttack.Count.ToString());
+        return enemytoAttack;
+
     }
 }
