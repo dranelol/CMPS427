@@ -110,7 +110,7 @@ public class ProjectileBehaviour : MonoBehaviour
     {
         //ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
 
-        // if we need to fuck with particle scale, do it here
+        // if we need to change particle scale, do it here
 
         /*
         foreach (ParticleSystem item in particles)

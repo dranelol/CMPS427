@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-/// <summary>
-/// Creates a GUI prompting douchebags to start the game or fuck off and die.
-/// </summary>
+
 public class Navigator : MonoBehaviour {
     private const int WIDTH = 200;
     private const int HEIGHT = 300;

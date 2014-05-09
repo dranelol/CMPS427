@@ -8,17 +8,17 @@ public class seekPoint : MonoBehaviour {
 	public GameObject destination;
 	public Trigger colTrigger;
 
-	private bool fuck;
+	private bool thing;
 	// Use this for initialization
 	void Start () {
-		fuck = true;
+		thing = true;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if(!colTrigger.isActive && fuck) {
+		if(!colTrigger.isActive && thing) {
 			StartCoroutine("SplitUp");
-			fuck = false;
+			thing = false;
 		}
 	}
 
