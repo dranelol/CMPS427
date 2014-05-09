@@ -30,7 +30,7 @@ public class Navigator : MonoBehaviour {
 
         if (GUI.Button(new Rect(MAIN_LEFT + 20, CRED_TOP + 30, WIDTH - 40, 40), "Start Game"))
         {
-            Application.Quit();
+            //Application.Quit();
             Application.LoadLevel("setup");
         }
 
