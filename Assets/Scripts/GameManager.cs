@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
         if (Application.loadedLevelName == "setup")
         {
             previousScene = "setup";
-            Application.LoadLevel("ForestOverworld");
+            Application.LoadLevel("OverworldBaseCamp");
         }
 
         InfernalSpawn = (GameObject)Resources.Load("Enemy Prefabs/InfernalEnemy", typeof(GameObject));

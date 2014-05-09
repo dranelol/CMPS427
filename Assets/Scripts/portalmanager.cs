@@ -12,7 +12,7 @@ public class portalmanager : MonoBehaviour {
             {
                 GameObject.FindGameObjectWithTag("Player").GetComponent<MovementFSM>().Warp(GameObject.Find("OverworldBaseCampEntrance").transform.position);
             }
-            if (GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().previousScene == "floorPlanDemo")
+            else if (GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().previousScene == "floorPlanDemo")
             {
                 GameObject.FindGameObjectWithTag("Player").GetComponent<MovementFSM>().Warp(GameObject.Find("DungeonEntrance").transform.position);
             }
@@ -27,11 +27,11 @@ public class portalmanager : MonoBehaviour {
             {
                 GameObject.FindGameObjectWithTag("Player").GetComponent<MovementFSM>().Warp(GameObject.Find("ForestOverworldEntrance").transform.position);
             }
-            if (GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().previousScene == "floorPlanDemo")
+            else if (GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().previousScene == "floorPlanDemo")
             {
                 GameObject.FindGameObjectWithTag("Player").GetComponent<MovementFSM>().Warp(GameObject.Find("DungeonEntrance").transform.position);
             }
-            if (GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().previousScene == "OverworldDesert")
+            else if (GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().previousScene == "OverworldDesert")
             {
                 GameObject.FindGameObjectWithTag("Player").GetComponent<MovementFSM>().Warp(GameObject.Find("OverworldDesertEntrance").transform.position);
             }
@@ -47,7 +47,7 @@ public class portalmanager : MonoBehaviour {
             {
                 GameObject.FindGameObjectWithTag("Player").GetComponent<MovementFSM>().Warp(GameObject.Find("DungeonEntrance").transform.position);
             }
-            if (GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().previousScene == "OverworldBaseCamp")
+            else if (GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().previousScene == "OverworldBaseCamp")
             {
                 GameObject.FindGameObjectWithTag("Player").GetComponent<MovementFSM>().Warp(GameObject.Find("OverworldBaseCampEntrance").transform.position);
             }
