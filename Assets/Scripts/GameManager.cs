@@ -79,6 +79,8 @@ public class GameManager : MonoBehaviour
     public GameObject BossInfernalFireballProjectile;
     public GameObject BossInfernalFireballExplosion;
 
+    public GameObject BossFlamestrikeParticles;
+
     public equipmentFactory EquipmentFactory;
 
     public static Dictionary<string, Ability> Abilities;
@@ -189,6 +191,11 @@ public class GameManager : MonoBehaviour
         Abilities["enemycleavenormal"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 2f, 2.5f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemycleavefast"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 1.0f, 1.0f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemydeathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 10.0f, 360.0f, 2.0f, 0.0f, 0.0f, "deathgrip", "Enemy Deathgrip", DeathgripParticles);
+
+        Abilities["bossfireball"] = new BossFireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 5.0f, 10.0f, 0f, "bossfireball", "Boss Fireball", BossInfernalFireballExplosion);
+
+        Abilities["bossflamestrike"] = new BossFlamestrike(AttackType.PBAOE, DamageType.FIRE, 10.0f, 360.0f, 10.0f, 10.0f, 0.0f, "bossflamestrike", "Boss Flamestrike", BossFlamestrikeParticles);
+
         #endregion
         #endregion
 

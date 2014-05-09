@@ -27,7 +27,6 @@ public class Dervish : Ability
         gameManager.RunCoroutine(DoAttackRepeating(source, attacker, isPlayer, 12, 0.5f));
         DoBuff(source, attacker);
 
-
         int tempindex = 10;
         while (attacker.abilityManager.abilities[tempindex] != null && attacker.abilityManager.abilities[tempindex].ID != "icebolt")
         {
