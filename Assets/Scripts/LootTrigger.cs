@@ -26,7 +26,7 @@ public class LootTrigger : Trigger
 
 
 
-        inventory = new Inventory();
+        
 
         uiController = GameObject.FindWithTag("UI Controller").GetComponent<UIController>();
 
@@ -39,8 +39,10 @@ public class LootTrigger : Trigger
 
 
         ef = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
-        
 
+        inventory = new Inventory();
+
+        //Debug.Log("count: " + inventory.Items.Count.ToString());
         if (inventory.Items.Count <= 0)
         {
             Debug.Log("chest getting default items");
@@ -52,7 +54,7 @@ public class LootTrigger : Trigger
                     inventory.AddItem(ef.randomEquipment(2));
                 }
             }
-            else if (diceroll == 4)
+            else if (diceroll > 3)
             {
                 inventory.AddItem(ef.randomEquipment(3));
             }
@@ -74,17 +76,15 @@ public class LootTrigger : Trigger
         if (inventory.IsEmpty() == true)
         {
             inventoryOpened = false;
-            GameObject.Destroy(gameObject);
-            
-        }
-
-        if (inventoryOpened == false)
-        {
             if (uiController.GuiState == UIController.States.LOOT)
             {
                 uiController.GuiState = UIController.States.INGAME;
             }
+            GameObject.Destroy(gameObject);
+            
         }
+
+
     }
 
 	public override void Activate() 
