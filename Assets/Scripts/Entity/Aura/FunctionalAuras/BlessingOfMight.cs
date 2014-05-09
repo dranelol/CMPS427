@@ -64,8 +64,6 @@ sealed public class BlessingOfMight : Aura
 
     #endregion
 
-  
-
     #region Private Constructor
 
     private BlessingOfMight(Entity target, Entity caster, Aura prototype) : base(target, caster, prototype) { }
