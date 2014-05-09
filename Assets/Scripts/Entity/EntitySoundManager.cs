@@ -11,9 +11,9 @@ public class EntitySoundManager : MonoBehaviour
     public List<AudioClip> _miscClips;
 
     private const float _attackChance = 0.7f;
-    private const float _aggroChance = 0.65f;
-    private const float _getHitChance = 0.6f;
-    private const float _victoryChance = 0.7f;
+    private const float _aggroChance = 0.5f;
+    private const float _getHitChance = 0.5f;
+    private const float _victoryChance = 0.9f;
 
 	void Awake () 
     {

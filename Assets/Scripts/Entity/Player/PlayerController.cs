@@ -693,6 +693,7 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
+
             entity.abilityManager.AddAbility(GameManager.Abilities["dervish"], 1);
             entity.abilityManager.AddAbility(GameManager.Abilities["shadowfury"], 2);
             entity.abilityManager.AddAbility(GameManager.Abilities["dropdasteel"], 3);
@@ -893,7 +894,7 @@ public class PlayerController : MonoBehaviour {
         
         //Play animation
 
-        talentManager.GiveTalentPoints(1);
+        talentManager.GiveTalentPoints(50);
         entity.GiveAttributePoints(5);
 
 
