@@ -22,9 +22,9 @@ public class LootTrigger : Trigger
 
     void Awake()
     {
-        inventory = new Inventory();
 
-        ef = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
+
+        inventory = new Inventory();
 
         uiController = GameObject.FindWithTag("UI Controller").GetComponent<UIController>();
 
@@ -34,8 +34,11 @@ public class LootTrigger : Trigger
 
 	void Start() 
     {
-       
-        if (inventory.Items.Count == 0)
+
+        ef = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
+        
+
+        if (inventory.Items.Count <= 0)
         {
             Debug.Log("chest getting default items");
             inventory.AddItem(ef.randomEquipment(1, 1, equipSlots.slots.Head));

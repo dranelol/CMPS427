@@ -91,6 +91,8 @@ public class GameManager : MonoBehaviour
     {
         DontDestroyOnLoad(transform.gameObject);
 
+        EquipmentFactory = new equipmentFactory();
+
         if (Application.loadedLevelName == "setup")
         {
             Application.LoadLevel("TestScene");
@@ -98,7 +100,7 @@ public class GameManager : MonoBehaviour
 
         InfernalSpawn = (GameObject)Resources.Load("Enemy Prefabs/InfernalEnemy", typeof(GameObject));
         
-        EquipmentFactory = new equipmentFactory();
+        
         
         #region ability initialization
         Abilities = new Dictionary<string, Ability>();
