@@ -36,14 +36,14 @@ sealed public class fireballbarrage : Aura
     public fireballbarrage(string name)
         : base(name, TEMPLATE_AURA_DESCRIPTION, TEMPLATE_AURA_FLAVOR_TEXT, TEMPLATE_AURA_ICON_TEXTURE_NAME, TEMPLATE_AURA_PARTICLE_EFFECT_NAME,
         TEMPLATE_AURA_AURATYPE, TEMPLATE_AURA_DURATION, TEMPLATE_AURA_MAXIMUM_NUMBER_OF_STACKS, TEMPLATE_AURA_INITIAL_NUMBER_OF_STACKS
-        , new doability()
+        
     #endregion
 
             /* ----------------------------------------MODIFY THE REST HERE------------------------------------------------- *
          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
          * You can define your own modules or use the predefined modules to describe how the aura affects the entity. 
          * After you define your module, pass it as a paramater below before the ')' ie. ', new CustomModule())'         */
-
+        , new doability()
         )
     { }
 

@@ -268,15 +268,22 @@ public abstract class Aura
         {
             Module modCopy = mod.Copy();
 
+            if (RecursiveCheckModule(modCopy) == true)
+            {
+                _tickModules.Add((Tick)modCopy);
+            }
+            /*
             if (modCopy.GetType().BaseType.BaseType == typeof(Tick))
             {
                 _tickModules.Add((Tick)modCopy);
             }
+            */
 
             _allModules.Add(modCopy);
-            
         }
+
         Debug.Log("length of tickmodules: " + _tickModules.Count);
+
         _timeRemaining = 0;
         _stackCount = 0;
         _initialStackCount = protoType.InitialStackCount;
@@ -391,6 +398,27 @@ public abstract class Aura
         {
             OnEnd(); // Call OnEnd event
         }
+    }
+
+    protected bool RecursiveCheckModule(Module auraType)
+    {
+        Type newType = auraType.GetType();
+
+
+        while (newType != typeof(System.Object))
+        {
+            if (newType == typeof(Tick))
+            {
+                return true;
+            }
+
+            else
+            {
+                newType = newType.BaseType;
+            }
+        }
+
+        return false;
     }
 
     #endregion

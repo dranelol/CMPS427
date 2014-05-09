@@ -420,7 +420,7 @@ public class AIController : StateMachine
     IEnumerator dead_EnterState()
     {
         _soundManager.Death();
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>().Experience += 25;
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>().Experience += EntityObject.Level * 10;
 
         PursuitFSM.StopPursuit();
         MoveFSM.LockMovement(MovementFSM.LockType.ShiftLock);

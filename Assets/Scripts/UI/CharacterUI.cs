@@ -20,7 +20,6 @@ public class CharacterUI : UIState
 
     private Vector2 scrollViewVector;
     private Camera characterCamera;
-    private GUITexture titsMcGee;
 
     private equipment toBeUsed;
 
@@ -30,6 +29,10 @@ public class CharacterUI : UIState
 
     private equipment equipItem;
     private equipment deleteItem;
+
+    string health, resource, power, defense, damage, attackSpeed, movementSpeed;
+
+    float tempHealth, tempResource, tempPower, tempDefense, tempDamage, tempAttackSpeed, tempMovementSpeed;
 
     public CharacterUI(int id, UIController controller)
         : base(id, controller)
@@ -43,13 +46,14 @@ public class CharacterUI : UIState
     public override void Enter()
     {
         Controller.Camera.enabled = true;
-        titsMcGee = null;
         toBeUsed = null;
         hoverEquip = null;
         hoverEquipped = null;
         equipItem = null;
 
         Controller.DraggedEquip = null;
+
+        health= resource= power= defense= damage= attackSpeed= movementSpeed = "";
     }
 
     public override void Exit()
@@ -57,7 +61,6 @@ public class CharacterUI : UIState
         base.Exit();
 
         Controller.Camera.enabled = false;
-        titsMcGee = Controller.Camera.guiTexture;
     }
 
     public override void Update()
@@ -75,15 +78,141 @@ public class CharacterUI : UIState
         if (hoverEquip != null)
         {
 
+
+
+
+            if (Controller.Player.EquippedEquip.ContainsKey(hoverEquip.validSlot))
+            {
+                #region Health Difference
+                if (Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Health > hoverEquip.equipmentAttributes.Health)
+                {
+                    tempHealth = Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Health - hoverEquip.equipmentAttributes.Health;
+
+                    health = "[-"+tempHealth.ToString()+"]";
+                }
+                else if (Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Health < hoverEquip.equipmentAttributes.Health)
+                {
+                    tempHealth = hoverEquip.equipmentAttributes.Health - Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Health;
+
+                    health = "[+" + tempHealth.ToString() + "]";
+                }
+                #endregion
+
+                #region Resource Difference
+
+                if (Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Resource > hoverEquip.equipmentAttributes.Resource)
+                {
+                    tempResource = Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Resource - hoverEquip.equipmentAttributes.Resource;
+
+                    resource = "-" + tempResource.ToString();
+                }
+                else if (Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Resource < hoverEquip.equipmentAttributes.Resource)
+                {
+                    tempResource = hoverEquip.equipmentAttributes.Resource - Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Resource;
+
+                    resource = "[+" + tempResource.ToString() + "]";
+                }
+
+                #endregion
+
+                #region Power Difference
+
+                if (Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Power > hoverEquip.equipmentAttributes.Power)
+                {
+                    tempPower = Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Power - hoverEquip.equipmentAttributes.Power;
+
+                    power = "[-" + tempPower.ToString() + "]";
+                }
+                else if (Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Power < hoverEquip.equipmentAttributes.Power)
+                {
+                    tempPower = hoverEquip.equipmentAttributes.Power - Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Power;
+
+                    power = "[+" + tempPower.ToString() + "]";
+                }
+
+                #endregion
+
+                #region Defense Difference
+
+                if (Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Defense > hoverEquip.equipmentAttributes.Defense)
+                {
+                    tempDefense = Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Defense - hoverEquip.equipmentAttributes.Defense;
+
+                    defense = "[-" + tempDefense.ToString() + "]";
+                }
+                else if (Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Defense < hoverEquip.equipmentAttributes.Defense)
+                {
+                    tempDefense = hoverEquip.equipmentAttributes.Defense - Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.Defense;
+
+                    defense = "[+" + tempDefense.ToString() + "]";
+                }
+
+                #endregion
+
+                #region Damage Difference
+
+                if (Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.MaxDamage > hoverEquip.equipmentAttributes.MaxDamage)
+                {
+                    tempDamage = Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.MaxDamage - hoverEquip.equipmentAttributes.MaxDamage;
+
+                    damage = "[-" + tempDamage.ToString() + "]";
+                }
+                else if (Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.MaxDamage < hoverEquip.equipmentAttributes.MaxDamage)
+                {
+                    tempDamage = hoverEquip.equipmentAttributes.MaxDamage - Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.MaxDamage;
+
+                    damage = "[+" + tempDamage.ToString() + "]";
+                }
+
+                #endregion
+
+                #region Attack Speed Difference
+
+                if (Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.AttackSpeed > hoverEquip.equipmentAttributes.AttackSpeed)
+                {
+                    tempAttackSpeed = Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.AttackSpeed - hoverEquip.equipmentAttributes.AttackSpeed;
+
+                    attackSpeed = "[-" + tempAttackSpeed.ToString() + "]";
+                }
+                else if (Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.AttackSpeed < hoverEquip.equipmentAttributes.AttackSpeed)
+                {
+                    tempAttackSpeed = hoverEquip.equipmentAttributes.AttackSpeed - Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.AttackSpeed;
+
+                    attackSpeed = "[+" + tempAttackSpeed.ToString() + "]";
+                }
+
+                #endregion
+
+                #region Movement Speed Difference
+
+                if (Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.MovementSpeed > hoverEquip.equipmentAttributes.MovementSpeed)
+                {
+                    tempMovementSpeed = Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.MovementSpeed - hoverEquip.equipmentAttributes.MovementSpeed;
+
+                    movementSpeed = "[-" + tempMovementSpeed.ToString() + "]";
+                }
+                else if (Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.MovementSpeed < hoverEquip.equipmentAttributes.MovementSpeed)
+                {
+                    tempMovementSpeed = hoverEquip.equipmentAttributes.MovementSpeed - Controller.Player.EquippedEquip[hoverEquip.validSlot].equipmentAttributes.MovementSpeed;
+
+                    movementSpeed = "[+" + tempMovementSpeed.ToString() + "]";
+                }
+
+                #endregion
+
+            }
+            
+            
+            
             GUIContent thisContent = new GUIContent(
                 hoverEquip.equipmentName + "\n"
-                + "Health: " + hoverEquip.equipmentAttributes.Health.ToString() + "\n"
-                + "Resource: " + hoverEquip.equipmentAttributes.Resource.ToString() + "\n"
-                + "Power: " + hoverEquip.equipmentAttributes.Power.ToString() + "\n"
-                + "Defense: " + hoverEquip.equipmentAttributes.Defense.ToString() + "\n"
-                + "Damage: " + hoverEquip.equipmentAttributes.MinDamage.ToString() + " - " + hoverEquip.equipmentAttributes.MaxDamage.ToString() + "\n"
-                + "Attack Speed: " + hoverEquip.equipmentAttributes.AttackSpeed.ToString() + "\n"
-                + "Movement Speed: " + hoverEquip.equipmentAttributes.MovementSpeed.ToString() + "\n"
+                + "Health: " + hoverEquip.equipmentAttributes.Health.ToString() + " " + health + "\n"
+                + "Resource: " + hoverEquip.equipmentAttributes.Resource.ToString() + " " + resource + "\n"
+                + "Power: " + hoverEquip.equipmentAttributes.Power.ToString() + " " + power + "\n"
+                + "Defense: " + hoverEquip.equipmentAttributes.Defense.ToString() + " " + defense + "\n"
+                + "Damage: (" + hoverEquip.equipmentAttributes.MinDamage.ToString() + " - " + hoverEquip.equipmentAttributes.MaxDamage.ToString() + ") " + damage + "\n"
+                + "Attack Speed: " + hoverEquip.equipmentAttributes.AttackSpeed.ToString() + " " + attackSpeed + "\n"
+                + "Movement Speed: " + hoverEquip.equipmentAttributes.MovementSpeed.ToString() + " " + movementSpeed + "\n"
                 );
 
             GUIStyle thisStyle = new GUIStyle("box");

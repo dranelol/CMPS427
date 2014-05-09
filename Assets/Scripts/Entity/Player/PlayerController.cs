@@ -18,8 +18,8 @@ public class PlayerController : MonoBehaviour {
     public CombatFSM combatFSM;
     private AnimationController _animationController;
 
-    private HashSet<Ability> spellBook;
-    public HashSet<Ability> SpellBook
+    private List<Ability> spellBook;
+    public List<Ability> SpellBook
     {
         get { return spellBook; }
 
@@ -44,12 +44,16 @@ public class PlayerController : MonoBehaviour {
         set { mouseOverGUI = value; }
     }
 
+    
+
     void Awake()
     {
+        
+
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
         talentManager = transform.GetComponent<TalentManager>();
-        spellBook = new HashSet<Ability>();
+        spellBook = new List<Ability>();
 
         DontDestroyOnLoad(transform.gameObject);
 
@@ -863,11 +867,22 @@ public class PlayerController : MonoBehaviour {
         
 
         //Check for level up
-        if (entity.Experience >= entity.NextLevelExperience)
+        if (entity.Experience >= entity.NextLevelExperience && entity.Level < 19)
         {
             LevelUp();
-            entity.Experience = entity.NextLevelExperience - entity.Experience;
+
+            
+            entity.Experience -= entity.NextLevelExperience;
+
+            
+
             entity.NextLevelExperience *= 2;
+        }
+        else if (entity.Experience >= entity.NextLevelExperience && entity.Level < 19)
+        {
+            LevelUp();
+
+            entity.LevelCap = true;
         }
 
     }

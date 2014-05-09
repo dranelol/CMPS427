@@ -38,6 +38,19 @@ public class Talent
         get { return name; }
     }
 
+    private string bonus;
+    public string Bonus
+    {
+        get { return bonus; }
+    }
+
+    private float bonusMagnitude;
+    public float BonusMagnitude
+    {
+        get { return bonusMagnitude; }
+    }
+
+
     /// <summary>
     /// Talent Constructor
     /// </summary>
@@ -52,6 +65,60 @@ public class Talent
         this.talentAbility = ability;
         this.depth = depth;
         this.name = name;
+        this.bonus = "";
+        this.bonusMagnitude = 0;
+    }
+
+    public Talent(string name, int maxPoints, string bonus, float bonusMagnitude, int depth)
+    {
+        currentPoints = 0;
+        this.maxPoints = maxPoints;
+        this.bonus = bonus;
+        this.depth = depth;
+        this.name = name;
+        this.talentAbility = null;
+        this.bonusMagnitude = bonusMagnitude;
+    }
+
+    public string ReadableBonus()
+    {
+        float bonusRead = bonusMagnitude  * 100f;
+
+        
+
+        
+        if (bonus == "attackDamage")
+        {
+            return "Adds " + bonusRead.ToString() + "% Attack Damage"; 
+        }
+        else if (bonus == "attackSpeed")
+        {
+            return "Adds " + bonusRead.ToString() + "% Attack Speed";
+        }
+        else if (bonus == "fire")
+        {
+            return "Adds " + bonusRead.ToString() + "% Fire Damage";
+        }
+        else if (bonus == "ice")
+        {
+            return "Adds " + bonusRead.ToString() + "% Ice Damage";
+        }
+        else if (bonus == "shadow")
+        {
+            return "Adds " + bonusRead.ToString() + "% Shadow Damage";
+        }
+        else if (bonus == "onHitDamage")
+        {
+            return "Adds " + bonusRead.ToString() + "% On Hit Damage";
+        }
+        else if (bonus == "defense")
+        {
+            return "Adds " + bonusRead.ToString() + "% Defense";
+        }
+        else
+        {
+            return "";
+        }
     }
 
     

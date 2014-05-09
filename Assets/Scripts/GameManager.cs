@@ -97,6 +97,8 @@ public class GameManager : MonoBehaviour
     {
         DontDestroyOnLoad(transform.gameObject);
 
+        EquipmentFactory = new equipmentFactory();
+
         if (Application.loadedLevelName == "setup")
         {
             Application.LoadLevel("TestScene");
@@ -104,7 +106,7 @@ public class GameManager : MonoBehaviour
 
         InfernalSpawn = (GameObject)Resources.Load("Enemy Prefabs/InfernalEnemy", typeof(GameObject));
         
-        EquipmentFactory = new equipmentFactory();
+        
         
         #region ability initialization
         Abilities = new Dictionary<string, Ability>();
@@ -146,7 +148,8 @@ public class GameManager : MonoBehaviour
         Abilities["GETOVERHERE"] = new GETOVERHERE(AttackType.PROJECTILE, DamageType.SHADOW, 4.0f, 0.0f, 5.0f, 0.1f, 10f, "GETOVERHERE", "Shadow Pull", GETOVERHEREParticles);
         Abilities["normalmine"] = new NormalMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 360.0f, 4.0f, 1.0f, 10f, "normalmine", "Mine", MineParticles);
         Abilities["blinkstrike"] = new BlinkStrike(AttackType.PROJECTILE, DamageType.SHADOW, 4.0f, 1.0f, 7.0f, 5.0f, 10f, "blinkstrike", "Blink Strike", BlinkStrikeProjectile);
-        Abilities["blink"] = new Blink(AttackType.GROUNDTARGET, DamageType.NONE, 5.0f, 0.0f, 7.0f, 0.0f, 25f, "blink", "Blink", BlinkParticles);Abilities["shockmine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 30.0f, 5f, "shockmine", "Shock Mine", ShockMineProjectile);
+        Abilities["blink"] = new Blink(AttackType.GROUNDTARGET, DamageType.NONE, 5.0f, 0.0f, 7.0f, 0.0f, 25f, "blink", "Blink", BlinkParticles);
+        Abilities["shockmine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 30.0f, 5f, "shockmine", "Shock Mine", ShockMineProjectile);
         Abilities["aoefreeze"] = new AOEfreeze(AttackType.PBAOE, DamageType.WATER, 5.0f, 360f, 15f, 1f, 30f, "aoefreeze", "Flashfreeze", AOEFreezeParticles);
         Abilities["onhitnormal"] = new OnHitNormal(AttackType.MELEE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, 0f, "onhitnormal", "On Hit Normal", OnHitNormalParticles);
         Abilities["onhitsworddrop"] = new OnHitSwordDrop(AttackType.MELEE, DamageType.PHYSICAL, 0f, 0f, 0f, 0f, 0f, "onhitsworddrop", "Sword Drop OnHit", OnHitSwordDropObject); 

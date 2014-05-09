@@ -32,15 +32,15 @@ public class HealthMonitor : MonoBehaviour {
             GUI.skin.button.wordWrap = true;
 
             GUI.Box(new Rect(CENTER_WIDTH, CENTER_HEIGHT, WIDTH, HEIGHT),
-                "YOU DIED. YOU'RE SO FUCKING WORTHLESS.");
+                "YOU ARE DEAD");
 
-            if (GUI.Button(new Rect(CENTER_WIDTH + 20, CENTER_HEIGHT + 60, WIDTH - 40, 40), "BULLSHIT GIVE ME A RETRY"))
+            if (GUI.Button(new Rect(CENTER_WIDTH + 20, CENTER_HEIGHT + 60, WIDTH - 40, 40), "TRY AGAIN"))
             {
                 player.Respawn();
             }
 
             if (GUI.Button(new Rect(CENTER_WIDTH + 20, CENTER_HEIGHT + HEIGHT - 60, WIDTH - 40, 40),
-                "FUCK IT I GIVE UP"))
+                "QUIT"))
             {
                 Application.Quit();
             }

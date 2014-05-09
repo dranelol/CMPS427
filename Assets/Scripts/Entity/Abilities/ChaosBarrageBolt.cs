@@ -13,7 +13,7 @@ public class ChaosBarrageBolt : Ability
 
     public override void SpawnProjectile(GameObject source, Vector3 target, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
-        int segments = 4;
+        int segments = 8;
 
         for (int i = 0; i < segments; i++)
         {
