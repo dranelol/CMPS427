@@ -29,6 +29,13 @@ public class PlayerEntity : Entity
         set { attributePoints = value; }
     }
 
+    private bool levelCap;
+    public bool LevelCap
+    {
+        get { return levelCap; }
+        set { levelCap = value; }
+    }
+
     public Mesh mesh { get { return GetComponent<MeshFilter>().mesh; } }
 
     GameManager gameManager;
@@ -44,6 +51,8 @@ public class PlayerEntity : Entity
         Experience = 0;
         Level = 1;
         nextLevelExperience = 100;
+
+        levelCap = false;
 
     }
 

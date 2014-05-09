@@ -44,8 +44,12 @@ public class PlayerController : MonoBehaviour {
         set { mouseOverGUI = value; }
     }
 
+    
+
     void Awake()
     {
+        
+
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
         talentManager = transform.GetComponent<TalentManager>();
@@ -869,7 +873,7 @@ public class PlayerController : MonoBehaviour {
         
 
         //Check for level up
-        if (entity.Experience >= entity.NextLevelExperience)
+        if (entity.Experience >= entity.NextLevelExperience && entity.Level < 19)
         {
             LevelUp();
 
@@ -877,6 +881,12 @@ public class PlayerController : MonoBehaviour {
             entity.Experience = entity.NextLevelExperience - entity.Experience;
             entity.NextLevelExperience *= 2;
             entity.Experience = 0;
+        }
+        else if (entity.Experience >= entity.NextLevelExperience && entity.Level < 19)
+        {
+            LevelUp();
+
+            entity.LevelCap = true;
         }
 
     }
