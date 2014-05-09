@@ -146,7 +146,7 @@ public class Cleave : Ability
 
                     //bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range + source.GetComponent<MovementFSM>().Radius, ~(1 << playerMask));
 
-                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << enemyMask));
+                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
