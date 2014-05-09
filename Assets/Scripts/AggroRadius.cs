@@ -5,7 +5,7 @@ public class AggroRadius : MonoBehaviour
 {
     private AIGroupController group;
     private SphereCollider trigger;
-    public bool active = true;
+    public bool activeTrigger = true;
 
 	void Awake() 
     {
@@ -20,7 +20,7 @@ public class AggroRadius : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (active)
+        if (activeTrigger)
         {
             if (other.tag == "Player" && !other.GetComponent<Entity>().IsDead())
             {

@@ -26,21 +26,21 @@ public class CombatMath : MonoBehaviour
 
     public static bool DistanceGreaterThan(Vector3 positionA, Vector3 positionB, float distance)
     {
-        return (positionB - positionA).sqrMagnitude > Mathf.Pow(distance, 2f);
+        return (positionB - positionA).sqrMagnitude > distance * distance;
     }
 
     public static bool DistanceLessThan(Vector3 positionA, Vector3 positionB, float distance)
     {
-        return (positionB - positionA).sqrMagnitude < Mathf.Pow(distance, 2f);
+        return (positionB - positionA).sqrMagnitude < distance * distance;
     }
 
     public static bool DistanceGreaterThanEqual(Vector3 positionA, Vector3 positionB, float distance)
     {
-        return (positionB - positionA).sqrMagnitude >= Mathf.Pow(distance, 2f);
+        return (positionB - positionA).sqrMagnitude >= distance * distance;
     }
 
     public static bool DistanceLessThanEqual(Vector3 positionA, Vector3 positionB, float distance)
     {
-        return (positionB - positionA).sqrMagnitude <= Mathf.Pow(distance, 2f);
+        return (positionB - positionA).sqrMagnitude <= distance * distance;
     }
 }

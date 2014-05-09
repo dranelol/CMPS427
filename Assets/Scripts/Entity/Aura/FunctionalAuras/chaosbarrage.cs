@@ -79,15 +79,16 @@ sealed public class chaosbarrage : Aura
 
             Debug.Log(SourceEntity.abilityManager.abilities[tempindex].Name);
 
-            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            //RaycastHit rayCastTarget;
-            //Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
-            //Vector3 vectorToMouse = rayCastTarget.point - SourceEntity.transform.position;
-            //Vector3 forward = new Vector3(vectorToMouse.x, SourceEntity.transform.forward.y, vectorToMouse.z).normalized;
-            Vector3 forward = SourceEntity.gameObject.transform.forward;
-            Vector3 rayCastTarget = SourceEntity.gameObject.transform.forward;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit rayCastTarget;
+            Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+            Vector3 vectorToMouse = rayCastTarget.point - SourceEntity.transform.position;
+            Vector3 forward = new Vector3(vectorToMouse.x, SourceEntity.transform.forward.y, vectorToMouse.z).normalized;
+            //Vector3 forward = SourceEntity.gameObject.transform.forward;
+            Vector3 rayCastTargetPoint = CombatMath.GetCenter(SourceEntity.gameObject.transform) + forward * 5;
             Debug.Log("barraging");
-            Barrage(forward,tempindex, rayCastTarget, SourceEntity);
+
+            Barrage(forward, tempindex, rayCastTargetPoint, SourceEntity);
         }
 
         public void Barrage(Vector3 forward, int tempindex, Vector3 rayCastTarget, Entity sourceEntity)

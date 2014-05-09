@@ -419,7 +419,6 @@ public class AIController : StateMachine
 
     IEnumerator dead_EnterState()
     {
-        // Destroy(this.gameObject);
         _soundManager.Death();
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>().Experience += EntityObject.Level * 10;
 
