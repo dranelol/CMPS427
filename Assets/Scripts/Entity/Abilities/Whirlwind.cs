@@ -138,7 +138,7 @@ public class Whirlwind : Ability
     }
 
     public override void DoPhysics(GameObject source, GameObject target)
-    {
+    {   
         Vector3 relativeVector = (target.transform.position - source.transform.position).normalized;
         float normalizedMagnitude = 5f - Vector3.Distance(target.transform.position, source.transform.position);
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));

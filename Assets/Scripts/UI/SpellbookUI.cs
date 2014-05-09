@@ -39,7 +39,7 @@ public class SpellbookUI : UIState
     {
         base.Enter();
 
-        tempSpells = new List<Ability>();
+        
         hoverInactiveSpell = null;
         hoverActiveSpell = null;
 
@@ -137,10 +137,18 @@ public class SpellbookUI : UIState
 
         inactiveRects = new Dictionary<Rect, Ability>();
         activeRects = new Dictionary<Rect, Ability>();
+        tempSpells = new List<Ability>();
 
         #region Spellbook
 
-        tempSpells = Controller.Player.abilityManager.abilities.FindAll(delegate(Ability ab) { return ab != null; });
+        for (int i = 1; i < 6; i++)
+        {
+            tempSpells.Add(Controller.Player.abilityManager.abilities[i]);
+        }
+
+
+
+        tempSpells = tempSpells.FindAll(delegate(Ability ab) { return ab != null; });
 
         //GUILayout.BeginArea(new Rect(0, 25, (WIDTH) / 2, HEIGHT - 25));
 

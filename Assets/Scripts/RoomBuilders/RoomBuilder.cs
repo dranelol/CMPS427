@@ -42,7 +42,7 @@ public class RoomBuilder : MonoBehaviour {
 				choiceWeightRange[k,0] = choiceWeightRange[k-1,1]+1;
 				choiceWeightRange[k,1] = choiceWeightRange[k-1,1]+(int)choiceWeights[k];
 			}
-			Debug.Log(k+"("+choiceWeightRange[k,0]+","+choiceWeightRange[k,1]+")");
+
 		}
 
 		overallChoiceRange = new int[2]{0,0};
@@ -62,7 +62,7 @@ public class RoomBuilder : MonoBehaviour {
 		{
 			int i = 0;
 			itemChoice = EvaluateChoice(Random.Range(overallChoiceRange[0], overallChoiceRange[1]));
-			Debug.Log ("ItemChoice = " +itemChoice);
+
 
 			int numItems = Random.Range(0,maxObjectCount);
 
@@ -72,14 +72,15 @@ public class RoomBuilder : MonoBehaviour {
 				obj.transform.parent = gameObject.transform;
 
 				obj.transform.localPosition = pos;
-				Debug.Log ("pos="+pos);
+
 
 				numItems--;
 				if(numItems == 0) {break;}
 			}
 		}
 
-        if (Random.RandomRange(0, 100) % 10 == 0)
+        if (Random.RandomRange(0, 100) % 10 == 0&& myType != cellType.empty)
+
         {
             GameObject.Instantiate(enemyNode, transform.position, Quaternion.identity);
         }
