@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
 
         if (Application.loadedLevelName == "setup")
         {
-            Application.LoadLevel("TestScene");
+            Application.LoadLevel(2);
         }
 
         InfernalSpawn = (GameObject)Resources.Load("Enemy Prefabs/InfernalEnemy", typeof(GameObject));
