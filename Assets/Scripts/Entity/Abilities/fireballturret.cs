@@ -136,7 +136,8 @@ public class FireballTurret : Ability
                 {
                     // try to cast a ray from the enemy to the turret
 
-                    bool rayCastHit = CombatMath.RayCast(collider.transform, source.transform, out hit, range, ~(1 << enemyMask));
+                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << enemyMask));
+                    //bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << enemyMask));
                     Debug.DrawRay(normalizedDefenderPosition, enemyVector2, Color.red, 0.5f);
                     if (!rayCastHit)
                     {
@@ -160,7 +161,8 @@ public class FireballTurret : Ability
                 {
                     // try to cast a ray from the player to the turret
 
-                    bool rayCastHit = CombatMath.RayCast(collider.transform, source.transform, out hit, range, ~(1 << playerMask));
+                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << playerMask));
+                    //bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {

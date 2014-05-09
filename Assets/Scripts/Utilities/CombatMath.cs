@@ -15,7 +15,10 @@ public class CombatMath : MonoBehaviour
 
         if (range != Mathf.Infinity)
         {
-            range += attacker.GetComponent<MovementFSM>().Radius;
+            if(attacker.GetComponent<MovementFSM>() != null)
+            {
+                range += attacker.GetComponent<MovementFSM>().Radius;
+            }
         }
 
         return Physics.Raycast(origin, target - origin, out hitInfo, range, layerMask);
