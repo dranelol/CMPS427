@@ -28,11 +28,13 @@ public class Infernal : MonoBehaviour
         if (!boss)
         {
             name = _source.name + "'s Summoned Inferno";
+            GetComponent<MouseoverDisplay>().name = name;
         }
 
         else
         {
             name = "Infernal Overlord";
+            GetComponent<MouseoverDisplay>().name = name;
         }
         
         _pieces.animation["gatherIntoGolem"].wrapMode = WrapMode.ClampForever;

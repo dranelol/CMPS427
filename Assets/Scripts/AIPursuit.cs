@@ -15,7 +15,7 @@ public class AIPursuit : StateMachine
         flee
     }
 
-    public const float _rangeAccuracy = 0.9f;
+    public const float _rangeAccuracy = 0.8f;
 
     private Entity entity;
     private MovementFSM MoveFSM;
@@ -251,10 +251,6 @@ public class AIPursuit : StateMachine
 
     void approach_Update()
     {
-        Debug.Log(Vector3.Distance(transform.position, currentTarget.transform.position));
-        Debug.Log("DKFSJDF");
-        Debug.Log((CombatMath.GetCenter(currentTarget.transform) - CombatMath.GetCenter(transform)).sqrMagnitude);
-
         if (currentTarget != null)
         {
             if (doesFlee && (entity.CurrentHP < (entity.currentAtt.Health * 0.2f)) && hasFled == false)
@@ -298,9 +294,9 @@ public class AIPursuit : StateMachine
 
     void seek_Update()
     {
-        Debug.DrawRay(CombatMath.GetCenter(transform), CombatMath.GetCenter(currentTarget.transform) - CombatMath.GetCenter(transform));
         if (currentTarget != null)
         {
+            
             if (doesFlee && (entity.CurrentHP < (entity.currentAtt.Health * 0.2f)) && hasFled == false)
             {
                 Transition(PursuitStates.flee);
@@ -319,15 +315,21 @@ public class AIPursuit : StateMachine
                     Vector3 enemyPosition = CombatMath.GetCenter(transform);
                     Vector3 playerPosition = CombatMath.GetCenter(currentTarget.transform);
 
-                    if (Physics.Raycast(enemyPosition, playerPosition - enemyPosition, out hit, _adjustedRange, ~(1 << LayerMask.NameToLayer("Enemy"))))
+                    if (CombatMath.RayCast(transform, currentTarget.transform, out hit, _abilityManager.abilities[_nextAbilityIndex].Range, ~(1 << LayerMask.NameToLayer("Player"))))
                     {
-                        if (hit.collider.tag == "Player")
+
+                        if (hit.collider.tag == "Enemy")
                         {
                             if (_abilityManager.activeCoolDowns[_nextAbilityIndex] <= Time.time)
                             {
                                 MoveFSM.Turn(currentTarget.transform.position, 5f);
                                 MoveFSM.Stop();
                                 Transition(PursuitStates.attack);
+                            }
+
+                            else
+                            {
+                                MoveFSM.Stop();
                             }
                         }
 
