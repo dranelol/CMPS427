@@ -199,6 +199,7 @@ public class GameManager : MonoBehaviour
         Abilities["bossfireball"] = new BossFireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 5.0f, 10.0f, 0f, "bossfireball", "Boss Fireball", BossInfernalFireballExplosion);
 
         Abilities["bossflamestrike"] = new BossFlamestrike(AttackType.PBAOE, DamageType.FIRE, 10.0f, 360.0f, 10.0f, 10.0f, 0.0f, "bossflamestrike", "Boss Flamestrike", BossFlamestrikeParticles);
+        Abilities["enemywhirlwind"] = new Whirlwind(AttackType.GROUNDTARGET, DamageType.PHYSICAL, 3.0f, 360.0f, 8.0f, 5.0f, 0f, "enemywhirlwind", "Enemy Whirlwind", OnHitNormalParticles);
 
         #endregion
         #endregion
