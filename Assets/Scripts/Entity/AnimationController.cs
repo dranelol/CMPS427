@@ -214,8 +214,8 @@ public class AnimationController : MonoBehaviour
             animation[name].speed = animation[name].clip.length / (GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
             _movementFSM.LockMovement(MovementFSM.LockType.MovementLock, GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
 
-            Debug.Log(animation[name].clip.length);
-            Debug.Log(animation[name].length);
+            //Debug.Log(animation[name].clip.length);
+            //Debug.Log(animation[name].length);
         }
 
         else
