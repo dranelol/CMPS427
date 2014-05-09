@@ -7,6 +7,7 @@ public class SceneTrigger : Trigger
     public Shader defaultShader;
     public Shader highlight;
     public GameObject triggerTarget;
+	public string destinationLevelName;
 
     bool inventoryOpened = false;
     void Awake()
@@ -31,19 +32,24 @@ public class SceneTrigger : Trigger
     {
         // level transition
 
-        if (Application.loadedLevel == 1)
-        {
-            Application.LoadLevel(2);
-            Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().SpawnInParticles, GameObject.FindGameObjectWithTag("Player").transform.position, Quaternion.identity);
-        
-        }
+		GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().previousScene = Application.loadedLevelName;
+		GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Moba_Camera>().settings.rotation.defualtRotation.y = 0;
+		Application.LoadLevel(destinationLevelName);
 
-        else
-        {
-            Application.LoadLevel(1);
-            Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().SpawnInParticles, GameObject.FindGameObjectWithTag("Player").transform.position, Quaternion.identity);
-        
-        }
+
+//		if (Application.loadedLevel == 1)
+//        {
+//            Application.LoadLevel(2);
+//            Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().SpawnInParticles, GameObject.FindGameObjectWithTag("Player").transform.position, Quaternion.identity);
+//        
+//        }
+//
+//        else
+//        {
+//            Application.LoadLevel(1);
+//            Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().SpawnInParticles, GameObject.FindGameObjectWithTag("Player").transform.position, Quaternion.identity);
+//        
+//        }
 
         base.SetOff();
     }
@@ -52,14 +58,16 @@ public class SceneTrigger : Trigger
     {
     }
 
+
+
     void OnMouseEnter()
     {
-        triggerObject.renderer.material.shader = highlight;
+		//triggerObject.renderer.material.shader = highlight;
     }
 
     void OnMouseExit()
     {
-        triggerObject.renderer.material.shader = defaultShader;
+        //triggerObject.renderer.material.shader = defaultShader;
     }
 
 

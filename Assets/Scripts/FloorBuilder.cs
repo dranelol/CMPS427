@@ -20,7 +20,9 @@ public enum cellType{
 	topHallEnd = 14,
 	bottomHallEnd = 15,
 	horizontalHall = 16,
-	verticalHall = 17
+	verticalHall = 17, 
+	bossRoom = 18,
+	entrance = 19
 };
 
 public class FloorBuilder : MonoBehaviour {
@@ -58,6 +60,13 @@ public class FloorBuilder : MonoBehaviour {
 	public GameObject BottomHallEnd;
 	public GameObject HorizontalHall;
 	public GameObject VerticalHall;
+	public List<GameObject> tileObjects;
+	public GameObject BossRoom;
+	public GameObject Entrance;
+
+	public int EntranceTile;
+	public int BossRoomTile;
+
 
 
 	public int[] roomList;
@@ -67,8 +76,9 @@ public class FloorBuilder : MonoBehaviour {
 	Vector3 [] cellPositions;
 
 	// Use this for initialization
-	void Start () 
+	void Awake() 
     {
+		tileObjects = new List<GameObject>();
 		roomList = new int[desiredRoomCount];
 		if(roomWeights.Length < 4)// clamp minimum array size to 4
 		{roomWeights = new int[4]{1,1,1,1};}
@@ -79,6 +89,12 @@ public class FloorBuilder : MonoBehaviour {
 		cellPositions = new Vector3[w*h];
 		buildFloorplan ();
 		EvaluateTiles();
+		BossRoomTile = -1;
+		EntranceTile = -1;
+		SelectEntranceBossTiles();
+		SetBossRoom();
+		SetEntrance();
+
 	}
 	
 	void buildFloorplan()
@@ -96,7 +112,7 @@ public class FloorBuilder : MonoBehaviour {
 		rooms[y*w+x] = 4;// set center tile to have 4 available adjacent cells
 		roomList[0] = y*w+x;
 		int weightSum = roomWeights[3];
-		Debug.Log(weightSum);
+
 		int roomCount = 1;
 
 		while(roomCount < desiredRoomCount && weightSum > 0)
@@ -146,7 +162,7 @@ public class FloorBuilder : MonoBehaviour {
 				}
 			}
 		}
-		Debug.Log (count.ToString()+" cells created!");
+
 	}
 
 	// picks a new room to be in the maze
@@ -384,6 +400,7 @@ public class FloorBuilder : MonoBehaviour {
 			//cell.GetComponent<RoomBuilder>().roomID = j; 
 			//cell.GetComponent<RoomBuilder>().myType = RoomBuilder.cellType.center;
 			GameObject cell;
+
 			if(cellTypes[j] == cellType.center){
 				if((cellTypes[j-(int)buildArea.x] == cellType.center &&
 				   cellTypes[j+(int)buildArea.x] == cellType.center) ||
@@ -639,6 +656,7 @@ public class FloorBuilder : MonoBehaviour {
                 //cell = null;
 				cell = GameObject.Instantiate(Empty, Vector3.right * (roomWidth * (j % w - (w / 2) + .5f)) + Vector3.forward * (roomHeight * ((((h * w) - j - 1)) / w) - (5 * w) + 5) + Vector3.down * .25f, transform.rotation) as GameObject;
             }
+			cell.GetComponent<RoomBuilder>().roomID = j; 
 			//cell.transform.position = Vector3.right*(roomWidth*(((j%w)/2)+.5f))+Vector3.forward*(roomHeight*(((j/w)/2)+.5f));
 			//cell.GetComponent<RoomBuilder>().roomID = j; 
 			//cell.GetComponent<RoomBuilder>().myType = cellTypes[j];
@@ -648,8 +666,369 @@ public class FloorBuilder : MonoBehaviour {
             {
                 cell.transform.parent = cellParent.transform;
             }
-			//cell.GetComponent<RoomBuilder>().myType = cellTypes[j];
+
+			cell.GetComponent<RoomBuilder>().myType = cellTypes[j];
+			tileObjects.Add(cell);
+
         }
+
+	}
+
+	void SelectEntranceBossTiles(){
+		// select Boss Room Location
+		List<int> choices = new List<int>();
+
+		for(int i = (int)buildArea.x * 5; i < cellTypes.Length; i++){
+			if(i%(int)buildArea.x > 3 && (i%(int)buildArea.x) < ((int)buildArea.x - 3)){
+				if(cellTypes[i] == cellType.top ||
+				   cellTypes[i] == cellType.topHallEnd ||
+				   cellTypes[i] == cellType.topLeft ||
+				   cellTypes[i] == cellType.topRight ||
+				   cellTypes[i] == cellType.horizontalHall ||
+				   cellTypes[i] == cellType.rightHallEnd ||
+			       cellTypes[i] == cellType.leftHallEnd){
+					if(cellTypes[i-(    (int)buildArea.x)-3] == cellType.empty &&
+					   cellTypes[i-(    (int)buildArea.x)-2] == cellType.empty &&
+					   cellTypes[i-(    (int)buildArea.x)-1] == cellType.empty &&
+					   cellTypes[i-(    (int)buildArea.x)  ] == cellType.empty &&
+					   cellTypes[i-(    (int)buildArea.x)+1] == cellType.empty &&
+					   cellTypes[i-(    (int)buildArea.x)+2] == cellType.empty &&
+					   cellTypes[i-(    (int)buildArea.x)+3] == cellType.empty &&
+					   cellTypes[i-(2 * (int)buildArea.x)-3] == cellType.empty &&
+					   cellTypes[i-(2 * (int)buildArea.x)-2] == cellType.empty &&
+					   cellTypes[i-(2 * (int)buildArea.x)-1] == cellType.empty &&
+					   cellTypes[i-(2 * (int)buildArea.x)  ] == cellType.empty &&
+					   cellTypes[i-(2 * (int)buildArea.x)+1] == cellType.empty &&
+					   cellTypes[i-(2 * (int)buildArea.x)+2] == cellType.empty &&
+					   cellTypes[i-(2 * (int)buildArea.x)+3] == cellType.empty &&
+					   cellTypes[i-(3 * (int)buildArea.x)-3] == cellType.empty &&
+					   cellTypes[i-(3 * (int)buildArea.x)-2] == cellType.empty &&
+					   cellTypes[i-(3 * (int)buildArea.x)-1] == cellType.empty &&
+					   cellTypes[i-(3 * (int)buildArea.x)  ] == cellType.empty &&
+					   cellTypes[i-(3 * (int)buildArea.x)+1] == cellType.empty &&
+					   cellTypes[i-(3 * (int)buildArea.x)+2] == cellType.empty &&
+					   cellTypes[i-(3 * (int)buildArea.x)+3] == cellType.empty &&
+					   cellTypes[i-(4 * (int)buildArea.x)-3] == cellType.empty &&
+					   cellTypes[i-(4 * (int)buildArea.x)-2] == cellType.empty &&
+					   cellTypes[i-(4 * (int)buildArea.x)-1] == cellType.empty &&
+					   cellTypes[i-(4 * (int)buildArea.x)  ] == cellType.empty &&
+					   cellTypes[i-(4 * (int)buildArea.x)+1] == cellType.empty &&
+					   cellTypes[i-(4 * (int)buildArea.x)+2] == cellType.empty &&
+					   cellTypes[i-(4 * (int)buildArea.x)+3] == cellType.empty &&
+					   cellTypes[i-(5 * (int)buildArea.x)-3] == cellType.empty &&
+					   cellTypes[i-(5 * (int)buildArea.x)-2] == cellType.empty &&
+					   cellTypes[i-(5 * (int)buildArea.x)-1] == cellType.empty &&
+					   cellTypes[i-(5 * (int)buildArea.x)  ] == cellType.empty &&
+					   cellTypes[i-(5 * (int)buildArea.x)+1] == cellType.empty &&
+					   cellTypes[i-(5 * (int)buildArea.x)+2] == cellType.empty &&
+					   cellTypes[i-(5 * (int)buildArea.x)+3] == cellType.empty){
+					   choices.Add(i);
+						
+						
+					}
+					else{
+						if(choices.Count > 0){
+							
+							BossRoomTile = choices[(int)choices.Count/2];
+							break;
+						}
+					}
+				}
+			}
+		}
+		choices.Clear();
+		// select location for entrance
+
+		for(int i = (cellTypes.Length-((int)buildArea.x * 5)-1); i >= 0; i--){
+
+			if(i%(int)buildArea.x > 3 && (i%(int)buildArea.x) < ((int)buildArea.x - 3)){
+				if(cellTypes[i] == cellType.bottom ||
+				   cellTypes[i] == cellType.bottomHallEnd ||
+				   cellTypes[i] == cellType.bottomLeft ||
+				   cellTypes[i] == cellType.bottomRight ||
+				   cellTypes[i] == cellType.horizontalHall ||
+				   cellTypes[i] == cellType.rightHallEnd ||
+				   cellTypes[i] == cellType.leftHallEnd){
+					if(cellTypes[i+(    (int)buildArea.x)-3] == cellType.empty &&
+					   cellTypes[i+(    (int)buildArea.x)-2] == cellType.empty &&
+					   cellTypes[i+(    (int)buildArea.x)-1] == cellType.empty &&
+					   cellTypes[i+(    (int)buildArea.x)  ] == cellType.empty &&
+					   cellTypes[i+(    (int)buildArea.x)+1] == cellType.empty &&
+					   cellTypes[i+(    (int)buildArea.x)+2] == cellType.empty &&
+					   cellTypes[i+(    (int)buildArea.x)+3] == cellType.empty &&
+					   cellTypes[i+(2 * (int)buildArea.x)-3] == cellType.empty &&
+					   cellTypes[i+(2 * (int)buildArea.x)-2] == cellType.empty &&
+					   cellTypes[i+(2 * (int)buildArea.x)-1] == cellType.empty &&
+					   cellTypes[i+(2 * (int)buildArea.x)  ] == cellType.empty &&
+					   cellTypes[i+(2 * (int)buildArea.x)+1] == cellType.empty &&
+					   cellTypes[i+(2 * (int)buildArea.x)+2] == cellType.empty &&
+					   cellTypes[i+(2 * (int)buildArea.x)+3] == cellType.empty &&
+					   cellTypes[i+(3 * (int)buildArea.x)-3] == cellType.empty &&
+					   cellTypes[i+(3 * (int)buildArea.x)-2] == cellType.empty &&
+					   cellTypes[i+(3 * (int)buildArea.x)-1] == cellType.empty &&
+					   cellTypes[i+(3 * (int)buildArea.x)  ] == cellType.empty &&
+					   cellTypes[i+(3 * (int)buildArea.x)+1] == cellType.empty &&
+					   cellTypes[i+(3 * (int)buildArea.x)+2] == cellType.empty &&
+					   cellTypes[i+(3 * (int)buildArea.x)+3] == cellType.empty &&
+					   cellTypes[i+(4 * (int)buildArea.x)-3] == cellType.empty &&
+					   cellTypes[i+(4 * (int)buildArea.x)-2] == cellType.empty &&
+					   cellTypes[i+(4 * (int)buildArea.x)-1] == cellType.empty &&
+					   cellTypes[i+(4 * (int)buildArea.x)  ] == cellType.empty &&
+					   cellTypes[i+(4 * (int)buildArea.x)+1] == cellType.empty &&
+					   cellTypes[i+(4 * (int)buildArea.x)+2] == cellType.empty &&
+					   cellTypes[i+(4 * (int)buildArea.x)+3] == cellType.empty &&
+					   cellTypes[i+(5 * (int)buildArea.x)-3] == cellType.empty &&
+					   cellTypes[i+(5 * (int)buildArea.x)-2] == cellType.empty &&
+					   cellTypes[i+(5 * (int)buildArea.x)-1] == cellType.empty &&
+					   cellTypes[i+(5 * (int)buildArea.x)  ] == cellType.empty &&
+					   cellTypes[i+(5 * (int)buildArea.x)+1] == cellType.empty &&
+					   cellTypes[i+(5 * (int)buildArea.x)+2] == cellType.empty &&
+					   cellTypes[i+(5 * (int)buildArea.x)+3] == cellType.empty){
+						choices.Add(i);
+
+					}
+					else{
+						if(choices.Count > 0){
+
+							EntranceTile = choices[(int)choices.Count/2];
+							break;
+						}
+					}
+				}
+			}
+			}
+
+
+		if(BossRoomTile == -1 || EntranceTile == -1){
+
+			roomList = new int[desiredRoomCount];
+			if(roomWeights.Length < 4)// clamp minimum array size to 4
+			{roomWeights = new int[4]{1,1,1,1};}
+			tileObjects = new List<GameObject>();
+			cellTypes = new cellType[w*h];
+			cellPositions = new Vector3[w*h];
+			buildFloorplan ();
+			EvaluateTiles();
+			BossRoomTile = -1;
+			EntranceTile = -1;
+			SelectEntranceBossTiles();
+		}
+	}
+
+	void SetEntrance(){
+		cellTypes[EntranceTile+(    (int)buildArea.x)  ] = cellType.entrance;
+		
+		cellTypes[EntranceTile+(2 * (int)buildArea.x)-2] = cellType.entrance;
+		cellTypes[EntranceTile+(2 * (int)buildArea.x)-1] = cellType.entrance;
+		cellTypes[EntranceTile+(2 * (int)buildArea.x)  ] = cellType.entrance;
+		cellTypes[EntranceTile+(2 * (int)buildArea.x)+1] = cellType.entrance;
+		cellTypes[EntranceTile+(2 * (int)buildArea.x)+2] = cellType.entrance;
+		
+		cellTypes[EntranceTile+(3 * (int)buildArea.x)-2] = cellType.entrance;
+		cellTypes[EntranceTile+(3 * (int)buildArea.x)-1] = cellType.entrance;
+		cellTypes[EntranceTile+(3 * (int)buildArea.x)  ] = cellType.entrance;
+		cellTypes[EntranceTile+(3 * (int)buildArea.x)+1] = cellType.entrance;
+		cellTypes[EntranceTile+(3 * (int)buildArea.x)+2] = cellType.entrance;
+		
+		cellTypes[EntranceTile+(4 * (int)buildArea.x)-2] = cellType.entrance;
+		cellTypes[EntranceTile+(4 * (int)buildArea.x)-1] = cellType.entrance;
+		cellTypes[EntranceTile+(4 * (int)buildArea.x)  ] = cellType.entrance;
+		cellTypes[EntranceTile+(4 * (int)buildArea.x)+1] = cellType.entrance;
+		cellTypes[EntranceTile+(4 * (int)buildArea.x)+2] = cellType.entrance;
+		
+		GameObject.Destroy(tileObjects[EntranceTile+(    (int)buildArea.x)  ]);
+		
+		GameObject.Destroy(tileObjects[EntranceTile+(2 * (int)buildArea.x)-2]);
+		GameObject.Destroy(tileObjects[EntranceTile+(2 * (int)buildArea.x)-1]);
+		GameObject.Destroy(tileObjects[EntranceTile+(2 * (int)buildArea.x)  ]);
+		GameObject.Destroy(tileObjects[EntranceTile+(2 * (int)buildArea.x)+1]);
+		GameObject.Destroy(tileObjects[EntranceTile+(2 * (int)buildArea.x)+2]);
+		
+		GameObject.Destroy(tileObjects[EntranceTile+(3 * (int)buildArea.x)-2]);
+		GameObject.Destroy(tileObjects[EntranceTile+(3 * (int)buildArea.x)-1]);
+		GameObject.Destroy(tileObjects[EntranceTile+(3 * (int)buildArea.x)  ]);
+		GameObject.Destroy(tileObjects[EntranceTile+(3 * (int)buildArea.x)+1]);
+		GameObject.Destroy(tileObjects[EntranceTile+(3 * (int)buildArea.x)+2]);
+		
+		GameObject.Destroy(tileObjects[EntranceTile+(4 * (int)buildArea.x)-2]);
+		GameObject.Destroy(tileObjects[EntranceTile+(4 * (int)buildArea.x)-1]);
+		GameObject.Destroy(tileObjects[EntranceTile+(4 * (int)buildArea.x)  ]);
+		GameObject.Destroy(tileObjects[EntranceTile+(4 * (int)buildArea.x)+1]);
+		GameObject.Destroy(tileObjects[EntranceTile+(4 * (int)buildArea.x)+2]);
+		
+		Entrance = Instantiate(Entrance, new Vector3(cellPositions[EntranceTile+1].x, cellPositions[EntranceTile+1].y - .25f, cellPositions[EntranceTile+1].z - 30f), Entrance.transform.rotation) as GameObject;
+		
+		if(cellTypes[EntranceTile] == cellType.bottom){
+			GameObject.Destroy(tileObjects[EntranceTile]);
+			tileObjects[EntranceTile] = Instantiate(Center, cellPositions[EntranceTile]+ Vector3.down *.25f, Center.transform.rotation)as GameObject;
+			cellTypes[EntranceTile] = cellType.center;
+			foreach (Transform child in tileObjects[BossRoomTile].transform)
+			{
+				if(child.gameObject.name =="BLPillar")child.gameObject.SetActive(true);
+				if(child.gameObject.name =="BRPillar")child.gameObject.SetActive(true);
+			} 
+		}
+		else if(cellTypes[EntranceTile] == cellType.bottomHallEnd){
+			GameObject.Destroy(tileObjects[EntranceTile]);
+			tileObjects[EntranceTile] = Instantiate(VerticalHall, cellPositions[EntranceTile]+ Vector3.down *.25f, VerticalHall.transform.rotation)as GameObject;
+			cellTypes[EntranceTile] = cellType.verticalHall;
+			
+		}
+		else if(cellTypes[EntranceTile] == cellType.bottomLeft){
+			GameObject.Destroy(tileObjects[EntranceTile]);
+			tileObjects[EntranceTile] = Instantiate(Left, cellPositions[EntranceTile]+ Vector3.down *.25f, Left.transform.rotation)as GameObject;
+			cellTypes[EntranceTile] = cellType.left;
+			foreach (Transform child in tileObjects[EntranceTile].transform)
+			{
+				if(child.gameObject.name =="BRPillar")child.gameObject.SetActive(true);
+			} 
+		}
+		else if(cellTypes[EntranceTile] == cellType.bottomRight){
+			GameObject.Destroy(tileObjects[EntranceTile]);
+			tileObjects[EntranceTile] = Instantiate(Right, cellPositions[EntranceTile]+ Vector3.down *.25f, Right.transform.rotation)as GameObject;
+			cellTypes[EntranceTile] = cellType.right;
+			foreach (Transform child in tileObjects[EntranceTile].transform)
+			{
+				if(child.gameObject.name =="BLPillar")child.gameObject.SetActive(true);
+			} 
+		}
+		else if(cellTypes[EntranceTile] == cellType.horizontalHall){
+			GameObject.Destroy(tileObjects[EntranceTile]);
+			tileObjects[EntranceTile] = Instantiate(Top, cellPositions[EntranceTile]+ Vector3.down *.25f, Top.transform.rotation)as GameObject;
+			cellTypes[EntranceTile] = cellType.top;
+			foreach (Transform child in tileObjects[EntranceTile].transform)
+			{
+				if(child.gameObject.name =="BLPillar")child.gameObject.SetActive(true);
+				if(child.gameObject.name =="BRPillar")child.gameObject.SetActive(true);
+			} 
+		}
+		else if(cellTypes[EntranceTile] == cellType.rightHallEnd){
+			GameObject.Destroy(tileObjects[EntranceTile]);
+			tileObjects[EntranceTile] = Instantiate(TopRight, cellPositions[EntranceTile]+ Vector3.down *.25f, TopRight.transform.rotation)as GameObject;
+			cellTypes[EntranceTile] = cellType.topRight;
+			foreach (Transform child in tileObjects[EntranceTile].transform)
+			{
+				if(child.gameObject.name =="BLPillar")child.gameObject.SetActive(true);
+			} 
+		}
+		else if(cellTypes[EntranceTile] == cellType.leftHallEnd){
+			GameObject.Destroy(tileObjects[EntranceTile]);
+			tileObjects[EntranceTile] = Instantiate(TopLeft, cellPositions[EntranceTile]+ Vector3.down *.25f, TopLeft.transform.rotation)as GameObject;
+			cellTypes[EntranceTile] = cellType.topLeft;
+			foreach (Transform child in tileObjects[EntranceTile].transform)
+			{
+				if(child.gameObject.name =="BRPillar")child.gameObject.SetActive(true);
+			} 
+		}
+	}
+
+	void SetBossRoom(){
+
+
+		cellTypes[BossRoomTile-(    (int)buildArea.x)  ] = cellType.bossRoom;
+
+		cellTypes[BossRoomTile-(2 * (int)buildArea.x)-2] = cellType.bossRoom;
+		cellTypes[BossRoomTile-(2 * (int)buildArea.x)-1] = cellType.bossRoom;
+		cellTypes[BossRoomTile-(2 * (int)buildArea.x)  ] = cellType.bossRoom;
+		cellTypes[BossRoomTile-(2 * (int)buildArea.x)+1] = cellType.bossRoom;
+		cellTypes[BossRoomTile-(2 * (int)buildArea.x)+2] = cellType.bossRoom;
+
+		cellTypes[BossRoomTile-(3 * (int)buildArea.x)-2] = cellType.bossRoom;
+		cellTypes[BossRoomTile-(3 * (int)buildArea.x)-1] = cellType.bossRoom;
+		cellTypes[BossRoomTile-(3 * (int)buildArea.x)  ] = cellType.bossRoom;
+		cellTypes[BossRoomTile-(3 * (int)buildArea.x)+1] = cellType.bossRoom;
+		cellTypes[BossRoomTile-(3 * (int)buildArea.x)+2] = cellType.bossRoom;
+
+		cellTypes[BossRoomTile-(4 * (int)buildArea.x)-2] = cellType.bossRoom;
+		cellTypes[BossRoomTile-(4 * (int)buildArea.x)-1] = cellType.bossRoom;
+		cellTypes[BossRoomTile-(4 * (int)buildArea.x)  ] = cellType.bossRoom;
+		cellTypes[BossRoomTile-(4 * (int)buildArea.x)+1] = cellType.bossRoom;
+		cellTypes[BossRoomTile-(4 * (int)buildArea.x)+2] = cellType.bossRoom;
+
+		GameObject.Destroy(tileObjects[BossRoomTile-(    (int)buildArea.x)  ]);
+
+		GameObject.Destroy(tileObjects[BossRoomTile-(2 * (int)buildArea.x)-2]);
+		GameObject.Destroy(tileObjects[BossRoomTile-(2 * (int)buildArea.x)-1]);
+		GameObject.Destroy(tileObjects[BossRoomTile-(2 * (int)buildArea.x)  ]);
+		GameObject.Destroy(tileObjects[BossRoomTile-(2 * (int)buildArea.x)+1]);
+		GameObject.Destroy(tileObjects[BossRoomTile-(2 * (int)buildArea.x)+2]);
+
+		GameObject.Destroy(tileObjects[BossRoomTile-(3 * (int)buildArea.x)-2]);
+		GameObject.Destroy(tileObjects[BossRoomTile-(3 * (int)buildArea.x)-1]);
+		GameObject.Destroy(tileObjects[BossRoomTile-(3 * (int)buildArea.x)  ]);
+		GameObject.Destroy(tileObjects[BossRoomTile-(3 * (int)buildArea.x)+1]);
+		GameObject.Destroy(tileObjects[BossRoomTile-(3 * (int)buildArea.x)+2]);
+
+		GameObject.Destroy(tileObjects[BossRoomTile-(4 * (int)buildArea.x)-2]);
+		GameObject.Destroy(tileObjects[BossRoomTile-(4 * (int)buildArea.x)-1]);
+		GameObject.Destroy(tileObjects[BossRoomTile-(4 * (int)buildArea.x)  ]);
+		GameObject.Destroy(tileObjects[BossRoomTile-(4 * (int)buildArea.x)+1]);
+		GameObject.Destroy(tileObjects[BossRoomTile-(4 * (int)buildArea.x)+2]);
+
+		BossRoom = Instantiate(BossRoom, new Vector3(cellPositions[BossRoomTile-1].x, cellPositions[BossRoomTile-1].y - .25f, cellPositions[BossRoomTile-1].z + 30f), BossRoom.transform.rotation) as GameObject;
+
+		if(cellTypes[BossRoomTile] == cellType.top){
+			GameObject.Destroy(tileObjects[BossRoomTile]);
+			tileObjects[BossRoomTile] = Instantiate(Center, cellPositions[BossRoomTile]+ Vector3.down *.25f, Center.transform.rotation)as GameObject;
+			cellTypes[BossRoomTile] = cellType.center;
+			foreach (Transform child in tileObjects[BossRoomTile].transform)
+			{
+				if(child.gameObject.name =="TLPillar")child.gameObject.SetActive(true);
+				if(child.gameObject.name =="TRPillar")child.gameObject.SetActive(true);
+			} 
+		}
+		else if(cellTypes[BossRoomTile] == cellType.topHallEnd){
+			GameObject.Destroy(tileObjects[BossRoomTile]);
+			tileObjects[BossRoomTile] = Instantiate(VerticalHall, cellPositions[BossRoomTile]+ Vector3.down *.25f, VerticalHall.transform.rotation)as GameObject;
+			cellTypes[BossRoomTile] = cellType.verticalHall;
+
+		}
+		else if(cellTypes[BossRoomTile] == cellType.topLeft){
+			GameObject.Destroy(tileObjects[BossRoomTile]);
+			tileObjects[BossRoomTile] = Instantiate(Left, cellPositions[BossRoomTile]+ Vector3.down *.25f, Left.transform.rotation)as GameObject;
+			cellTypes[BossRoomTile] = cellType.left;
+			foreach (Transform child in tileObjects[BossRoomTile].transform)
+			{
+				if(child.gameObject.name =="TRPillar")child.gameObject.SetActive(true);
+			} 
+		}
+		else if(cellTypes[BossRoomTile] == cellType.topRight){
+			GameObject.Destroy(tileObjects[BossRoomTile]);
+			tileObjects[BossRoomTile] = Instantiate(Right, cellPositions[BossRoomTile]+ Vector3.down *.25f, Right.transform.rotation)as GameObject;
+			cellTypes[BossRoomTile] = cellType.right;
+			foreach (Transform child in tileObjects[BossRoomTile].transform)
+			{
+				if(child.gameObject.name =="TLPillar")child.gameObject.SetActive(true);
+			} 
+		}
+		else if(cellTypes[BossRoomTile] == cellType.horizontalHall){
+			GameObject.Destroy(tileObjects[BossRoomTile]);
+			tileObjects[BossRoomTile] = Instantiate(Bottom, cellPositions[BossRoomTile]+ Vector3.down *.25f, Bottom.transform.rotation)as GameObject;
+			cellTypes[BossRoomTile] = cellType.bottom;
+			foreach (Transform child in tileObjects[BossRoomTile].transform)
+			{
+				if(child.gameObject.name =="TLPillar")child.gameObject.SetActive(true);
+				if(child.gameObject.name =="TRPillar")child.gameObject.SetActive(true);
+			} 
+		}
+		else if(cellTypes[BossRoomTile] == cellType.rightHallEnd){
+			GameObject.Destroy(tileObjects[BossRoomTile]);
+			tileObjects[BossRoomTile] = Instantiate(BottomRight, cellPositions[BossRoomTile]+ Vector3.down *.25f, BottomRight.transform.rotation)as GameObject;
+			cellTypes[BossRoomTile] = cellType.bottomRight;
+			foreach (Transform child in tileObjects[BossRoomTile].transform)
+			{
+				if(child.gameObject.name =="TLPillar")child.gameObject.SetActive(true);
+			} 
+		}
+		else if(cellTypes[BossRoomTile] == cellType.leftHallEnd){
+			GameObject.Destroy(tileObjects[BossRoomTile]);
+			tileObjects[BossRoomTile] = Instantiate(BottomLeft, cellPositions[BossRoomTile]+ Vector3.down *.25f, BottomLeft.transform.rotation)as GameObject;
+			cellTypes[BossRoomTile] = cellType.bottomLeft;
+			foreach (Transform child in tileObjects[BossRoomTile].transform)
+			{
+				if(child.gameObject.name =="TRPillar")child.gameObject.SetActive(true);
+			} 
+		}
 
 	}
 	
