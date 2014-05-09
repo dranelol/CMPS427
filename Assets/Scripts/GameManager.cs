@@ -190,7 +190,7 @@ public class GameManager : MonoBehaviour
 
         #region enemy abilities
 
-        Abilities["enemyfireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 2.5f, 10.0f, 0f, "enemyfireball", "Enemy Fireball", FireballExplosion);
+        Abilities["enemyfireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 4f, 10.0f, 0f, "enemyfireball", "Enemy Fireball", FireballExplosion);
         Abilities["enemycleaveslow"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 3.0f, 5.0f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemycleavenormal"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 2f, 2.5f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemycleavefast"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 1.0f, 1.0f, 0f, "cleave", "Cleave", CleaveParticles);
@@ -199,6 +199,7 @@ public class GameManager : MonoBehaviour
         Abilities["bossfireball"] = new BossFireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 5.0f, 10.0f, 0f, "bossfireball", "Boss Fireball", BossInfernalFireballExplosion);
 
         Abilities["bossflamestrike"] = new BossFlamestrike(AttackType.PBAOE, DamageType.FIRE, 10.0f, 360.0f, 10.0f, 10.0f, 0.0f, "bossflamestrike", "Boss Flamestrike", BossFlamestrikeParticles);
+        Abilities["enemywhirlwind"] = new Whirlwind(AttackType.GROUNDTARGET, DamageType.PHYSICAL, 3.0f, 360.0f, 8.0f, 5.0f, 0f, "enemywhirlwind", "Enemy Whirlwind", OnHitNormalParticles);
 
         #endregion
         #endregion

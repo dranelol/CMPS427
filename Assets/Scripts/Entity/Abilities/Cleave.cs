@@ -24,7 +24,8 @@ public class Cleave : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
-
+                    GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoHitAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().OnHitNormalParticles, 0.2f, isPlayer, defender.gameObject));
+                    // GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(defender.gameObject, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().OnHitNormalParticles, 0.2f, isPlayer, defender.gameObject));
 
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
@@ -178,6 +179,8 @@ public class Cleave : Ability
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
+
+
         float damageAmt;
         if (isPlayer == true)
         {
@@ -192,6 +195,28 @@ public class Cleave : Ability
 
     }
 
+    public IEnumerator DoHitAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target)
+    {
+        GameObject particles;
+
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(target.transform), target.transform.rotation);
+
+        yield return new WaitForSeconds(time);
+
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem item in particleSystems)
+        {
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
+
+        }
+
+        GameObject.Destroy(particles);
+
+        yield return null;
+    }
 
     public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
     {

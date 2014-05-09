@@ -54,8 +54,14 @@ public class SceneTrigger : Trigger
         base.SetOff();
     }
 
-    void OnTriggerExit(Collider other)
+    public override void OnTriggerExit(Collider other)
     {
+        base.OnTriggerExit(other);
+    }
+
+    public override void OnTriggerEnter(Collider other)
+    {
+        base.OnTriggerEnter(other);
     }
 
 

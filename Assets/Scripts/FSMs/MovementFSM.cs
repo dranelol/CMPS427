@@ -69,7 +69,7 @@ public class MovementFSM : StateMachine
         set 
         {
             _navMeshAgent.radius = Mathf.Clamp(value, MINIMUM_RADIUS, MAXIMUM_RADIUS);
-            _navMeshAgent.stoppingDistance = Radius * 1.1f * transform.lossyScale.magnitude;
+            _navMeshAgent.stoppingDistance = Radius;
         }
     }
 
@@ -133,7 +133,7 @@ public class MovementFSM : StateMachine
 
     void Start()
     {
-        _navMeshAgent.stoppingDistance = Radius * 1.1f * transform.lossyScale.magnitude;
+        _navMeshAgent.stoppingDistance = Radius;
         _navMeshAgent.updateRotation = false;
 
         if (tag == "Player")

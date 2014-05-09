@@ -699,7 +699,6 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
 
-
             LevelUp(true);
             
             /*
@@ -964,6 +963,7 @@ public class PlayerController : MonoBehaviour {
                 entity.GiveAttributePoints(5);
 
 
+
                 entity.Experience -= entity.NextLevelExperience;
 
 
@@ -983,7 +983,6 @@ public class PlayerController : MonoBehaviour {
             }
         }
 
-        
 
 
     }
