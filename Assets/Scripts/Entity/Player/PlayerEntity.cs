@@ -46,8 +46,8 @@ public class PlayerEntity : Entity
         base.Awake();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         spawnPoint = transform.position;
-        currentHP = 1000;
-        baseAtt.Health = 1000;
+        currentHP = 200;
+        baseAtt.Health = 200;
         Experience = 0;
         Level = 1;
         nextLevelExperience = 100;
@@ -92,17 +92,9 @@ public class PlayerEntity : Entity
 
         else
         {
-            abilityManager.AddAbility(GameManager.Abilities["dropdasteel"], 1);
-            abilityManager.AddAbility(GameManager.Abilities["shieldbreaker"], 2);
-            abilityManager.AddAbility(GameManager.Abilities["boomerangblade"], 3);
-            abilityManager.AddAbility(GameManager.Abilities["fireballturret"], 4);
-            abilityManager.AddAbility(GameManager.Abilities["firemine"], 5);
+            abilityManager.AddAbility(GameManager.Abilities["cleave"], 1);
 
-            abilityIndexDict["dropdasteel"] = 1;
-            abilityIndexDict["shieldbreaker"] = 2;
-            abilityIndexDict["boomerangblade"] = 3;
-            abilityIndexDict["fireballturret"] = 4;
-            abilityIndexDict["firemine"] = 5;
+            abilityIndexDict["cleave"] = 1;
         }
 	}
 	

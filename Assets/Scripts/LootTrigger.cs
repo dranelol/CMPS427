@@ -32,6 +32,7 @@ public class LootTrigger : Trigger
 
         defaultShader = Shader.Find("Diffuse");
         highlight = Shader.Find("Outlined/Silhouetted Diffuse");
+        
     }
 
 	void Start() 
@@ -60,6 +61,7 @@ public class LootTrigger : Trigger
             }
         }
 
+        
 
 		if(isActive) 
         {
@@ -101,10 +103,11 @@ public class LootTrigger : Trigger
         {
             uiController.GuiState = UIController.States.INGAME;
         }
+
         else if (uiController.GuiState == UIController.States.INGAME)
         {
-
             uiController.SetInventory(inventory);
+            
             uiController.GuiState = UIController.States.LOOT;
         }
         // maybe change object's material?
