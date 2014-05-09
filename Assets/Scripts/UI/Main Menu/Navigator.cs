@@ -22,7 +22,7 @@ public class Navigator : MonoBehaviour {
         }
 
         if (GUI.Button(new Rect(CENTER_WIDTH + 20, CENTER_HEIGHT + HEIGHT - 60, WIDTH - 40, 40), 
-            "Go Fuck Yourself"))
+            "Quit"))
         {
             Application.Quit();
         }

@@ -422,8 +422,10 @@ public class HUD_GUI : MonoBehaviour {
 
         GUI.Label(new Rect(Screen.width * .025f, Screen.height * .025f, Screen.width * .45f, Screen.height * .1f),"Level: "+player.Level.ToString(), infoBoxStyle );
 
-        GUI.Label(new Rect(Screen.width * .025f, Screen.height * .05f, Screen.width * .45f, Screen.height * .1f), "Experience: "+player.Experience.ToString() + "/" + player.NextLevelExperience, infoBoxStyle);
-
+        if (player.LevelCap == false)
+        {
+            GUI.Label(new Rect(Screen.width * .025f, Screen.height * .05f, Screen.width * .45f, Screen.height * .1f), "Experience: " + player.Experience.ToString() + "/" + player.NextLevelExperience, infoBoxStyle);
+        }
         #endregion
 
     }

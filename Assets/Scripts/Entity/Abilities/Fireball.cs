@@ -83,6 +83,11 @@ public class Fireball : Ability
         if (isPlayer == true)
         {
             damageAmt = DamageCalc.DamageCalculation(attacker, defender, damageMod);
+
+            if (attacker.gameObject.GetComponent<TalentManager>().Bonuses["fire"] == true)
+            {
+                damageAmt += damageAmt * 0.1f;
+            }
         }
         else
         {

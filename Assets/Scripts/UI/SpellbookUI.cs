@@ -16,6 +16,14 @@ public class SpellbookUI : UIState
 
     private Ability draggedAbility;
 
+    private List<Ability> tempSpells;
+
+    private Ability hoverInactiveSpell;
+    private Ability hoverActiveSpell;
+
+    private Dictionary<Rect, Ability> inactiveRects;
+    private Dictionary<Rect, Ability> activeRects;
+
     public SpellbookUI(int id, UIController controller)
         : base(id, controller)
     {
@@ -31,7 +39,11 @@ public class SpellbookUI : UIState
     {
         base.Enter();
 
+        tempSpells = new List<Ability>();
+        hoverInactiveSpell = null;
+        hoverActiveSpell = null;
 
+        
     }
 
     public override void Exit()
@@ -48,11 +60,58 @@ public class SpellbookUI : UIState
     public override void OnGui()
     {
 
+        GUI.depth = 0;
+        
         labelStyle = new GUIStyle("box");
         labelStyle.alignment = TextAnchor.MiddleCenter;
         labelStyle.fontSize = 12;
         labelStyle.normal.textColor = Color.white;
         GUI.Window(0, windowDimensions, OnWindow, "Spellbook");
+
+        float tooltipWidth, tooltipHeight;
+        string info;
+
+        if (hoverInactiveSpell != null)
+        {
+
+            info = hoverInactiveSpell.Name + "\n"
+                     + "Damage: " + hoverInactiveSpell.DamageMod.ToString() + "\n"
+                     + "Cost: " + hoverInactiveSpell.ResourceCost.ToString() + "\n"
+                     + "Range: " + hoverInactiveSpell.Range.ToString() + "\n"
+                     + "Cooldown: " + hoverInactiveSpell.Cooldown.ToString();
+
+            tooltipHeight = 83;
+            tooltipWidth = 150;
+            
+            
+            GUIContent thisContent = new GUIContent(info);
+
+            GUIStyle thisStyle = new GUIStyle("box");
+            thisStyle.alignment = TextAnchor.UpperLeft;
+            thisStyle.normal.textColor = Color.white;
+
+            GUI.Box(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, tooltipWidth, tooltipHeight), thisContent, thisStyle);
+        }
+        else if (hoverActiveSpell != null)
+        {
+            info = hoverActiveSpell.Name + "\n"
+                     + "Damage: " + hoverActiveSpell.DamageMod.ToString() + "\n"
+                     + "Cost: " + hoverActiveSpell.ResourceCost.ToString() + "\n"
+                     + "Range: " + hoverActiveSpell.Range.ToString() + "\n"
+                     + "Cooldown: " + hoverActiveSpell.Cooldown.ToString();
+
+            tooltipHeight = 83;
+            tooltipWidth = 150;
+
+
+            GUIContent thisContent = new GUIContent(info);
+
+            GUIStyle thisStyle = new GUIStyle("box");
+            thisStyle.alignment = TextAnchor.UpperLeft;
+            thisStyle.normal.textColor = Color.white;
+
+            GUI.Box(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, tooltipWidth, tooltipHeight), thisContent, thisStyle);
+        }
     }
 
     void OnWindow(int windowID)
@@ -76,75 +135,122 @@ public class SpellbookUI : UIState
 
         #endregion
 
+        inactiveRects = new Dictionary<Rect, Ability>();
+        activeRects = new Dictionary<Rect, Ability>();
+
         #region Spellbook
 
+        tempSpells = Controller.Player.abilityManager.abilities.FindAll(delegate(Ability ab) { return ab != null; });
 
+        //GUILayout.BeginArea(new Rect(0, 25, (WIDTH) / 2, HEIGHT - 25));
 
-        GUILayout.BeginArea(new Rect(0, 25, (WIDTH) / 2, HEIGHT - 25));
-
-        DropActiveToInactive(new Rect(0, 25, (WIDTH) / 2, HEIGHT - 25));
         
 
-        GUILayout.BeginVertical();
+        Rect thisRect;
 
-        foreach (Ability item in Controller.PlayerController.SpellBook)
+        float yOffset = 0;
+
+        int totalSpells = Controller.PlayerController.SpellBook.Count + tempSpells.Count;
+
+
+        int viewSize = (totalSpells + 1) * 28;
+
+        Rect viewArea = new Rect(0, 0, 10, viewSize);
+
+        scrollViewVector = GUI.BeginScrollView(new Rect(0, 25, (WIDTH) / 2, HEIGHT - 25), scrollViewVector,
+            viewArea);
+
+
+        for (int i = 0; i < totalSpells; i++)
         {
-            GUILayout.BeginHorizontal();
-            GUILayout.Space(5);
-            GUILayout.Box(new GUIContent(item.Name), GUILayout.Width(((WIDTH) / 2)-10), GUILayout.Height(50));
+            thisRect = new Rect(5, yOffset, ((WIDTH) / 2) - 10, 25);
 
-            Drag(item, GUILayoutUtility.GetLastRect());
-
-            GUILayout.Space(5);
+            if (i < Controller.PlayerController.SpellBook.Count)
+            {
                 
+                GUI.Box(thisRect, Controller.PlayerController.SpellBook[i].Name);
+                Drag(Controller.PlayerController.SpellBook[i], thisRect);
+                inactiveRects.Add(new Rect(thisRect.x, thisRect.y+25, thisRect.width, thisRect.height), Controller.PlayerController.SpellBook[i]);
+            }
+            else
+            {
+                GUI.Box(thisRect, "Empty");
+                DropActiveToInactive(thisRect);
+            }
+
             
-             
-            GUILayout.EndHorizontal();
+
+            yOffset += 28;
         }
 
-        GUILayout.EndVertical();
+        GUI.EndScrollView();
+     
+       // GUILayout.EndArea();
 
-        
-
-        GUILayout.EndArea();
+        SetInactiveHoverSpell(inactiveRects);
 
         #endregion
 
         #region Ability Slots
 
-        GUILayout.BeginArea(new Rect(WIDTH / 2, 25, (WIDTH) / 2, HEIGHT - 25));
+        //GUILayout.BeginArea(new Rect(WIDTH / 2, 25, (WIDTH) / 2, HEIGHT - 25));
 
-        GUILayout.BeginVertical();
+       // GUILayout.BeginVertical();
+
+        yOffset = 25;
 
         for (int i = 1; i<6 ;i++)
         {
 
 
-            GUILayout.Label(NumberToKey(i), GUILayout.Width(((WIDTH) / 2) - 10), GUILayout.Height(20));
-            GUILayout.BeginHorizontal();
-            GUILayout.Space(5);
+            GUI.Label(new Rect(WIDTH / 2, yOffset, ((WIDTH) / 2) - 10, 20), NumberToKey(i));
+
+            yOffset += 23;
+
+            thisRect = new Rect((WIDTH / 2) + 5, yOffset, ((WIDTH) / 2) - 10, 50);
+
+            //GUILayout.BeginHorizontal();
+            //GUILayout.Space(5);
             if (Controller.Player.abilityManager.abilities[i] != null)
             {
-                GUILayout.Box(new GUIContent(Controller.Player.abilityManager.abilities[i].Name), labelStyle,  GUILayout.Width(((WIDTH) / 2) - 10), GUILayout.Height(50));
 
                 
-                DropInactiveToActive(GUILayoutUtility.GetLastRect(), i);
-                Drag(Controller.Player.abilityManager.abilities[i], GUILayoutUtility.GetLastRect());
+
+                GUI.Box(thisRect, new GUIContent(Controller.Player.abilityManager.abilities[i].Name), labelStyle);
+
+
+
+
+                DropInactiveToActive(thisRect, i);
+                Drag(Controller.Player.abilityManager.abilities[i], thisRect);
+                activeRects.Add(thisRect, Controller.Player.abilityManager.abilities[i]);
+
             }
             else
             {
-                GUILayout.Box(new GUIContent("Empty"), labelStyle, GUILayout.Width(((WIDTH) / 2) - 10), GUILayout.Height(50));
-                DropInactiveToActive(GUILayoutUtility.GetLastRect(), i);
+
+                GUI.Box(thisRect, "Empty", labelStyle);
+                
+                
+                DropInactiveToActive(thisRect, i);
             } 
 
-            GUILayout.Space(5);
-            GUILayout.EndHorizontal();
+            
+            //GUILayout.EndHorizontal();
+
+            yOffset += 50;
             
         }
 
-        GUILayout.EndVertical();
+       // GUILayout.EndVertical();
 
-        GUILayout.EndArea();
+        //GUILayout.EndArea();
+
+        SetActiveHoverSpell(activeRects);
+
+        activeRects.Clear();
+        inactiveRects.Clear();
+
         #endregion
     }
 
@@ -249,6 +355,72 @@ public class SpellbookUI : UIState
         else
         {
             return "";
+        }
+    }
+
+
+    private void SetInactiveHoverSpell(Dictionary<Rect, Ability> hoverRects)
+    {
+        Vector2 mPos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
+
+
+
+        foreach (var pair in hoverRects)
+        {
+
+            if (ButtonContains(pair.Key, GUIUtility.ScreenToGUIPoint(mPos)))
+            {
+
+
+                hoverInactiveSpell = pair.Value;
+
+                return;
+            }
+            else
+            {
+
+                hoverInactiveSpell = null;
+            }
+        }
+    }
+
+    private void SetActiveHoverSpell(Dictionary<Rect, Ability> hoverRects)
+    {
+        Vector2 mPos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
+
+
+
+        foreach (var pair in hoverRects)
+        {
+
+            if (ButtonContains(pair.Key, GUIUtility.ScreenToGUIPoint(mPos)))
+            {
+
+
+                hoverActiveSpell = pair.Value;
+
+                return;
+            }
+            else
+            {
+
+                hoverActiveSpell = null;
+            }
+        }
+    }
+
+    private bool ButtonContains(Rect r, Vector2 mPos)
+    {
+        if (mPos.x > r.x
+            && mPos.y > r.y
+            && mPos.x < r.x + r.width
+            && mPos.y < r.y + r.height)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

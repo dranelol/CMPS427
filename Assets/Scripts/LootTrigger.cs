@@ -24,10 +24,9 @@ public class LootTrigger : Trigger
     void Awake()
     {
 
-        Debug.Log("awake");
-        inventory = new Inventory();
 
-        ef = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
+
+        inventory = new Inventory();
 
         uiController = GameObject.FindWithTag("UI Controller").GetComponent<UIController>();
 
@@ -37,14 +36,12 @@ public class LootTrigger : Trigger
 
 	void Start() 
     {
-        if (ef == null)
-        {
-            Debug.Log("calling awake from start");
-            Awake();
-        }
 
-        //Debug.Log(ef.ToString());
-        if (inventory.Items.Count == 0)
+
+        ef = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
+        
+
+        if (inventory.Items.Count <= 0)
         {
             Debug.Log("chest getting default items");
             int diceroll = Random.Range(1, 5);
