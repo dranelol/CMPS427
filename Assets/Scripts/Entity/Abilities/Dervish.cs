@@ -15,16 +15,17 @@ public class Dervish : Ability
         // do attack "repetition" times with "timeDelta" waiting between each
         Debug.Log("attackhandler?");
 
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DervishSpawn, 2.0f, isPlayer, 1.5f));
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DervishSpawn, 2.0f, isPlayer, 2.0f));
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DervishSpawn, 2.0f, isPlayer, 2.5f));
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DervishSpawn, 2.0f, isPlayer, 3.0f));
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DervishSpawn, 2.0f, isPlayer, 3.5f));
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DervishSpawn, 2.0f, isPlayer, 4.0f));
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoSpawnAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().DervishSpawn, 2.0f, isPlayer, 4.5f));
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAttackRepeating(source, attacker, isPlayer, 6, 0.25f));
-        DoBuff(source, attacker);
+        GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
+        gameManager.RunCoroutine(DoSpawnAnimation(source, gameManager.DervishSpawn, 6.0f, isPlayer, 1.5f, 0.0f));
+        gameManager.RunCoroutine(DoSpawnAnimation(source, gameManager.DervishSpawn, 6.0f, isPlayer, 2.0f, 0.1f));
+        gameManager.RunCoroutine(DoSpawnAnimation(source, gameManager.DervishSpawn, 6.0f, isPlayer, 2.5f, 0.3f));
+        gameManager.RunCoroutine(DoSpawnAnimation(source, gameManager.DervishSpawn, 6.0f, isPlayer, 3.0f, 0.6f));
+        gameManager.RunCoroutine(DoSpawnAnimation(source, gameManager.DervishSpawn, 6.0f, isPlayer, 3.5f, 1.0f));
+        gameManager.RunCoroutine(DoSpawnAnimation(source, gameManager.DervishSpawn, 6.0f, isPlayer, 4.0f, 1.5f));
+        gameManager.RunCoroutine(DoSpawnAnimation(source, gameManager.DervishSpawn, 6.0f, isPlayer, 4.5f, 2.1f));
+        gameManager.RunCoroutine(DoAttackRepeating(source, attacker, isPlayer, 12, 0.5f));
+        DoBuff(source, attacker);
 
         int tempindex = 10;
         while (attacker.abilityManager.abilities[tempindex] != null && attacker.abilityManager.abilities[tempindex].ID != "icebolt")
@@ -37,7 +38,20 @@ public class Dervish : Ability
             attacker.abilityIndexDict["dervishdeathgrip"] = tempindex;
 
         }
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(randomdeathgrip(source, attacker, isPlayer, 6, 0.25f,tempindex));
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(RandomDeathgrip(source, attacker, isPlayer, 6, 1.0f,tempindex));
+    }
+
+    public IEnumerator RotateThemOwls(GameObject datOwl)
+    {
+        MovementFSM moveFSM = datOwl.GetComponent<MovementFSM>();
+
+        for (int i = 0; i < 360; i++)
+        {
+            moveFSM.Turn(Rotations.RotateAboutY(datOwl.transform.forward, 15.0f), 5);
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        yield return null;
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -224,7 +238,7 @@ public class Dervish : Ability
         yield return null;
     }
 
-    public IEnumerator randomdeathgrip(GameObject source, Entity attacker, bool isPlayer, int repetitions, float waitdelta, int abilityindex)
+    public IEnumerator RandomDeathgrip(GameObject source, Entity attacker, bool isPlayer, int repetitions, float waitdelta, int abilityindex)
     {
 
 
@@ -269,20 +283,31 @@ public class Dervish : Ability
         yield return null;
     }
 
-    public IEnumerator DoSpawnAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, float orbitScale, GameObject target = null)
+    public IEnumerator DoSpawnAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, float orbitScale, float yOffset, GameObject target = null)
     {
         GameObject particles;
 
-        particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position+new Vector3(0,1,0), source.transform.rotation);
-  
-        particles.GetComponentInChildren<OrbSpawnSingle>().orbitObject = source;
+        GameObject parent1 = new GameObject("Parent1");
+        GameObject parent2 = new GameObject("Parent2");
+
+        parent1.transform.position = source.transform.position;
+        parent2.transform.position = source.transform.position;
+        parent1.transform.parent = source.transform;
+        parent1.transform.position += new Vector3(0, yOffset, 0);
+
+        parent2.transform.parent = source.transform;
+        parent2.transform.position += new Vector3(0, yOffset, 0);
+
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(source.transform) + new Vector3(0, yOffset, 0), source.transform.rotation);
+
+        particles.GetComponentInChildren<OrbSpawnSingle>().orbitObject = parent1;
         particles.GetComponentInChildren<OrbSpawnSingle>().orbitScale = orbitScale;
         particles.GetComponentInChildren<OrbSpawnSingle>().minHeight = 1;
         particles.GetComponentInChildren<OrbSpawnSingle>().maxHeight = 1;
 
-        GameObject particles2 = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position + new Vector3(0, 1, 0), source.transform.rotation);
+        GameObject particles2 = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(source.transform) + new Vector3(0, yOffset, 0), source.transform.rotation);
 
-        particles2.GetComponentInChildren<OrbSpawnSingle>().orbitObject = source;
+        particles2.GetComponentInChildren<OrbSpawnSingle>().orbitObject = parent2;
         particles2.GetComponentInChildren<OrbSpawnSingle>().orbitScale = orbitScale;
         particles2.GetComponentInChildren<OrbSpawnSingle>().initialAngleFromForward = 180;
         particles2.GetComponentInChildren<OrbSpawnSingle>().minHeight = 1;
@@ -292,6 +317,8 @@ public class Dervish : Ability
 
         GameObject.Destroy(particles);
         GameObject.Destroy(particles2);
+        GameObject.Destroy(parent1);
+        GameObject.Destroy(parent2);
 
         yield return null;
     }

@@ -693,13 +693,13 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            entity.abilityManager.AddAbility(GameManager.Abilities["cleave"], 1);
+            entity.abilityManager.AddAbility(GameManager.Abilities["dervish"], 1);
             entity.abilityManager.AddAbility(GameManager.Abilities["shadowfury"], 2);
             entity.abilityManager.AddAbility(GameManager.Abilities["dropdasteel"], 3);
             entity.abilityManager.AddAbility(GameManager.Abilities["shadowtrap"], 4);
             entity.abilityManager.AddAbility(GameManager.Abilities["deathanddecay"], 5);
 
-            entity.abilityIndexDict["cleave"] = 1;
+            entity.abilityIndexDict["dervish"] = 1;
             entity.abilityIndexDict["shadowfury"] = 2;
             entity.abilityIndexDict["dropdasteel"] = 3;
             entity.abilityIndexDict["shadowtrap"] = 4;

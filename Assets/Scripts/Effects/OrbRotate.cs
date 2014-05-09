@@ -88,7 +88,7 @@ public class OrbRotate : MonoBehaviour
         currentPositionVector = (transform.position - orbitPosition);
 
         float angleTravelled = Vector3.Angle(previousPositionVector, currentPositionVector);
-
+        
         currentRotations = currentRotations + (angleTravelled / 360.0f);
 
         if (currentRotations >= rotations && infiniteRotation == false)
