@@ -150,23 +150,22 @@ public class MovementFSM : StateMachine
 
     #region public functions
 
-    public void SetPath(Vector3 targetPosition)
+    public bool SetPath(Vector3 targetPosition)
     {
         if ((MoveStates)CurrentState != MoveStates.moveLocked)
         {
             _navMeshAgent.speed = _movementSpeed;
+            NavMeshHit navMeshHit;
 
-            if (CombatMath.DistanceGreaterThan(targetPosition, transform.position, 1))
+            if (tag == "Player")
             {
-                NavMeshHit navMeshHit;
-
-                if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
+                if (CombatMath.DistanceGreaterThan(targetPosition, transform.position, 1))
                 {
-                    if (tag == "Player")
+                    if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
                     {
                         NavMeshHit playerNavMeshHit;
 
-                        if (_navMeshAgent.Raycast(targetPosition, out playerNavMeshHit))
+                        if (_navMeshAgent.Raycast(navMeshHit.position, out playerNavMeshHit))
                         {
                             _navMeshAgent.Move((playerNavMeshHit.position - transform.position).normalized / 50f);
                             _navMeshAgent.SetDestination(playerNavMeshHit.position);
@@ -178,20 +177,25 @@ public class MovementFSM : StateMachine
                         }
 
                         Transition(MoveStates.moving);
+                        return true;
                     }
+                }
 
-                    else
-                    {
-                        if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
-                        {
-                            _navMeshAgent.SetDestination(navMeshHit.position);
-                        }
-
-                        Transition(MoveStates.moving);
-                    }
+                return false;
+            }
+            
+            else
+            {
+                if (NavMesh.SamplePosition(targetPosition, out navMeshHit, 15, 1 << LayerMask.NameToLayer("Default")))
+                {
+                    _navMeshAgent.SetDestination(navMeshHit.position);
+                    Transition(MoveStates.moving);
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     public void WalkPath(Vector3 targetPosition)

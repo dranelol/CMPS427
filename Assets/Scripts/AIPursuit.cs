@@ -67,6 +67,7 @@ public class AIPursuit : StateMachine
         HashSet<Enum> fleeTransitions = new HashSet<Enum>();
         fleeTransitions.Add(PursuitStates.approach);
         fleeTransitions.Add(PursuitStates.inactive);
+        fleeTransitions.Add(PursuitStates.flee);
         AddTransitionsFrom(PursuitStates.flee, fleeTransitions);
 
         StartMachine(PursuitStates.inactive);
@@ -250,6 +251,9 @@ public class AIPursuit : StateMachine
 
     void approach_Update()
     {
+        Debug.Log("DKFSJDF");
+        Debug.Log(Vector3.Distance(transform.position, currentTarget.transform.position));
+
         if (currentTarget != null)
         {
             if (doesFlee && (entity.CurrentHP < (entity.currentAtt.Health * 0.2f)) && hasFled == false)
@@ -257,27 +261,20 @@ public class AIPursuit : StateMachine
                 Transition(PursuitStates.flee);
             }
 
-            else if (!MoveFSM.HasPath)
+            else if ((currentTarget.transform.position - transform.position).sqrMagnitude <= _adjustedRange * _adjustedRange)
             {
-                if (!MoveFSM.PathPending)
-                {
-                    MoveFSM.SetPath(currentTarget.transform.position);
-                }
-
-                else
-                {
-                    MoveFSM.Turn(currentTarget.transform.position);
-                }
+                Transition(PursuitStates.seek);
             }
 
-            else if ((currentTarget.transform.position - MoveFSM.Destination).sqrMagnitude > Mathf.Pow(_adjustedRange, 2f))
+            else if ((currentTarget.transform.position - MoveFSM.Destination).sqrMagnitude > _adjustedRange * _adjustedRange)
             {
+                Debug.LogError((currentTarget.transform.position - MoveFSM.Destination).sqrMagnitude + ", " + _adjustedRange * _adjustedRange);
                 MoveFSM.SetPath(currentTarget.transform.position);
             }
 
-            else if ((currentTarget.transform.position - transform.position).sqrMagnitude <= Mathf.Pow(_adjustedRange, 2f))
+            else if (!MoveFSM.HasPath && ! MoveFSM.PathPending)
             {
-                Transition(PursuitStates.seek);
+                MoveFSM.SetPath(currentTarget.transform.position);
             }
 
             else
@@ -305,19 +302,16 @@ public class AIPursuit : StateMachine
                 Transition(PursuitStates.flee);
             }
 
-            if ((MovementFSM.MoveStates)MoveFSM.CurrentState == MovementFSM.MoveStates.idle)
+            else if ((MovementFSM.MoveStates)MoveFSM.CurrentState == MovementFSM.MoveStates.idle)
             {
                 MoveFSM.Turn(currentTarget.transform.position);
             }
 
             if (combatFSM.IsIdle())
             {
-                Vector3 entityCenterPosition = CombatMath.GetCenter(transform);
-                Vector3 targetCenterPosition = CombatMath.GetCenter(currentTarget.transform);
-
                 RaycastHit hit;
 
-                if (Physics.Raycast(entityCenterPosition, targetCenterPosition - entityCenterPosition, out hit, _adjustedRange, ~(1 << LayerMask.NameToLayer("Enemy"))))
+                if (CombatMath.RayCast(transform, currentTarget.transform, out hit, _adjustedRange, ~(1 << LayerMask.NameToLayer("Enemy"))))
                 {
                     if (hit.collider.tag == "Player" && _abilityManager.activeCoolDowns[_nextAbilityIndex] <= Time.time)
                     {

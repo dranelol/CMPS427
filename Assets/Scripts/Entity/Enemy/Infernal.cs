@@ -74,7 +74,7 @@ public class Infernal : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         aggro.activeTrigger = true;
-        GetComponent<AIController>().Threat(_target, 1);
+        // GetComponent<AIController>().Threat(_target, 1);
     }
 
     public void Death()
