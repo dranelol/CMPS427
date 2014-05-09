@@ -83,13 +83,13 @@ public class PlayerEntity : Entity
 
         else
         {
-            abilityManager.AddAbility(GameManager.Abilities["whirlwind"], 1);
+            abilityManager.AddAbility(GameManager.Abilities["chaosbarrage"], 1);
             abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
             abilityManager.AddAbility(GameManager.Abilities["boomerangblade"], 3);
             abilityManager.AddAbility(GameManager.Abilities["fireballturret"], 4);
             abilityManager.AddAbility(GameManager.Abilities["firemine"], 5);
 
-            abilityIndexDict["whirlwind"] = 1;
+            abilityIndexDict["chaosbarrage"] = 1;
             abilityIndexDict["cleave"] = 2;
             abilityIndexDict["boomerangblade"] = 3;
             abilityIndexDict["fireballturret"] = 4;

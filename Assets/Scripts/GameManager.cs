@@ -121,6 +121,7 @@ public class GameManager : MonoBehaviour
         Abilities["poisonbolt"] = new Poisonbolt(AttackType.HONINGPROJECTILE, DamageType.POISON, 10.0f, 0.0f, 0.0f, 10.0f, 0f, "poisonbolt", "poisonbolt", FireballExplosion);
         Abilities["bloodbolt"] = new Bloodbolt(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL, 10.0f, 0.0f, 0.0f, 10.0f, 0f, "bloodbolt", "bloodbolt", FireballExplosion);
         Abilities["chaosbolt"] = new Chaosbolt(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.0f, 10.0f, 0f, "chaosbolt", "chaosbolt", ChaosboltExplosion);
+        Abilities["chaosbarragebolt"] = new ChaosBarrageBolt(AttackType.HONINGPROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 0.0f, 10.0f, 0f, "chaosbarragebolt", "chaosbarragebolt", ChaosboltExplosion);
         Abilities["icebolt"] = new IceBolt(AttackType.PROJECTILE, DamageType.WATER, 8f, 0f, 0.0f, 10.0f, 0f, "icebolt", "Ice Bolt", IceBoltParticles);
         Abilities["cleave"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 0.0f, 5.0f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["arrow"] = new Arrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 8.0f, 0.0f, 0.0f, 5.0f, 0f, "arrow", "Arrow", ArrowParticles);
@@ -129,7 +130,7 @@ public class GameManager : MonoBehaviour
 
         #region buff abilities
 
-        Abilities["chaosbarrage"] = new ChaosBarrageAbility(AttackType.STATUS, DamageType.NONE, 10.0f, 0.0f, 30.0f, 0.0f, 100f, "chaosbarrage", "Chaos Barrage", ChaosBarrageParticles);
+        Abilities["chaosbarrage"] = new ChaosBarrageAbility(AttackType.STATUS, DamageType.NONE, 10.0f, 0.0f, 0.0f, 0.0f, 0, "chaosbarrage", "Chaos Barrage", ChaosBarrageParticles);
         Abilities["fireballbarrage"] = new FireballBarrageAbility(AttackType.STATUS, DamageType.NONE, 10.0f, 0.0f, 30.0f, 0.0f, 100f, "fireballbarrage", "Fireball Barrage", FireballBarrageParticles);
         Abilities["rootability"] = new RootAbility(AttackType.STATUS, DamageType.NONE, 10.0f, 360.0f, 15.0f, 0.0f, 0f, "rootability", "Root Ability", null);
 
