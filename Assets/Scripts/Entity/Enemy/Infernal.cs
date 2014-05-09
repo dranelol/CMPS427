@@ -28,11 +28,13 @@ public class Infernal : MonoBehaviour
         if (!boss)
         {
             name = _source.name + "'s Summoned Inferno";
+            GetComponent<MouseoverDisplay>().name = name;
         }
 
         else
         {
             name = "Infernal Overlord";
+            GetComponent<MouseoverDisplay>().name = name;
         }
         
         _pieces.animation["gatherIntoGolem"].wrapMode = WrapMode.ClampForever;
@@ -55,6 +57,9 @@ public class Infernal : MonoBehaviour
         }
 
         else
+        {
+            _target = _source;
+        }
         
         transform.FindChild("EnemyAggroCollider").gameObject.AddComponent<AggroRadius>();
         AggroRadius aggro = transform.FindChild("EnemyAggroCollider").gameObject.GetComponent<AggroRadius>();
@@ -74,7 +79,7 @@ public class Infernal : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         aggro.activeTrigger = true;
-        // GetComponent<AIController>().Threat(_target, 1);
+        GetComponent<AIController>().Threat(_target, 1);
     }
 
     public void Death()
