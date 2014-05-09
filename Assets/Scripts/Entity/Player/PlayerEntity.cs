@@ -51,7 +51,6 @@ public class PlayerEntity : Entity
     {
         base.Start();
 
-
         if (gameManager.loadSaveTest == true)
         {
             for (int i = 2; i < 6; i++)
@@ -84,17 +83,17 @@ public class PlayerEntity : Entity
 
         else
         {
-            abilityManager.AddAbility(GameManager.Abilities["shadowbolt"], 1);
-            abilityManager.AddAbility(GameManager.Abilities["improvedshadowbolt"], 2);
-            abilityManager.AddAbility(GameManager.Abilities["deathanddecay"], 3);
-            abilityManager.AddAbility(GameManager.Abilities["whirlwind"], 4);
-            abilityManager.AddAbility(GameManager.Abilities["shadowfury"], 5);
+            abilityManager.AddAbility(GameManager.Abilities["whirlwind"], 1);
+            abilityManager.AddAbility(GameManager.Abilities["cleave"], 2);
+            abilityManager.AddAbility(GameManager.Abilities["boomerangblade"], 3);
+            abilityManager.AddAbility(GameManager.Abilities["fireballturret"], 4);
+            abilityManager.AddAbility(GameManager.Abilities["firemine"], 5);
 
-            abilityIndexDict["shadowbolt"] = 1;
-            abilityIndexDict["improvedshadowbolt"] = 2;
-            abilityIndexDict["deathanddecay"] = 3;
-            abilityIndexDict["whirlwind"] = 4;
-            abilityIndexDict["shadowfury"] = 5;
+            abilityIndexDict["whirlwind"] = 1;
+            abilityIndexDict["cleave"] = 2;
+            abilityIndexDict["boomerangblade"] = 3;
+            abilityIndexDict["fireballturret"] = 4;
+            abilityIndexDict["firemine"] = 5;
         }
 	}
 	
@@ -130,8 +129,8 @@ public class PlayerEntity : Entity
 
     public void OnApplicationQuit()
     {
-       Inventory.UnSaveShit();
-       Inventory.SaveItems();
+       //Inventory.UnSaveShit();
+       //Inventory.SaveItems();
     }
 
     public Attributes GetAttributes()

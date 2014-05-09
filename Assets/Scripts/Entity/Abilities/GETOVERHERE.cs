@@ -13,17 +13,13 @@ public class GETOVERHERE : Ability
 
     public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
-        
+        GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position, Quaternion.Euler(forward));
+            
+        projectile.GetComponent<ProjectileBehaviour>().owner = owner;
+        projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 0.25f;
+        projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
 
-            GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position, Quaternion.Euler(forward));
-
-            projectile.GetComponent<ProjectileBehaviour>().owner = owner;
-            projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 0.25f;
-            projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
-
-            projectile.rigidbody.velocity = forward.normalized * 40.0f;
-       
-
+        projectile.rigidbody.velocity = forward.normalized * 40.0f;
     }
 
     public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)

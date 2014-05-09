@@ -14,7 +14,7 @@ public class Shadowbolt : Ability
     public override void SpawnProjectile(GameObject source, Vector3 target, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
 
-        GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().ShadowboltProjectile, source.transform.position + forward + new Vector3(0,2,0), Quaternion.LookRotation(forward));
+        GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().ShadowboltProjectile, CombatMath.GetCenter(source.transform), Quaternion.LookRotation(forward));
 
         projectile.GetComponent<ProjectileBehaviour>().owner = owner;
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
@@ -87,7 +87,7 @@ public class Shadowbolt : Ability
     {
         GameObject particles;
 
-        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position + new Vector3(0,1,0), source.transform.rotation);
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(target.transform), source.transform.rotation);
 
         yield return new WaitForSeconds(time);
 

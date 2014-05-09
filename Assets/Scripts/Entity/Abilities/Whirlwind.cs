@@ -76,7 +76,7 @@ public class Whirlwind : Ability
                 if (isPlayer == true)
                 {
                     // try to cast a ray from the enemy to the player
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, ~(1 << enemyMask));
+                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << enemyMask));
 
                     if (!rayCastHit)
                     {
@@ -93,11 +93,11 @@ public class Whirlwind : Ability
                         }
                     }
                 }
-
+            
                 else
                 {
                     // try to cast a ray from the player to the enemy
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, ~(1 << playerMask));
+                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
@@ -194,7 +194,7 @@ public class Whirlwind : Ability
     {
         GameObject particles;
 
-        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position, target.transform.rotation);
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(target.transform), target.transform.rotation);
 
         yield return new WaitForSeconds(time);
 
@@ -217,7 +217,7 @@ public class Whirlwind : Ability
     {
         GameObject particles;
 
-        particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(source.transform), source.transform.rotation);
 
         particles.GetComponent<OrbSpawnSingle>().orbitObject = source;
         particles.GetComponent<OrbSpawnSingle>().orbitScale = orbitScale;

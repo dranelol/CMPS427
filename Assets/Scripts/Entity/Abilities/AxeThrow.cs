@@ -19,7 +19,7 @@ public class AxeThrow : Ability
         for (int i = 0; i < segments; i++)
         {
 
-            GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().AxeThrowProjectile, source.transform.position + Rotations.RotateAboutY(forward, (360 / segments) * i) * 1, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
+            GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().AxeThrowProjectile, CombatMath.GetCenter(source.transform) + Rotations.RotateAboutY(forward, (360 / segments) * i) * 1, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
 
             projectile.GetComponent<ProjectileBehaviour>().owner = owner;
             projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 2.5f;
@@ -84,7 +84,7 @@ public class AxeThrow : Ability
     {
         GameObject particles;
 
-        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position, source.transform.rotation);
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(target.transform), source.transform.rotation);
 
         yield return new WaitForSeconds(time);
 

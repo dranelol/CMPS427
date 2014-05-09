@@ -2,21 +2,42 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Fusrodah : Ability
+public class BossInfernalFireball : Ability
 {
-    public Fusrodah(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+    public BossInfernalFireball(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
         : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
-       
+
     }
-                                            
-    public override void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
+
+
+    public override void SpawnProjectile(GameObject source, Vector3 target, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
+    {
+
+        GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().BossInfernalFireballProjectile, source.transform.position + new Vector3(0,10.0f,0), Quaternion.LookRotation(forward));
+        Debug.Log("shootin dat infernal");
+        projectile.GetComponent<ProjectileBehaviour>().owner = owner;
+        projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 10.0f;
+        projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
+        projectile.GetComponent<ProjectileBehaviour>().target = target;
+        projectile.GetComponent<ProjectileBehaviour>().CollidesWithTerrain = true;
+        projectile.GetComponent<ProjectileBehaviour>().AOEOnExplode = true;
+        projectile.GetComponent<ProjectileBehaviour>().speed = 5f;
+
+        //projectile.rigidbody.velocity = forward;
+
+        Vector3 direction = (target - projectile.transform.position).normalized;
+
+        projectile.transform.rotation = Quaternion.LookRotation(direction);
+    }
+
+    public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
     {
         List<GameObject> attacked = OnAttack(source, isPlayer);
 
         if (isPlayer == true)
         {
-
+            Debug.Log(attacked.Count);
             foreach (GameObject enemy in attacked)
             {
                 if (enemy.GetComponent<AIController>().IsResetting() == false
@@ -24,10 +45,9 @@ public class Fusrodah : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
-                    DoPhysics(source, enemy);
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
-                        enemy.GetComponent<AIController>().BeenAttacked(source);
+                        enemy.GetComponent<AIController>().BeenAttacked(attacker.gameObject);
                     }
                 }
             }
@@ -39,13 +59,19 @@ public class Fusrodah : Ability
             {
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
-                DoPhysics(source, enemy);
+
             }
         }
 
+        NavMeshHit navMeshHit;
+
+        if (NavMesh.SamplePosition(source.transform.position, out navMeshHit, range, 1 << LayerMask.NameToLayer("Default")))
+        {
+            GameObject infernoSpawn = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().InfernalSpawn, navMeshHit.position, Quaternion.identity);
+            infernoSpawn.GetComponent<Infernal>().Initialize(attacker.gameObject);
+        }
 
         GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer));
-    
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -79,11 +105,12 @@ public class Fusrodah : Ability
             colliders = Physics.OverlapSphere(source.transform.position, range, 1 << playerMask);
         }
 
+        Debug.Log("colliders gained: " + colliders.Length);
         foreach (Collider collider in colliders)
         {
             //Debug.Log(collider.ToString());
 
-            // create a vector from the possible enemy to the attacker
+            // create a vector from the possible enemy to the source.transform
 
             Vector3 enemyVector = collider.transform.position - source.transform.position;
             Vector3 enemyVector2 = source.transform.position - collider.transform.position;
@@ -98,47 +125,29 @@ public class Fusrodah : Ability
             if (Vector3.Angle(forward, enemyVector) < angle)
             {
                 RaycastHit hit = new RaycastHit();
-                
 
                 if (isPlayer == true)
                 {
-                    // try to cast a ray from the enemy to the player
-                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << enemyMask));
+                    // try to cast a ray from the enemy to the original position
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, ~(1 << enemyMask));
 
                     if (!rayCastHit)
                     {
-
-                    }
-                    // if the ray hits, the enemy is in line of sight of the player, this is a successful attack hit
-                    else
-                    {
-                        if (hit.collider.gameObject.tag == "Player")
-                        {
-                            Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                            Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
-                            enemiesToAttack.Add(collider.gameObject);
-                        }
+                        Debug.Log("no hit, good");
+                        Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
+                        Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
+                        enemiesToAttack.Add(collider.gameObject);
                     }
                 }
 
                 else
                 {
-                    // try to cast a ray from the player to the enemy
-                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << playerMask));
+                    // try to cast a ray from the player to the original position
+                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
-
-                    }
-                    // if the ray hits, the player is in line of sight of the enemy, this is a successful attack hit
-                    else
-                    {
-                        if (hit.collider.gameObject.tag == "Enemy")
-                        {
-                            //Debug.DrawRay(collider.transform.position, enemyVector, Color.green, 0.5f);
-                            //Debug.DrawRay(collider.transform.position, enemyVector2, Color.red, 0.5f);
-                            enemiesToAttack.Add(collider.gameObject);
-                        }
+                        enemiesToAttack.Add(collider.gameObject);
                     }
                 }
             }
@@ -158,45 +167,19 @@ public class Fusrodah : Ability
         {
             damageAmt = DamageCalc.DamageCalculation(attacker, defender, 0);
         }
-        Debug.Log("damage: " + damageAmt);
+        if (isPlayer == true)
+        {
+            Debug.Log("damage: " + damageAmt);
+        }
 
         defender.ModifyHealth(-damageAmt);
-    }
-
-    public override void DoPhysics(GameObject source, GameObject target)
-    {
-        Vector3 relativeVector = (target.transform.position - source.transform.position).normalized;
-        float normalizedMagnitude = 6f - Vector3.Distance(target.transform.position, source.transform.position);
-        float force = (normalizedMagnitude / (Mathf.Pow(0.35f, 2)));
-        //defender.GetComponent<MovementFSM>().Stop(0.17f);
-
-        target.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force * 2, 0.2f);
     }
 
     public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
     {
         GameObject particles;
 
-        // if the player is casting the ability, we need to activate it based on the position of the cursor, not the transform's forward
-        if (isPlayer == true)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit targetRay;
-            Physics.Raycast(ray, out targetRay, Mathf.Infinity);
-            Vector3 vectorToMouse = targetRay.point - source.transform.position;
-            Vector3 cursorForward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
-
-
-            Quaternion rotation = Quaternion.LookRotation(cursorForward);
-            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, rotation);
-        }
-
-        else
-        {
-            particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
-        }
-
-        //particles.transform.parent = attacker.transform;
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
 
         yield return new WaitForSeconds(time);
 
@@ -204,7 +187,6 @@ public class Fusrodah : Ability
 
         foreach (ParticleSystem item in particleSystems)
         {
-            Debug.Log("asd");
             item.transform.parent = null;
             item.emissionRate = 0;
             item.enableEmission = false;

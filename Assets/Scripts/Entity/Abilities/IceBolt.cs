@@ -13,58 +13,17 @@ public class IceBolt : Ability
 
     public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
+        GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().IceBoltProjectile, CombatMath.GetCenter(source.transform) + new Vector3(0,0.5f,0), Quaternion.LookRotation(forward));
 
-        int segments = 1;
-        Vector3 launchpos;
+        projectile.GetComponent<ProjectileBehaviour>().owner = owner;
+        projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
+        projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
 
-        if (source.tag == "Projectile")
-        {
-            launchpos = source.transform.position;
-            launchpos.y = launchpos.y - 1;
-        }
-        else
-        {
-            launchpos = source.transform.position;
-        }
-
-        for (int i = 0; i < segments; i++)
-        {
-
-            GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().IceBoltProjectile, launchpos /*+ Rotations.RotateAboutY(forward, (360 / segments) * i) * 2*/, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
-
-            projectile.GetComponent<ProjectileBehaviour>().owner = owner;
-            projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
-            projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
-
-            projectile.rigidbody.velocity = Rotations.RotateAboutY(forward, (360 / segments) * i) * 20.0f;
-        }
-
+        projectile.rigidbody.velocity = forward * 20.0f;
     }
 
     public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
     {
-
-        /*
-        Vector3 forward = Vector3.zero;
-
-        // if its a player, attack based on mouse
-        if (isPlayer == true)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit rayCastTarget;
-            Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
-            Vector3 vectorToMouse = rayCastTarget.point - source.transform.position;
-            forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
-        }
-
-        // if its an enemy, attack based on forward vector
-        else
-        {
-            forward = source.transform.forward;
-        }
-         */
-
-
         if (isPlayer == true)
         {
             if (target.GetComponent<AIController>().IsResetting() == false
@@ -114,7 +73,7 @@ public class IceBolt : Ability
     {
         GameObject particles;
 
-        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position, source.transform.rotation);
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(target.transform), source.transform.rotation);
 
         yield return new WaitForSeconds(time);
 

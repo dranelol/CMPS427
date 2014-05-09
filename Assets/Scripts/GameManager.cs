@@ -73,6 +73,9 @@ public class GameManager : MonoBehaviour
     public GameObject ShadowfurySpawn;
     public GameObject ShadowtrapSpawn;
 
+    public GameObject BossInfernalFireballProjectile;
+    public GameObject BossInfernalFireballExplosion;
+
     public equipmentFactory EquipmentFactory;
 
     public static Dictionary<string, Ability> Abilities;
@@ -134,7 +137,8 @@ public class GameManager : MonoBehaviour
         Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 5.0f, 45.0f, 5.0f, 10.0f, 20.0f, "fusrodah", "Fus Roh Dah", FusRoDahParticles);
 		Abilities["flamestrike"] = new Flamestrike(AttackType.PBAOE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 1000.0f, 25.0f, "flamestrike", "Flamestrike", FlamestrikeParticles);
         Abilities["bladewaltz"] = new BladeWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 30.0f, 0f, 50.0f, "bladewaltz", "Blade Waltz", BladeWaltzParticles);
-        Abilities["erenwaltz"] = new ErenWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 5.0f, 0f, "erenwaltz", "Eren Waltz", BladeWaltzParticles);Abilities["firemine"] = new FireMine(AttackType.PROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 4.0f, 200.0f, 10f, "firemine", "Fire Mine", FiremineParticles);
+        Abilities["erenwaltz"] = new ErenWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 5.0f, 0f, "erenwaltz", "Eren Waltz", BladeWaltzParticles);
+        Abilities["firemine"] = new FireMine(AttackType.PROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 4.0f, 200.0f, 10f, "firemine", "Fire Mine", FiremineParticles);
         Abilities["GETOVERHERE"] = new GETOVERHERE(AttackType.PROJECTILE, DamageType.SHADOW, 4.0f, 0.0f, 5.0f, 0.1f, 10f, "GETOVERHERE", "Shadow Pull", GETOVERHEREParticles);
         Abilities["normalmine"] = new NormalMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 360.0f, 4.0f, 1.0f, 10f, "normalmine", "Mine", MineParticles);
         Abilities["blinkstrike"] = new BlinkStrike(AttackType.PROJECTILE, DamageType.SHADOW, 4.0f, 1.0f, 7.0f, 5.0f, 10f, "blinkstrike", "Blink Strike", BlinkStrikeProjectile);
@@ -154,6 +158,7 @@ public class GameManager : MonoBehaviour
         Abilities["dropdasteel"] = new DropDaSteel(AttackType.STATUS, DamageType.NONE, 0f, 0f, 32f, 0f, 0f, "dropdasteel", "Drop Da Steel", dropdasteelparticles);
 
         Abilities["infernalfireball"] = new InfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 30.0f, 0f, "infernalfireball", "Infernal Fireball", InfernalFireballExplosion);
+        Abilities["bossinfernalfireball"] = new BossInfernalFireball(AttackType.HONINGPROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 30.0f, 0f, "bossinfernalfireball", "Boss Infernal Fireball", BossInfernalFireballExplosion);
         Abilities["whirlwind"] = new Whirlwind(AttackType.GROUNDTARGET, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 10.0f, 0f, "whirlwind", "Whirlwind", OnHitNormalParticles);
 
         //Abilities["healorb"] = new HealOrb(AttackType.PROJECTILE, DamageType.NONE, 5.0f, 360.0f, 0.0f, 0.0f, "healorb", "Heal Orb", HealOrbExplosion);
@@ -166,7 +171,7 @@ public class GameManager : MonoBehaviour
         #endregion
 
         #region enemy abilities
-        Abilities["enemyfireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 2.5f, 10.0f, 0f, "enemyfireball", "Enemy Fireball", FireballExplosion);
+        Abilities["enemyfireball"] = new Fireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 2.5f, 10.0f, 3.0f, "enemyfireball", "Enemy Fireball", FireballExplosion);
         Abilities["enemycleaveslow"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 5.0f, 5.0f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemycleavenormal"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 2.5f, 2.5f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemycleavefast"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 1.0f, 1.0f, 0f, "cleave", "Cleave", CleaveParticles);
@@ -211,4 +216,6 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(coroutine);
     }
+
+    
 }

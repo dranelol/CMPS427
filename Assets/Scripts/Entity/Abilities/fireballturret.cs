@@ -10,13 +10,10 @@ public class FireballTurret : Ability
 
     }
 
-
     public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
-
-
         int segments = 1;
-        GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position + forward, source.transform.rotation);
+        GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position + new Vector3(0,1,0), source.transform.rotation);
 
 
         projectile.GetComponent<ProjectileBehaviour>().owner = owner;
@@ -34,12 +31,14 @@ public class FireballTurret : Ability
         {
             tempindex++;
         }
+
         if (owner.GetComponent<Entity>().abilityManager.abilities[tempindex] == null)
         {
             owner.GetComponent<Entity>().abilityManager.AddAbility(GameManager.Abilities["fireball"], tempindex);
             owner.GetComponent<Entity>().abilityIndexDict["fireball"] = tempindex;
             Debug.Log("fireball added to " + tempindex);
         }
+
         /*
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
@@ -49,10 +48,8 @@ public class FireballTurret : Ability
 
     
         GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(launch(projectile, owner, tempindex, isPlayer));
-    
     }
 
-    
     public IEnumerator launch(GameObject source, GameObject owner, int tempindex, bool isplayer)
     {
         for (int i = 0; i < 12; i++)
@@ -79,47 +76,6 @@ public class FireballTurret : Ability
 
 
         yield return null;
-    }
-    
-    public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
-    {
-        /*
-        List<GameObject> attacked = OnAttack(target, isPlayer);
-
-        if (isPlayer == true)
-        {
-            Debug.Log(attacked.Count);
-            foreach (GameObject enemy in attacked)
-            {
-                if (enemy.GetComponent<AIController>().IsResetting() == false
-                    && enemy.GetComponent<AIController>().IsDead() == false)
-                {
-                    Entity defender = enemy.GetComponent<Entity>();
-                    DoDamage(source, enemy, attacker, defender, isPlayer);
-                    DoPhysics(target, enemy);
-                    if (enemy.GetComponent<AIController>().IsInCombat() == false)
-                    {
-                        enemy.GetComponent<AIController>().BeenAttacked(source);
-                    }
-                }
-            }
-        }
-
-        else
-        {
-            foreach (GameObject enemy in attacked)
-            {
-                Entity defender = enemy.GetComponent<Entity>();
-                DoDamage(source, enemy, attacker, defender, isPlayer);
-                DoPhysics(target, enemy);
-
-            }
-        }
-         * */
-    }
-
-    public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
-    {
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -180,7 +136,8 @@ public class FireballTurret : Ability
                 {
                     // try to cast a ray from the enemy to the turret
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << enemyMask));
+                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << enemyMask));
+                    //bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << enemyMask));
                     Debug.DrawRay(normalizedDefenderPosition, enemyVector2, Color.red, 0.5f);
                     if (!rayCastHit)
                     {
@@ -204,7 +161,8 @@ public class FireballTurret : Ability
                 {
                     // try to cast a ray from the player to the turret
 
-                    bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << playerMask));
+                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << playerMask));
+                    //bool rayCastHit = Physics.Raycast(new Ray(normalizedDefenderPosition, enemyVector2), out hit, range, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
@@ -241,9 +199,4 @@ public class FireballTurret : Ability
         return enemytoAttack;
 
     }
-
-    public override void DoPhysics(GameObject source, GameObject target)
-    {
-    }
-
 }

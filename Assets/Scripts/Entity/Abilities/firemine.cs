@@ -14,17 +14,13 @@ public class FireMine : Ability
 
     public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
-        
+        GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, CombatMath.GetCenter(source.transform) + new Vector3(0,0.3f,0), source.transform.rotation);
 
-            GameObject projectile = (GameObject)GameObject.Instantiate(particleSystem, source.transform.position, source.transform.rotation);
+        projectile.GetComponent<ProjectileBehaviour>().owner = owner;
+        projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
+        projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
 
-            projectile.GetComponent<ProjectileBehaviour>().owner = owner;
-            projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
-            projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
-
-            projectile.rigidbody.velocity = Vector3.zero;
-        
-
+        projectile.rigidbody.velocity = Vector3.zero;
     }
 
     public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
@@ -67,6 +63,9 @@ public class FireMine : Ability
 
             }
         }
+
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().FireballExplosion, 0.2f, isPlayer, target));
+   
     }
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
@@ -140,7 +139,7 @@ public class FireMine : Ability
                 if (isPlayer == true)
                 {
                     // try to cast a ray from the enemy to the player
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, ~(1<<enemyMask));
+                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << enemyMask));
 
                     if (!rayCastHit)
                     {
@@ -161,7 +160,7 @@ public class FireMine : Ability
                 else
                 {
                     // try to cast a ray from the player to the enemy
-                    bool rayCastHit = Physics.Raycast(new Ray(collider.transform.position, enemyVector2), out hit, range, ~(1 << playerMask));
+                    bool rayCastHit = CombatMath.RayCast(source.transform, collider.transform, out hit, range, ~(1 << playerMask));
 
                     if (!rayCastHit)
                     {
@@ -187,10 +186,34 @@ public class FireMine : Ability
     public override void DoPhysics(GameObject source, GameObject target)
     {
         Vector3 relativeVector = (target.transform.position - source.transform.position+new Vector3(.01f,0f,0f)).normalized;
+
         float normalizedMagnitude = 5f - Vector3.Distance(target.transform.position, source.transform.position + new Vector3(.01f, 0f, 0f));
+
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
 
         target.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force, 0.2f);
     }
 
+    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target)
+    {
+        GameObject particles;
+
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(target.transform), source.transform.rotation);
+
+        yield return new WaitForSeconds(time);
+
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem item in particleSystems)
+        {
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
+
+        }
+
+        GameObject.Destroy(particles);
+
+        yield return null;
+    }
 }

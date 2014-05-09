@@ -7,19 +7,17 @@ public class Fireball : Ability
     public Fireball(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
         : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
     {
-
+        
     }
-
 
     public override void SpawnProjectile(GameObject source, GameObject owner, Vector3 forward, string abilityID, bool isPlayer)
     {
-        
         int segments = 1;
         
         for(int i = 0; i < segments; i++)
         {
             
-            GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().FireballProjectile, source.transform.position + Rotations.RotateAboutY(forward, (360 / segments) * i) * 2, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
+            GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().FireballProjectile, CombatMath.GetCenter(source.transform) + Rotations.RotateAboutY(forward, (360 / segments) * i) * 2, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
 
             projectile.GetComponent<ProjectileBehaviour>().owner = owner;
             projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 3.0f;
@@ -104,7 +102,7 @@ public class Fireball : Ability
     {
         GameObject particles;
 
-        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position, source.transform.rotation);
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(target.transform), source.transform.rotation);
 
         yield return new WaitForSeconds(time);
 
