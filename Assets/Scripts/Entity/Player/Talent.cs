@@ -82,8 +82,10 @@ public class Talent
 
     public string ReadableBonus()
     {
-        float bonusRead = bonusMagnitude * 100f;
+        float bonusRead = bonusMagnitude  * 100f;
+
         
+
         
         if (bonus == "attackDamage")
         {
@@ -104,6 +106,14 @@ public class Talent
         else if (bonus == "shadow")
         {
             return "Adds " + bonusRead.ToString() + "% Shadow Damage";
+        }
+        else if (bonus == "onHitDamage")
+        {
+            return "Adds " + bonusRead.ToString() + "% On Hit Damage";
+        }
+        else if (bonus == "defense")
+        {
+            return "Adds " + bonusRead.ToString() + "% Defense";
         }
         else
         {

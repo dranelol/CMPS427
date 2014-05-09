@@ -59,7 +59,7 @@ public class Entity : MonoBehaviour
 
     public void Awake()
     {
-        // LoadInventory();
+        inventory = new Inventory(); // LoadInventory();
         abilityManager = gameObject.GetComponent<AbilityManager>();
         equippedEquip = new Dictionary<equipSlots.slots, equipment>();
         _soundManager = GetComponent<EntitySoundManager>();

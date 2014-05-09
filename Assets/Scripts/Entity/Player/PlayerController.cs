@@ -18,8 +18,8 @@ public class PlayerController : MonoBehaviour {
     public CombatFSM combatFSM;
     private AnimationController _animationController;
 
-    private HashSet<Ability> spellBook;
-    public HashSet<Ability> SpellBook
+    private List<Ability> spellBook;
+    public List<Ability> SpellBook
     {
         get { return spellBook; }
 
@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
         talentManager = transform.GetComponent<TalentManager>();
-        spellBook = new HashSet<Ability>();
+        spellBook = new List<Ability>();
 
         DontDestroyOnLoad(transform.gameObject);
 
@@ -887,7 +887,7 @@ public class PlayerController : MonoBehaviour {
         
         //Play animation
 
-        talentManager.GiveTalentPoints(1);
+        talentManager.GiveTalentPoints(50);
         entity.GiveAttributePoints(5);
 
 

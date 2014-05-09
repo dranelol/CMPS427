@@ -48,6 +48,11 @@ public class TalentManager : MonoBehaviour
         get { return bonuses; }
     }
 
+    private Dictionary<string, int> bonusRanks;
+    public Dictionary<string, int> BonusRanks
+    {
+        get { return bonusRanks; }
+    }
 
     private PlayerController playerController;
 
@@ -68,33 +73,104 @@ public class TalentManager : MonoBehaviour
         magicTreePoints = 0;
 
         bonuses = new Dictionary<string, bool>();
+        bonusRanks = new Dictionary<string, int>();
 
         bonuses.Add("attackDamage", false);
+        bonusRanks.Add("attackDamage", 0);
         bonuses.Add("attackSpeed", false);
+        bonusRanks.Add("attackSpeed", 0);
         bonuses.Add("fire", false);
+        bonusRanks.Add("fire", 0);
         bonuses.Add("ice", false);
+        bonusRanks.Add("ice", 0);
         bonuses.Add("shadow", false);
+        bonusRanks.Add("shadow", 0);
+        bonuses.Add("onHitDamage", false);
+        bonusRanks.Add("onHitDamage", 0);
+        bonuses.Add("defense", false);
+        bonusRanks.Add("defense", 0);
 
     }
     
     
     // Use this for initialization
-	void Start () 
+	void Start ()
     {
-        mightTree.Add(new Talent("Fus Ro Dah", 1, GameManager.Abilities["fusrodah"], 0));
-        mightTree.Add(new Talent("Hadouken", 1, "fire", 0.1f, 1));
-        mightTree.Add(new Talent("Fireball Turret", 1, GameManager.Abilities["fireballturret"], 1));
-        mightTree.Add(new Talent("Blink Strike", 1, GameManager.Abilities["blinkstrike"], 2));
 
-        magicTree.Add(new Talent("Blink", 1, GameManager.Abilities["blink"], 0));
+        #region Might Talents
+
+        //Tier 1
+        mightTree.Add(new Talent("Cleave", 1, GameManager.Abilities["cleave"], 0));
+        mightTree.Add(new Talent("Axe Throw", 1, GameManager.Abilities["axethrow"], 0));
+        
+        //Tier 2
+        mightTree.Add(new Talent("On Hit Damage +", 1, "onHitDamage", .1f, 1));
+        mightTree.Add(new Talent("Fus Ro Dah", 1, GameManager.Abilities["fusrodah"], 1));
+        mightTree.Add(new Talent("Blink Strike", 1, GameManager.Abilities["blinkstrike"], 1));
+
+        //Tier 3
+        mightTree.Add(new Talent("Attack Damage +", 3, "attackDamage", .1f, 2));
+        mightTree.Add(new Talent("Attack Speed +", 2, "attackSpeed", .1f, 2));
+        mightTree.Add(new Talent("Defense", 5, "defense", .1f, 2));
+
+        //Tier 4 
+        mightTree.Add(new Talent("Whirlwind", 1, GameManager.Abilities["whirlwind"], 3));
+        mightTree.Add(new Talent("Hadouken", 1, GameManager.Abilities["hadouken"], 3));
+
+        //Tier 5
+        mightTree.Add(new Talent("Boomerang Blade", 1, GameManager.Abilities["boomerangblade"], 4));
+        mightTree.Add(new Talent("Death Grip", 1, GameManager.Abilities["GETOVERHERE"], 4));
+
+        //Tier 6
+        mightTree.Add(new Talent("Shield Breaker", 1, GameManager.Abilities["shieldbreaker"], 5));
+        mightTree.Add(new Talent("Shadow Pull", 1, GameManager.Abilities["deathgrip"], 5));
+        mightTree.Add(new Talent("Blade Waltz", 1, GameManager.Abilities["bladewaltz"], 5));
+
+        //Tier 7
+        //mightTree.Add(new Talent("Dervish", 1, GameManager.Abilities["dervish"], 6));
+
+        #endregion
+
+        #region Magic Talents
+
+        //Tier 1
+        magicTree.Add(new Talent("Fireball", 1, GameManager.Abilities["fireball"], 0));
+        magicTree.Add(new Talent("Ice Bolt", 1, GameManager.Abilities["icebolt"], 0));
+        magicTree.Add(new Talent("Shadow Bolt", 1, GameManager.Abilities["shadowbolt"], 0));
+
+        //Tier 2
+        magicTree.Add(new Talent("Flame Strike", 1, GameManager.Abilities["flamestrike"], 1));
         magicTree.Add(new Talent("Frozen orb", 1, GameManager.Abilities["frozenorb"], 1));
-        magicTree.Add(new Talent("Death Grip", 1, GameManager.Abilities["deathgrip"], 1));
-        magicTree.Add(new Talent("Chaos Barrage", 1, GameManager.Abilities["chaosbarrage"], 2));
+        magicTree.Add(new Talent("Shadow Trap", 1, GameManager.Abilities["shadowtrap"], 1));
+
+        //Tier 3
+        magicTree.Add(new Talent("Fire Damage +", 1, "fire", .1f, 2));
+        magicTree.Add(new Talent("Ice Damage +", 1, "ice", .1f, 2));
+        magicTree.Add(new Talent("Shadow Damage +", 1, "shadow", .1f, 2));
+
+        //Tier 4
+        magicTree.Add(new Talent("Fire Mine", 1, GameManager.Abilities["firemine"], 3));
+        magicTree.Add(new Talent("Blink", 1, GameManager.Abilities["blink"], 3));
+        magicTree.Add(new Talent("Improved Shadow Bolt", 1, GameManager.Abilities["improvedshadowbolt"], 3));
+
+        //Tier 5
+        magicTree.Add(new Talent("Fire Turret", 1, GameManager.Abilities["fireballturret"], 4));
+        magicTree.Add(new Talent("Let It Go", 1, GameManager.Abilities["aoefreeze"], 4));
+        magicTree.Add(new Talent("Shadowfury", 1, GameManager.Abilities["shadowfury"], 4));
+
+        //Tier 6
+        magicTree.Add(new Talent("Fire Barrage", 1, GameManager.Abilities["fireballbarrage"], 5));
+        magicTree.Add(new Talent("Frost Nova", 1, GameManager.Abilities["frostnova"], 5));
+        magicTree.Add(new Talent("Death and Decay", 1, GameManager.Abilities["deathanddecay"], 5));
+
+        //Tier 7
+        magicTree.Add(new Talent("Chaos Barrage", 1, GameManager.Abilities["chaosbarrage"], 6));
+
+        #endregion
 
 
 
-
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () 
@@ -336,10 +412,12 @@ public class TalentManager : MonoBehaviour
     public void AddPassive(Talent talent)
     {
         bonuses[talent.Bonus] = true;
+        bonusRanks[talent.Bonus] = talent.CurrentPoints;
     }
 
     public void RemovePassive(Talent talent)
     {
         bonuses[talent.Bonus] = false;
+        bonusRanks[talent.Bonus] = 0;
     }
 }

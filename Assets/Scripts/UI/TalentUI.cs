@@ -116,7 +116,7 @@ public class TalentUI : UIState
                      + "Cooldown: " + hoverTalentMight.TalentAbility.Cooldown.ToString();
 
                 tooltipHeight = 83;
-                tooltipWidth = 100;
+                tooltipWidth = 150;
 
             }
             else
@@ -124,7 +124,7 @@ public class TalentUI : UIState
                 info = hoverTalentMight.Name + "\n" + hoverTalentMight.ReadableBonus();
 
                 tooltipHeight = 40;
-                tooltipWidth = 150;
+                tooltipWidth = 170;
             }
 
 
@@ -150,14 +150,14 @@ public class TalentUI : UIState
                      + "Cooldown: " + hoverTalentMagic.TalentAbility.Cooldown.ToString();
 
                 tooltipHeight = 83;
-                tooltipWidth = 100;
+                tooltipWidth = 150;
             }
             else
             {
                 info = hoverTalentMagic.Name + "\n" + hoverTalentMagic.ReadableBonus();
 
                 tooltipHeight = 40;
-                tooltipWidth = 150;
+                tooltipWidth = 170;
             }
 
 
@@ -195,7 +195,7 @@ public class TalentUI : UIState
         GUIContent tempTalentLabel = new GUIContent();
         int count = 0;
         float iconWidth = 0f;
-        float iconHeight = 50f;
+        float iconHeight = 30f;
         Rect thisRect = new Rect();
         mightRects = new Dictionary<Rect, Talent>();
         magicRects = new Dictionary<Rect, Talent>();
@@ -464,7 +464,7 @@ public class TalentUI : UIState
 
         foreach (var pair in talentMightAllocation)
         {
-            Debug.Log("Talent: " + pair.Key.Name + " Value: "+pair.Value.ToString());         
+                    
             
             if(pair.Value > 0)
             {
@@ -477,7 +477,7 @@ public class TalentUI : UIState
 
         foreach (var pair in talentMagicAllocation)
         {
-            Debug.Log("Talent: " + pair.Key.Name + " Value: " + pair.Value.ToString());
+            
             if (pair.Value > 0)
             {
                 for (int i = 0; i < pair.Value; i++)
