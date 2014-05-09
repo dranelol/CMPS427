@@ -45,50 +45,47 @@ public class EnemySpawner : MonoBehaviour
         {
             if (other.tag == "Player" && !other.GetComponent<Entity>().IsDead())
             {
-
                 level = other.GetComponent<PlayerEntity>().Level;
 
                 List<GameObject> enemies = EnemyAttributeFactory.GetEnemies(_resources, _maxCount, _maxCost, _minCost);
-
-
-                Debug.Log("doing thing" + enemies.Count.ToString());
-                for (int i = 0; i < enemies.Count; i++)
-                {
-                    GenerateEnemy(enemies[i]);
-                }
-
+                StartCoroutine(GenerateEnemies(enemies));
                 HasSpawned = true;
             }
         }
     }
 
-    private void GenerateEnemy(GameObject enemyPrefab)
+    IEnumerator GenerateEnemies(List<GameObject> enemyPrefabs)
     {
-        Vector3 newPosition = transform.position + new Vector3(UnityEngine.Random.Range(-spawnRadius, spawnRadius), 0, UnityEngine.Random.Range(-spawnRadius, spawnRadius));
-
-        NavMeshHit meshLocation;
-        Debug.Log("making dude");
-        if (NavMesh.SamplePosition(newPosition, out meshLocation, SPAWN_RADIUS_MAX, 1 << LayerMask.NameToLayer("Default")))
+        for (int i = 0; i < enemyPrefabs.Count; i++)
         {
-            GameObject newEnemy = Instantiate(enemyPrefab, meshLocation.position, Quaternion.identity) as GameObject;
+            Vector3 newPosition = transform.position + new Vector3(UnityEngine.Random.Range(-spawnRadius, spawnRadius), 0, UnityEngine.Random.Range(-spawnRadius, spawnRadius));
 
-            newEnemy.name += "(" + newEnemy.GetInstanceID() + ")";
-            newEnemy.transform.parent = transform;
+            NavMeshHit meshLocation;
 
-            newEnemy.transform.Find("EnemyAggroCollider").gameObject.AddComponent<AggroRadius>();
-            AIController AIControl = newEnemy.AddComponent<AIController>();
-            Entity enemyEntity = newEnemy.GetComponent<Entity>();
-            EnemyBaseAtts enemyBase = newEnemy.GetComponent<EnemyBaseAtts>();
+            if (NavMesh.SamplePosition(newPosition, out meshLocation, SPAWN_RADIUS_MAX, 1 << LayerMask.NameToLayer("Default")))
+            {
+                GameObject newEnemy = Instantiate(enemyPrefabs[i], meshLocation.position, Quaternion.identity) as GameObject;
 
-            enemyEntity.SetLevel(level);
-            enemyBase.InitializeStats(level);
-            enemyBase.SetAbilities();
-        }
+                newEnemy.name += "(" + newEnemy.GetInstanceID() + ")";
+                newEnemy.transform.parent = transform;
 
-        else
-        {
-            this.gameObject.SetActive(false);
-            throw new NullReferenceException("Could not find a place to spawn enemy. Check node location.");
+                newEnemy.transform.Find("EnemyAggroCollider").gameObject.AddComponent<AggroRadius>();
+                newEnemy.AddComponent<AIController>();
+                Entity enemyEntity = newEnemy.GetComponent<Entity>();
+                EnemyBaseAtts enemyBase = newEnemy.GetComponent<EnemyBaseAtts>();
+
+                enemyEntity.SetLevel(level);
+                enemyBase.InitializeStats(level);
+                enemyBase.SetAbilities();
+            }
+
+            else
+            {
+                this.gameObject.SetActive(false);
+                Debug.LogError("Could not find a place to spawn enemy. Check node location.");
+            }
+
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
