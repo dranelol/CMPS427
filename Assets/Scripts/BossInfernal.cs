@@ -1,32 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Infernal : MonoBehaviour 
+public class BossInfernal : MonoBehaviour
 {
     private SkinnedMeshRenderer[] _meshRenderer;
+    public GameObject _eyes;
 
     public GameObject _pieces;
     public GameObject _main;
     public string _deathAnimation;
 
-    private GameObject _source;
+    private GameObject _target;
 
     void Awake()
     {
         _meshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>();
+        _eyes = transform.FindChild("Eyes").gameObject;
         _pieces.animation[_deathAnimation].wrapMode = WrapMode.ClampForever;
     }
 
-    public void Initialize(GameObject source)
+    public void Initialize(GameObject target)
     {
-        _source = source;
+        _target = target;
 
-        GetComponent<CapsuleCollider>().enabled = false;
-
-        name = "Big Tim";
+        name = "Infernal Overlord";
         GetComponent<MouseoverDisplay>().name = name;
-   
- 
+
         _pieces.animation["gatherIntoGolem"].wrapMode = WrapMode.ClampForever;
         _pieces.animation["gatherIntoGolem"].speed = 2f;
         _pieces.animation.Play("gatherIntoGolem");
@@ -39,17 +38,18 @@ public class Infernal : MonoBehaviour
         yield return new WaitForSeconds(time);
 
         AggroRadius aggro = transform.FindChild("EnemyAggroCollider").gameObject.AddComponent<AggroRadius>();
+        aggro.activeTrigger = false;
 
         gameObject.AddComponent<AIController>();
-        gameObject.GetComponent<Entity>().SetLevel(_source.GetComponent<Entity>().Level);
-        gameObject.GetComponent<EnemyBaseAtts>().InitializeStats(_source.GetComponent<Entity>().Level);
+        gameObject.GetComponent<Entity>().SetLevel(_target.GetComponent<Entity>().Level);
+        gameObject.GetComponent<EnemyBaseAtts>().InitializeStats(_target.GetComponent<Entity>().Level);
         gameObject.GetComponent<EnemyBaseAtts>().SetAbilities();
         gameObject.GetComponent<Entity>().UpdateCurrentAttributes();
         gameObject.GetComponent<NavMeshAgent>().enabled = true;
 
-        GameObject _target = _source.GetComponent<AIController>().Target;
         GetComponent<CapsuleCollider>().enabled = true;
         _meshRenderer[0].enabled = true;
+        _eyes.SetActive(true);
         _pieces.SetActive(false);
 
         yield return new WaitForSeconds(0.5f);
@@ -66,6 +66,7 @@ public class Infernal : MonoBehaviour
         }
 
         _main.SetActive(false);
+        _eyes.SetActive(false);
         _pieces.SetActive(true);
         _pieces.animation.Play(_deathAnimation);
     }
