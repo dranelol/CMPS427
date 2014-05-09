@@ -127,7 +127,7 @@ public class TalentManager : MonoBehaviour
         mightTree.Add(new Talent("Blade Waltz", 1, GameManager.Abilities["bladewaltz"], 5));
 
         //Tier 7
-        //mightTree.Add(new Talent("Dervish", 1, GameManager.Abilities["dervish"], 6));
+        mightTree.Add(new Talent("Dervish", 1, GameManager.Abilities["dervish"], 6));
 
         #endregion
 
