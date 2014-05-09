@@ -44,11 +44,16 @@ public class PlayerController : MonoBehaviour {
         set { mouseOverGUI = value; }
     }
 
-    
+    private bool mouseOverChest;
+    public bool MouseOverChest
+    {
+        get { return mouseOverChest; }
+        set { mouseOverChest = value; }
+    }
 
     void Awake()
     {
-        
+        mouseOverChest = false;
 
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
@@ -233,7 +238,7 @@ public class PlayerController : MonoBehaviour {
 
         #region ability 1
 
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButton(1) && mouseOverChest == false)
         {
 
             if (mouseOverGUI == true)

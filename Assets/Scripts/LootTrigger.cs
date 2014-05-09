@@ -69,6 +69,8 @@ public class LootTrigger : Trigger
     {
         base.Update();
 
+        //Debug.Log("mouse over: "+uiController.PlayerController.MouseOverChest.ToString());
+
         if (inventory.IsEmpty() == true)
         {
             inventoryOpened = false;
@@ -130,7 +132,7 @@ public class LootTrigger : Trigger
     void OnMouseEnter()
     {
         Debug.Log("entering");
-        triggerObject.renderer.material.shader = highlight;
+        //triggerObject.renderer.material.shader = highlight;
     }
 
     void OnMouseOver()
@@ -141,7 +143,7 @@ public class LootTrigger : Trigger
     void OnMouseExit()
     {
         Debug.Log("exiting");
-        triggerObject.renderer.material.shader = defaultShader;
+        //triggerObject.renderer.material.shader = defaultShader;
     }
 
     
