@@ -66,7 +66,6 @@ public class EnemySpawner : MonoBehaviour
             {
                 GameObject newEnemy = Instantiate(enemyPrefabs[i], meshLocation.position, Quaternion.identity) as GameObject;
 
-                newEnemy.name += "(" + newEnemy.GetInstanceID() + ")";
                 newEnemy.transform.parent = transform;
 
                 newEnemy.transform.Find("EnemyAggroCollider").gameObject.AddComponent<AggroRadius>();

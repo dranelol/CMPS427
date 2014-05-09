@@ -5,33 +5,6 @@ using System.Collections.Generic;
 
 public class EnemyAttributeFactory : MonoBehaviour
 {
-    #region oldcode with statblocks
-	
-    /*
-    #region critter stats
-    public Attributes critterbase;
-    public float critterscalingHP = 2.5f;
-    public float critterscalingresource = 5f;
-    public float critterscalingpower = 2f;
-    public float critterscalingdefense = 2f;
-    public float critterscalingmindmg = .5f;
-    public float critterscalingmaxdmg = .5f;
-    #endregion
-
-    #region small stats
-    public Attributes smallbase;
-    public float smallscalingHP = 5f;
-    public float smallscalingresource = 10f;
-    public float smallscalingpower = 4f;
-    public float smallscalingdefense = 4f;
-    public float smallscalingmindmg = .75f;
-    public float smallscalingmaxdmg = .75f;
-	
-     */
-		
-	
-    #endregion
-	
     #region Constants
 	
     public const int MIN_ENEMY_COST = 1;
