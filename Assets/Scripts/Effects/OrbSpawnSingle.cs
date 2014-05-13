@@ -52,16 +52,17 @@ public class OrbSpawnSingle : MonoBehaviour
         Debug.Log("spawn distance: " + Vector3.Distance(newOrbPos, transform.position));
 
         GameObject newOrb = (GameObject)GameObject.Instantiate(orb, newOrbPos, transform.rotation);
-        newOrb.GetComponent<OrbRotate>().minHeight = minHeight;
-        newOrb.GetComponent<OrbRotate>().maxHeight = maxHeight;
-        newOrb.GetComponent<OrbRotate>().angularSpeed = angularSpeed;
-        newOrb.GetComponent<OrbRotate>().oscillationSpeed = oscillationSpeed;
-        newOrb.GetComponent<OrbRotate>().yOrbit = yOrbit;
-        newOrb.GetComponent<OrbRotate>().orbitScale = orbitScale;
-        newOrb.GetComponent<OrbRotate>().rotations = rotations;
-        newOrb.GetComponent<OrbRotate>().clockwiseRotate = clockwiseRotate;
-        newOrb.GetComponent<OrbRotate>().movingOrbit = movingOrbit;
-        newOrb.GetComponent<OrbRotate>().infiniteRotation = infiniteRotation;
+        OrbRotate orbRotate = newOrb.GetComponent<OrbRotate>();
+        orbRotate.minHeight = minHeight;
+        orbRotate.maxHeight = maxHeight;
+        orbRotate.angularSpeed = angularSpeed;
+        orbRotate.oscillationSpeed = oscillationSpeed;
+        orbRotate.yOrbit = yOrbit;
+        orbRotate.orbitScale = orbitScale;
+        orbRotate.rotations = rotations;
+        orbRotate.clockwiseRotate = clockwiseRotate;
+        orbRotate.movingOrbit = movingOrbit;
+        orbRotate.infiniteRotation = infiniteRotation;
 
         
 

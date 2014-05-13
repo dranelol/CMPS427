@@ -23,17 +23,17 @@ public class OrbSpawn : MonoBehaviour
 
 
 
-	void Awake () 
+	void Start () 
     {
         for (int i = 0; i < orbAmount; i++)
         {
             Vector3 newOrbPos = Vector3.zero;
-
+            Debug.Log("orbitScale: " + orbitScale);
             // trig math to spawn orbs around the orbit object, evenly spaced
             if (yOrbit == true)
             {
                 newOrbPos = new Vector3(transform.position.x + orbitScale * Mathf.Cos((360 / orbAmount) * i * Mathf.Deg2Rad),
-                                        minHeight,
+                                        transform.position.y + minHeight,
                                         transform.position.z + orbitScale * Mathf.Sin((360 / orbAmount) * i * Mathf.Deg2Rad));
             }
 
@@ -47,17 +47,20 @@ public class OrbSpawn : MonoBehaviour
 
             // set all orb stuff that needs to be set from master 
             GameObject newOrb = (GameObject)GameObject.Instantiate(orb, newOrbPos, transform.rotation);
-            newOrb.GetComponent<OrbRotate>().minHeight = minHeight;
-            newOrb.GetComponent<OrbRotate>().maxHeight = maxHeight;
-            newOrb.GetComponent<OrbRotate>().angularSpeed = angularSpeed;
-            newOrb.GetComponent<OrbRotate>().oscillationSpeed = oscillationSpeed;
-            newOrb.GetComponent<OrbRotate>().yOrbit = yOrbit;
-            newOrb.GetComponent<OrbRotate>().orbitScale = orbitScale;
-            newOrb.GetComponent<OrbRotate>().rotations = rotations;
-            newOrb.GetComponent<OrbRotate>().clockwiseRotate = clockwiseRotate;
-            newOrb.GetComponent<OrbRotate>().movingOrbit = movingOrbit;
-            newOrb.GetComponent<OrbRotate>().infiniteRotation = infiniteRotation;
-            newOrb.GetComponent<OrbRotate>().orbitObject = orbitObject;
+            OrbRotate orbRotate = newOrb.GetComponent<OrbRotate>();
+            orbRotate.minHeight = minHeight;
+            orbRotate.maxHeight = maxHeight;
+            orbRotate.angularSpeed = angularSpeed;
+            orbRotate.oscillationSpeed = oscillationSpeed;
+            orbRotate.yOrbit = yOrbit;
+            orbRotate.orbitScale = orbitScale;
+            orbRotate.rotations = rotations;
+            orbRotate.clockwiseRotate = clockwiseRotate;
+            orbRotate.movingOrbit = movingOrbit;
+            orbRotate.infiniteRotation = infiniteRotation;
+            orbRotate.orbitObject = orbitObject;
+
+            Debug.Log("spawn distance: " + Vector3.Distance(newOrbPos, transform.position));
 
             if (movingOrbit == true)
             {
