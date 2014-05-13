@@ -25,7 +25,7 @@ public class ShieldBreaker : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
-
+                    gameManager.RunCoroutine(OnHitAnimation(source, gameManager.OnHitNormalParticles, 0.2f, true, enemy));
 
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
@@ -47,6 +47,8 @@ public class ShieldBreaker : Ability
                 // todo: check if player is dead
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
+                gameManager.RunCoroutine(OnHitAnimation(source, gameManager.OnHitNormalParticles, 0.2f, false, enemy));
+
                 if (attacker.abilityManager.abilities[6] != null)
                 {
                     attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
@@ -251,6 +253,29 @@ public class ShieldBreaker : Ability
         }
 
         //particles.transform.parent = source.transform;
+
+        yield return new WaitForSeconds(time);
+
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem item in particleSystems)
+        {
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
+
+        }
+
+        GameObject.Destroy(particles);
+
+        yield return null;
+    }
+
+    public IEnumerator OnHitAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target)
+    {
+        GameObject particles;
+
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(target.transform), target.transform.rotation);
 
         yield return new WaitForSeconds(time);
 
