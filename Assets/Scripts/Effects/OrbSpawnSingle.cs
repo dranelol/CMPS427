@@ -26,28 +26,30 @@ public class OrbSpawnSingle : MonoBehaviour
 
         if (yOrbit == true)
         {
-            newOrbPos = new Vector3(transform.position.x + orbitScale * Mathf.Cos(initialAngleFromForward * Mathf.Deg2Rad),
-                                    transform.position.y,
-                                    transform.position.z + orbitScale * Mathf.Sin(initialAngleFromForward * Mathf.Deg2Rad));
+            newOrbPos = new Vector3(transform.position.x + orbitScale,// * Mathf.Cos(initialAngleFromForward * Mathf.Deg2Rad),*/
+                                    CombatMath.GetCenter(transform).y,
+                                    transform.position.z + orbitScale);// * Mathf.Sin(initialAngleFromForward * Mathf.Deg2Rad));
 
             // rotate based on forward vector of orbit object
 
-            //float turnAngle = Vector3.Angle(Vector3.back, orbitObject.transform.forward);
+            
 
             
         }
 
         else
         {
-            newOrbPos = new Vector3(transform.position.x + orbitScale * Mathf.Sin(initialAngleFromForward * Mathf.Deg2Rad),
-                                    transform.position.y + orbitScale * Mathf.Cos(initialAngleFromForward * Mathf.Deg2Rad),
+            newOrbPos = new Vector3(transform.position.x + orbitScale,// * Mathf.Sin(initialAngleFromForward * Mathf.Deg2Rad),
+                                    CombatMath.GetCenter(transform).y + orbitScale,// * Mathf.Cos(initialAngleFromForward * Mathf.Deg2Rad),
                                     transform.position.z);
 
             
 
         }
 
-        Debug.Log("spawning orb at: " + newOrbPos.ToString());
+        //Debug.Log("spawning orb at: " + newOrbPos.ToString());
+
+        Debug.Log("spawn distance: " + Vector3.Distance(newOrbPos, transform.position));
 
         GameObject newOrb = (GameObject)GameObject.Instantiate(orb, newOrbPos, transform.rotation);
         newOrb.GetComponent<OrbRotate>().minHeight = minHeight;
@@ -60,6 +62,8 @@ public class OrbSpawnSingle : MonoBehaviour
         newOrb.GetComponent<OrbRotate>().clockwiseRotate = clockwiseRotate;
         newOrb.GetComponent<OrbRotate>().movingOrbit = movingOrbit;
         newOrb.GetComponent<OrbRotate>().infiniteRotation = infiniteRotation;
+
+        
 
         if (movingOrbit == true)
         {
@@ -88,9 +92,10 @@ public class OrbSpawnSingle : MonoBehaviour
             newOrb.GetComponent<OrbRotate>().orbitPosition = transform.position;
         }
 
-
-        
+        newOrb.transform.RotateAround(newOrb.GetComponent<OrbRotate>().orbitPosition, Vector3.up, initialAngleFromForward);
 
         newOrb.transform.parent = transform;
+
+
     }
 }

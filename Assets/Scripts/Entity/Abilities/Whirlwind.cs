@@ -14,9 +14,9 @@ public class Whirlwind : Ability
     {
         // do attack "repetition" times with "timeDelta" waiting between each
         GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        gameManager.RunCoroutine(DoSpawnAnimation(source, gameManager.WhirlwindSpawn, 1.0f, isPlayer, 1.8f));
-        gameManager.RunCoroutine(DoSpawnAnimation(source, gameManager.WhirlwindSpawn, 1.0f, isPlayer, 2.0f));
-        gameManager.RunCoroutine(DoSpawnAnimation(source, gameManager.WhirlwindSpawn, 1.0f, isPlayer, 2.2f));
+        //gameManager.RunCoroutine(DoSpawnAnimation(attacker.gameObject, gameManager.WhirlwindSpawn, 1.0f, isPlayer, 1.8f));
+        gameManager.RunCoroutine(DoSpawnAnimation(attacker.gameObject, gameManager.WhirlwindSpawn, 1.0f, isPlayer, 2.0f));
+        //gameManager.RunCoroutine(DoSpawnAnimation(attacker.gameObject, gameManager.WhirlwindSpawn, 1.0f, isPlayer, 2.2f));
         gameManager.RunCoroutine(DoAttackRepeating(source, attacker, isPlayer, 3, 0.25f));
     }
 
@@ -154,7 +154,6 @@ public class Whirlwind : Ability
 
             if (isPlayer == true)
             {
-                Debug.Log(attacked.Count);
                 foreach (GameObject enemy in attacked)
                 {
                     if (enemy.GetComponent<AIController>().IsResetting() == false
@@ -217,11 +216,14 @@ public class Whirlwind : Ability
     public IEnumerator DoSpawnAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, float orbitScale, GameObject target = null)
     {
         GameObject particles;
-
+        Debug.Log(source.gameObject.name.ToString());
         particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(source.transform), source.transform.rotation);
 
         particles.GetComponent<OrbSpawnSingle>().orbitObject = source;
         particles.GetComponent<OrbSpawnSingle>().orbitScale = orbitScale;
+        particles.GetComponent<OrbSpawnSingle>().yOrbit = true;
+        particles.GetComponent<OrbSpawnSingle>().clockwiseRotate = true;
+        particles.GetComponent<OrbSpawnSingle>().initialAngleFromForward = 0.0f;
 
         yield return new WaitForSeconds(time);
 

@@ -93,8 +93,10 @@ public class PlayerEntity : Entity
         else
         {
             abilityManager.AddAbility(GameManager.Abilities["cleave"], 1);
+            abilityManager.AddAbility(GameManager.Abilities["whirlwind"], 2);
 
             abilityIndexDict["cleave"] = 1;
+            abilityIndexDict["whirlwind"] = 2;
         }
 	}
 	

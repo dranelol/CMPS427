@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour
 
     public static float GLOBAL_COOLDOWN = 0.5f;
 
-    public AudioClip YEAAAAA;
+    public Camera MainCamera;
 
     public bool loadSaveTest = false;
 
