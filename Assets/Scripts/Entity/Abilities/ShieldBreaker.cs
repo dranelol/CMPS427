@@ -213,7 +213,7 @@ public class ShieldBreaker : Ability
             Vector3 vectorToMouse = target.point - source.transform.position;
             dashdir = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
 
-            source.GetComponent<MovementFSM>().AddForce(dashdir * 200, .1f);
+            source.GetComponent<MovementFSM>().AddForce(dashdir * 455, .1f);
         }
         else 
         {
