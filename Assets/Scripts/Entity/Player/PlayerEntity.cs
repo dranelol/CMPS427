@@ -92,11 +92,11 @@ public class PlayerEntity : Entity
 
         else
         {
-            abilityManager.AddAbility(GameManager.Abilities["blinkstrike"], 1);
+            abilityManager.AddAbility(GameManager.Abilities["cleave"], 1);
             abilityManager.AddAbility(GameManager.Abilities["shieldbreaker"], 2);
             abilityManager.AddAbility(GameManager.Abilities["dropdasteel"], 3);
 
-            abilityIndexDict["blinkstrike"] = 1;
+            abilityIndexDict["cleave"] = 1;
             abilityIndexDict["shieldbreaker"] = 2;
             abilityIndexDict["dropdasteel"] = 3;
         }
@@ -105,12 +105,7 @@ public class PlayerEntity : Entity
 	// Update is called once per frame
 	public void Update () 
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit target;
-        Physics.Raycast(ray, out target, Mathf.Infinity);
-        Vector3 vectorToMouse = target.point - gameObject.transform.position;
-        Vector3 normalizedVectorToMouse = new Vector3(vectorToMouse.x, gameObject.transform.forward.y, vectorToMouse.z);
-        Debug.DrawRay(gameObject.transform.position, normalizedVectorToMouse.normalized * 5.0f, Color.yellow);
+        
         //Debug.Log(ray.direction);
 
 
