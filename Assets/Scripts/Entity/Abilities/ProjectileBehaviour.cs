@@ -110,7 +110,7 @@ public class ProjectileBehaviour : MonoBehaviour
     {
         //ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
 
-        // if we need to fuck with particle scale, do it here
+        // if we need to change particle scale, do it here
 
         /*
         foreach (ParticleSystem item in particles)
@@ -345,42 +345,13 @@ public class ProjectileBehaviour : MonoBehaviour
                     Destroy(gameObject);
                 }
             }
-            /*
-        else if (other.gameObject.tag == "Enemy" && owner.gameObject.tag == "Enemy")
-        {
-            Debug.Log("attacked a friendly enemy");
 
-            Entity ownerEntity = owner.GetComponent<Entity>();
-
-            int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
-
-            ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
-
-            DetachParticleSystem();
-            Destroy(gameObject);
-        }
-        */
-            // call attackhandler on this projectile's ability
-
-            // clean up and suicide
-            //Destroy(gameObject);
             
         }
     }
 
     public void DetachParticleSystem()
     {
-        /*
-        foreach (Transform child in transform)
-        {
-            Debug.Log("asd");
-            if (child.gameObject.tag == "OrbRotate")
-            {
-                Debug.Log("unparenting orbs");
-                child.parent = null;
-            }
-        }
-        */
 
         ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
 

@@ -63,7 +63,7 @@ public class Inventory
         }
     }
 
-    public void UnSaveShit()
+    public void UnSave()
     {
         for (int i = 0; i < MAX; i++)
         {

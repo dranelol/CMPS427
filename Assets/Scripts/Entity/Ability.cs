@@ -127,6 +127,7 @@ public abstract class Ability
         this.particleSystem = particles;
         this.id = id;
         this.resourceCost = resourceCost;
+        this.gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
 
     public virtual void AttackHandler(GameObject source, Entity attacker, bool isPlayer)

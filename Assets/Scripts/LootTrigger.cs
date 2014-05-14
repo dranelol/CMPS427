@@ -32,6 +32,7 @@ public class LootTrigger : Trigger
 
         defaultShader = Shader.Find("Diffuse");
         highlight = Shader.Find("Outlined/Silhouetted Diffuse");
+        
     }
 
 	void Start() 
@@ -58,6 +59,7 @@ public class LootTrigger : Trigger
             }
         }
 
+        
 
 		if(isActive) 
         {
@@ -74,16 +76,13 @@ public class LootTrigger : Trigger
         if (inventory.IsEmpty() == true)
         {
             inventoryOpened = false;
-            GameObject.Destroy(gameObject);
-            
-        }
-
-        if (inventoryOpened == false)
-        {
             if (uiController.GuiState == UIController.States.LOOT)
             {
                 uiController.GuiState = UIController.States.INGAME;
             }
+
+            GameObject.Destroy(gameObject);
+            
         }
     }
 
@@ -101,10 +100,11 @@ public class LootTrigger : Trigger
         {
             uiController.GuiState = UIController.States.INGAME;
         }
+
         else if (uiController.GuiState == UIController.States.INGAME)
         {
-
             uiController.SetInventory(inventory);
+            
             uiController.GuiState = UIController.States.LOOT;
         }
         // maybe change object's material?

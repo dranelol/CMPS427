@@ -65,6 +65,8 @@ public class OrbRotate : MonoBehaviour
 
     private bool movingUp = true;
 
+    private Vector3 testVector = new Vector3(199.3f, 9.86f, 204.98f);
+
     void Start()
     {
         if (movingOrbit == true)
@@ -73,6 +75,8 @@ public class OrbRotate : MonoBehaviour
         }
 
         previousPositionVector = currentPositionVector = (transform.position - orbitPosition);
+
+        
         
     }
 
@@ -82,7 +86,7 @@ public class OrbRotate : MonoBehaviour
         {
             orbitPosition = orbitObject.transform.position;
         }
-
+        //Debug.Log(Vector3.Distance(transform.position, orbitObject.transform.position).ToString());
         // figuring out how much we've rotated so far
         previousPositionVector = currentPositionVector;
         currentPositionVector = (transform.position - orbitPosition);
@@ -102,40 +106,41 @@ public class OrbRotate : MonoBehaviour
         // orbiting about y-axis
         if (yOrbit == true)
         {
-            Vector3 newPosition = transform.position;
             float angleToRotate = angularSpeed * Time.deltaTime;
 
             if (clockwiseRotate == true)
             {
+                transform.RotateAround(orbitPosition, Vector3.up, angularSpeed * Time.deltaTime);
+                //newPosition = new Vector3((Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) - (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitPosition.x,
+                                           //orbitPosition.y,
+                                           //(Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) + (Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitPosition.z);
                 
-                //transform.RotateAround(orbitObject.transform.position, Vector3.up, angularSpeed * Time.deltaTime);
-                newPosition = new Vector3((Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) - (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitPosition.x,
-                                           orbitPosition.y,
-                                           (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) + (Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitPosition.z);
-
 
             }
 
             else
             {
                 //transform.RotateAround(orbitObject.transform.position, Vector3.up, angularSpeed * Time.deltaTime * (-1)); 
-                newPosition = new Vector3((Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) + (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitPosition.x,
-                                           orbitPosition.y,
-                                           (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) - (Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitPosition.z);
-
-
+                //newPosition = new Vector3((Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) - (Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitPosition.x,
+                                           //orbitPosition.y,
+                                           //(Mathf.Sin(angleToRotate * Mathf.Deg2Rad) * (transform.position.x - orbitPosition.x)) + (Mathf.Cos(angleToRotate * Mathf.Deg2Rad) * (transform.position.z - orbitPosition.z)) + orbitPosition.z);
+                transform.RotateAround(orbitPosition, Vector3.up, angularSpeed * Time.deltaTime * (-1));
             }
 
             // y-oscillation
 
+            
+
             if (oscillationSpeed > 0.0f)
             {
-                if (transform.position.y >= maxHeight)
+                Vector3 newPosition = transform.position;
+
+                if (transform.position.y >= maxHeight + orbitPosition.y)
                 {
                     movingUp = false;
                 }
 
-                if (transform.position.y <= minHeight)
+                if (transform.position.y <= minHeight + orbitPosition.y)
                 {
                     movingUp = true;
                 }
@@ -155,9 +160,11 @@ public class OrbRotate : MonoBehaviour
                     //newPosition.y += Mathf.Lerp(minHeight, maxHeight, Time.time);
                     newPosition.y = transform.position.y - oscillationSpeed * Time.deltaTime;
                 }
+
+                transform.position = newPosition;
             }
 
-            transform.position = newPosition;
+            
         }
 
         // orbiting around forward vector of origin object
