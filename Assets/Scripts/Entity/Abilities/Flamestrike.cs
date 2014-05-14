@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Flamestrike : Ability
 {
     public Flamestrike(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float cost, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, cost, id, readable, particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, cost, id, readable, particles, 2)
     {
 
     }

@@ -102,6 +102,14 @@ public abstract class Ability
         }
     }
 
+    protected int attackIndex;
+    public int AttackIndex
+    {
+        get
+        {
+            return attackIndex;
+        }
+    }
 
     /// <summary>
     /// Base modifier from which damage is calculated
@@ -115,7 +123,7 @@ public abstract class Ability
     
     #endregion
 
-    public Ability(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
+    public Ability(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles, int attackAnimationIndex)
     {
         this.attackType = attackType;
         this.damageType = damageType;
@@ -127,6 +135,7 @@ public abstract class Ability
         this.particleSystem = particles;
         this.id = id;
         this.resourceCost = resourceCost;
+        this.attackIndex = attackAnimationIndex;
         this.gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
 

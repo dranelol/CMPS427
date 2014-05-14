@@ -272,19 +272,11 @@ public class PlayerController : MonoBehaviour {
 
                     moveFSM.Turn(transform.position + forward, 5f);
 
-                    try
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[1], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
-                    }
-
-                    catch
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[1], equipSlots.equipmentType.Sword);
-                    }
-
+                    //_animationController.PlayerAttack(entity.abilityManager.abilities[1], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);                 
+                    
                     if (entity.abilityManager.abilities[1].AttackType == AttackType.MELEE)
                     {
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                        //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                         entity.abilityManager.abilities[1].AttackHandler(gameObject, entity, true);
 
                     }
@@ -293,7 +285,7 @@ public class PlayerController : MonoBehaviour {
                     {
                         //combatFSM.Attack(0.0f);
 
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                        //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                         // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                         // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
@@ -306,7 +298,7 @@ public class PlayerController : MonoBehaviour {
                     {
                         //combatFSM.Attack(0.0f);
 
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                        //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                         // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                         // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
@@ -316,7 +308,7 @@ public class PlayerController : MonoBehaviour {
 
                     else if (entity.abilityManager.abilities[1].AttackType == AttackType.GROUNDTARGET)
                     {
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                        //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                         entity.abilityManager.abilities[1].AttackHandler(gameObject, rayCastTarget.point, entity, true);
 
@@ -324,16 +316,17 @@ public class PlayerController : MonoBehaviour {
 
                     else
                     {
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                        //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                         entity.abilityManager.abilities[1].AttackHandler(gameObject, entity, true);
 
 
                     }
 
+                    float attackDuration = combatFSM.Attack(entity.abilityManager.abilities[1].Cooldown, entity.currentAtt.AttackSpeed);
 
+                    _animationController.Attack(entity.abilityManager.abilities[1].AttackIndex, attackDuration);
+                 
                     entity.abilityManager.activeCoolDowns[1] = Time.time + entity.abilityManager.abilities[1].Cooldown;
-
-
                 }
             }
         }
@@ -356,16 +349,6 @@ public class PlayerController : MonoBehaviour {
 
                     moveFSM.Turn(transform.position + forward, 5f);
 
-                    try
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[2], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
-                    }
-
-                    catch
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[2], equipSlots.equipmentType.Sword);
-                    }
-
                     if (entity.CurrentResource >= entity.abilityManager.abilities[2].ResourceCost)
                     {
                         entity.ModifyResource(entity.abilityManager.abilities[2].ResourceCost * -1);
@@ -374,7 +357,7 @@ public class PlayerController : MonoBehaviour {
 
                         if (entity.abilityManager.abilities[2].AttackType == AttackType.MELEE)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                             entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
 
                         }
@@ -383,7 +366,7 @@ public class PlayerController : MonoBehaviour {
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
@@ -396,7 +379,7 @@ public class PlayerController : MonoBehaviour {
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
@@ -406,7 +389,7 @@ public class PlayerController : MonoBehaviour {
 
                         else if (entity.abilityManager.abilities[2].AttackType == AttackType.GROUNDTARGET)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             entity.abilityManager.abilities[2].AttackHandler(gameObject, rayCastTarget.point, entity, true);
 
@@ -414,12 +397,16 @@ public class PlayerController : MonoBehaviour {
 
                         else
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                             entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
 
 
                         }
 
+                        float attackDuration = combatFSM.Attack(entity.abilityManager.abilities[2].Cooldown, entity.currentAtt.AttackSpeed);
+
+                        _animationController.Attack(entity.abilityManager.abilities[2].AttackIndex, attackDuration);
+               
                         entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
 
                     }
@@ -447,23 +434,13 @@ public class PlayerController : MonoBehaviour {
 
                     moveFSM.Turn(transform.position + forward, 5f);
 
-                    try
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[3], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
-                    }
-
-                    catch
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[3], equipSlots.equipmentType.Sword);
-                    }
-
                     if (entity.CurrentResource >= entity.abilityManager.abilities[3].ResourceCost)
                     {
                         entity.ModifyResource(entity.abilityManager.abilities[3].ResourceCost * -1);
 
                         if (entity.abilityManager.abilities[3].AttackType == AttackType.MELEE)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                             entity.abilityManager.abilities[3].AttackHandler(gameObject, entity, true);
                         }
 
@@ -472,7 +449,7 @@ public class PlayerController : MonoBehaviour {
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
@@ -484,7 +461,7 @@ public class PlayerController : MonoBehaviour {
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                           // combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
@@ -495,7 +472,7 @@ public class PlayerController : MonoBehaviour {
 
                         else if (entity.abilityManager.abilities[3].AttackType == AttackType.GROUNDTARGET)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                           // combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             entity.abilityManager.abilities[3].AttackHandler(gameObject, rayCastTarget.point, entity, true);
 
@@ -503,12 +480,15 @@ public class PlayerController : MonoBehaviour {
 
                         else
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                           // combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                             entity.abilityManager.abilities[3].AttackHandler(gameObject, entity, true);
 
 
                         }
 
+                        float attackDuration = combatFSM.Attack(entity.abilityManager.abilities[3].Cooldown, entity.currentAtt.AttackSpeed);
+
+                        _animationController.Attack(entity.abilityManager.abilities[3].AttackIndex, attackDuration);
 
                         entity.abilityManager.activeCoolDowns[3] = Time.time + entity.abilityManager.abilities[3].Cooldown;
                     }
@@ -534,22 +514,14 @@ public class PlayerController : MonoBehaviour {
                     Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
                     moveFSM.Turn(transform.position + forward, 5f);
-                    try
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[4], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
-                    }
-
-                    catch
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[4], equipSlots.equipmentType.Sword);
-                    }
+            
                     if (entity.CurrentResource >= entity.abilityManager.abilities[4].ResourceCost)
                     {
                         entity.ModifyResource(entity.abilityManager.abilities[4].ResourceCost * -1);
 
                         if (entity.abilityManager.abilities[4].AttackType == AttackType.MELEE)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                             entity.abilityManager.abilities[4].AttackHandler(gameObject, entity, true);
                         }
 
@@ -558,7 +530,7 @@ public class PlayerController : MonoBehaviour {
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
@@ -570,7 +542,7 @@ public class PlayerController : MonoBehaviour {
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                           // combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
@@ -581,7 +553,7 @@ public class PlayerController : MonoBehaviour {
 
                         else if (entity.abilityManager.abilities[4].AttackType == AttackType.GROUNDTARGET)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
 
                             entity.abilityManager.abilities[4].AttackHandler(gameObject, rayCastTarget.point, entity, true);
@@ -589,12 +561,15 @@ public class PlayerController : MonoBehaviour {
                         }
                         else
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                             entity.abilityManager.abilities[4].AttackHandler(gameObject, entity, true);
 
 
                         }
 
+                        float attackDuration = combatFSM.Attack(entity.abilityManager.abilities[4].Cooldown, entity.currentAtt.AttackSpeed);
+
+                        _animationController.Attack(entity.abilityManager.abilities[4].AttackIndex, attackDuration);
 
                         entity.abilityManager.activeCoolDowns[4] = Time.time + entity.abilityManager.abilities[4].Cooldown;
                     }
@@ -621,30 +596,20 @@ public class PlayerController : MonoBehaviour {
 
                     moveFSM.Turn(transform.position + forward, 5f);
 
-                    try
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[5], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
-                    }
-
-                    catch
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[5], equipSlots.equipmentType.Sword);
-                    }
-
                     if (entity.CurrentResource >= entity.abilityManager.abilities[5].ResourceCost)
                     {
                         entity.ModifyResource(entity.abilityManager.abilities[5].ResourceCost * -1);
 
                         if (entity.abilityManager.abilities[5].AttackType == AttackType.MELEE)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                             entity.abilityManager.abilities[5].AttackHandler(gameObject, entity, true);
                         }
                         else if (entity.abilityManager.abilities[5].AttackType == AttackType.PROJECTILE)
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
@@ -657,7 +622,7 @@ public class PlayerController : MonoBehaviour {
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
@@ -667,7 +632,7 @@ public class PlayerController : MonoBehaviour {
 
                         else if (entity.abilityManager.abilities[5].AttackType == AttackType.GROUNDTARGET)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
 
                             entity.abilityManager.abilities[5].AttackHandler(gameObject, rayCastTarget.point, entity, true);
@@ -676,10 +641,13 @@ public class PlayerController : MonoBehaviour {
 
                         else
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                             entity.abilityManager.abilities[5].AttackHandler(gameObject, entity, true);
                         }
 
+                        float attackDuration = combatFSM.Attack(entity.abilityManager.abilities[5].Cooldown, entity.currentAtt.AttackSpeed);
+
+                        _animationController.Attack(entity.abilityManager.abilities[5].AttackIndex, attackDuration);
 
                         entity.abilityManager.activeCoolDowns[5] = Time.time + entity.abilityManager.abilities[5].Cooldown;
                     }
