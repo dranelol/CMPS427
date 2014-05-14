@@ -265,7 +265,6 @@ public class PlayerController : MonoBehaviour {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[1] <= Time.time)
                 {
                     int terrainMask = LayerMask.NameToLayer("Terrain");
-
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit rayCastTarget;
                     Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << terrainMask);

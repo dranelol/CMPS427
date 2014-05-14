@@ -94,11 +94,11 @@ public class PlayerEntity : Entity
         {
             abilityManager.AddAbility(GameManager.Abilities["cleave"], 1);
             abilityManager.AddAbility(GameManager.Abilities["shieldbreaker"], 2);
-            abilityManager.AddAbility(GameManager.Abilities["dropdasteel"], 3);
+            abilityManager.AddAbility(GameManager.Abilities["fusrodah"], 3);
 
             abilityIndexDict["cleave"] = 1;
             abilityIndexDict["shieldbreaker"] = 2;
-            abilityIndexDict["dropdasteel"] = 3;
+            abilityIndexDict["fusrodah"] = 3;
         }
 	}
 	

@@ -174,7 +174,7 @@ public class Deathgrip : Ability
         Vector3 relativeVector = (source.transform.position - target.transform.position).normalized;
         float normalizedMagnitude = Vector3.Distance(target.transform.position, source.transform.position);
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
-        target.GetComponent<MovementFSM>().AddForce(relativeVector * force * 2, 0.1f);
+        target.GetComponent<MovementFSM>().AddForce(relativeVector * force * 5, 0.1f);
     }
 
     private void DoBlink(GameObject source, GameObject target)

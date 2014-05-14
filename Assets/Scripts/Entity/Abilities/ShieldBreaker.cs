@@ -68,7 +68,7 @@ public class ShieldBreaker : Ability
         DoDash(source, isPlayer, forward);
 
 
-        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer));
+        //GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer));
         
     }
 
