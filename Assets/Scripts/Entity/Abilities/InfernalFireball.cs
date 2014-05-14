@@ -16,7 +16,7 @@ public class InfernalFireball : Ability
         GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(PlayExplosion(1.45f));
  
         GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().InfernalFireballProjectile, source.transform.position + new Vector3(0,10.0f,0), Quaternion.LookRotation(forward));
-        Debug.Log("shootin dat infernal");
+
         projectile.GetComponent<ProjectileBehaviour>().owner = owner;
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 10.0f;
         projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;

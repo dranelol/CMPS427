@@ -36,7 +36,6 @@ public class ShockMine : Ability
 
         if (isPlayer == true)
         {
-            Debug.Log(attacked.Count);
             foreach (GameObject enemy in attacked)
             {
                 if (enemy.GetComponent<AIController>().IsResetting() == false
@@ -74,7 +73,6 @@ public class ShockMine : Ability
         }
         if (isPlayer == true)
         {
-            Debug.Log("damage: " + damageAmt);
         }
 
         defender.ModifyHealth(-damageAmt);

@@ -14,7 +14,6 @@ public class ShieldBreaker : Ability
     {
         List<GameObject> attacked = OnAttack(source, isPlayer);
 
-        Debug.Log("shieldbreaker attacked: " + attacked.Count);
         if (isPlayer == true)
         {
             // this is player -> enemy

@@ -139,14 +139,12 @@ public class PlayerController : MonoBehaviour {
 
         if (targetPosition != Vector3.zero)
         {
-            Debug.Log("this shouldnt happen ever");
             // If we're in attack range...
             Vector3 diff = targetPosition - transform.position;
             if (diff.magnitude <= attackRange)
             {
                 // attack enemy
                 targetPosition = Vector3.zero;
-                Debug.Log("STOPPING 2");
                 moveFSM.Stop();
             }
             else
@@ -371,7 +369,7 @@ public class PlayerController : MonoBehaviour {
                     if (entity.CurrentResource >= entity.abilityManager.abilities[2].ResourceCost)
                     {
                         entity.ModifyResource(entity.abilityManager.abilities[2].ResourceCost * -1);
-                        Debug.Log("Attack Speed: " + entity.currentAtt.AttackSpeed.ToString());
+ 
 
 
                         if (entity.abilityManager.abilities[2].AttackType == AttackType.MELEE)
@@ -792,15 +790,15 @@ public class PlayerController : MonoBehaviour {
                 blah = blah + entity.GetEquip(equipSlots.slots.Feet).equipmentName + " \n";
             else blah = blah + "HAS NO SHOE \n";
 
-            Debug.Log(blah);
+     
             blah = entity.currentAtt.Health.ToString() + " Health\n";
             blah = blah + entity.currentAtt.Resource.ToString() + " Resource\n";
             blah = blah + entity.currentAtt.Power.ToString() + " Power\n";
             blah = blah + entity.currentAtt.Defense.ToString() + " Defense\n";
             blah = blah + entity.currentAtt.MinDamage.ToString() + " MinDamage\n";
             blah = blah + entity.currentAtt.MaxDamage.ToString() + " Maxdamage\n";
-            Debug.Log(blah);
-            Debug.Log(entity.CurrentHP.ToString());
+       
+       
 
 
         }
