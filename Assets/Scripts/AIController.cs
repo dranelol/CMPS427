@@ -430,7 +430,7 @@ public class AIController : StateMachine
 
         try
         {
-            GetComponent<BossInfernal>().Death();
+            GetComponent<Infernal>().Death();
         }
 
         catch
