@@ -24,8 +24,8 @@ public class Deathgrip : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
-                    //DoPhysics(source, enemy);
-                    DoBlink(source, enemy);
+                    DoPhysics(source, enemy);
+                    //DoBlink(source, enemy);
 
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
@@ -45,8 +45,8 @@ public class Deathgrip : Ability
             {
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
-                //DoPhysics(source, enemy);
-                DoBlink(source, enemy);
+                DoPhysics(source, enemy);
+                //DoBlink(source, enemy);
                 GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, enemy));
             }
         }
