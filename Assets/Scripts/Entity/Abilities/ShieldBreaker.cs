@@ -25,7 +25,7 @@ public class ShieldBreaker : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
-
+                    gameManager.RunCoroutine(OnHitAnimation(source, gameManager.OnHitNormalParticles, 0.2f, true, enemy));
 
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
@@ -47,6 +47,8 @@ public class ShieldBreaker : Ability
                 // todo: check if player is dead
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
+                gameManager.RunCoroutine(OnHitAnimation(source, gameManager.OnHitNormalParticles, 0.2f, false, enemy));
+
                 if (attacker.abilityManager.abilities[6] != null)
                 {
                     attacker.abilityManager.abilities[6].AttackHandler(attacker.gameObject, defender.gameObject, isPlayer);
@@ -55,8 +57,19 @@ public class ShieldBreaker : Ability
             }
         }
 
+        int terrainMask = LayerMask.NameToLayer("Terrain");
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit target;
+        Physics.Raycast(ray, out target, Mathf.Infinity, 1 << terrainMask);
+        Vector3 vectorToMouse = target.point - source.transform.position;
+        Vector3 forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
+
+
+        DoDash(source, isPlayer, forward);
+
+
         GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer));
-        DoDash(source, isPlayer);
+        
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -65,14 +78,20 @@ public class ShieldBreaker : Ability
 
         Vector3 forward = new Vector3();
 
+        int terrainMask = LayerMask.NameToLayer("Terrain");
+
         // this is a player attack, forward attack vector will be based on cursor position
         if (isPlayer == true)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit target;
-            Physics.Raycast(ray, out target, Mathf.Infinity);
+            Physics.Raycast(ray, out target, Mathf.Infinity, 1 << terrainMask);
             Vector3 vectorToMouse = target.point - source.transform.position;
             forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
+
+            
+
+            Debug.DrawRay(source.transform.position, forward * 5.0f, Color.blue);
         }
 
 
@@ -193,33 +212,9 @@ public class ShieldBreaker : Ability
     }
 
 
-    private void DoDash(GameObject source, bool isPlayer)
+    private void DoDash(GameObject source, bool isPlayer, Vector3 dashDir)
     {
-        Vector3 dashdir;
-        if (isPlayer == true)
-        {
-            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            //RaycastHit target;
-            //Physics.Raycast(ray, out target, Mathf.Infinity);
-            //source.GetComponent<NavMeshAgent>().Warp(target.point);
-           // source.GetComponent<NavMeshAgent>().
-
-
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit target;
-            Physics.Raycast(ray, out target, Mathf.Infinity);
-            Vector3 vectorToMouse = target.point - source.transform.position;
-            dashdir = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
-
-            source.GetComponent<MovementFSM>().AddForce(dashdir * 200, .1f);
-        }
-        else 
-        {
-            
-            //dashdir = 
-        }
-
-       // source.GetComponent<MovementFSM>().AddForce(dashdir * 500, .1f);
+       source.GetComponent<MovementFSM>().AddForce(dashDir * 455, .1f);
     }
 
     public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
@@ -251,6 +246,29 @@ public class ShieldBreaker : Ability
         }
 
         //particles.transform.parent = source.transform;
+
+        yield return new WaitForSeconds(time);
+
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem item in particleSystems)
+        {
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
+
+        }
+
+        GameObject.Destroy(particles);
+
+        yield return null;
+    }
+
+    public IEnumerator OnHitAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target)
+    {
+        GameObject particles;
+
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(target.transform), target.transform.rotation);
 
         yield return new WaitForSeconds(time);
 
