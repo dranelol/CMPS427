@@ -438,8 +438,6 @@ public class AIController : StateMachine
             _animationController.Death();
         }
 
-
-
         #region heal orb spawning
         GameObject healOrb = (GameObject)Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EnvironmentHealOrbProjectile, new Vector3(transform.position.x, transform.position.y + 2, transform.position.z), Quaternion.identity);
 
