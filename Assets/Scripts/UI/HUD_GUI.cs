@@ -318,7 +318,7 @@ public class HUD_GUI : MonoBehaviour {
                           + "E = " + player.abilityManager.abilities[4].Name + " \n"
                           + "R = " + player.abilityManager.abilities[5].Name + " \n";
         */
-        string version = "Alpha v1.0";
+        string version = "Week12v1";
 
         GUI.Label(InfoBox1, attackList, infoBoxStyle);
         GUI.Label(InfoBox2, version, infoBoxStyle);
