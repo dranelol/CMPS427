@@ -4,7 +4,7 @@ using System.Collections;
 public class Blink : Ability
 {
     public Blink(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles, 2)
     {
        
     }

@@ -28,7 +28,6 @@ public class OrbSpawn : MonoBehaviour
         for (int i = 0; i < orbAmount; i++)
         {
             Vector3 newOrbPos = Vector3.zero;
-            Debug.Log("orbitScale: " + orbitScale);
             // trig math to spawn orbs around the orbit object, evenly spaced
             if (yOrbit == true)
             {
@@ -60,7 +59,6 @@ public class OrbSpawn : MonoBehaviour
             orbRotate.infiniteRotation = infiniteRotation;
             orbRotate.orbitObject = orbitObject;
 
-            Debug.Log("spawn distance: " + Vector3.Distance(newOrbPos, transform.position));
 
             if (movingOrbit == true)
             {

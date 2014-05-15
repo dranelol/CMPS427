@@ -84,7 +84,7 @@ public class EnemySpawner : MonoBehaviour
                 Debug.LogError("Could not find a place to spawn enemy. Check node location.");
             }
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
