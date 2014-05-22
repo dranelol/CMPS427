@@ -227,7 +227,7 @@ public class ProjectileBehaviour : MonoBehaviour
                     if (other.gameObject.GetComponent<ProjectileBehaviour>().owner.tag == "Player")
                     {
                         // carry out projectile explosion ability
-                        Debug.Log("attacked an enemy!");
+                      
 
                         if (EnvironmentProjectile == false)
                         {

@@ -370,30 +370,11 @@ public class AIPursuit : StateMachine
     IEnumerator attack_EnterState()
     {
         _swinging = true;
-        float offset = 0;
 
-        if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.MELEE)
-        {
-            _animationController.Attack(AnimationType.Melee, 0);
-        }
+        float attackDuration = combatFSM.Attack(entity.abilityManager.abilities[_nextAbilityIndex].Cooldown, entity.currentAtt.AttackSpeed);
+        _animationController.Attack(entity.abilityManager.abilities[_nextAbilityIndex].AttackIndex, attackDuration);
 
-        else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.PROJECTILE)
-        {
-            _animationController.Attack(AnimationType.Melee, 1);
-        }
-
-        else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.HONINGPROJECTILE)
-        {
-            _animationController.Attack(AnimationType.Melee, 1);
-        }
-
-        else
-        {
-            _animationController.Attack(AnimationType.Melee, 2);
-            offset = 0.3f;
-        }
-
-        Invoke("SwingTimer", _swingSpeed + offset);
+        Invoke("SwingTimer", _swingSpeed);
         yield break;
     }
 
@@ -405,28 +386,29 @@ public class AIPursuit : StateMachine
             {
                 if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.MELEE)
                 {
-                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                    //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                     _abilityManager.abilities[_nextAbilityIndex].AttackHandler(gameObject, entity, false);
                 }
 
                 else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.PROJECTILE)
                 {
-                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                    //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                     _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, gameObject, (CombatMath.GetCenter(currentTarget.transform) - CombatMath.GetCenter(transform)).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
                 }
 
                 else if (_abilityManager.abilities[_nextAbilityIndex].AttackType == AttackType.HONINGPROJECTILE)
                 {
-                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                    //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                     _abilityManager.abilities[_nextAbilityIndex].SpawnProjectile(gameObject, CombatMath.GetCenter(currentTarget.transform), gameObject, (CombatMath.GetCenter(currentTarget.transform) - CombatMath.GetCenter(transform)).normalized, _abilityManager.abilities[_nextAbilityIndex].ID, false);
                 }
 
                 else
                 {
-                    combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                   // combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                     _abilityManager.abilities[_nextAbilityIndex].AttackHandler(gameObject, entity, false);
                 }
 
+                // combatFSM.Attack(_abilityManager.abilities[_nextAbilityIndex].Cooldown, entity.currentAtt.AttackSpeed);
                 _abilityManager.activeCoolDowns[_nextAbilityIndex] = Time.time + _abilityManager.abilities[_nextAbilityIndex].Cooldown;
                 UpdateAbilities();
                 _soundManager.Attack();

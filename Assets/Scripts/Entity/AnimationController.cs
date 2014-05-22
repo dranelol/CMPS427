@@ -14,13 +14,10 @@ public class AnimationController : MonoBehaviour
 
     public AnimationClip _sleep;
 
-    public AnimationClip[] _meleeAnimations;
-    public AnimationClip[] _spellAnimations;
-    public AnimationClip[] _miscAnimations;
+    public AnimationClip[] _attackAnimations;
 
     public static float DEFAULT_CHARACTER_RADIUS = 0.3f;
 
-    private float _baseAnimationSpeed;
     private string _movementAnimation;
     private MovementFSM _movementFSM;
     private Entity _entity;
@@ -65,30 +62,28 @@ public class AnimationController : MonoBehaviour
             animation["Sleep"].layer = 1;
         }
 
-        ProcessCombatAnimations(_meleeAnimations);
-        ProcessCombatAnimations(_spellAnimations);
-        ProcessCombatAnimations(_miscAnimations);
-
         _movementAnimation = "Run";
 
-        if (tag == "Player")
+        foreach (AnimationClip clip in _attackAnimations)
         {
-            animation["cast spell"].speed = 3f;
-            animation["attack 1"].speed = 2f;
-            animation["attack 2"].speed = 2f;
-            animation["attack 3"].speed = 2f;
-            animation["attack 4"].speed = 2f;
-            animation["attack 5"].speed = 2f;
-            animation["attack 6"].speed = 2f;
+            animation.AddClip(clip, clip.name);
+            animation[clip.name].layer = 2;
+            animation[clip.name].wrapMode = WrapMode.Once;
+
+            if (clip.name == "attack 6")
+            {
+                animation[clip.name].wrapMode = WrapMode.Loop;
+                animation[clip.name].layer = 1;
+            }
+
+            if (_attackTransform != null)
+            {
+                animation[clip.name].AddMixingTransform(_attackTransform, true);
+            }
         }
 
         _movementFSM = GetComponent<MovementFSM>();
         _entity = GetComponent<Entity>();
-    }
-
-    void Start()
-    {
-        _baseAnimationSpeed = DEFAULT_CHARACTER_RADIUS / GetComponent<MovementFSM>().Radius;
     }
 
     #endregion
@@ -122,109 +117,38 @@ public class AnimationController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Perform an animation of the given type and index. No animation will be played if the animation
-    /// is not present. The index given is the index of the animation in the array specified on the 
-    /// prefab, not the index of the animation out of all the animations
-    /// </summary>
-    /// <param name="type">The type of animation to play</param>
-    /// <param name="index">The index of the animation</param>
-    public void Attack(AnimationType type, int index)
+
+    public void Attack(int attackIndex, float duration)
     {
-        AnimationClip[] animations;
-
-        switch (type)
-        {
-            case AnimationType.Spell:
-                animations = _spellAnimations;
-                break;
-
-            case AnimationType.Misc:
-                animations = _miscAnimations;
-                break;
-
-            default:
-                animations = _meleeAnimations;
-                break;
-        }
+        string animationName;
 
         try
         {
-            animation.Play(animations[index].name);
+            animationName = _attackAnimations[attackIndex].name;
         }
 
         catch
         {
-            Debug.LogWarning("There is no " + type + " animation " + "indexed at " + index + ".");
-        } 
-    }
-
-
-    public void Attack(string animationName)
-    {
-        try
-        {
-            animation.Play(animationName);
+            animationName = _attackAnimations[0].name;
         }
 
-        catch
+        if (attackIndex == 4 || attackIndex == 5)
         {
-            Debug.LogWarning("There is no animation named " + animationName + ".");
-        }
-    }
-
-    public void PlayerAttack(Ability ability, equipSlots.equipmentType weaponType)
-    {
-        AttackType attackType = ability.AttackType;
-
-        string name;
-
-        if (ability.ID == "whirlwind")
-        {
-            name = "attack 4";
-            animation[name].speed = animation[name].clip.length / (GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
-            _movementFSM.LockMovement(MovementFSM.LockType.MovementLock, GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
+            animation[animationName].speed = 2;
         }
 
-        else if ((AttackType)attackType == AttackType.MELEE)
+        else if (animation[animationName].clip.length > duration)
         {
-            List<string> attackAnimations = new List<string>();
-
-            if ((equipSlots.equipmentType)weaponType == equipSlots.equipmentType.Dagger)
-            {
-                attackAnimations.Add("attack 1");
-                attackAnimations.Add("attack 3");
-                attackAnimations.Add("attack 5");
-            }
-
-            else if ((equipSlots.equipmentType)weaponType == equipSlots.equipmentType.Axe)
-            {
-                attackAnimations.Add("attack 2");
-                attackAnimations.Add("attack 1");
-            }
-
-            else
-            {
-                attackAnimations.Add("attack 1");
-                attackAnimations.Add("attack 3");
-                attackAnimations.Add("attack 4");
-            }
-
-            name = attackAnimations[UnityEngine.Random.Range((int)0, (int)attackAnimations.Count)];
-            animation[name].speed = animation[name].clip.length / (GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
-            _movementFSM.LockMovement(MovementFSM.LockType.MovementLock, GameManager.GLOBAL_COOLDOWN / _entity.currentAtt.AttackSpeed);
-
-            //Debug.Log(animation[name].clip.length);
-            //Debug.Log(animation[name].length);
+            animation[animationName].speed = animation[animationName].clip.length / duration;
         }
 
         else
         {
-            name = "cast spell";
-            _movementFSM.LockMovement(MovementFSM.LockType.MovementLock, animation[name].length / 3f);
+            animation[animationName].speed = 1;
         }
 
-        Attack(name);
+        _movementFSM.LockMovement(MovementFSM.LockType.MovementLock, duration * 0.8f);
+        animation.Play(animationName);
     }
 
     public void WalkToMove()
@@ -240,26 +164,6 @@ public class AnimationController : MonoBehaviour
     public void UpdateMovementSpeed(float value)
     {
        animation["Run"].speed = value * 1.5f;
-    }
-
-    #endregion
-
-    #region Private Functions
-
-    private void ProcessCombatAnimations(AnimationClip[] animations)
-    {
-        for (int i = 0; i < animations.Length; i++)
-        {
-            string name = animations[i].name;
-            animation.AddClip(animations[i], name);
-            animation[name].layer = 2;
-            animation[name].wrapMode = WrapMode.Once;
-
-            if (_attackTransform != null)
-            {
-                animation[name].AddMixingTransform(_attackTransform, true);
-            }
-        }
     }
 
     #endregion

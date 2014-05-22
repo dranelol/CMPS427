@@ -784,8 +784,8 @@ ModelImporter:
     - serializedVersion: 16
       name: attack 3
       takeName: 
-      firstFrame: 1059
-      lastFrame: 1089
+      firstFrame: 1068
+      lastFrame: 1078
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -862,9 +862,9 @@ ModelImporter:
     - serializedVersion: 16
       name: attack 6
       takeName: 
-      firstFrame: 1195
-      lastFrame: 1275
-      wrapMode: 0
+      firstFrame: 1244
+      lastFrame: 1251
+      wrapMode: 2
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0

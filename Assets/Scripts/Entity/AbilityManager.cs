@@ -36,7 +36,7 @@ public class AbilityManager : MonoBehaviour
 
     public void AddAbility(Ability ab, int index)
     {
-        Debug.Log(ab.Name);
+  
         if (abilities.Count <= 40)
         {
             abilities[index] = ab;
@@ -54,7 +54,7 @@ public class AbilityManager : MonoBehaviour
     {
         if (abilities[index] != null)
         {
-            Debug.Log("removing "+ abilities[index].Name);
+     
             PlayerPrefs.DeleteKey("ability" + (index).ToString());
             abilities[index] = null;
         }

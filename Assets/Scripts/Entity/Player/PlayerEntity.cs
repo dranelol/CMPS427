@@ -51,7 +51,7 @@ public class PlayerEntity : Entity
         Experience = 0;
         Level = 1;
         nextLevelExperience = 100;
-
+        GLOBAL_COOLDOWN = 0.5f;
         levelCap = false;
 
     }

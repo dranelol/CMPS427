@@ -44,7 +44,7 @@ public class LootTrigger : Trigger
 
         if (inventory.Items.Count <= 0)
         {
-            Debug.Log("chest getting default items");
+       
             int diceroll = Random.Range(1, 5);
             if (diceroll <= 3)
             {
