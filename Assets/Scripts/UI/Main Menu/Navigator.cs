@@ -4,16 +4,21 @@ using System.Collections;
 
 public class Navigator : MonoBehaviour {
     private const int WIDTH = 200;
-    private const int HEIGHT = 300;
+    private const int HEIGHT = 350;
 	private const int INFO_WIDTH = 400;
     
 	// Variable to orient the boxes and their contents
 	private int MAIN_LEFT = (Screen.width - WIDTH) / 4 - WIDTH;
     private int MAIN_TOP = (Screen.height - HEIGHT) * 2 / 3;
+
 	private int INFO_LEFT = (Screen.width - INFO_WIDTH) * 3/4 + WIDTH;
 	private int INFO_TOP = (Screen.height - HEIGHT) / 3 - 100;
-	private int CRED_LEFT = (Screen.width - WIDTH) * 3/4 + WIDTH;
-	private int CRED_TOP = (Screen.height - HEIGHT) * 2 / 3 + 100;
+
+    private int CRED_LEFT = (Screen.width - WIDTH) * 3 / 4 + WIDTH;
+    private int CRED_TOP = (Screen.height - HEIGHT) * 2 / 3 + 100;
+
+    private int CONT_LEFT = (Screen.width - WIDTH) * 3 / 4 + WIDTH / 3;
+    private int CONT_TOP = (Screen.height - HEIGHT) * 2 / 3 + 100;
 
 	private bool showInfo = false;
     private bool showCredits = false;
@@ -36,7 +41,7 @@ public class Navigator : MonoBehaviour {
         }
 
         if (GUI.Button(new Rect(MAIN_LEFT + 20, CRED_TOP + HEIGHT - 270, WIDTH - 40, 40),
-            "Game Info"))
+            "Controls"))
         {
             // If controls button pressed, alternate whether the controls pane is to be shown
             showControls = !showControls;
@@ -110,31 +115,31 @@ public class Navigator : MonoBehaviour {
 
     void drawControls()
     {
-        GUI.Box(new Rect(INFO_LEFT, CRED_TOP, INFO_WIDTH, HEIGHT), "GAME INFO");
+        GUI.Box(new Rect(CONT_LEFT, CONT_TOP, INFO_WIDTH, HEIGHT + 50), "CONTROLS");
 
-        string infoString = "Left-click: Movement" +
-                            "Right-click: Ability 1" +
-                            "Q: Ability 2" +
-                            "W: Ability 2" +
-                            "E: Ability 2" +
-                            "R: Ability 2" +
+        string infoString = "Left-click: Movement\n" +
+                            "Right-click: Ability 1\n" +
+                            "Q: Ability 2\n" +
+                            "W: Ability 3\n" +
+                            "E: Ability 4\n" +
+                            "R: Ability 5\n" +
                             "\n" +
-                            "N: Talents" +
-                            "J: Spellbook" +
-                            "I: Inventory" +
-                            ": Attributes" + 
+                            "N: Talents\n" +
+                            "J: Spellbook\n" +
+                            "I: Inventory\n" +
+                            "H: Attributes\n" + 
                             "\n" +
-                            "1: Gain level" +
-                            "2: Gain 50 talent points" +
-                            "3: Gain 25 attribute points" +
-                            "4: Gain Might abilities" +
-                            "5: Gain Magic abilities" +
+                            "1: Gain level\n" +
+                            "2: Gain 50 talent points\n" +
+                            "3: Gain 25 attribute points\n" +
+                            "4: Gain Might abilities\n" +
+                            "5: Gain Magic abilities\n" +
                             "6: Gain full set of equipment";
                             
 
         GUI.Label(new Rect(INFO_LEFT + 20, CRED_TOP + 30, INFO_WIDTH - 40, HEIGHT - 80), infoString, centerText);
 
-        if (GUI.Button(new Rect(INFO_LEFT + 80, CRED_TOP + HEIGHT - 60, INFO_WIDTH - 160, 30), "Close"))
-            showInfo = false;
+        if (GUI.Button(new Rect(INFO_LEFT + 80, CRED_TOP + HEIGHT - 30, INFO_WIDTH - 160, 30), "Close"))
+            showControls = false;
     }
 }
