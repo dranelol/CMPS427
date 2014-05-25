@@ -93,12 +93,12 @@ public class PlayerEntity : Entity
         else
         {
             abilityManager.AddAbility(GameManager.Abilities["cleave"], 1);
-            abilityManager.AddAbility(GameManager.Abilities["GETOVERHERE"], 2);
+            abilityManager.AddAbility(GameManager.Abilities["groundslam"], 2);
             abilityManager.AddAbility(GameManager.Abilities["deathgrip"], 3);
             abilityManager.AddAbility(GameManager.Abilities["blinkstrike"], 4);
 
             abilityIndexDict["cleave"] = 1;
-            abilityIndexDict["GETOVERHERE"] = 2;
+            abilityIndexDict["groundslam"] = 2;
             abilityIndexDict["deathgrip"] = 3;
             abilityIndexDict["blinkstrike"] = 4;
         }
