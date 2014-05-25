@@ -16,7 +16,8 @@ public class Navigator : MonoBehaviour {
 	private int CRED_TOP = (Screen.height - HEIGHT) * 2 / 3 + 100;
 
 	private bool showInfo = false;
-	private bool showCredits = false;
+    private bool showCredits = false;
+    private bool showControls = false;
 
 	private GUIStyle centerText;
 
@@ -34,13 +35,25 @@ public class Navigator : MonoBehaviour {
             Application.LoadLevel("setup");
         }
 
+        if (GUI.Button(new Rect(MAIN_LEFT + 20, CRED_TOP + HEIGHT - 270, WIDTH - 40, 40),
+            "Game Info"))
+        {
+            // If controls button pressed, alternate whether the controls pane is to be shown
+            showControls = !showControls;
+            showCredits = false;
+            showInfo = false;
+        }
+
 		if (GUI.Button(new Rect(MAIN_LEFT + 20, CRED_TOP + HEIGHT - 200, WIDTH - 40, 40), 
 		    "Game Info"))
 		{
 			// If Info Button pressed, alternate whether the info pane is to be shown
 			showInfo = !showInfo;
-			showCredits = false;
+            showCredits = false;
+            showControls = false;
 		}
+
+        
 
 		if (GUI.Button(new Rect(MAIN_LEFT + 20, CRED_TOP + HEIGHT - 130, WIDTH - 40, 40), 
 		    "Credits"))
@@ -48,6 +61,8 @@ public class Navigator : MonoBehaviour {
 			// If Credits Button pressed, alternate whether the credits pane is to be shown
 			showCredits = !showCredits;
 			showInfo = false;
+            showControls = false;
+
 		}
 
 		if (GUI.Button(new Rect(MAIN_LEFT + 20, CRED_TOP + HEIGHT - 60, WIDTH - 40, 40), 
@@ -64,13 +79,17 @@ public class Navigator : MonoBehaviour {
 		{
 			drawCredits ();
 		}
+        if (showControls)
+        {
+            drawControls();
+        }
     }
 
 	void drawInfo()
 	{
 		GUI.Box (new Rect (INFO_LEFT, CRED_TOP, INFO_WIDTH, HEIGHT), "GAME INFO");
 
-		string infoString = "SPRING 2014 CMPS427 \n Over the Top \n A dungeon-crawler RPG featuring randomly generated items, enemies, and dungeons.";
+        string infoString = "SPRING 2014 CMPS427 \n Over the Top \n A dungeon-crawler RPG featuring randomly generated items, enemies, and dungeons.";
 		
 		GUI.Label (new Rect (INFO_LEFT + 20, CRED_TOP + 30, INFO_WIDTH - 40, HEIGHT - 80), infoString, centerText);
 
@@ -88,4 +107,34 @@ public class Navigator : MonoBehaviour {
 		if (GUI.Button (new Rect (CRED_LEFT + 40, CRED_TOP + HEIGHT - 60, WIDTH - 80, 30), "Close"))
 			showCredits = false;
 	}
+
+    void drawControls()
+    {
+        GUI.Box(new Rect(INFO_LEFT, CRED_TOP, INFO_WIDTH, HEIGHT), "GAME INFO");
+
+        string infoString = "Left-click: Movement" +
+                            "Right-click: Ability 1" +
+                            "Q: Ability 2" +
+                            "W: Ability 2" +
+                            "E: Ability 2" +
+                            "R: Ability 2" +
+                            "\n" +
+                            "N: Talents" +
+                            "J: Spellbook" +
+                            "I: Inventory" +
+                            ": Attributes" + 
+                            "\n" +
+                            "1: Gain level" +
+                            "2: Gain 50 talent points" +
+                            "3: Gain 25 attribute points" +
+                            "4: Gain Might abilities" +
+                            "5: Gain Magic abilities" +
+                            "6: Gain full set of equipment";
+                            
+
+        GUI.Label(new Rect(INFO_LEFT + 20, CRED_TOP + 30, INFO_WIDTH - 40, HEIGHT - 80), infoString, centerText);
+
+        if (GUI.Button(new Rect(INFO_LEFT + 80, CRED_TOP + HEIGHT - 60, INFO_WIDTH - 160, 30), "Close"))
+            showInfo = false;
+    }
 }
