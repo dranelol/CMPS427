@@ -899,6 +899,7 @@ public class PlayerController : MonoBehaviour {
                 entity.NextLevelExperience *= 2;
                 entity.Experience = 0;
             }
+
             else if(entity.Level == 19)
             {
                 entity.Level++;
@@ -912,9 +913,10 @@ public class PlayerController : MonoBehaviour {
             }  
             
         }
+
         else
         {
-            if (entity.Experience >= entity.NextLevelExperience && entity.Level > 19)
+            if (entity.Experience >= entity.NextLevelExperience && entity.Level < 19)
             {
                 entity.Level++;
 
@@ -931,6 +933,7 @@ public class PlayerController : MonoBehaviour {
 
                 entity.NextLevelExperience *= 2;
             }
+
             else if (entity.Experience >= entity.NextLevelExperience && entity.Level == 19)
             {
                 entity.Level++;
