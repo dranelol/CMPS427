@@ -14,6 +14,12 @@ public class LootTrigger : Trigger
         get { return inventory; }
     }
 
+    private bool safeToDestroy;
+    public bool SafeToDestroy
+    {
+        get { return safeToDestroy; }
+    }
+
     private UIController uiController;
 
     private equipmentFactory ef;
@@ -25,7 +31,7 @@ public class LootTrigger : Trigger
     {
 
 
-
+        safeToDestroy = false;
         
 
         uiController = GameObject.FindWithTag("UI Controller").GetComponent<UIController>();
@@ -82,8 +88,8 @@ public class LootTrigger : Trigger
             {
                 uiController.GuiState = UIController.States.INGAME;
             }
-            GameObject.Destroy(gameObject);
-            
+
+            safeToDestroy = true;            
         }
 
 

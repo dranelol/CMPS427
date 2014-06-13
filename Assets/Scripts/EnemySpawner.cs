@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class EnemySpawner : MonoBehaviour 
 {
     private SphereCollider trigger;
+    private GameManager gameManager;
 
     public float triggerRadius;
     public float spawnRadius;
@@ -21,6 +22,8 @@ public class EnemySpawner : MonoBehaviour
     void Awake()
     {
         NavMeshHit meshLocation;
+
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
         if (NavMesh.SamplePosition(transform.position, out meshLocation, 30, 1 << LayerMask.NameToLayer("Default")))
         {
@@ -76,6 +79,10 @@ public class EnemySpawner : MonoBehaviour
                 enemyEntity.SetLevel(level);
                 enemyBase.InitializeStats(level);
                 enemyBase.SetAbilities();
+
+
+
+
             }
 
             else
