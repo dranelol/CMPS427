@@ -120,6 +120,7 @@ public class UIController : MonoBehaviour
          * Can only be accessed ingame. 
          * Accessed by Key Input for testing purposes.
          */
+        /*
         if (Input.GetKeyUp(KeyCode.L))
         {
             if (guiState == States.LEVELUP)
@@ -127,7 +128,7 @@ public class UIController : MonoBehaviour
             else if (guiState == States.INGAME)
                 guiState = States.LEVELUP;
         }
-
+        */
 
         if (Input.GetKeyUp(KeyCode.N))
         {

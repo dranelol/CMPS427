@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Deathgrip : Ability
 {
     public Deathgrip(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles, 2)
     {
        
     }
@@ -24,8 +24,8 @@ public class Deathgrip : Ability
                 {
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
-                    //DoPhysics(source, enemy);
-                    DoBlink(source, enemy);
+                    DoPhysics(source, enemy);
+                    //DoBlink(source, enemy);
 
                     if (enemy.GetComponent<AIController>().IsInCombat() == false)
                     {
@@ -45,8 +45,8 @@ public class Deathgrip : Ability
             {
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
-                //DoPhysics(source, enemy);
-                DoBlink(source, enemy);
+                DoPhysics(source, enemy);
+                //DoBlink(source, enemy);
                 GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, enemy));
             }
         }
@@ -174,7 +174,7 @@ public class Deathgrip : Ability
         Vector3 relativeVector = (source.transform.position - target.transform.position).normalized;
         float normalizedMagnitude = Vector3.Distance(target.transform.position, source.transform.position);
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
-        target.GetComponent<MovementFSM>().AddForce(relativeVector * force * 2, 0.1f);
+        target.GetComponent<MovementFSM>().AddForce(relativeVector * force * 5, 0.1f);
     }
 
     private void DoBlink(GameObject source, GameObject target)

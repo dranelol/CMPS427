@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Fusrodah : Ability
 {
     public Fusrodah(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles, 2)
     {
        
     }
@@ -170,7 +170,7 @@ public class Fusrodah : Ability
         float force = (normalizedMagnitude / (Mathf.Pow(0.35f, 2)));
         //defender.GetComponent<MovementFSM>().Stop(0.17f);
 
-        target.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force * 2, 0.2f);
+        target.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force * 7, 0.15f);
     }
 
     public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)

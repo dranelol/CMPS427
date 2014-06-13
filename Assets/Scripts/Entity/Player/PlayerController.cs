@@ -95,6 +95,20 @@ public class PlayerController : MonoBehaviour {
       
 
         Debug.DrawRay(transform.position, transform.forward);
+
+        if (true)
+        {
+            int terrainMask = LayerMask.NameToLayer("Terrain");
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit target;
+            Physics.Raycast(ray, out target, Mathf.Infinity, 1 << terrainMask);
+            Vector3 vectorToMouse = target.point - gameObject.transform.position;
+            Vector3 normalizedVectorToMouse = new Vector3(vectorToMouse.x, gameObject.transform.forward.y, vectorToMouse.z);
+
+            Debug.DrawRay(gameObject.transform.position, normalizedVectorToMouse.normalized * 5.0f, Color.yellow);
+        }
+
         //Debug.DrawRay(transform.position, Rotations.RotateAboutY(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f), -22.5f));
         //Debug.DrawRay(transform.position, Rotations.RotateAboutY(new Vector3(transform.forward.x * 5.0f, transform.forward.y, transform.forward.z * 5.0f), 22.5f));
         
@@ -126,14 +140,12 @@ public class PlayerController : MonoBehaviour {
 
         if (targetPosition != Vector3.zero)
         {
-            Debug.Log("this shouldnt happen ever");
             // If we're in attack range...
             Vector3 diff = targetPosition - transform.position;
             if (diff.magnitude <= attackRange)
             {
                 // attack enemy
                 targetPosition = Vector3.zero;
-                Debug.Log("STOPPING 2");
                 moveFSM.Stop();
             }
             else
@@ -142,6 +154,7 @@ public class PlayerController : MonoBehaviour {
                 moveFSM.SetPath(targetPosition);
             }
         }
+
         #region moving and turning
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
@@ -246,31 +259,25 @@ public class PlayerController : MonoBehaviour {
                 return;
             }
             
+
             if (entity.abilityManager.abilities[1] != null)
             {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[1] <= Time.time)
                 {
+                    int terrainMask = LayerMask.NameToLayer("Terrain");
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit rayCastTarget;
-                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << terrainMask);
                     Vector3 vectorToMouse = rayCastTarget.point - transform.position;
                     Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
                     moveFSM.Turn(transform.position + forward, 5f);
 
-                    try
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[1], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
-                    }
-
-                    catch
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[1], equipSlots.equipmentType.Sword);
-                    }
-
+                    //_animationController.PlayerAttack(entity.abilityManager.abilities[1], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);                 
+                    
                     if (entity.abilityManager.abilities[1].AttackType == AttackType.MELEE)
                     {
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                        //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                         entity.abilityManager.abilities[1].AttackHandler(gameObject, entity, true);
 
                     }
@@ -279,7 +286,7 @@ public class PlayerController : MonoBehaviour {
                     {
                         //combatFSM.Attack(0.0f);
 
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                        //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                         // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                         // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
@@ -292,21 +299,17 @@ public class PlayerController : MonoBehaviour {
                     {
                         //combatFSM.Attack(0.0f);
 
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                        //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                         // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                         // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
-
-                        int terrainMask = LayerMask.NameToLayer("Terrain");
-
-                        int enemyMask = LayerMask.NameToLayer("Enemy");
 
                         entity.abilityManager.abilities[1].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[1].ID, true);
                     }
 
                     else if (entity.abilityManager.abilities[1].AttackType == AttackType.GROUNDTARGET)
                     {
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                        //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                         entity.abilityManager.abilities[1].AttackHandler(gameObject, rayCastTarget.point, entity, true);
 
@@ -314,16 +317,17 @@ public class PlayerController : MonoBehaviour {
 
                     else
                     {
-                        combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                        //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                         entity.abilityManager.abilities[1].AttackHandler(gameObject, entity, true);
 
 
                     }
 
+                    float attackDuration = combatFSM.Attack(entity.abilityManager.abilities[1].Cooldown, entity.currentAtt.AttackSpeed);
 
+                    _animationController.Attack(entity.abilityManager.abilities[1].AttackIndex, attackDuration);
+                 
                     entity.abilityManager.activeCoolDowns[1] = Time.time + entity.abilityManager.abilities[1].Cooldown;
-
-
                 }
             }
         }
@@ -336,33 +340,25 @@ public class PlayerController : MonoBehaviour {
             {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[2] <= Time.time)
                 {
+                    int terrainMask = LayerMask.NameToLayer("Terrain");
+
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit rayCastTarget;
-                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << terrainMask);
                     Vector3 vectorToMouse = rayCastTarget.point - transform.position;
                     Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
                     moveFSM.Turn(transform.position + forward, 5f);
 
-                    try
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[2], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
-                    }
-
-                    catch
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[2], equipSlots.equipmentType.Sword);
-                    }
-
                     if (entity.CurrentResource >= entity.abilityManager.abilities[2].ResourceCost)
                     {
                         entity.ModifyResource(entity.abilityManager.abilities[2].ResourceCost * -1);
-                        Debug.Log("Attack Speed: " + entity.currentAtt.AttackSpeed.ToString());
+ 
 
 
                         if (entity.abilityManager.abilities[2].AttackType == AttackType.MELEE)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                             entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
 
                         }
@@ -371,7 +367,7 @@ public class PlayerController : MonoBehaviour {
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
@@ -384,22 +380,17 @@ public class PlayerController : MonoBehaviour {
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
-
-                            int terrainMask = LayerMask.NameToLayer("Terrain");
-
-                            int enemyMask = LayerMask.NameToLayer("Enemy");
-
 
                             entity.abilityManager.abilities[2].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[2].ID, true);
                         }
 
                         else if (entity.abilityManager.abilities[2].AttackType == AttackType.GROUNDTARGET)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             entity.abilityManager.abilities[2].AttackHandler(gameObject, rayCastTarget.point, entity, true);
 
@@ -407,12 +398,16 @@ public class PlayerController : MonoBehaviour {
 
                         else
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                             entity.abilityManager.abilities[2].AttackHandler(gameObject, entity, true);
 
 
                         }
 
+                        float attackDuration = combatFSM.Attack(entity.abilityManager.abilities[2].Cooldown, entity.currentAtt.AttackSpeed);
+
+                        _animationController.Attack(entity.abilityManager.abilities[2].AttackIndex, attackDuration);
+               
                         entity.abilityManager.activeCoolDowns[2] = Time.time + entity.abilityManager.abilities[2].Cooldown;
 
                     }
@@ -424,31 +419,21 @@ public class PlayerController : MonoBehaviour {
 
         #region ability 3
 
-        
-
         if (Input.GetKey(KeyCode.W))
         {
             if (entity.abilityManager.abilities[3] != null)
             {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[3] <= Time.time)
                 {
+                    int terrainMask = LayerMask.NameToLayer("Terrain");
+
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit rayCastTarget;
-                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << terrainMask);
                     Vector3 vectorToMouse = rayCastTarget.point - transform.position;
                     Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
                     moveFSM.Turn(transform.position + forward, 5f);
-
-                    try
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[3], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
-                    }
-
-                    catch
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[3], equipSlots.equipmentType.Sword);
-                    }
 
                     if (entity.CurrentResource >= entity.abilityManager.abilities[3].ResourceCost)
                     {
@@ -456,7 +441,7 @@ public class PlayerController : MonoBehaviour {
 
                         if (entity.abilityManager.abilities[3].AttackType == AttackType.MELEE)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                             entity.abilityManager.abilities[3].AttackHandler(gameObject, entity, true);
                         }
 
@@ -465,13 +450,10 @@ public class PlayerController : MonoBehaviour {
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
-                            int terrainMask = LayerMask.NameToLayer("Terrain");
-
-                            int enemyMask = LayerMask.NameToLayer("Enemy");
 
                             entity.abilityManager.abilities[3].SpawnProjectile(gameObject, gameObject, forward, entity.abilityManager.abilities[3].ID, true);
                         }
@@ -480,14 +462,10 @@ public class PlayerController : MonoBehaviour {
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                           // combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
-
-                            int terrainMask = LayerMask.NameToLayer("Terrain");
-
-                            int enemyMask = LayerMask.NameToLayer("Enemy");
 
 
                             entity.abilityManager.abilities[3].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[3].ID, true);
@@ -495,7 +473,7 @@ public class PlayerController : MonoBehaviour {
 
                         else if (entity.abilityManager.abilities[3].AttackType == AttackType.GROUNDTARGET)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                           // combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             entity.abilityManager.abilities[3].AttackHandler(gameObject, rayCastTarget.point, entity, true);
 
@@ -503,12 +481,15 @@ public class PlayerController : MonoBehaviour {
 
                         else
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                           // combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                             entity.abilityManager.abilities[3].AttackHandler(gameObject, entity, true);
 
 
                         }
 
+                        float attackDuration = combatFSM.Attack(entity.abilityManager.abilities[3].Cooldown, entity.currentAtt.AttackSpeed);
+
+                        _animationController.Attack(entity.abilityManager.abilities[3].AttackIndex, attackDuration);
 
                         entity.abilityManager.activeCoolDowns[3] = Time.time + entity.abilityManager.abilities[3].Cooldown;
                     }
@@ -525,29 +506,23 @@ public class PlayerController : MonoBehaviour {
             {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[4] <= Time.time)
                 {
+                    int terrainMask = LayerMask.NameToLayer("Terrain");
+
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit rayCastTarget;
-                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << terrainMask);
                     Vector3 vectorToMouse = rayCastTarget.point - transform.position;
                     Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
                     moveFSM.Turn(transform.position + forward, 5f);
-                    try
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[4], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
-                    }
-
-                    catch
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[4], equipSlots.equipmentType.Sword);
-                    }
+            
                     if (entity.CurrentResource >= entity.abilityManager.abilities[4].ResourceCost)
                     {
                         entity.ModifyResource(entity.abilityManager.abilities[4].ResourceCost * -1);
 
                         if (entity.abilityManager.abilities[4].AttackType == AttackType.MELEE)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                             entity.abilityManager.abilities[4].AttackHandler(gameObject, entity, true);
                         }
 
@@ -556,7 +531,7 @@ public class PlayerController : MonoBehaviour {
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
@@ -568,15 +543,10 @@ public class PlayerController : MonoBehaviour {
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                           // combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
-
-
-                            int terrainMask = LayerMask.NameToLayer("Terrain");
-
-                            int enemyMask = LayerMask.NameToLayer("Enemy");
 
 
                             entity.abilityManager.abilities[4].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[4].ID, true);
@@ -584,7 +554,7 @@ public class PlayerController : MonoBehaviour {
 
                         else if (entity.abilityManager.abilities[4].AttackType == AttackType.GROUNDTARGET)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
 
                             entity.abilityManager.abilities[4].AttackHandler(gameObject, rayCastTarget.point, entity, true);
@@ -592,12 +562,15 @@ public class PlayerController : MonoBehaviour {
                         }
                         else
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                             entity.abilityManager.abilities[4].AttackHandler(gameObject, entity, true);
 
 
                         }
 
+                        float attackDuration = combatFSM.Attack(entity.abilityManager.abilities[4].Cooldown, entity.currentAtt.AttackSpeed);
+
+                        _animationController.Attack(entity.abilityManager.abilities[4].AttackIndex, attackDuration);
 
                         entity.abilityManager.activeCoolDowns[4] = Time.time + entity.abilityManager.abilities[4].Cooldown;
                     }
@@ -614,23 +587,15 @@ public class PlayerController : MonoBehaviour {
             {
                 if (combatFSM.IsIdle() == true && entity.abilityManager.activeCoolDowns[5] <= Time.time)
                 {
+                    int terrainMask = LayerMask.NameToLayer("Terrain");
+
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit rayCastTarget;
-                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity);
+                    Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << terrainMask);
                     Vector3 vectorToMouse = rayCastTarget.point - transform.position;
                     Vector3 forward = new Vector3(vectorToMouse.x, transform.forward.y, vectorToMouse.z).normalized;
 
                     moveFSM.Turn(transform.position + forward, 5f);
-
-                    try
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[5], entity.EquippedEquip[equipSlots.slots.Main].equipmentType);
-                    }
-
-                    catch
-                    {
-                        _animationController.PlayerAttack(entity.abilityManager.abilities[5], equipSlots.equipmentType.Sword);
-                    }
 
                     if (entity.CurrentResource >= entity.abilityManager.abilities[5].ResourceCost)
                     {
@@ -638,14 +603,14 @@ public class PlayerController : MonoBehaviour {
 
                         if (entity.abilityManager.abilities[5].AttackType == AttackType.MELEE)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN / entity.currentAtt.AttackSpeed);
                             entity.abilityManager.abilities[5].AttackHandler(gameObject, entity, true);
                         }
                         else if (entity.abilityManager.abilities[5].AttackType == AttackType.PROJECTILE)
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
@@ -658,22 +623,17 @@ public class PlayerController : MonoBehaviour {
                         {
                             //combatFSM.Attack(0.0f);
 
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
                             // if this is a projectile, attackhandler is only called when the projectile scores a hit.
                             // so, the keypress doesn't spawn the attackhandler, it simply inits the projectile object
-
-
-                            int terrainMask = LayerMask.NameToLayer("Terrain");
-
-                            int enemyMask = LayerMask.NameToLayer("Enemy");
 
                             entity.abilityManager.abilities[5].SpawnProjectile(gameObject, rayCastTarget.point, gameObject, forward, entity.abilityManager.abilities[5].ID, true);
                         }
 
                         else if (entity.abilityManager.abilities[5].AttackType == AttackType.GROUNDTARGET)
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
 
 
                             entity.abilityManager.abilities[5].AttackHandler(gameObject, rayCastTarget.point, entity, true);
@@ -682,10 +642,13 @@ public class PlayerController : MonoBehaviour {
 
                         else
                         {
-                            combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
+                            //combatFSM.Attack(GameManager.GLOBAL_COOLDOWN);
                             entity.abilityManager.abilities[5].AttackHandler(gameObject, entity, true);
                         }
 
+                        float attackDuration = combatFSM.Attack(entity.abilityManager.abilities[5].Cooldown, entity.currentAtt.AttackSpeed);
+
+                        _animationController.Attack(entity.abilityManager.abilities[5].AttackIndex, attackDuration);
 
                         entity.abilityManager.activeCoolDowns[5] = Time.time + entity.abilityManager.abilities[5].Cooldown;
                     }
@@ -696,29 +659,11 @@ public class PlayerController : MonoBehaviour {
 
         #endregion
 
+        #region cheats
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
 
-            LevelUp(true);
-            
-            /*
-            
-            entity.abilityManager.AddAbility(GameManager.Abilities["cleave"], 1);
-
-            entity.abilityManager.AddAbility(GameManager.Abilities["dervish"], 1);
-
-            entity.abilityManager.AddAbility(GameManager.Abilities["shadowfury"], 2);
-            entity.abilityManager.AddAbility(GameManager.Abilities["dropdasteel"], 3);
-            entity.abilityManager.AddAbility(GameManager.Abilities["shadowtrap"], 4);
-            entity.abilityManager.AddAbility(GameManager.Abilities["deathanddecay"], 5);
-
-            entity.abilityIndexDict["dervish"] = 1;
-            entity.abilityIndexDict["shadowfury"] = 2;
-            entity.abilityIndexDict["dropdasteel"] = 3;
-            entity.abilityIndexDict["shadowtrap"] = 4;
-            entity.abilityIndexDict["deathanddecay"] = 5;
-             * 
-             */ 
+            LevelUp(true); 
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -771,88 +716,14 @@ public class PlayerController : MonoBehaviour {
                 entity.removeEquipment((equipSlots.slots)i);
             }
         }
-
-        if(Input.GetKeyDown(KeyCode.M))
-        {
-            string blah = "";
-
-            //blah = blah + entity.GetEquip(equipSlots.slots.Main).equipmentName + " \n" + entity.GetEquip(equipSlots.slots.Off).equipmentName;
-            if (entity.HasEquipped(equipSlots.slots.Main))
-                blah = blah + entity.GetEquip(equipSlots.slots.Main).equipmentName + " \n";
-            else blah = blah + "HAS NO SWORD \n";
-            if (entity.HasEquipped(equipSlots.slots.Off))
-                blah = blah + entity.GetEquip(equipSlots.slots.Off).equipmentName + " \n";
-            else blah = blah + "HAS NO OFFHAND \n";
-            if (entity.HasEquipped(equipSlots.slots.Head))
-                blah = blah + entity.GetEquip(equipSlots.slots.Head).equipmentName + " \n";
-            else blah = blah + "HAS NO HAT \n";
-            if (entity.HasEquipped(equipSlots.slots.Chest))
-                blah = blah + entity.GetEquip(equipSlots.slots.Chest).equipmentName + " \n";
-            else blah = blah + "HAS NO SHIRT \n";
-            if (entity.HasEquipped(equipSlots.slots.Legs))
-                blah = blah + entity.GetEquip(equipSlots.slots.Legs).equipmentName + " \n";
-            else blah = blah + "HAS NO PANTS \n";
-            if (entity.HasEquipped(equipSlots.slots.Feet))
-                blah = blah + entity.GetEquip(equipSlots.slots.Feet).equipmentName + " \n";
-            else blah = blah + "HAS NO SHOE \n";
-
-            Debug.Log(blah);
-            blah = entity.currentAtt.Health.ToString() + " Health\n";
-            blah = blah + entity.currentAtt.Resource.ToString() + " Resource\n";
-            blah = blah + entity.currentAtt.Power.ToString() + " Power\n";
-            blah = blah + entity.currentAtt.Defense.ToString() + " Defense\n";
-            blah = blah + entity.currentAtt.MinDamage.ToString() + " MinDamage\n";
-            blah = blah + entity.currentAtt.MaxDamage.ToString() + " Maxdamage\n";
-            Debug.Log(blah);
-            Debug.Log(entity.CurrentHP.ToString());
-
-
-        }
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            //entity.ModifyHealth(entity.currentAtt.Health-entity.CurrentHP);
-            //entity.ModifyResource(entity.currentAtt.Resource - entity.CurrentResource);
-        }
+        #endregion
 
         #region ABILITY TESTS
 
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-
-            GameObject rotationEffect = (GameObject)Instantiate(gameManager.CleaveParticles, transform.position, Quaternion.identity);
-
-            //rotationEffect.transform.parent = transform;
-
-            OrbSpawnSingle orbSpawn = rotationEffect.GetComponent<OrbSpawnSingle>();
-
-            orbSpawn.orbitObject = gameObject;
-            orbSpawn.initialAngleFromForward = Rotations.AngleSigned(transform.forward, Vector3.forward, Vector3.up) + 25.0f;
-            //orbSpawn.rotations = 0.25f;
-            //orbSpawn.angularSpeed = 360.0f;
-            //orbSpawn.oscillationSpeed = 0.5f;
-
-        }
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-
-            GameObject rotationEffect = (GameObject)Instantiate(gameManager.WhirlwindParticles, transform.position, Quaternion.identity);
-
-            //rotationEffect.transform.parent = transform;
-
-            OrbSpawnSingle orbSpawn = rotationEffect.GetComponent<OrbSpawnSingle>();
-
-            orbSpawn.orbitObject = gameObject;
-            orbSpawn.initialAngleFromForward = Rotations.AngleSigned(transform.forward, Vector3.forward, Vector3.up) + 25.0f;
-            //orbSpawn.rotations = 0.25f;
-            //orbSpawn.angularSpeed = 360.0f;
-            //orbSpawn.oscillationSpeed = 0.5f;
-
-        }
         #endregion
 
         #region equipment stuff
-
+        /*
         // Equipping light weapon.
         if (Input.GetKeyDown(KeyCode.A))
         {
@@ -910,7 +781,7 @@ public class PlayerController : MonoBehaviour {
         }
 
 
-        
+        */
 
         #endregion
 
@@ -938,6 +809,7 @@ public class PlayerController : MonoBehaviour {
                 entity.NextLevelExperience *= 2;
                 entity.Experience = 0;
             }
+
             else if(entity.Level == 19)
             {
                 entity.Level++;
@@ -951,9 +823,10 @@ public class PlayerController : MonoBehaviour {
             }  
             
         }
+
         else
         {
-            if (entity.Experience >= entity.NextLevelExperience && entity.Level > 19)
+            if (entity.Experience >= entity.NextLevelExperience && entity.Level < 19)
             {
                 entity.Level++;
 
@@ -970,6 +843,7 @@ public class PlayerController : MonoBehaviour {
 
                 entity.NextLevelExperience *= 2;
             }
+
             else if (entity.Experience >= entity.NextLevelExperience && entity.Level == 19)
             {
                 entity.Level++;

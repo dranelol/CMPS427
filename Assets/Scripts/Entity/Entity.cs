@@ -36,6 +36,7 @@ public class Entity : MonoBehaviour
     public Attributes equipAtt; // Attribute changes that are added on from equipment stat changes
     public Attributes baseAtt; // Base attributes without any status effects or gear
     private EntitySoundManager _soundManager;
+    public float GLOBAL_COOLDOWN;
 
     public float minMovementSpeed = 0;
     public float maxMovementSpeed = 3;
@@ -79,6 +80,7 @@ public class Entity : MonoBehaviour
 
         level = 1;
         experience = 0;
+        GLOBAL_COOLDOWN = 1f;
     }
 
     public void OnApplicationQuit() { }

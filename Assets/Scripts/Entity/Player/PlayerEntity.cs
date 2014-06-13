@@ -51,7 +51,7 @@ public class PlayerEntity : Entity
         Experience = 0;
         Level = 1;
         nextLevelExperience = 100;
-
+        GLOBAL_COOLDOWN = 0.5f;
         levelCap = false;
 
     }
@@ -93,20 +93,21 @@ public class PlayerEntity : Entity
         else
         {
             abilityManager.AddAbility(GameManager.Abilities["cleave"], 1);
+            //abilityManager.AddAbility(GameManager.Abilities["groundslam"], 2);
+            //abilityManager.AddAbility(GameManager.Abilities["deathgrip"], 3);
+            //abilityManager.AddAbility(GameManager.Abilities["blinkstrike"], 4);
 
             abilityIndexDict["cleave"] = 1;
+            //abilityIndexDict["groundslam"] = 2;
+            //abilityIndexDict["deathgrip"] = 3;
+            //abilityIndexDict["blinkstrike"] = 4;
         }
 	}
 	
 	// Update is called once per frame
 	public void Update () 
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit target;
-        Physics.Raycast(ray, out target, Mathf.Infinity);
-        Vector3 vectorToMouse = target.point - gameObject.transform.position;
-        Vector3 normalizedVectorToMouse = new Vector3(vectorToMouse.x, gameObject.transform.forward.y, vectorToMouse.z);
-        Debug.DrawRay(gameObject.transform.position, normalizedVectorToMouse.normalized * 5.0f, Color.yellow);
+        
         //Debug.Log(ray.direction);
 
 

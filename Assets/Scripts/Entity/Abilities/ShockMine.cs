@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class ShockMine : Ability
 {
     public ShockMine(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles, 2)
     {
 
     }
@@ -36,7 +36,6 @@ public class ShockMine : Ability
 
         if (isPlayer == true)
         {
-            Debug.Log(attacked.Count);
             foreach (GameObject enemy in attacked)
             {
                 if (enemy.GetComponent<AIController>().IsResetting() == false
@@ -74,7 +73,6 @@ public class ShockMine : Ability
         }
         if (isPlayer == true)
         {
-            Debug.Log("damage: " + damageAmt);
         }
 
         defender.ModifyHealth(-damageAmt);

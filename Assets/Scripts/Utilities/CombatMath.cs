@@ -24,6 +24,18 @@ public class CombatMath : MonoBehaviour
         return Physics.Raycast(origin, target - origin, out hitInfo, range, layerMask);
     }
 
+    public static Vector3 ForwardRayCastToMouse(Vector3 origin)
+    {
+        int terrainMask = LayerMask.NameToLayer("Terrain");
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit rayCastTarget;
+        Physics.Raycast(ray, out rayCastTarget, Mathf.Infinity, 1 << terrainMask);
+        Vector3 vectorToMouse = rayCastTarget.point - origin;
+        Vector3 forward = new Vector3(vectorToMouse.x, origin.y, vectorToMouse.z).normalized;
+
+        return forward;
+    }
+
     public static bool DistanceGreaterThan(Vector3 positionA, Vector3 positionB, float distance)
     {
         return (positionB - positionA).sqrMagnitude > distance * distance;

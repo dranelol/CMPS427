@@ -115,7 +115,7 @@ public class TalentManager : MonoBehaviour
 
         //Tier 4 
         mightTree.Add(new Talent("Whirlwind", 1, GameManager.Abilities["whirlwind"], 3));
-        mightTree.Add(new Talent("Hadouken", 1, GameManager.Abilities["hadouken"], 3));
+        mightTree.Add(new Talent("Ground Slam", 1, GameManager.Abilities["groundslam"], 3));
 
         //Tier 5
         mightTree.Add(new Talent("Boomerang Blade", 1, GameManager.Abilities["boomerangblade"], 4));

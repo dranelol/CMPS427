@@ -10,7 +10,7 @@ public class CombatFSM : StateMachine
     private bool timeLocked = false;
     private bool attack = false;
     private float lockedTime = 1.0f;
-
+    private Entity entity;
     public enum CombatStates
     {
         idle,
@@ -39,6 +39,7 @@ public class CombatFSM : StateMachine
         AddTransitionsFrom(CombatStates.combatLocked, combatLockedTransitions);
 
         StartMachine(CombatStates.idle);
+        entity = GetComponent<Entity>();
 	}
 
     #region public functions
@@ -51,6 +52,28 @@ public class CombatFSM : StateMachine
             lockedTime = Mathf.Max(time, 0);
             Transition(CombatStates.attacking);
         }
+    }
+
+    public float Attack(float abilityCooldown, float attackSpeed)
+    {
+        attack = true;
+        if (!timeLocked)
+        {
+            if (abilityCooldown < entity.GLOBAL_COOLDOWN && attackSpeed > 1)
+            {
+                lockedTime = entity.GLOBAL_COOLDOWN / attackSpeed;
+            }
+
+            else
+            {
+                lockedTime = entity.GLOBAL_COOLDOWN;
+            }
+
+            Transition(CombatStates.attacking);
+            return lockedTime;
+        }
+
+        return 0;
     }
 
     public bool IsIdle()

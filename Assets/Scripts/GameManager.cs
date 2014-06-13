@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     public GameObject FlamestrikeParticles;
 
     public GameObject BlinkStrikeProjectile;
+    public GameObject BlinkStrikeExplosion;
     public GameObject BlinkParticles;
     public GameObject BladeWaltzParticles;
 
@@ -91,7 +92,7 @@ public class GameManager : MonoBehaviour
 
     public static float GLOBAL_COOLDOWN = 0.5f;
 
-    public AudioClip YEAAAAA;
+    public Camera MainCamera;
 
     public bool loadSaveTest = false;
 
@@ -144,16 +145,16 @@ public class GameManager : MonoBehaviour
 
         #endregion
 
-        Abilities["hadouken"] = new Hadouken(AttackType.PBAOE, DamageType.AIR, 5.0f, 360.0f, 10.0f, 10.0f, 25.0f, "hadouken", "Hadouken", HadoukenParticles);
-        Abilities["deathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 5.0f, 360.0f, 10.0f, 15.0f, 25.0f, "deathgrip", "AoE Deathgrip", DeathgripParticles);
+        Abilities["groundslam"] = new Hadouken(AttackType.PBAOE, DamageType.AIR, 5.0f, 360.0f, 10.0f, 10.0f, 25.0f, "groundslam", "Ground Slam", HadoukenParticles);
+        Abilities["deathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 5.0f, 360.0f, 0.0f, 15.0f, 25.0f, "deathgrip", "AoE Deathgrip", DeathgripParticles);
         Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 5.0f, 45.0f, 5.0f, 10.0f, 20.0f, "fusrodah", "Fus Roh Dah", FusRoDahParticles);
 		Abilities["flamestrike"] = new Flamestrike(AttackType.PBAOE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 1000.0f, 25.0f, "flamestrike", "Flamestrike", FlamestrikeParticles);
         Abilities["bladewaltz"] = new BladeWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 30.0f, 0f, 50.0f, "bladewaltz", "Blade Waltz", BladeWaltzParticles);
         Abilities["erenwaltz"] = new ErenWaltz(AttackType.PBAOE, DamageType.PHYSICAL, 5.0f, 360.0f, 0.0f, 5.0f, 0f, "erenwaltz", "Eren Waltz", BladeWaltzParticles);
         Abilities["firemine"] = new FireMine(AttackType.PROJECTILE, DamageType.FIRE, 5.0f, 360.0f, 4.0f, 200.0f, 10f, "firemine", "Fire Mine", FiremineParticles);
-        Abilities["GETOVERHERE"] = new GETOVERHERE(AttackType.PROJECTILE, DamageType.SHADOW, 4.0f, 0.0f, 5.0f, 0.1f, 10f, "GETOVERHERE", "Shadow Pull", GETOVERHEREParticles);
+        Abilities["GETOVERHERE"] = new GETOVERHERE(AttackType.PROJECTILE, DamageType.SHADOW, 4.0f, 0.0f, 0.0f, 0.1f, 10f, "GETOVERHERE", "Shadow Pull", GETOVERHEREParticles);
         Abilities["normalmine"] = new NormalMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 360.0f, 4.0f, 1.0f, 10f, "normalmine", "Mine", MineParticles);
-        Abilities["blinkstrike"] = new BlinkStrike(AttackType.PROJECTILE, DamageType.SHADOW, 4.0f, 1.0f, 7.0f, 5.0f, 10f, "blinkstrike", "Blink Strike", BlinkStrikeProjectile);
+        Abilities["blinkstrike"] = new BlinkStrike(AttackType.PROJECTILE, DamageType.SHADOW, 4.0f, 1.0f, 0.0f, 5.0f, 10f, "blinkstrike", "Blink Strike", BlinkStrikeExplosion);
         Abilities["blink"] = new Blink(AttackType.GROUNDTARGET, DamageType.NONE, 5.0f, 0.0f, 7.0f, 0.0f, 25f, "blink", "Blink", BlinkParticles);
         Abilities["shockmine"] = new ShockMine(AttackType.PROJECTILE, DamageType.PHYSICAL, 7.0f, 360.0f, 3.0f, 30.0f, 5f, "shockmine", "Shock Mine", ShockMineProjectile);
         Abilities["aoefreeze"] = new AOEfreeze(AttackType.PBAOE, DamageType.WATER, 5.0f, 360f, 15f, 1f, 30f, "aoefreeze", "Flashfreeze", AOEFreezeParticles);
@@ -167,7 +168,7 @@ public class GameManager : MonoBehaviour
         Abilities["boomerangbladereturn"] = new BoomerangBladeReturn(AttackType.HONINGPROJECTILE, DamageType.PHYSICAL, 0.0f, 0.0f, 0.0f, 0.0f, 0f, "boomerangbladereturn", "Boomerang Blade(returning)", BoomerangBladeExplosion);
         Abilities["axethrow"] = new AxeThrow(AttackType.PROJECTILE, DamageType.PHYSICAL, 5.0f, 0.0f, 2.0f, 0.0f, 3f, "axethrow", "Axe Throw", AxeThrowExplosion);
         Abilities["frostnova"] = new FrostNova(AttackType.PBAOE, DamageType.WATER, 7f, 360f, 20f, 0f, 60f, "frostnova", "Frost Nova", IceBoltParticles);
-        Abilities["shieldbreaker"] = new ShieldBreaker(AttackType.PBAOE, DamageType.PHYSICAL, 10f, 8f, 5f, 5f, 20f, "shieldbreaker", "Shieldbreaker", ShieldBreakerParticles);
+        Abilities["shieldbreaker"] = new ShieldBreaker(AttackType.PBAOE, DamageType.PHYSICAL, 10f, 15f, 0.0f, 5f, 20f, "shieldbreaker", "Shieldbreaker", ShieldBreakerParticles);
         Abilities["dropdasteel"] = new DropDaSteel(AttackType.STATUS, DamageType.NONE, 0f, 0f, 32f, 0f, 0f, "dropdasteel", "Drop Da Steel", dropdasteelparticles);
 
         Abilities["dervishdeathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.NONE, 3f, 360f, 0f, 0f, 0f, "dervishdeathgrip", "Dervish Deathgrip", DeathgripParticles);
@@ -194,7 +195,7 @@ public class GameManager : MonoBehaviour
         Abilities["enemycleaveslow"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 3.0f, 5.0f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemycleavenormal"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 2f, 2.5f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemycleavefast"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 1.0f, 1.0f, 0f, "cleave", "Cleave", CleaveParticles);
-        Abilities["enemydeathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 10.0f, 360.0f, 2.0f, 0.0f, 0.0f, "deathgrip", "Enemy Deathgrip", DeathgripParticles);
+        Abilities["enemydeathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 10.0f, 360.0f, 10.0f, 0.0f, 0.0f, "enemydeathgrip", "Enemy Deathgrip", DeathgripParticles);
 
         Abilities["bossfireball"] = new BossFireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 5.0f, 10.0f, 0f, "bossfireball", "Boss Fireball", BossInfernalFireballExplosion);
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Hadouken : Ability
 {
     public Hadouken(AttackType attackType, DamageType damageType, float range, float angle, float cooldown, float damageMod, float resourceCost, string id, string readable, GameObject particles)
-        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles)
+        : base(attackType, damageType, range, angle, cooldown, damageMod, resourceCost, id, readable, particles, 2)
     {
 
     }
@@ -43,6 +43,8 @@ public class Hadouken : Ability
                 
             }
         }
+
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 4.0f, isPlayer));
     }
 
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
@@ -168,6 +170,29 @@ public class Hadouken : Ability
         float normalizedMagnitude = 5f - Vector3.Distance(target.transform.position, source.transform.position);
         float force = (normalizedMagnitude / (Mathf.Pow(0.4f, 2)));
 
-        target.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force * 2, 0.2f);
+        target.GetComponent<MovementFSM>().AddForce(relativeVector.normalized * force * 5, 0.2f);
+    }
+
+    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
+    {
+        GameObject particles;
+
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position, source.transform.rotation);
+
+        yield return new WaitForSeconds(time);
+
+        ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem item in particleSystems)
+        {
+            item.transform.parent = null;
+            item.emissionRate = 0;
+            item.enableEmission = false;
+
+        }
+
+        GameObject.Destroy(particles);
+
+        yield return null;
     }
 }

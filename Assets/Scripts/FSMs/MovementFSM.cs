@@ -268,7 +268,7 @@ public class MovementFSM : StateMachine
         if (force.magnitude > 0)
         {
             LockMovement(LockType.MovementLock, duration);
-            _navMeshAgent.Move(force / 50f);
+            StartCoroutine(AddForceIncrement(force, duration));
         }
     }
 
@@ -279,6 +279,21 @@ public class MovementFSM : StateMachine
             Transition(MoveStates.idle);
         }
         _navMeshAgent.Warp(targetLocation);
+    }
+
+    private IEnumerator AddForceIncrement(Vector3 totalForce, float duration)
+    {
+        int increments = (int)(duration*50f);
+
+        Vector3 force = totalForce / increments;
+
+        for (int i = 0; i < increments; i++)
+        {
+            _navMeshAgent.Move(force / 50f);
+            yield return new WaitForEndOfFrame();
+        }
+
+        yield return null;
     }
 
     #endregion
