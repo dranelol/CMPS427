@@ -20,6 +20,13 @@ public class LootTrigger : Trigger
         get { return safeToDestroy; }
     }
 
+
+    private bool canBeOpened;
+    public bool CanBeOpened
+    {
+        get { return canBeOpened; }
+        set { canBeOpened = value; }
+    }
     private UIController uiController;
 
     private equipmentFactory ef;
@@ -32,7 +39,7 @@ public class LootTrigger : Trigger
 
 
         safeToDestroy = false;
-        
+        canBeOpened = false;
 
         uiController = GameObject.FindWithTag("UI Controller").GetComponent<UIController>();
 
@@ -81,6 +88,8 @@ public class LootTrigger : Trigger
 
         //Debug.Log("mouse over: "+uiController.PlayerController.MouseOverChest.ToString());
 
+        Debug.Log("can open: "+canBeOpened.ToString());
+
         if (inventory.IsEmpty() == true)
         {
             inventoryOpened = false;
@@ -102,6 +111,12 @@ public class LootTrigger : Trigger
 
 	public override void SetOff()
     {
+
+        if (canBeOpened == false)
+        {
+            return;
+        }
+        
         Debug.Log("get dat loot");
 
         // bring up inventory for item
@@ -133,6 +148,12 @@ public class LootTrigger : Trigger
                 // close inventory if opened
                 
                 inventoryOpened = false;
+
+                if (uiController.GuiState == UIController.States.LOOT)
+                {
+                    uiController.GuiState = UIController.States.INGAME;
+                }
+
             }
             
         }
@@ -142,6 +163,7 @@ public class LootTrigger : Trigger
     {
         Debug.Log("entering");
         //triggerObject.renderer.material.shader = highlight;
+        
     }
 
     void OnMouseOver()
