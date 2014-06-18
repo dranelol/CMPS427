@@ -88,7 +88,7 @@ public class LootTrigger : Trigger
 
         //Debug.Log("mouse over: "+uiController.PlayerController.MouseOverChest.ToString());
 
-        Debug.Log("can open: "+canBeOpened.ToString());
+        
 
         if (inventory.IsEmpty() == true)
         {
