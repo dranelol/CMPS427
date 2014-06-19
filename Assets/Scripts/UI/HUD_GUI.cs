@@ -49,6 +49,7 @@ public class HUD_GUI : MonoBehaviour {
 	public float native_height;
     public Rect InfoBox1;
     public Rect InfoBox2;
+    public Rect InfoBox3;
 
     public PlayerEntity player;
 	bool damageFlag = false;
@@ -101,6 +102,8 @@ public class HUD_GUI : MonoBehaviour {
 
         InfoBox1 = new Rect(Screen.width * .5f, Screen.height * .87f, Screen.width * .45f, Screen.height * .1f);
         InfoBox2 = new Rect(Screen.width * .91f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
+
+        InfoBox3 = new Rect(Screen.width * .02f, Screen.height * .10f, Screen.width * .1f, Screen.height * .5f);
 
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>();
 		currentLiquid = HealthLiquid;
@@ -323,6 +326,27 @@ public class HUD_GUI : MonoBehaviour {
         GUI.Label(InfoBox1, attackList, infoBoxStyle);
         GUI.Label(InfoBox2, version, infoBoxStyle);
         GUI.Label(TempManaBox, player.CurrentResource.ToString() + "/" + player.currentAtt.Resource.ToString() + " Resource", infoBoxStyle);
+
+        string controls =  "Left-click: Movement\n" +
+                            "Right-click: Ability 1\n" +
+                            "Q: Ability 2\n" +
+                            "W: Ability 3\n" +
+                            "E: Ability 4\n" +
+                            "R: Ability 5\n" +
+                            "\n" +
+                            "N: Talents\n" +
+                            "J: Spellbook\n" +
+                            "I: Inventory\n" +
+                            "H: Attributes\n" +
+                            "\n" +
+                            "1: Gain level\n" +
+                            "2: Gain 50 talent points\n" +
+                            "3: Gain 25 attribute points\n" +
+                            "4: Gain Might abilities\n" +
+                            "5: Gain Magic abilities\n" +
+                            "6: Gain full set of equipment";
+
+        GUI.Label(InfoBox3, controls, infoBoxStyle);
 
 
         #region ability cooldown GUI
