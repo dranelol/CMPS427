@@ -14,6 +14,19 @@ public class LootTrigger : Trigger
         get { return inventory; }
     }
 
+    private bool safeToDestroy;
+    public bool SafeToDestroy
+    {
+        get { return safeToDestroy; }
+    }
+
+
+    private bool canBeOpened;
+    public bool CanBeOpened
+    {
+        get { return canBeOpened; }
+        set { canBeOpened = value; }
+    }
     private UIController uiController;
 
     private equipmentFactory ef;
@@ -25,8 +38,8 @@ public class LootTrigger : Trigger
     {
 
 
-
-        inventory = new Inventory();
+        safeToDestroy = false;
+        canBeOpened = false;
 
         uiController = GameObject.FindWithTag("UI Controller").GetComponent<UIController>();
 
@@ -40,8 +53,10 @@ public class LootTrigger : Trigger
 
 
         ef = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().EquipmentFactory;
-        
 
+        inventory = new Inventory();
+
+        //Debug.Log("count: " + inventory.Items.Count.ToString());
         if (inventory.Items.Count <= 0)
         {
        
@@ -53,7 +68,7 @@ public class LootTrigger : Trigger
                     inventory.AddItem(ef.randomEquipment(2));
                 }
             }
-            else if (diceroll == 4)
+            else if (diceroll > 3)
             {
                 inventory.AddItem(ef.randomEquipment(3));
             }
@@ -73,20 +88,20 @@ public class LootTrigger : Trigger
 
         //Debug.Log("mouse over: "+uiController.PlayerController.MouseOverChest.ToString());
 
+        
+
         if (inventory.IsEmpty() == true)
         {
             inventoryOpened = false;
-            GameObject.Destroy(gameObject);
-            
-        }
-
-        if (inventoryOpened == false)
-        {
             if (uiController.GuiState == UIController.States.LOOT)
             {
                 uiController.GuiState = UIController.States.INGAME;
             }
+
+            safeToDestroy = true;            
         }
+
+
     }
 
 	public override void Activate() 
@@ -96,6 +111,12 @@ public class LootTrigger : Trigger
 
 	public override void SetOff()
     {
+
+        if (canBeOpened == false)
+        {
+            return;
+        }
+        
         Debug.Log("get dat loot");
 
         // bring up inventory for item
@@ -127,6 +148,12 @@ public class LootTrigger : Trigger
                 // close inventory if opened
                 
                 inventoryOpened = false;
+
+                if (uiController.GuiState == UIController.States.LOOT)
+                {
+                    uiController.GuiState = UIController.States.INGAME;
+                }
+
             }
             
         }
@@ -136,6 +163,7 @@ public class LootTrigger : Trigger
     {
         Debug.Log("entering");
         //triggerObject.renderer.material.shader = highlight;
+        
     }
 
     void OnMouseOver()

@@ -50,6 +50,11 @@ public class EnemyBaseAtts : MonoBehaviour {
         tempatts.MovementSpeed = baseMoveSpd + scalingMoveSpd * (level - 1);
         tempatts.AttackSpeed = baseAttackSpd + scalingAttackSpd * (level - 1);
 
+        LootDropChance = UnityEngine.Random.Range(0f, 3f);
+
+        MinLootDrops = 1;
+        MaxLootDrops = 5;
+
         _entity.baseAtt = tempatts;
 
         GetComponent<Entity>().UpdateCurrentAttributes();
