@@ -95,6 +95,7 @@ public class PlayerController : MonoBehaviour {
       
 
         Debug.DrawRay(transform.position, transform.forward);
+
         if (true)
         {
             int terrainMask = LayerMask.NameToLayer("Terrain");
@@ -153,6 +154,7 @@ public class PlayerController : MonoBehaviour {
                 moveFSM.SetPath(targetPosition);
             }
         }
+
         #region moving and turning
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
@@ -657,29 +659,11 @@ public class PlayerController : MonoBehaviour {
 
         #endregion
 
+        #region cheats
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
 
-            LevelUp(true);
-            
-            /*
-            
-            entity.abilityManager.AddAbility(GameManager.Abilities["cleave"], 1);
-
-            entity.abilityManager.AddAbility(GameManager.Abilities["dervish"], 1);
-
-            entity.abilityManager.AddAbility(GameManager.Abilities["shadowfury"], 2);
-            entity.abilityManager.AddAbility(GameManager.Abilities["dropdasteel"], 3);
-            entity.abilityManager.AddAbility(GameManager.Abilities["shadowtrap"], 4);
-            entity.abilityManager.AddAbility(GameManager.Abilities["deathanddecay"], 5);
-
-            entity.abilityIndexDict["dervish"] = 1;
-            entity.abilityIndexDict["shadowfury"] = 2;
-            entity.abilityIndexDict["dropdasteel"] = 3;
-            entity.abilityIndexDict["shadowtrap"] = 4;
-            entity.abilityIndexDict["deathanddecay"] = 5;
-             * 
-             */ 
+            LevelUp(true); 
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -732,88 +716,14 @@ public class PlayerController : MonoBehaviour {
                 entity.removeEquipment((equipSlots.slots)i);
             }
         }
-
-        if(Input.GetKeyDown(KeyCode.M))
-        {
-            string blah = "";
-
-            //blah = blah + entity.GetEquip(equipSlots.slots.Main).equipmentName + " \n" + entity.GetEquip(equipSlots.slots.Off).equipmentName;
-            if (entity.HasEquipped(equipSlots.slots.Main))
-                blah = blah + entity.GetEquip(equipSlots.slots.Main).equipmentName + " \n";
-            else blah = blah + "HAS NO SWORD \n";
-            if (entity.HasEquipped(equipSlots.slots.Off))
-                blah = blah + entity.GetEquip(equipSlots.slots.Off).equipmentName + " \n";
-            else blah = blah + "HAS NO OFFHAND \n";
-            if (entity.HasEquipped(equipSlots.slots.Head))
-                blah = blah + entity.GetEquip(equipSlots.slots.Head).equipmentName + " \n";
-            else blah = blah + "HAS NO HAT \n";
-            if (entity.HasEquipped(equipSlots.slots.Chest))
-                blah = blah + entity.GetEquip(equipSlots.slots.Chest).equipmentName + " \n";
-            else blah = blah + "HAS NO SHIRT \n";
-            if (entity.HasEquipped(equipSlots.slots.Legs))
-                blah = blah + entity.GetEquip(equipSlots.slots.Legs).equipmentName + " \n";
-            else blah = blah + "HAS NO PANTS \n";
-            if (entity.HasEquipped(equipSlots.slots.Feet))
-                blah = blah + entity.GetEquip(equipSlots.slots.Feet).equipmentName + " \n";
-            else blah = blah + "HAS NO SHOE \n";
-
-     
-            blah = entity.currentAtt.Health.ToString() + " Health\n";
-            blah = blah + entity.currentAtt.Resource.ToString() + " Resource\n";
-            blah = blah + entity.currentAtt.Power.ToString() + " Power\n";
-            blah = blah + entity.currentAtt.Defense.ToString() + " Defense\n";
-            blah = blah + entity.currentAtt.MinDamage.ToString() + " MinDamage\n";
-            blah = blah + entity.currentAtt.MaxDamage.ToString() + " Maxdamage\n";
-       
-       
-
-
-        }
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            //entity.ModifyHealth(entity.currentAtt.Health-entity.CurrentHP);
-            //entity.ModifyResource(entity.currentAtt.Resource - entity.CurrentResource);
-        }
+        #endregion
 
         #region ABILITY TESTS
 
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-
-            GameObject rotationEffect = (GameObject)Instantiate(gameManager.CleaveParticles, transform.position, Quaternion.identity);
-
-            //rotationEffect.transform.parent = transform;
-
-            OrbSpawnSingle orbSpawn = rotationEffect.GetComponent<OrbSpawnSingle>();
-
-            orbSpawn.orbitObject = gameObject;
-            orbSpawn.initialAngleFromForward = Rotations.AngleSigned(transform.forward, Vector3.forward, Vector3.up) + 25.0f;
-            //orbSpawn.rotations = 0.25f;
-            //orbSpawn.angularSpeed = 360.0f;
-            //orbSpawn.oscillationSpeed = 0.5f;
-
-        }
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-
-            GameObject rotationEffect = (GameObject)Instantiate(gameManager.WhirlwindParticles, transform.position, Quaternion.identity);
-
-            //rotationEffect.transform.parent = transform;
-
-            OrbSpawnSingle orbSpawn = rotationEffect.GetComponent<OrbSpawnSingle>();
-
-            orbSpawn.orbitObject = gameObject;
-            orbSpawn.initialAngleFromForward = Rotations.AngleSigned(transform.forward, Vector3.forward, Vector3.up) + 25.0f;
-            //orbSpawn.rotations = 0.25f;
-            //orbSpawn.angularSpeed = 360.0f;
-            //orbSpawn.oscillationSpeed = 0.5f;
-
-        }
         #endregion
 
         #region equipment stuff
-
+        /*
         // Equipping light weapon.
         if (Input.GetKeyDown(KeyCode.A))
         {
@@ -871,7 +781,7 @@ public class PlayerController : MonoBehaviour {
         }
 
 
-        
+        */
 
         #endregion
 
@@ -899,6 +809,7 @@ public class PlayerController : MonoBehaviour {
                 entity.NextLevelExperience *= 2;
                 entity.Experience = 0;
             }
+
             else if(entity.Level == 19)
             {
                 entity.Level++;
@@ -912,9 +823,10 @@ public class PlayerController : MonoBehaviour {
             }  
             
         }
+
         else
         {
-            if (entity.Experience >= entity.NextLevelExperience && entity.Level > 19)
+            if (entity.Experience >= entity.NextLevelExperience && entity.Level < 19)
             {
                 entity.Level++;
 
@@ -931,6 +843,7 @@ public class PlayerController : MonoBehaviour {
 
                 entity.NextLevelExperience *= 2;
             }
+
             else if (entity.Experience >= entity.NextLevelExperience && entity.Level == 19)
             {
                 entity.Level++;

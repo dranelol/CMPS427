@@ -32,7 +32,7 @@ public class Trigger : MonoBehaviour {
         else if (isActive == true
         && inRange == true
         && clickTrigger == true
-        && (Input.GetMouseButtonDown(1) == true))
+        && (Input.GetMouseButton(1) == true))
         {
             SetOff();
         }

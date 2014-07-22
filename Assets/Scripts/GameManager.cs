@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour
 
         #endregion
 
-        Abilities["hadouken"] = new Hadouken(AttackType.PBAOE, DamageType.AIR, 5.0f, 360.0f, 10.0f, 10.0f, 25.0f, "hadouken", "Hadouken", HadoukenParticles);
+        Abilities["groundslam"] = new Hadouken(AttackType.PBAOE, DamageType.AIR, 5.0f, 360.0f, 10.0f, 10.0f, 25.0f, "groundslam", "Ground Slam", HadoukenParticles);
         Abilities["deathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 5.0f, 360.0f, 0.0f, 15.0f, 25.0f, "deathgrip", "AoE Deathgrip", DeathgripParticles);
         Abilities["fusrodah"] = new Fusrodah(AttackType.PBAOE, DamageType.AIR, 5.0f, 45.0f, 5.0f, 10.0f, 20.0f, "fusrodah", "Fus Roh Dah", FusRoDahParticles);
 		Abilities["flamestrike"] = new Flamestrike(AttackType.PBAOE, DamageType.FIRE, 5.0f, 360.0f, 5.0f, 1000.0f, 25.0f, "flamestrike", "Flamestrike", FlamestrikeParticles);
@@ -195,7 +195,7 @@ public class GameManager : MonoBehaviour
         Abilities["enemycleaveslow"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 3.0f, 5.0f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemycleavenormal"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 2f, 2.5f, 0f, "cleave", "Cleave", CleaveParticles);
         Abilities["enemycleavefast"] = new Cleave(AttackType.MELEE, DamageType.PHYSICAL, 3.0f, 45.0f, 1.0f, 1.0f, 0f, "cleave", "Cleave", CleaveParticles);
-        Abilities["enemydeathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 10.0f, 360.0f, 2.0f, 0.0f, 0.0f, "deathgrip", "Enemy Deathgrip", DeathgripParticles);
+        Abilities["enemydeathgrip"] = new Deathgrip(AttackType.PBAOE, DamageType.SHADOW, 10.0f, 360.0f, 10.0f, 0.0f, 0.0f, "enemydeathgrip", "Enemy Deathgrip", DeathgripParticles);
 
         Abilities["bossfireball"] = new BossFireball(AttackType.PROJECTILE, DamageType.FIRE, 10.0f, 0.0f, 5.0f, 10.0f, 0f, "bossfireball", "Boss Fireball", BossInfernalFireballExplosion);
 
