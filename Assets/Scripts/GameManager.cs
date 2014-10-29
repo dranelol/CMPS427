@@ -98,8 +98,6 @@ public class GameManager : MonoBehaviour
 
     public GameObject thing;
 	// Use this for initialization
-
-    public List<Ability> Effects = new List<Ability>();
     public void Awake()
     {
         DontDestroyOnLoad(transform.gameObject);
@@ -187,11 +185,8 @@ public class GameManager : MonoBehaviour
         Abilities["deathanddecay"] = new DeathAndDecay(AttackType.GROUNDTARGET, DamageType.SHADOW, 5.0f, 360.0f, 0.0f, 1.0f, 0f, "deathanddecay", "Death and Decay", DeathAndDecaySpawn);
         Abilities["shadowfury"] = new Shadowfury(AttackType.GROUNDTARGET, DamageType.SHADOW, 3.0f, 360.0f, 0.0f, 1.0f, 0f, "shadowfury", "Shadowfury", ShadowfurySpawn);
         Abilities["shadowtrap"] = new Shadowtrap(AttackType.GROUNDTARGET, DamageType.SHADOW, 3.0f, 360.0f, 0.0f, 0.0f, 0f, "shadowtrap", "Shadowtrap", ShadowtrapSpawn);
+        
 
-        foreach (Ability item in Abilities.Values)
-        {
-            Effects.Add(item);
-        }
         #endregion
 
         #region enemy abilities

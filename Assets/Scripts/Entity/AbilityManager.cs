@@ -10,8 +10,6 @@ public class AbilityManager : MonoBehaviour
 
     public List<float> activeCoolDowns;
 
-    public Boolean CHEATMODE = true;
-
 	// Use this for initialization
     public void Awake()
     {
@@ -33,13 +31,7 @@ public class AbilityManager : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-        if (CHEATMODE == true)
-        {
-            for (int i = 0; i < activeCoolDowns.Count; i++)
-            {
-                activeCoolDowns[i] = 0.0f;
-            }
-        }
+        
 	}
 
     public void AddAbility(Ability ab, int index)

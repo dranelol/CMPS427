@@ -166,6 +166,7 @@ public class ProjectileBehaviour : MonoBehaviour
             // if we need to explode
             if (ExplodesOnTimeout == true)
             {
+
                 if (owner.gameObject.tag == "Player")
                 {
 
@@ -176,8 +177,7 @@ public class ProjectileBehaviour : MonoBehaviour
 
                         int abilityIndex = ownerEntity.abilityIndexDict[abilityID];
 
-                        //ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(gameObject, owner, ownerEntity, true);
-                        ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(gameObject, transform.position, ownerEntity, true);
+                        ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(gameObject, owner, ownerEntity, true);
                     }
                     hasCollided = true;
                     DetachParticleSystem();
@@ -280,7 +280,7 @@ public class ProjectileBehaviour : MonoBehaviour
 
             else
             {
-                
+                Debug.Log(other.gameObject.tag + " and " + owner.gameObject.tag);
                 if (other.gameObject.tag == "Enemy" && owner.gameObject.tag == "Player")
                 {
                     if (HasCollidedWith.Contains(other.gameObject) == false)

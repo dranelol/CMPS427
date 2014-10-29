@@ -47,7 +47,7 @@ public class AOEfreeze : Ability
         }
         GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.5f, isPlayer));
     }
-	
+
     public override List<GameObject> OnAttack(GameObject source, bool isPlayer)
     {
         List<GameObject> enemiesToAttack = new List<GameObject>();
