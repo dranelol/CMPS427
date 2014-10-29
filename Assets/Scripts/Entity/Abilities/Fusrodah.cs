@@ -58,8 +58,11 @@ public class Fusrodah : Ability
         if (isPlayer == true)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
             RaycastHit target;
+
             Physics.Raycast(ray, out target, Mathf.Infinity);
+
             Vector3 vectorToMouse = target.point - source.transform.position;
             forward = new Vector3(vectorToMouse.x, source.transform.forward.y, vectorToMouse.z).normalized;
         }

@@ -77,7 +77,7 @@ sealed public class chaosbarrage : Aura
                 SourceEntity.abilityIndexDict["chaosbarragebolt"] = tempindex;
             }
 
-            Debug.Log(SourceEntity.abilityManager.abilities[tempindex].Name);
+            //Debug.Log(SourceEntity.abilityManager.abilities[tempindex].Name);
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit rayCastTarget;
@@ -86,7 +86,7 @@ sealed public class chaosbarrage : Aura
             Vector3 forward = new Vector3(vectorToMouse.x, SourceEntity.transform.forward.y, vectorToMouse.z).normalized;
             //Vector3 forward = SourceEntity.gameObject.transform.forward;
             Vector3 rayCastTargetPoint = CombatMath.GetCenter(SourceEntity.gameObject.transform) + forward * 5;
-            Debug.Log("barraging");
+            
 
             Barrage(forward, tempindex, rayCastTargetPoint, SourceEntity);
         }

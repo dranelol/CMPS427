@@ -21,12 +21,14 @@ public class ChaosBarrageBolt : Ability
             //GameObject projectile = (GameObject)GameObject.Instantiate(GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().FireballProjectile, CombatMath.GetCenter(source.transform) + Rotations.RotateAboutY(forward, (360 / segments) * i) * 2, Quaternion.LookRotation(Rotations.RotateAboutY(forward, (360 / segments) * i)));
 
             projectile.GetComponent<ProjectileBehaviour>().owner = owner;
-            projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
+            projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 1.0f;
             projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
             projectile.GetComponent<ProjectileBehaviour>().target = target;
             projectile.GetComponent<ProjectileBehaviour>().homing = true;
             projectile.GetComponent<ProjectileBehaviour>().speed = 15f;
 
+            projectile.GetComponent<ProjectileBehaviour>().ExplodesOnTimeout = true;
+            projectile.GetComponent<ProjectileBehaviour>().EnvironmentProjectile = false;
 
             //Vector3 randPos = source.transform.position + forward + Random.onUnitSphere * 1f;
             Vector3 randPos = source.transform.position + Rotations.RotateAboutY(forward, (360 / segments) * i) + Random.onUnitSphere * 1f;
@@ -42,8 +44,15 @@ public class ChaosBarrageBolt : Ability
 
     }
 
+    public override void AttackHandler(GameObject source, Vector3 AoEPoint, Entity attacker, bool isPlayer)
+    {
+        GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, AoEPoint));
+    
+    }
+
     public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)
     {
+        
         if (isPlayer == true)
         {
             if (target.GetComponent<AIController>().IsResetting() == false
@@ -58,14 +67,16 @@ public class ChaosBarrageBolt : Ability
 
             }
         }
-
+        
         else
         {
             Entity defender = target.GetComponent<Entity>();
             DoDamage(source, target, attacker, defender, isPlayer);
         }
-
+        
         GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoAnimation(source, particleSystem, 0.2f, isPlayer, target));
+    
+    
     }
 
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
@@ -89,12 +100,12 @@ public class ChaosBarrageBolt : Ability
 
 
 
-    public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target)
+    public IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, Vector3 aoePoint)
     {
         Debug.Log("explode");
         GameObject particles;
 
-        particles = (GameObject)GameObject.Instantiate(particlePrefab, target.transform.position, source.transform.rotation);
+        particles = (GameObject)GameObject.Instantiate(particlePrefab, aoePoint, source.transform.rotation);
 
         yield return new WaitForSeconds(time);
 
