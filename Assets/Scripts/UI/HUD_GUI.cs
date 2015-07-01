@@ -50,6 +50,7 @@ public class HUD_GUI : MonoBehaviour {
     public Rect InfoBox1;
     public Rect InfoBox2;
     public Rect InfoBox3;
+    public Rect InfoBox4;
 
     public PlayerEntity player;
 	bool damageFlag = false;
@@ -104,6 +105,8 @@ public class HUD_GUI : MonoBehaviour {
         InfoBox2 = new Rect(Screen.width * .91f, Screen.height * .90f, Screen.width * .45f, Screen.height * .1f);
 
         InfoBox3 = new Rect(Screen.width * .02f, Screen.height * .10f, Screen.width * .1f, Screen.height * .5f);
+
+        InfoBox4 = new Rect(Screen.width * .20f, Screen.height * .02f, Screen.width * .3f, Screen.height * .05f);
 
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEntity>();
 		currentLiquid = HealthLiquid;
@@ -321,18 +324,21 @@ public class HUD_GUI : MonoBehaviour {
                           + "E = " + player.abilityManager.abilities[4].Name + " \n"
                           + "R = " + player.abilityManager.abilities[5].Name + " \n";
         */
-        string version = "Alpha v0.3.3";
+        string version = "Alpha v0.3.4";
 
         GUI.Label(InfoBox1, attackList, infoBoxStyle);
         GUI.Label(InfoBox2, version, infoBoxStyle);
         GUI.Label(TempManaBox, player.CurrentResource.ToString() + "/" + player.currentAtt.Resource.ToString() + " Resource", infoBoxStyle);
 
-        string controls =  "Left-click: Movement\n" +
+        string controls = "Left-click: Movement\n" +
                             "Right-click: Ability 1\n" +
                             "Q: Ability 2\n" +
                             "W: Ability 3\n" +
                             "E: Ability 4\n" +
                             "R: Ability 5\n" +
+                            "\n" +
+                            "F: Interact\n" +
+                            "Mouse-over + F: Interact with Loot Chest\n" +
                             "\n" +
                             "N: Talents\n" +
                             "J: Spellbook\n" +
@@ -347,6 +353,27 @@ public class HUD_GUI : MonoBehaviour {
                             "6: Gain full set of equipment";
 
         GUI.Label(InfoBox3, controls, infoBoxStyle);
+
+        string hubTips = "Welcome to the Hub World! Dungeon entrance is to the west, Forest entrance is to the east";
+        string dungeonTips = "Welcome to the Dungeon! Boss room is probably located to the northwest or northeast. Use the minimap for help!";
+        string forestTips = "Welcome to the forest! Hub entrance is to the west.";
+
+        if (Application.loadedLevelName == "OverworldBaseCamp")
+        {
+            GUI.Label(InfoBox4, hubTips, infoBoxStyle);
+        }
+
+        if (Application.loadedLevelName == "ForestOverworld")
+        {
+            GUI.Label(InfoBox4, forestTips, infoBoxStyle);
+        }
+
+        if (Application.loadedLevelName == "floorPlanDemo")
+        {
+            GUI.Label(InfoBox4, dungeonTips, infoBoxStyle);
+        }
+
+        
 
 
         #region ability cooldown GUI

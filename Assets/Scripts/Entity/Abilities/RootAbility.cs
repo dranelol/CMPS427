@@ -9,7 +9,7 @@ public class RootAbility : Ability
     {
 
     }
-
+    // buff AttackHandler
     public override void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
     {
         List<GameObject> attacked = OnAttack(source, isPlayer);
@@ -18,9 +18,11 @@ public class RootAbility : Ability
         {
             foreach (GameObject enemy in attacked)
             {
+                // if our target isn't dead or resetting
                 if (enemy.GetComponent<AIController>().IsResetting() == false
                     && enemy.GetComponent<AIController>().IsDead() == false)
                 {
+                    // get defender, do buff, put the target in combat if they weren't before
                     Entity defender = enemy.GetComponent<Entity>();
                     DoBuff(enemy, attacker);
 

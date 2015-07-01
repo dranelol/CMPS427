@@ -10,6 +10,7 @@ public class Cleave : Ability
        
     }
 
+    // PBAoE AttackHandler
     public override void AttackHandler(GameObject source, Entity attacker, bool isPlayer)
     {
         List<GameObject> attacked = OnAttack(source, isPlayer);
@@ -19,9 +20,11 @@ public class Cleave : Ability
             // this is player -> enemy
             foreach (GameObject enemy in attacked)
             {
+                // if our target isn't dead or resetting
                 if (enemy.GetComponent<AIController>().IsResetting() == false
                     && enemy.GetComponent<AIController>().IsDead() == false)
                 {
+                    // get defender, do damage, put the target in combat if they weren't before
                     Entity defender = enemy.GetComponent<Entity>();
                     DoDamage(source, enemy, attacker, defender, isPlayer);
                     GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().RunCoroutine(DoHitAnimation(source, GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().OnHitNormalParticles, 0.2f, isPlayer, defender.gameObject));
@@ -44,7 +47,6 @@ public class Cleave : Ability
             // this is enemy -> player
             foreach (GameObject enemy in attacked)
             {
-                // todo: check if player is dead
                 Entity defender = enemy.GetComponent<Entity>();
                 DoDamage(source, enemy, attacker, defender, isPlayer);
                 if (attacker.abilityManager.abilities[6] != null)
@@ -64,7 +66,7 @@ public class Cleave : Ability
 
         Vector3 forward = new Vector3();
 
-        // this is a player attack, forward attack vector will be based on cursor position
+        // if this is a player attack, forward attack vector will be based on cursor position
         if (isPlayer == true)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -80,6 +82,7 @@ public class Cleave : Ability
 
         Collider[] colliders;
 
+        // if this is a player attack, check for enemies in range
         if (isPlayer == true)
         {
 
@@ -87,6 +90,7 @@ public class Cleave : Ability
 
         }
 
+         // if this is an enemy attack, check for players in range
         else
         {
             colliders = Physics.OverlapSphere(source.transform.position, range + source.GetComponent<MovementFSM>().Radius, 1 << playerMask);
@@ -181,7 +185,7 @@ public class Cleave : Ability
     public override void DoDamage(GameObject source, GameObject target, Entity attacker, Entity defender, bool isPlayer)
     {
 
-
+        // run damage calc, apply damage
         float damageAmt;
         if (isPlayer == true)
         {
@@ -198,14 +202,17 @@ public class Cleave : Ability
 
     public IEnumerator DoHitAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target)
     {
+        // instantiate particle system for the on-hit of this ability
         GameObject particles;
 
         particles = (GameObject)GameObject.Instantiate(particlePrefab, CombatMath.GetCenter(target.transform), target.transform.rotation);
-
+        // wait for "time" seconds
         yield return new WaitForSeconds(time);
-
+        // get all particle systems from the prefab
         ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
 
+        // unparent each particle system, and disable emission. we do this to make sure that each particle system has a chance to finish its full cycle before being destroyed
+        // each particle system has a script to destroy itself when emission fully stops
         foreach (ParticleSystem item in particleSystems)
         {
             item.transform.parent = null;
@@ -214,6 +221,7 @@ public class Cleave : Ability
 
         }
 
+        // destroy the entire particle system object
         GameObject.Destroy(particles);
 
         yield return null;
@@ -222,7 +230,7 @@ public class Cleave : Ability
     public override IEnumerator DoAnimation(GameObject source, GameObject particlePrefab, float time, bool isPlayer, GameObject target = null)
     {
         GameObject particles;
-
+        // instantiate particle system for the on-hit of this ability
         // if the player is casting the ability, we need to activate it based on the position of the cursor, not the transform's forward
         if (isPlayer == true)
         {
@@ -242,13 +250,12 @@ public class Cleave : Ability
             particles = (GameObject)GameObject.Instantiate(particlePrefab, source.transform.position + source.transform.forward * source.GetComponent<MovementFSM>().Radius * 0.5f, source.transform.rotation);
 
         }
-
-        //particles.transform.parent = source.transform;
-
+        // wait for "time" seconds
         yield return new WaitForSeconds(time);
-
+        // get all particle systems from the prefab
         ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
-
+        // unparent each particle system, and disable emission. we do this to make sure that each particle system has a chance to finish its full cycle before being destroyed
+        // each particle system has a script to destroy itself when emission fully stops
         foreach (ParticleSystem item in particleSystems)
         {
             item.transform.parent = null;
@@ -256,7 +263,7 @@ public class Cleave : Ability
             item.enableEmission = false;
 
         }
-
+        // destroy the entire particle system object
         GameObject.Destroy(particles);
 
         yield return null;

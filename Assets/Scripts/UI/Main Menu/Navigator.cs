@@ -124,10 +124,13 @@ public class Navigator : MonoBehaviour {
                             "E: Ability 4\n" +
                             "R: Ability 5\n" +
                             "\n" +
+                            "F: Interact\n" +
+                            "Mouse-over + F: Interact with Loot Chest\n" +
+                            "\n" +
                             "N: Talents\n" +
                             "J: Spellbook\n" +
                             "I: Inventory\n" +
-                            "H: Attributes\n" + 
+                            "H: Attributes\n" +
                             "\n" +
                             "1: Gain level\n" +
                             "2: Gain 50 talent points\n" +

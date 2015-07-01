@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// Attack type will determine the attack algorithm used.
+/// attack type will determine the attack algorithm used
 /// </summary>
 public enum AttackType
 {
@@ -17,8 +17,7 @@ public enum AttackType
 };
 
 /// <summary>
-/// Damage type will indicate which type of damage to mitigate.
-/// This might not be used - it's just being included.
+/// damage type will indicate which type of damage to mitigate
 /// </summary>
 public enum DamageType
 {

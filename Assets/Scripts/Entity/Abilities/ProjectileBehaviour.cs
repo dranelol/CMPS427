@@ -108,16 +108,6 @@ public class ProjectileBehaviour : MonoBehaviour
 
     void Awake()
     {
-        //ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
-
-        // if we need to change particle scale, do it here
-
-        /*
-        foreach (ParticleSystem item in particles)
-        {
-            item.transform.localScale = new Vector3(1, 1, 1);
-        }
-        */
     }
 
 	void Start () 
@@ -137,6 +127,7 @@ public class ProjectileBehaviour : MonoBehaviour
 
         if (homing == true)
         {
+            // if there is a target object, use its transform as our target position
             if (targetObject != null)
             {
                 Vector3 direction = targetObject.transform.position - transform.position;
@@ -144,6 +135,8 @@ public class ProjectileBehaviour : MonoBehaviour
                 Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.3f, 0f);
                 transform.rotation = Quaternion.LookRotation(newDirection);
             }
+
+            // else, use "target" as target position
             else
             {
 
@@ -281,6 +274,8 @@ public class ProjectileBehaviour : MonoBehaviour
             else
             {
                 Debug.Log(other.gameObject.tag + " and " + owner.gameObject.tag);
+
+                // normal collision between enemy and player
                 if (other.gameObject.tag == "Enemy" && owner.gameObject.tag == "Player")
                 {
                     if (HasCollidedWith.Contains(other.gameObject) == false)
@@ -288,6 +283,7 @@ public class ProjectileBehaviour : MonoBehaviour
                         Debug.Log("attacked an enemy: " + gameObject.name.ToString());
                         HasCollidedWith.Add(other.gameObject);
 
+                        // if this isn't an environment projectile; carry out normal attack handler
                         if (EnvironmentProjectile == false)
                         {
                             Entity ownerEntity = owner.GetComponent<Entity>();
@@ -297,6 +293,7 @@ public class ProjectileBehaviour : MonoBehaviour
                             ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), true);
                         }
 
+                        // if the projectile should die on hit, detach its particle system and destroy
                         if (DiesOnHit == true)
                         {
 
@@ -307,7 +304,7 @@ public class ProjectileBehaviour : MonoBehaviour
                     }
 
                 }
-
+                // normal collision between player and enemy
                 else if (other.gameObject.tag == "Player" && owner.gameObject.tag == "Enemy")
                 {
                     if (HasCollidedWith.Contains(other.gameObject) == false)
@@ -315,6 +312,7 @@ public class ProjectileBehaviour : MonoBehaviour
                         Debug.Log("attacked a player");
                         HasCollidedWith.Add(other.gameObject);
 
+                        // if this isn't an environment projectile; carry out normal attack handler
                         if (EnvironmentProjectile == false)
                         {
                             Entity ownerEntity = owner.GetComponent<Entity>();
@@ -323,7 +321,7 @@ public class ProjectileBehaviour : MonoBehaviour
 
                             ownerEntity.abilityManager.abilities[abilityIndex].AttackHandler(owner, other.gameObject, owner.GetComponent<Entity>(), false);
                         }
-
+                        // if the projectile should die on hit, detach its particle system and destroy
                         if (DiesOnHit == true)
                         {
 
@@ -352,9 +350,10 @@ public class ProjectileBehaviour : MonoBehaviour
 
     public void DetachParticleSystem()
     {
-
+        // get all particle systems from this object
         ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
-
+        // unparent each particle system, and disable emission. we do this to make sure that each particle system has a chance to finish its full cycle before being destroyed
+        // each particle system has a script to destroy itself when emission fully stops
         foreach (ParticleSystem item in particles)
         {
             item.transform.parent = null;
