@@ -16,7 +16,7 @@ public class BossInfernal : MonoBehaviour
     {
         _meshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>();
         _eyes = transform.FindChild("Eyes").gameObject;
-        _pieces.animation[_deathAnimation].wrapMode = WrapMode.ClampForever;
+        _pieces.GetComponent<Animation>()[_deathAnimation].wrapMode = WrapMode.ClampForever;
     }
 
     public void Initialize(GameObject target)
@@ -26,11 +26,11 @@ public class BossInfernal : MonoBehaviour
         name = "Infernal Overlord";
         GetComponent<MouseoverDisplay>().name = name;
 
-        _pieces.animation["gatherIntoGolem"].wrapMode = WrapMode.ClampForever;
-        _pieces.animation["gatherIntoGolem"].speed = 2f;
-        _pieces.animation.Play("gatherIntoGolem");
+        _pieces.GetComponent<Animation>()["gatherIntoGolem"].wrapMode = WrapMode.ClampForever;
+        _pieces.GetComponent<Animation>()["gatherIntoGolem"].speed = 2f;
+        _pieces.GetComponent<Animation>().Play("gatherIntoGolem");
 
-        StartCoroutine(StartCombat(_pieces.animation["gatherIntoGolem"].length / _pieces.animation["gatherIntoGolem"].speed));
+        StartCoroutine(StartCombat(_pieces.GetComponent<Animation>()["gatherIntoGolem"].length / _pieces.GetComponent<Animation>()["gatherIntoGolem"].speed));
     }
 
     private IEnumerator StartCombat(float time)
@@ -68,6 +68,6 @@ public class BossInfernal : MonoBehaviour
         _main.SetActive(false);
         _eyes.SetActive(false);
         _pieces.SetActive(true);
-        _pieces.animation.Play(_deathAnimation);
+        _pieces.GetComponent<Animation>().Play(_deathAnimation);
     }
 }

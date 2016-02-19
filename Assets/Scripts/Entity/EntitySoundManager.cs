@@ -17,7 +17,7 @@ public class EntitySoundManager : MonoBehaviour
 
 	void Awake () 
     {
-        if (!audio)
+        if (!GetComponent<AudioSource>())
         {
             gameObject.AddComponent<AudioSource>();
         }
@@ -29,7 +29,7 @@ public class EntitySoundManager : MonoBehaviour
         {
             if (_aggroClips.Count > 0 && UnityEngine.Random.value > _aggroChance)
             {
-                audio.PlayOneShot(RandomClip(_aggroClips));
+                GetComponent<AudioSource>().PlayOneShot(RandomClip(_aggroClips));
             }
         }
     }
@@ -38,7 +38,7 @@ public class EntitySoundManager : MonoBehaviour
     {
         if (_attackClips.Count > 0 && UnityEngine.Random.value > _attackChance)
         {
-            audio.PlayOneShot(RandomClip(_attackClips));
+            GetComponent<AudioSource>().PlayOneShot(RandomClip(_attackClips));
         }
     }
 
@@ -46,7 +46,7 @@ public class EntitySoundManager : MonoBehaviour
     {
         if (_getHitClips.Count > 0 && UnityEngine.Random.value > _getHitChance)
         {
-            audio.PlayOneShot(RandomClip(_getHitClips));
+            GetComponent<AudioSource>().PlayOneShot(RandomClip(_getHitClips));
         }
     }
 
@@ -54,8 +54,8 @@ public class EntitySoundManager : MonoBehaviour
     {
         if (_deathClips.Count > 0)
         {
-            audio.Stop();
-            audio.PlayOneShot(RandomClip(_deathClips));
+            GetComponent<AudioSource>().Stop();
+            GetComponent<AudioSource>().PlayOneShot(RandomClip(_deathClips));
         }
     }
 
@@ -63,8 +63,8 @@ public class EntitySoundManager : MonoBehaviour
     {
         if (_victoryClips.Count > 0 &&  UnityEngine.Random.value > _victoryChance)
         {
-            audio.Stop();
-            audio.PlayOneShot(RandomClip(_victoryClips));
+            GetComponent<AudioSource>().Stop();
+            GetComponent<AudioSource>().PlayOneShot(RandomClip(_victoryClips));
         }
     }
 
@@ -74,7 +74,7 @@ public class EntitySoundManager : MonoBehaviour
         {
             if (clip.name == clipName)
             {
-                audio.PlayOneShot(clip);
+                GetComponent<AudioSource>().PlayOneShot(clip);
                 return;
             }
         }

@@ -22,7 +22,7 @@ public class MouseHighlight : MonoBehaviour
     void OnMouseEnter()
     {
         //Debug.Log("entering");
-        renderer.material.shader = highlight;
+        GetComponent<Renderer>().material.shader = highlight;
         uiController.PlayerController.MouseOverChest = true;
         lootTrigger.CanBeOpened = true;
     }
@@ -35,7 +35,7 @@ public class MouseHighlight : MonoBehaviour
     void OnMouseExit()
     {
         //Debug.Log("exiting");
-        renderer.material.shader = defaultShader;
+        GetComponent<Renderer>().material.shader = defaultShader;
         uiController.PlayerController.MouseOverChest = false;
 
         lootTrigger.CanBeOpened = false;

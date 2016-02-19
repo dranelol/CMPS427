@@ -18,7 +18,7 @@ public class Moba_Camera_Boundary : MonoBehaviour {
 		}
 		else {
 			Moba_Camera_Boundaries.SetBoundaryLayerExist(false);
-			collider.isTrigger = true;
+			GetComponent<Collider>().isTrigger = true;
 		}
 	}
 }

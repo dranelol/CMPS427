@@ -23,7 +23,7 @@ public class FrozenOrb : Ability
         projectile.GetComponent<ProjectileBehaviour>().hasCollided = true;
 
 
-        projectile.rigidbody.velocity = forward.normalized * 5.0f;
+        projectile.GetComponent<Rigidbody>().velocity = forward.normalized * 5.0f;
 
 
         int tempindex = 10;

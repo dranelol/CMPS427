@@ -24,7 +24,7 @@ public class ShockMine : Ability
         projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
         projectile.GetComponent<ProjectileBehaviour>().CollidesWithProjectiles = true;
 
-        projectile.rigidbody.velocity = Vector3.zero;
+        projectile.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
 
     }

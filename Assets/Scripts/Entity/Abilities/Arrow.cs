@@ -23,7 +23,7 @@ public class Arrow : Ability
 
         // apply velocity
 
-        projectile.rigidbody.velocity = forward * 20.0f;
+        projectile.GetComponent<Rigidbody>().velocity = forward * 20.0f;
     }
 
     public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)

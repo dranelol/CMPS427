@@ -21,12 +21,12 @@ public class gui : MonoBehaviour {
            if (_name=="DAY"){
 			RenderSettings.skybox = new Material(mat);
 			_name="NIGHT";
-				GameObject.Find("sun").light.intensity=0.1f;
+				GameObject.Find("sun").GetComponent<Light>().intensity=0.1f;
 			}
 			else { 
 			RenderSettings.skybox = new Material(mat1);
 			_name="DAY";
-				GameObject.Find("sun").light.intensity=0f;
+				GameObject.Find("sun").GetComponent<Light>().intensity=0f;
 			}
         print (mat);
 		}
