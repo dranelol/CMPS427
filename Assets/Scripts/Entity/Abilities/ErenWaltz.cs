@@ -192,7 +192,7 @@ public class ErenWaltz : Ability
 
                     RaycastHit hit;
 
-                    enemy.collider.Raycast(castToRandom, out hit, 100.0f * 2.0f);
+                    enemy.GetComponent<Collider>().Raycast(castToRandom, out hit, 100.0f * 2.0f);
 
                     randPoint = hit.point;
 

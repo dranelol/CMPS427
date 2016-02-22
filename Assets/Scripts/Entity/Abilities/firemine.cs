@@ -20,7 +20,7 @@ public class FireMine : Ability
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 5.0f;
         projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
 
-        projectile.rigidbody.velocity = Vector3.zero;
+        projectile.GetComponent<Rigidbody>().velocity = Vector3.zero;
     }
 
     public override void AttackHandler(GameObject source, GameObject target, Entity attacker, bool isPlayer)

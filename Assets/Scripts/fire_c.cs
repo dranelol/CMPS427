@@ -18,6 +18,6 @@ public class fire_c : MonoBehaviour {
 			
 				rnd=Random.Range(1.55f,2.05f);
 		}
-		this.light.intensity+=(rnd-this.light.intensity)/5f;
+		this.GetComponent<Light>().intensity+=(rnd-this.GetComponent<Light>().intensity)/5f;
 	}
 }

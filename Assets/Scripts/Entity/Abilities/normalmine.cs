@@ -22,7 +22,7 @@ public class NormalMine : Ability
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 15.0f;
         projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
 
-        projectile.rigidbody.velocity = Vector3.zero;
+        projectile.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
 
     }

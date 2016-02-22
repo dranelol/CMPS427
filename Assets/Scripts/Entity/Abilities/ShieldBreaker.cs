@@ -235,7 +235,7 @@ public class ShieldBreaker : Ability
 
             //special for swoosh
             //particles.rigidbody.velocity = particles.transform.forward * 25f;
-            particles.rigidbody.AddForce(particles.transform.forward * 30f,ForceMode.Impulse);
+            particles.GetComponent<Rigidbody>().AddForce(particles.transform.forward * 30f,ForceMode.Impulse);
         }
 
         else

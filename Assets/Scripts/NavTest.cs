@@ -8,7 +8,7 @@ public class NavTest : MonoBehaviour
     {
         if (!this.gameObject.GetComponent<NavMeshAgent>().hasPath)
         {
-            animation.animation.Play("idle", PlayMode.StopAll);
+            GetComponent<Animation>().GetComponent<Animation>().Play("idle", PlayMode.StopAll);
         }
 	}
     public MovementFSM MoveFSM;

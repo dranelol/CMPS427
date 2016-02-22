@@ -49,7 +49,7 @@ class DepthOfFieldScatter extends PostEffectsBase {
 	}
 	
 	function FocalDistance01 (worldDist : float) : float {
-		return camera.WorldToViewportPoint((worldDist-camera.nearClipPlane) * camera.transform.forward + camera.transform.position).z / (camera.farClipPlane-camera.nearClipPlane);	
+		return GetComponent.<Camera>().WorldToViewportPoint((worldDist-GetComponent.<Camera>().nearClipPlane) * GetComponent.<Camera>().transform.forward + GetComponent.<Camera>().transform.position).z / (GetComponent.<Camera>().farClipPlane-GetComponent.<Camera>().nearClipPlane);	
 	}
 			
 	function OnRenderImage (source : RenderTexture, destination : RenderTexture) {		
@@ -70,7 +70,7 @@ class DepthOfFieldScatter extends PostEffectsBase {
 					
 		// focal & coc calculations
 
-		focalDistance01 = focalTransform ? (camera.WorldToViewportPoint (focalTransform.position)).z / (camera.farClipPlane) : FocalDistance01 (focalLength);
+		focalDistance01 = focalTransform ? (GetComponent.<Camera>().WorldToViewportPoint (focalTransform.position)).z / (GetComponent.<Camera>().farClipPlane) : FocalDistance01 (focalLength);
 		
 		var isInHdr : boolean = source.format == RenderTextureFormat.ARGBHalf;
 		

@@ -25,7 +25,7 @@ public class AxeThrow : Ability
             projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 2.5f;
             projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
 
-            projectile.rigidbody.velocity = Rotations.RotateAboutY(forward, (360 / segments) * i) * 10.0f;
+            projectile.GetComponent<Rigidbody>().velocity = Rotations.RotateAboutY(forward, (360 / segments) * i) * 10.0f;
         }
 
     }

@@ -28,57 +28,57 @@ public class AnimationController : MonoBehaviour
 
     void Awake()
     {
-        if (!animation)
+        if (!GetComponent<Animation>())
         {
             gameObject.AddComponent<Animation>();
         }
 
-        animation.playAutomatically = true;
+        GetComponent<Animation>().playAutomatically = true;
 
-        animation.AddClip(_idle, "Idle");
-        animation["Idle"].layer = 1;
+        GetComponent<Animation>().AddClip(_idle, "Idle");
+        GetComponent<Animation>()["Idle"].layer = 1;
 
-        animation.AddClip(_walk, "Walk");
-        animation["Walk"].layer = 1;
-        animation["Walk"].wrapMode = WrapMode.Loop;
+        GetComponent<Animation>().AddClip(_walk, "Walk");
+        GetComponent<Animation>()["Walk"].layer = 1;
+        GetComponent<Animation>()["Walk"].wrapMode = WrapMode.Loop;
 
-        animation.AddClip(_run, "Run");
-        animation["Run"].layer = 1;
-        animation["Run"].wrapMode = WrapMode.Loop;
+        GetComponent<Animation>().AddClip(_run, "Run");
+        GetComponent<Animation>()["Run"].layer = 1;
+        GetComponent<Animation>()["Run"].wrapMode = WrapMode.Loop;
 
-        animation.AddClip(_death, "Death");
-        animation["Death"].layer = 1;
-        animation["Death"].wrapMode = WrapMode.Once;
+        GetComponent<Animation>().AddClip(_death, "Death");
+        GetComponent<Animation>()["Death"].layer = 1;
+        GetComponent<Animation>()["Death"].wrapMode = WrapMode.Once;
 
         if (_sleep != null)
         {
-            animation.AddClip(_sleep, "Sleep");
-            animation["Sleep"].layer = 1;
+            GetComponent<Animation>().AddClip(_sleep, "Sleep");
+            GetComponent<Animation>()["Sleep"].layer = 1;
         }
 
         else
         {
-            animation.AddClip(_idle, "Sleep");
-            animation["Sleep"].layer = 1;
+            GetComponent<Animation>().AddClip(_idle, "Sleep");
+            GetComponent<Animation>()["Sleep"].layer = 1;
         }
 
         _movementAnimation = "Run";
 
         foreach (AnimationClip clip in _attackAnimations)
         {
-            animation.AddClip(clip, clip.name);
-            animation[clip.name].layer = 2;
-            animation[clip.name].wrapMode = WrapMode.Once;
+            GetComponent<Animation>().AddClip(clip, clip.name);
+            GetComponent<Animation>()[clip.name].layer = 2;
+            GetComponent<Animation>()[clip.name].wrapMode = WrapMode.Once;
 
             if (clip.name == "attack 6")
             {
-                animation[clip.name].wrapMode = WrapMode.Loop;
-                animation[clip.name].layer = 1;
+                GetComponent<Animation>()[clip.name].wrapMode = WrapMode.Loop;
+                GetComponent<Animation>()[clip.name].layer = 1;
             }
 
             if (_attackTransform != null)
             {
-                animation[clip.name].AddMixingTransform(_attackTransform, true);
+                GetComponent<Animation>()[clip.name].AddMixingTransform(_attackTransform, true);
             }
         }
 
@@ -94,26 +94,26 @@ public class AnimationController : MonoBehaviour
     {
         try
         {
-            animation.CrossFade("Idle", 0.3f);
+            GetComponent<Animation>().CrossFade("Idle", 0.3f);
         }
         catch { }
     }
 
     public void StartMoving()
     {
-        animation.CrossFade(_movementAnimation, 0.2f);
+        GetComponent<Animation>().CrossFade(_movementAnimation, 0.2f);
     }
 
     public void Death()
     {
-        animation.Play("Death", PlayMode.StopAll);
+        GetComponent<Animation>().Play("Death", PlayMode.StopAll);
     }
 
     public void Sleep()
     {
-        if (!animation.IsPlaying("Sleep"))
+        if (!GetComponent<Animation>().IsPlaying("Sleep"))
         {
-            animation.Play("Sleep", PlayMode.StopAll);
+            GetComponent<Animation>().Play("Sleep", PlayMode.StopAll);
         }
     }
 
@@ -134,21 +134,21 @@ public class AnimationController : MonoBehaviour
 
         if (attackIndex == 4 || attackIndex == 5)
         {
-            animation[animationName].speed = 2;
+            GetComponent<Animation>()[animationName].speed = 2;
         }
 
-        else if (animation[animationName].clip.length > duration)
+        else if (GetComponent<Animation>()[animationName].clip.length > duration)
         {
-            animation[animationName].speed = animation[animationName].clip.length / duration;
+            GetComponent<Animation>()[animationName].speed = GetComponent<Animation>()[animationName].clip.length / duration;
         }
 
         else
         {
-            animation[animationName].speed = 1;
+            GetComponent<Animation>()[animationName].speed = 1;
         }
 
         _movementFSM.LockMovement(MovementFSM.LockType.MovementLock, duration * 0.8f);
-        animation.Play(animationName);
+        GetComponent<Animation>().Play(animationName);
     }
 
     public void WalkToMove()
@@ -163,7 +163,7 @@ public class AnimationController : MonoBehaviour
 
     public void UpdateMovementSpeed(float value)
     {
-       animation["Run"].speed = value * 1.5f;
+       GetComponent<Animation>()["Run"].speed = value * 1.5f;
     }
 
     #endregion

@@ -46,7 +46,7 @@ public class FrostNova : Ability
             projectile.GetComponent<ProjectileBehaviour>().abilityID = "icebolt";
             projectile.GetComponent<ProjectileBehaviour>().CollidesWithTerrain = false;
 
-            projectile.rigidbody.velocity = Rotations.RotateAboutY(owner.transform.forward, (360 / segments) * i) * 10.0f;
+            projectile.GetComponent<Rigidbody>().velocity = Rotations.RotateAboutY(owner.transform.forward, (360 / segments) * i) * 10.0f;
            
             yield return new WaitForSeconds(.05f);
         }

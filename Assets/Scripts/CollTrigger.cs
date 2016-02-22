@@ -20,8 +20,8 @@ public class CollTrigger : Trigger
 
     public override void Activate()
     {
-        triggerObject.renderer.material.shader = highlight;
-        triggerObject.renderer.material.color = Color.red;     // (1,0,0,1)
+        triggerObject.GetComponent<Renderer>().material.shader = highlight;
+        triggerObject.GetComponent<Renderer>().material.color = Color.red;     // (1,0,0,1)
         Debug.Log(name.ToString() + " colActive!");
         base.Activate();
     }
@@ -31,8 +31,8 @@ public class CollTrigger : Trigger
 
         Debug.Log("F is pressed");
         StartCoroutine("SplitUp");
-        triggerObject.renderer.material.shader = defaultShader;
-        triggerObject.renderer.material.color = Color.white;    // (1,1,1,1)
+        triggerObject.GetComponent<Renderer>().material.shader = defaultShader;
+        triggerObject.GetComponent<Renderer>().material.color = Color.white;    // (1,1,1,1)
 
         base.SetOff();
     }

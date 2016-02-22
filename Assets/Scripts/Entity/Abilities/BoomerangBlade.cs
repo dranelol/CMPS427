@@ -39,7 +39,7 @@ public class BoomerangBlade : Ability
             projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
             projectile.GetComponent<ProjectileBehaviour>().DiesOnHit = false;
 
-            projectile.rigidbody.velocity = Rotations.RotateAboutY(forward, (360 / segments) * i) * 20.0f;
+            projectile.GetComponent<Rigidbody>().velocity = Rotations.RotateAboutY(forward, (360 / segments) * i) * 20.0f;
             projectile.GetComponent<ProjectileBehaviour>().accelerationConstant = -40.0f;
 
 

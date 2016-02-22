@@ -20,7 +20,7 @@ public class GETOVERHERE : Ability
         projectile.GetComponent<ProjectileBehaviour>().timeToActivate = 0.25f;
         projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
 
-        projectile.rigidbody.velocity = forward.normalized * 20.0f;
+        projectile.GetComponent<Rigidbody>().velocity = forward.normalized * 20.0f;
     }
 
 

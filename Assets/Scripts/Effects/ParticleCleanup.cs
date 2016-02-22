@@ -8,9 +8,9 @@ public class ParticleCleanup : MonoBehaviour
 {
 	void Update () 
     {
-        if (particleSystem.emissionRate == 0)
+        if (GetComponent<ParticleSystem>().emissionRate == 0)
         {
-            Destroy(gameObject, particleSystem.duration);
+            Destroy(gameObject, GetComponent<ParticleSystem>().duration);
         }
 	}
 }

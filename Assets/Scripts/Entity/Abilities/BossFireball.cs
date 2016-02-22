@@ -24,7 +24,7 @@ public class BossFireball : Ability
             projectile.GetComponent<ProjectileBehaviour>().abilityID = abilityID;
             projectile.GetComponent<ProjectileBehaviour>().CollidesWithTerrain = false;
 
-            projectile.rigidbody.velocity = Rotations.RotateAboutY(forward, (360 / segments) * i) * 10.0f;
+            projectile.GetComponent<Rigidbody>().velocity = Rotations.RotateAboutY(forward, (360 / segments) * i) * 10.0f;
         }
 
     }

@@ -158,7 +158,7 @@ public class TitanSpawner : MonoBehaviour
         {
             
             GameObject newEnemy = Instantiate(enemyPrefab, meshLocation.position, Quaternion.identity) as GameObject;
-            newEnemy.rigidbody.Sleep();
+            newEnemy.GetComponent<Rigidbody>().Sleep();
             newEnemy.name = "Enemy(" + newEnemy.GetInstanceID() + ")";
             newEnemy.transform.parent = transform;
             newEnemy.transform.Find("EnemyAggroCollider").gameObject.AddComponent<AggroRadius>();
